@@ -20,6 +20,10 @@ const FindFacturaComponent = () => {
         navigator("/addNuevaFactura")
     }
 
+    function editFactura(id){
+        navigator(`/editFactura/${id}`)
+    }
+
     const dummyData = [{
 
         "id" : "1",
@@ -73,7 +77,7 @@ const FindFacturaComponent = () => {
                             <td>{factura.ruc}</td>
                             <td>{factura.monto}</td>
                             <td>{factura.moneda}</td>
-                            <td><button className='btn btn-success' onClick={() => updateFactura(factura.id)}>Actualizar</button></td>
+                            <td><button className='btn btn-success' onClick={() => editFactura(factura.id)}>Actualizar</button></td>
                         </tr>
                     )
                 }

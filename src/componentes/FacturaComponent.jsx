@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import { nuevaFactura } from '../service/FacturaService'
-import { useNavigate } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import { facturaForId, nuevaFactura } from '../service/FacturaService'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const FacturaComponent = () => {
 
@@ -8,7 +8,6 @@ const FacturaComponent = () => {
     const [ruc, setRuc] = useState('')
     const [monto, setMonto] = useState('')
     const [moneda, setMoneda] = useState('')
-
     const [errors, setErrors] = useState({
         id : '',
         ruc : '',
@@ -17,6 +16,19 @@ const FacturaComponent = () => {
     })
 
     const navigator = useNavigate();
+
+    useEffect(() => {
+        if(id){
+            facturaForId().then((response) => {
+                setId(response.data.id);
+                setRuc(respnde.data.ruc);
+                setMonto(response.data.monto);
+                setMoneda(response.data.moneda);
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+    }, [id])
 
     function saveFactura(e){
         debugger
@@ -69,11 +81,22 @@ const FacturaComponent = () => {
         return valid;
     }
 
+    function pageTitle(id){
+        debugger
+        if(id){
+            return <h2>Actualizar Facturas</h2>
+        }else{
+            return <h2>Agregar de Facturas</h2>
+        }
+    }
+
   return (
     <div className='container'>
         <div className='row'>
             <div className='card'>
-                <h2>Lista de Facturas</h2>
+                {
+                    pageTitle()
+                }
                 <div className='card-body'>
                     <form>
                         <div className='form-group mb-2'>
