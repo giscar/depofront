@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {listaFacturas} from '../service/FacturaService'
+import {listaFacturas} from '../../service/FacturaService'
 import { useNavigate } from 'react-router-dom'
 
 const FindFacturaComponent = () => {

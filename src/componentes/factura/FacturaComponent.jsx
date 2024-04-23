@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import { editaFactura, facturaForId, nuevaFactura } from '../service/FacturaService'
+
 import { useNavigate, useParams } from 'react-router-dom'
+import { editaFactura, facturaForId, nuevaFactura } from '../../service/FacturaService'
 
 const FacturaComponent = () => {
 
@@ -30,7 +31,7 @@ const FacturaComponent = () => {
         }
     }, [id])
 
-    function saveFactura(e){
+    function saveOrUpdateFactura(e){
         debugger
         e.preventDefault();
         if(validateForm()){
@@ -39,12 +40,16 @@ const FacturaComponent = () => {
                 editaFactura(factura).then((response) => {
                     console.log(response.data);
                     navigator('/facturas')
+                }).catch(error => {
+                    console.log(error)
                 })
             }else{
                 const factura = {ruc, monto, moneda}
                 nuevaFactura(factura).then((response) => {
                     console.log(response.data);
                     navigator('/facturas')
+                }).catch(error => {
+                    console.log(error)
                 })
             }
         }
@@ -114,7 +119,7 @@ const FacturaComponent = () => {
                             {errors.moneda && <div className='invalid-feedback'>{errors.moneda}</div>}
                         </div>
                         
-                        <button className='btn btn-success' onClick={saveFactura}>Enviar</button>
+                        <button className='btn btn-success' onClick={saveOrUpdateFactura}>Enviar</button>
                     </form>
                 </div>
             </div>
