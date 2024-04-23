@@ -13,6 +13,7 @@ function App() {
     <>
       <BrowserRouter>
         <HeaderComponent />
+          <br/>
           <Routes>
             <Route path='/' element={<FindFacturaComponent />}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
