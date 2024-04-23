@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react'
-import { facturaForId, nuevaFactura } from '../service/FacturaService'
+import { editaFactura, facturaForId, nuevaFactura } from '../service/FacturaService'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const FacturaComponent = () => {
 
-    const [id, setId] = useState('')
     const [ruc, setRuc] = useState('')
     const [monto, setMonto] = useState('')
     const [moneda, setMoneda] = useState('')
+
+    const {id} = useParams();
+
     const [errors, setErrors] = useState({
-        id : '',
         ruc : '',
         monto : '',
         moneda : ''
@@ -19,9 +20,8 @@ const FacturaComponent = () => {
 
     useEffect(() => {
         if(id){
-            facturaForId().then((response) => {
-                setId(response.data.id);
-                setRuc(respnde.data.ruc);
+            facturaForId(id).then((response) => {
+                setRuc(response.data.ruc);
                 setMonto(response.data.monto);
                 setMoneda(response.data.moneda);
             }).catch(error => {
@@ -34,12 +34,19 @@ const FacturaComponent = () => {
         debugger
         e.preventDefault();
         if(validateForm()){
-            const factura = {id, ruc, monto, moneda}
-
-            nuevaFactura(factura).then((response) => {
-                console.log(response.data);
-                navigator('/facturas')
-            })
+            if(id){
+                const factura = {ruc, monto, moneda, id}
+                editaFactura(factura).then((response) => {
+                    console.log(response.data);
+                    navigator('/facturas')
+                })
+            }else{
+                const factura = {ruc, monto, moneda}
+                nuevaFactura(factura).then((response) => {
+                    console.log(response.data);
+                    navigator('/facturas')
+                })
+            }
         }
         
     }
@@ -48,13 +55,6 @@ const FacturaComponent = () => {
         let valid = true;
         const errorCopy = {... errors}
 
-        if (id.trim()){
-            errorCopy.id = '';
-        }else{
-            errorCopy.id = 'Tiene que ingresar el id';
-            valid = false;
-        }
-
         if (ruc.trim()){
             errorCopy.ruc = '';
         }else{
@@ -62,14 +62,14 @@ const FacturaComponent = () => {
             valid = false;
         }
 
-        if (monto.trim()){
+        if (monto){
             errorCopy.monto = '';
         }else{
             errorCopy.monto = 'Tiene que ingresar el monto';
             valid = false;
         }
 
-        if (moneda.trim()){
+        if (moneda){
             errorCopy.moneda = '';
         }else{
             errorCopy.moneda = 'Tiene que ingresar la moneda';
@@ -81,8 +81,7 @@ const FacturaComponent = () => {
         return valid;
     }
 
-    function pageTitle(id){
-        debugger
+    function pageTitle(){
         if(id){
             return <h2>Actualizar Facturas</h2>
         }else{
@@ -103,11 +102,6 @@ const FacturaComponent = () => {
                             <label className='form-label'>RUC:</label>
                             <input type='text' placeholder='Ingrese el RUC' name='txtRuc' value={ruc} className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRuc(e.target.value)}}></input>
                             {errors.ruc && <div className='invalid-feedback'>{errors.ruc}</div>}
-                        </div>
-                        <div className='form-group mb-2'>
-                            <label className='form-label'>ID:</label>
-                            <input type='text' placeholder='Ingrese el ID' name='txtIdFactura' value={id} className={`form-control ${errors.id? 'is-invalid' : ''}`} onChange={(e) =>{setId(e.target.value)}}></input>
-                            {errors.id && <div className='invalid-feedback'>{errors.id}</div>}
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>Monto:</label>
