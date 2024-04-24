@@ -2,25 +2,36 @@ import React,{ useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { Formik, useFormik } from 'formik';
+import { clienteForRuc } from '../../service/FacturaService';
 
 const BusquedaClienteComponent = ({show, handleClose}) => {
 
-  const [ruc, setRuc] = useState('')
-  const [cliente, setCliente] = useState('')
-  const handleSubmit = (event) => {
-  
-  const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+  const [ruc, setRuc] = useState();
+  const [razonSocial, setRazonSocial] = useState();
+  const [cliente, setCliente] = useState([])
 
-    setValidated(true);
-  };
+  const buscarCliente = () => {
+    const clienteData = [ruc, razonSocial]
+    console.log(clienteData);
+    clienteForRuc(ruc).then((response) =>{
+      debugger
+      setCliente(response.data);
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  const formik = useFormik({
+    initialValues : {
+      ruc : "",
+      cliente : ""
+    }
+  })
+  
 
   return (
     <>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
@@ -31,8 +42,9 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
               <Form.Label>RUC</Form.Label>
               <Form.Control
                 type="text"
-                defaultValue={ruc}
+                name='ruc'
                 placeholder="Ingrese el ruc"
+                onChange={(e) =>{setRuc(e.target.value)}}
                 autoFocus
               />
             </Form.Group>
@@ -43,8 +55,9 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
               <Form.Label>Cliente</Form.Label>
               <Form.Control
                 type="text"
-                defaultValue={cliente}
+                name='razonSocial'
                 placeholder="Ingrese el nombre del cliente"
+                onChange={(e) =>{setRazonSocial(e.target.value)}}
                 autoFocus
               />
             </Form.Group>
@@ -54,7 +67,7 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={buscarCliente}>
             Save Changes
           </Button>
         </Modal.Footer>
