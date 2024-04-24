@@ -32,7 +32,6 @@ const FacturaComponent = () => {
     }, [id])
 
     function saveOrUpdateFactura(e){
-        debugger
         e.preventDefault();
         if(validateForm()){
             if(id){

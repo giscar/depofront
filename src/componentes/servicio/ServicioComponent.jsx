@@ -3,17 +3,18 @@ import BusquedaClienteComponent from '../util/BusquedaClienteComponent';
 
 const ServicioComponent = () => {
 
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     const [codServicio, setCodServicio] = useState('')
     const [ruc, setRuc] = useState('')
     const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
     const [horaInicioServicio, setHoraInicioServicio] = useState('')
     const [horaFinServicio, setHoraFinServicio] = useState('')
     const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
+
+    //modal
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const [errors, setErrors] = useState({
         codServicio : '',
@@ -26,7 +27,6 @@ const ServicioComponent = () => {
 
     function saveOrUpdateServicio(){
         validateForm()
-        console.log();
     }
 
     function validateForm(){
@@ -97,7 +97,7 @@ const ServicioComponent = () => {
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>ruc:</label>
-                            <input type='text' placeholder='Ingrese el Monto' name='txtRuc' value={ruc} onClick={handleShow}
+                            <input type='text' placeholder='Ingrese el ruc' name='txtRuc' value={ruc} onClick={handleShow}
                                 className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRuc(e.target.value)}}></input>
                             {errors.ruc && <div className='invalid-feedback'>{errors.ruc}</div>}
                         </div>
@@ -132,7 +132,7 @@ const ServicioComponent = () => {
             </div>
         </div>
     </div>
-    <BusquedaClienteComponent show={show} handleClose={handleClose} />
+    <BusquedaClienteComponent show={show} handleClose={handleClose}/>
     </>
   )
 }
