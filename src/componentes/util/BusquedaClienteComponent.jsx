@@ -9,14 +9,13 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
 
   const [ruc, setRuc] = useState();
   const [razonSocial, setRazonSocial] = useState();
-  const [cliente, setCliente] = useState([])
+  const [clientes, setClientes] = useState([])
 
   const buscarCliente = () => {
     const clienteData = [ruc, razonSocial]
     console.log(clienteData);
     clienteForRuc(ruc).then((response) =>{
-      debugger
-      setCliente(response.data);
+      setClientes(response.data);
     }).catch(error => {
       console.error(error)
     })
@@ -25,7 +24,7 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
   const formik = useFormik({
     initialValues : {
       ruc : "",
-      cliente : ""
+      razonSocial : ""
     }
   })
   
@@ -70,6 +69,31 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
           <Button variant="primary" onClick={buscarCliente}>
             Save Changes
           </Button>
+          <br/>
+          <table className='table table-striped table-bordered table-hover'>
+            <thead>
+                <tr>
+                <th>ID</th>
+                    <th>RUC</th>
+                    <th>Razon</th>
+                    <th>Direccionn</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {
+                    clientes.map(cliente =>
+                        <tr key={cliente.id}>
+                            <td>{cliente.id}</td>
+                            <td>{cliente.ruc}</td>
+                            <td>{cliente.razonSocial}</td>
+                            <td>{cliente.direccion}</td>
+                           
+                        </tr>
+                    )
+                }
+            </tbody>
+        </table>
         </Modal.Footer>
       </Modal>
     </>
