@@ -100,13 +100,13 @@ const ServicioComponent = () => {
                 <h2>Nuevo Servicio</h2>
                 <div className='card-body'>
                     <form>
-                        <div className='form-group mb-2'>
+                        <div className='form-group md-2'>
                             <label className='form-label'>codServicio:</label>
                             <input type='text' placeholder='Ingrese el codServicio' name='txtCodServicio' value={codServicio} 
                                 className={`form-control ${errors.codServicio? 'is-invalid' : ''}`} onChange={(e) =>{setCodServicio(e.target.value)}}></input>
                             {errors.codServicio && <div className='invalid-feedback'>{errors.codServicio}</div>}
                         </div>
-                        <div className='form-group mb-2'>
+                        <div className='form-group md-2'>
                             <label className='form-label'>ruc:</label>
                             <input type='text' placeholder='Ingrese el ruc' name='txtRuc' value={ruc} onClick={handleShow} readOnly
                                 className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRuc(e.target.value)}}></input>

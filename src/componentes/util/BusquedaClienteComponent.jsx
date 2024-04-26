@@ -73,10 +73,10 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
+            Salir
           </Button>
           <Button variant="primary" onClick={buscarCliente}>
-            Save Changes
+            Buscar
           </Button>
           <br/>
           <table className='table table-striped table-bordered table-hover'>

@@ -12,24 +12,26 @@ const HeaderComponent = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-            <NavDropdown title="Dropdown" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+            <Nav.Link href="#features">Montacargas</Nav.Link>
+            <Nav.Link href="#pricing">Operadores</Nav.Link>
+            <Nav.Link href="#pricing">Reportes</Nav.Link>
+            
+            <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1">Nueva</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
-                Another action
+                Revisar
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Cancelar</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
-                Separated link
+                Modificar
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">More deets</Nav.Link>
+            <Nav.Link href="#deets">Administrador</Nav.Link>
             <Nav.Link eventKey={2} href="#memes">
-              Dank memes
+              cleov
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
