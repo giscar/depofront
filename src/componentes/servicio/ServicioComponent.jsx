@@ -1,14 +1,25 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import BusquedaClienteComponent from '../util/BusquedaClienteComponent';
 
 const ServicioComponent = () => {
 
     const [codServicio, setCodServicio] = useState('')
     const [ruc, setRuc] = useState('')
+    const [razonSocial, setRazonSocial] = useState('')
+    const [direccion, setDireccion] = useState('')
     const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
     const [horaInicioServicio, setHoraInicioServicio] = useState('')
     const [horaFinServicio, setHoraFinServicio] = useState('')
     const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
+    const [cliente, setCliente] = useState([])
+
+    useEffect(() => {
+        console.log(cliente);
+        setRuc(cliente.ruc)
+        setDireccion(cliente.direccion)
+        setRazonSocial(cliente.razonSocial)
+
+    }, [cliente])
 
     //modal
     const [show, setShow] = useState(false);
@@ -97,8 +108,20 @@ const ServicioComponent = () => {
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>ruc:</label>
-                            <input type='text' placeholder='Ingrese el ruc' name='txtRuc' value={ruc} onClick={handleShow}
+                            <input type='text' placeholder='Ingrese el ruc' name='txtRuc' value={ruc} onClick={handleShow} readOnly
                                 className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRuc(e.target.value)}}></input>
+                            {errors.ruc && <div className='invalid-feedback'>{errors.ruc}</div>}
+                        </div>
+                        <div className='form-group mb-2'>
+                            <label className='form-label'>Razon Social:</label>
+                            <input type='text' placeholder='Ingrese el ruc' name='txRazonSocial' value={razonSocial} onClick={handleShow} disabled
+                                className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRazonSocial(e.target.value)}}></input>
+                            {errors.ruc && <div className='invalid-feedback'>{errors.RazonSocial}</div>}
+                        </div>
+                        <div className='form-group mb-2'>
+                            <label className='form-label'>Direccion:</label>
+                            <input type='text' placeholder='Ingrese el ruc' name='txtDireccion' value={direccion} onClick={handleShow} disabled
+                                className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setDireccion(e.target.value)}}></input>
                             {errors.ruc && <div className='invalid-feedback'>{errors.ruc}</div>}
                         </div>
                         <div className='form-group mb-2'>
@@ -132,7 +155,7 @@ const ServicioComponent = () => {
             </div>
         </div>
     </div>
-    <BusquedaClienteComponent show={show} handleClose={handleClose}/>
+    <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente}/>
     </>
   )
 }

@@ -4,21 +4,26 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Formik, useFormik } from 'formik';
 import { clienteForRuc } from '../../service/FacturaService';
+import { FaCircleNotch } from 'react-icons/fa';
 
-const BusquedaClienteComponent = ({show, handleClose}) => {
+const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
 
   const [ruc, setRuc] = useState();
   const [razonSocial, setRazonSocial] = useState();
   const [clientes, setClientes] = useState([])
+  
 
   const buscarCliente = () => {
-    const clienteData = [ruc, razonSocial]
-    console.log(clienteData);
     clienteForRuc(ruc).then((response) =>{
       setClientes(response.data);
     }).catch(error => {
       console.error(error)
     })
+  }
+
+  const seleccionarCliente = (cliente) => {
+    setCliente(cliente)
+    handleClose()
   }
 
   const formik = useFormik({
@@ -31,9 +36,13 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
 
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} 
+              onHide={handleClose} 
+              size="lg"
+              backdrop="static"
+              keyboard={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Busqueda de clientes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -73,22 +82,24 @@ const BusquedaClienteComponent = ({show, handleClose}) => {
           <table className='table table-striped table-bordered table-hover'>
             <thead>
                 <tr>
-                <th>ID</th>
                     <th>RUC</th>
                     <th>Razon</th>
-                    <th>Direccionn</th>
-                    
+                    <th>Dirección</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {
                     clientes.map(cliente =>
                         <tr key={cliente.id}>
-                            <td>{cliente.id}</td>
                             <td>{cliente.ruc}</td>
                             <td>{cliente.razonSocial}</td>
                             <td>{cliente.direccion}</td>
-                           
+                            <td>
+                              <Button onClick={() => seleccionarCliente(cliente)}>
+                                <FaCircleNotch />
+                              </Button>
+                            </td>
                         </tr>
                     )
                 }
