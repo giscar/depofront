@@ -6,6 +6,7 @@ import FooterComponent from './componentes/FooterComponent'
 import HeaderComponent from './componentes/HeaderComponent'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ServicioComponent from './componentes/servicio/ServicioComponent'
+import LoginComponent from './componentes/login/LoginComponent'
 
 function App() {
 
@@ -15,7 +16,7 @@ function App() {
         <HeaderComponent />
           <br/>
           <Routes>
-            <Route path='/' element={<FindFacturaComponent />}></Route>
+            <Route path='/' element={<LoginComponent />}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
