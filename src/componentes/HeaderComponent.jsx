@@ -3,8 +3,16 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderComponent = () => {
+
+  const navigator = useNavigate();
+
+  const acceder = () =>{
+    navigator("/facturas")
+  }
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
       <Container>
@@ -17,7 +25,7 @@ const HeaderComponent = () => {
             <Nav.Link href="#pricing">Reportes</Nav.Link>
             
             <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Nueva</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.1" onClick={() => acceder() }>Nueva</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Revisar
               </NavDropdown.Item>

@@ -1,10 +1,10 @@
 import axios from "axios";
 
-//const REST_API_BASE_URL_FACTURA = "http://143.198.244.41:8080/factura"
 const REST_API_BASE_URL_FACTURA = "http://143.198.244.41:8080/factura"
+//const REST_API_BASE_URL_FACTURA = "http://143.198.244.41:8080/factura"
 
-//const REST_API_BASE_URL_CLIENTE = "http://143.198.244.41:8080/cliente"
 const REST_API_BASE_URL_CLIENTE = "http://143.198.244.41:8080/cliente"
+//const REST_API_BASE_URL_CLIENTE = "http://143.198.244.41:8080/cliente"
 
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 
