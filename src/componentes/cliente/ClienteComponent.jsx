@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
 import { useState } from 'react';
 import { FaCircleNotch } from 'react-icons/fa';
+import './ClienteComponent.css';
 
 function ClienteComponent() {
 
@@ -54,7 +55,6 @@ function ClienteComponent() {
 
   return (
     <>
-
       <Form noValidate onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="validationFormik01">
@@ -96,11 +96,12 @@ function ClienteComponent() {
 
 
       <br />
-      <table className='table table-striped table-bordered table-hover'>
+      <div className='container tableFixHead'>
+      <table className='table table-striped table-bordered table-hover ' responsive="md">
         <thead>
           <tr>
             <th>RUC</th>
-            <th>Razon</th>
+            <th>Razón Social</th>
             <th>Dirección</th>
             <th></th>
           </tr>
@@ -122,6 +123,8 @@ function ClienteComponent() {
           }
         </tbody>
       </table>
+      </div>
+      
     </>
   );
 }

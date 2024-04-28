@@ -13,12 +13,23 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
   const [clientes, setClientes] = useState([])
   
 
-  const buscarCliente = () => {
-    clienteForRuc(ruc).then((response) =>{
-      setClientes(response.data);
-    }).catch(error => {
-      console.error(error)
-    })
+  const buscarClienteByDescripcion = (data) => {
+    if (!data.ruc && !data.razonSocial) {
+      return
+    }
+    if (data.razonSocial) {
+      clienteForDescripcion(data.razonSocial).then((response) => {
+        setClientes(response.data);
+      }).catch(error => {
+        console.error(error)
+      })
+    } else {
+      clienteForRuc(data.ruc).then((response) => {
+        setClientes(response.data);
+      }).catch(error => {
+        console.error(error)
+      })
+    }
   }
 
   const seleccionarCliente = (cliente) => {
@@ -40,7 +51,8 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
               onHide={handleClose} 
               size="lg"
               backdrop="static"
-              keyboard={false}>
+              keyboard={false}
+              className='anyClass'>
         <Modal.Header closeButton>
           <Modal.Title>Busqueda de clientes</Modal.Title>
         </Modal.Header>
@@ -75,7 +87,7 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
           <Button variant="secondary" onClick={handleClose}>
             Salir
           </Button>
-          <Button variant="primary" onClick={buscarCliente}>
+          <Button variant="primary" onClick={() => buscarClienteByDescripcion()}>
             Buscar
           </Button>
           <br/>
