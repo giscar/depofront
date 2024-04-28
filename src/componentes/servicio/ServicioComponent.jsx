@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import BusquedaClienteComponent from '../util/BusquedaClienteComponent';
+import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 
 const ServicioComponent = () => {
 

@@ -9,8 +9,12 @@ const HeaderComponent = () => {
 
   const navigator = useNavigate();
 
-  const acceder = () =>{
+  const accederFacturas = () =>{
     navigator("/facturas")
+  }
+
+  const accederClientes = () =>{
+    navigator("/clientes")
   }
 
   return (
@@ -22,10 +26,10 @@ const HeaderComponent = () => {
           <Nav className="me-auto">
             <Nav.Link href="#features">Montacargas</Nav.Link>
             <Nav.Link href="#pricing">Operadores</Nav.Link>
-            <Nav.Link href="#pricing">Reportes</Nav.Link>
+            <Nav.Link href="#pricing" onClick={() => accederClientes() }>Clientes</Nav.Link>
             
             <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1" onClick={() => acceder() }>Nueva</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Nueva</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
                 Revisar
               </NavDropdown.Item>
