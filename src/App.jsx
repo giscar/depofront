@@ -8,6 +8,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ServicioComponent from './componentes/servicio/ServicioComponent'
 import LoginComponent from './componentes/login/LoginComponent'
 import ClienteComponent from './componentes/cliente/ClienteComponent'
+import NuevoClienteComponent from './componentes/cliente/NuevoClienteComponent'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>
+            <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>
             <Route path='/addServicio' element={<ServicioComponent />}></Route>
           </Routes>
         

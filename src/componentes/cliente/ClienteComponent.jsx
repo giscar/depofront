@@ -8,11 +8,18 @@ import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaServi
 import { useState } from 'react';
 import { FaCircleNotch } from 'react-icons/fa';
 import './ClienteComponent.css';
+import { useNavigate } from 'react-router-dom';
 
 function ClienteComponent() {
 
+  const navigator = useNavigate();
+
   const [clientes, setClientes] = useState([])
   const [ruc, setRuc] = useState([])
+
+  const accederNuevoCliente = () =>{
+    navigator("/nuevoCliente")
+  }
 
   const buscarClienteByDescripcion = (data) => {
     if (!data.ruc && !data.razonSocial) {
@@ -86,18 +93,21 @@ function ClienteComponent() {
               {errors.razonSocial}
             </Form.Control.Feedback>
           </Form.Group>
+          <Form.Group as={Col} md="4">
+            <Button type="submit" variant="info">Buscar</Button>
+            <Button type="reset" className='ms-2' onClick={() => handleReset(setClientes([]))}
+          variant="warning">Limpiar
+        </Button>
+          </Form.Group>
         </Row>
-        <Button type="submit" variant="outline-primary">Buscar</Button>
-        <Button type="reset" onClick={() => handleReset(
-            setClientes([])
-          )}
-          variant="outline-warning">Limpiar</Button>
+        <br/>
+        <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoCliente()}>Nuevo</Button>
       </Form>
 
 
       <br />
       <div className='container tableFixHead'>
-      <table className='table table-striped table-bordered table-hover ' responsive="md">
+      <table className='table table-striped table-bordered table-hover' responsive="md">
         <thead>
           <tr>
             <th>RUC</th>

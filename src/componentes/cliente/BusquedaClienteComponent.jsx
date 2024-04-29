@@ -1,17 +1,14 @@
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { Formik, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { clienteForRuc } from '../../service/FacturaService';
 import { FaCircleNotch } from 'react-icons/fa';
 
-const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
+const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
 
-  const [ruc, setRuc] = useState();
-  const [razonSocial, setRazonSocial] = useState();
   const [clientes, setClientes] = useState([])
-  
 
   const buscarClienteByDescripcion = (data) => {
     if (!data.ruc && !data.razonSocial) {
@@ -38,21 +35,21 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
   }
 
   const formik = useFormik({
-    initialValues : {
-      ruc : "",
-      razonSocial : ""
+    initialValues: {
+      ruc: "",
+      razonSocial: ""
     }
   })
-  
+
 
   return (
     <>
-      <Modal show={show} 
-              onHide={handleClose} 
-              size="lg"
-              backdrop="static"
-              keyboard={false}
-              className='anyClass'>
+      <Modal show={show}
+        onHide={handleClose}
+        size="lg"
+        backdrop="static"
+        keyboard={false}
+        className='anyClass'>
         <Modal.Header closeButton>
           <Modal.Title>Busqueda de clientes</Modal.Title>
         </Modal.Header>
@@ -64,7 +61,7 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
                 type="text"
                 name='ruc'
                 placeholder="Ingrese el ruc"
-                onChange={(e) =>{setRuc(e.target.value)}}
+                onChange={(e) => { setRuc(e.target.value) }}
                 autoFocus
               />
             </Form.Group>
@@ -77,46 +74,47 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
                 type="text"
                 name='razonSocial'
                 placeholder="Ingrese el nombre del cliente"
-                onChange={(e) =>{setRazonSocial(e.target.value)}}
+                onChange={(e) => { setRazonSocial(e.target.value) }}
                 autoFocus
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose} className='ms-1'>
             Salir
           </Button>
+          
           <Button variant="primary" onClick={() => buscarClienteByDescripcion()}>
             Buscar
           </Button>
-          <br/>
+          <br />
           <table className='table table-striped table-bordered table-hover'>
             <thead>
-                <tr>
-                    <th>RUC</th>
-                    <th>Razon</th>
-                    <th>Dirección</th>
-                    <th></th>
-                </tr>
+              <tr>
+                <th>RUC</th>
+                <th>Razon</th>
+                <th>Dirección</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
-                {
-                    clientes.map(cliente =>
-                        <tr key={cliente.id}>
-                            <td>{cliente.ruc}</td>
-                            <td>{cliente.razonSocial}</td>
-                            <td>{cliente.direccion}</td>
-                            <td>
-                              <Button onClick={() => seleccionarCliente(cliente)}>
-                                <FaCircleNotch />
-                              </Button>
-                            </td>
-                        </tr>
-                    )
-                }
+              {
+                clientes.map(cliente =>
+                  <tr key={cliente.id}>
+                    <td>{cliente.ruc}</td>
+                    <td>{cliente.razonSocial}</td>
+                    <td>{cliente.direccion}</td>
+                    <td>
+                      <Button onClick={() => seleccionarCliente(cliente)}>
+                        <FaCircleNotch />
+                      </Button>
+                    </td>
+                  </tr>
+                )
+              }
             </tbody>
-        </table>
+          </table>
         </Modal.Footer>
       </Modal>
     </>
