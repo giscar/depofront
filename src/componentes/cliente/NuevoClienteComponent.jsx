@@ -5,11 +5,18 @@ import Row from 'react-bootstrap/Row';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import {  nuevoCliente } from '../../service/FacturaService';
-import { useState } from 'react';
-import { FaCircleNotch } from 'react-icons/fa';
-import './ClienteComponent.css';
+import { toast } from 'react-toastify';
 
 function NuevoClienteComponent() {
+  const notify = () => toast.info('Se han registrado los cambios correctamente', {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+    });
 
   const saveCliente = (data) => {
     debugger
@@ -17,6 +24,7 @@ function NuevoClienteComponent() {
       console.error(error)
     })
     handleReset()
+    notify()
   }
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
@@ -47,6 +55,7 @@ function NuevoClienteComponent() {
                 onChange={handleChange}
                 isInvalid={!!errors.ruc}
                 autoComplete='off'
+                maxLength={11}
               />
               <Form.Control.Feedback type="invalid">
                 {errors.ruc}

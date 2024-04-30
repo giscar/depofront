@@ -9,6 +9,8 @@ import ServicioComponent from './componentes/servicio/ServicioComponent'
 import LoginComponent from './componentes/login/LoginComponent'
 import ClienteComponent from './componentes/cliente/ClienteComponent'
 import NuevoClienteComponent from './componentes/cliente/NuevoClienteComponent'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -26,7 +28,7 @@ function App() {
             <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>
             <Route path='/addServicio' element={<ServicioComponent />}></Route>
           </Routes>
-        
+          <ToastContainer />
       </BrowserRouter>
     </>
   )

@@ -85,7 +85,7 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
             Salir
           </Button>
           
-          <Button variant="primary" onClick={() => buscarClienteByDescripcion()}>
+          <Button variant="primary" onClick={() => buscarClienteByDescripcion}>
             Buscar
           </Button>
           <br />
