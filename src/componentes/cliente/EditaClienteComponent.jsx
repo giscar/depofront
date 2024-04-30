@@ -4,10 +4,14 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import {  nuevoCliente } from '../../service/FacturaService';
+import {  clienteForId, editaCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
-function NuevoClienteComponent() {
+function EditaClienteComponent() {
+  const navigator = useNavigate();
+
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
     autoClose: 3000,
@@ -18,13 +22,25 @@ function NuevoClienteComponent() {
     theme: "colored",
     });
 
-  const saveCliente = (data) => {
-    debugger
-    nuevoCliente(data).catch(error => {
+  const [cliente, setCliente] = useState([])
+  const {id} = useParams();
+
+  useEffect(() => {
+      if(id){
+          clienteForId(id).then((response) => {
+              setCliente(response.data);
+          }).catch(error => {
+              console.log(error);
+          })
+      }
+  }, [id])
+
+  const saveCliente = (cliente) => {
+    editaCliente(cliente).catch(error => {
       console.error(error)
     })
-    handleReset()
     notify()
+    navigator("/clientes")
   }
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
@@ -34,11 +50,13 @@ function NuevoClienteComponent() {
       direccion: yup.string().required("La dirección es requerido"),
     }),
     initialValues: {
-      ruc: '',
-      razonSocial: '',
-      direccion: '',
+      ruc: cliente.ruc,
+      razonSocial: cliente.razonSocial,
+      direccion: cliente.direccion,
+      id: cliente.id
     },
     onSubmit: saveCliente,
+    enableReinitialize: true
   })
 
   return (
@@ -96,8 +114,6 @@ function NuevoClienteComponent() {
           </Row>
           <Form.Group as={Col} md="4">
             <Button type="bottom" className='ms-2' variant="primary">Guardar</Button>
-            <Button type="reset" className='ms-2' onClick={() => handleReset()} variant="warning">Limpiar
-            </Button>
           </Form.Group>
         </Form>
       </div>
@@ -105,4 +121,4 @@ function NuevoClienteComponent() {
   );
 }
 
-export default NuevoClienteComponent;
+export default EditaClienteComponent;

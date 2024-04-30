@@ -11,6 +11,7 @@ import ClienteComponent from './componentes/cliente/ClienteComponent'
 import NuevoClienteComponent from './componentes/cliente/NuevoClienteComponent'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditaClienteComponent from './componentes/cliente/EditaClienteComponent'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>
             <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>
+            <Route path='/editCliente/:id' element={<EditaClienteComponent />}></Route>
             <Route path='/addServicio' element={<ServicioComponent />}></Route>
           </Routes>
           <ToastContainer />

@@ -24,37 +24,6 @@ const FindFacturaComponent = () => {
         navigator(`/editFactura/${id}`)
     }
 
-    const dummyData = [{
-
-        "id" : "1",
-		"ruc" : "1041092345",
-		"monto" : "10",
-		"moneda" : "Soles"
-    },
-    {
-
-        "id" : "2",
-		"ruc" : "1041092345",
-		"monto" : "10",
-		"moneda" : "Soles"
-    },
-    {
-
-        "id" : "3",
-		"ruc" : "1041092345",
-		"monto" : "10",
-		"moneda" : "Soles"
-    },
-    {
-
-        "id" : "4",
-		"ruc" : "1041092345",
-		"monto" : "10",
-		"moneda" : "Soles"
-    }]
-
-
-
   return (
     <div>
         <h2>Lista de facturas</h2>

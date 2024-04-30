@@ -6,7 +6,7 @@ import { Formik, useFormik } from 'formik';
 import * as yup from 'yup';
 import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
 import { useState } from 'react';
-import { FaCircleNotch } from 'react-icons/fa';
+import { FaCircleNotch, FaPencilAlt } from 'react-icons/fa';
 import './ClienteComponent.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,6 +21,11 @@ function ClienteComponent() {
     navigator("/nuevoCliente")
   }
 
+  const editCliente = (id) =>{
+    debugger
+    navigator(`/editCliente/${id}`)
+  }
+  
   const buscarClienteByDescripcion = (data) => {
     if (!data.ruc && !data.razonSocial) {
       return
@@ -124,8 +129,8 @@ function ClienteComponent() {
                 <td>{cliente.razonSocial}</td>
                 <td>{cliente.direccion}</td>
                 <td>
-                  <Button onClick={() => seleccionarCliente(cliente)}>
-                    <FaCircleNotch />
+                  <Button onClick={() => editCliente(cliente.id)}>
+                    <FaPencilAlt />
                   </Button>
                 </td>
               </tr>
