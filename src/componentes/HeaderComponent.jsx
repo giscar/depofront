@@ -21,6 +21,14 @@ const HeaderComponent = () => {
     navigator("/clientes")
   }
 
+  const accederMontacargas = () =>{
+    navigator("/montacargas")
+  }
+
+  const accederOperadores = () =>{
+    navigator("/operadores")
+  }
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
       <Container>
@@ -28,9 +36,9 @@ const HeaderComponent = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#features">Montacargas</Nav.Link>
-            <Nav.Link href="#pricing">Operadores</Nav.Link>
-            <Nav.Link href="#pricing" onClick={() => accederClientes() }>Clientes</Nav.Link>
+            <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
+            <Nav.Link onClick={() => accederOperadores() }>Operadores</Nav.Link>
+            <Nav.Link onClick={() => accederClientes() }>Clientes</Nav.Link>
             
             <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Nueva</NavDropdown.Item>

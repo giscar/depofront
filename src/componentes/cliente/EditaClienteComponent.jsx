@@ -43,7 +43,7 @@ function EditaClienteComponent() {
     navigator("/clientes")
   }
 
-  const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
+  const { handleSubmit, handleChange, values, errors } = useFormik({
     validationSchema: yup.object({
       ruc: yup.number("El RUC debe ser númerico").required("El numero de RUC es requerido").test('eq', 'Debe ingresar 11 números', val => val.toString().length === 11),
       razonSocial: yup.string().required("La razon social es requerido"),
