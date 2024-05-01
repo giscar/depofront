@@ -95,7 +95,7 @@ function NuevoClienteComponent() {
 
           </Row>
           <Form.Group as={Col} md="4">
-            <Button type="bottom" className='ms-2' variant="primary">Guardar</Button>
+            <Button type="submit" className='ms-2' variant="primary">Guardar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset()} variant="warning">Limpiar
             </Button>
           </Form.Group>
