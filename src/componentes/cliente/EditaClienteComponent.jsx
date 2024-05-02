@@ -97,13 +97,14 @@ function EditaClienteComponent() {
             <Form.Group as={Col} md="8" controlId="validationFormik03">
               <Form.Label>Razon Social</Form.Label>
               <Form.Control
+                className='text-uppercase'
                 as="textarea"
                 rows={3}
                 name="direccion"
                 value={values.direccion}
                 onChange={handleChange}
                 isInvalid={!!errors.direccion}
-                style={{ textTransform: 'uppercase' }}
+                
                 autoComplete='off'
               />
               <Form.Control.Feedback type="invalid">

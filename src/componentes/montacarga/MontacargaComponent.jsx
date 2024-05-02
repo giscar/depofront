@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { montacargaForAll } from '../../service/FacturaService';
 import { Button } from 'react-bootstrap';
@@ -26,7 +26,9 @@ const MontacargaComponent = () => {
       })
   }
 
-  buscarMontacarga();
+  useEffect(()=>{
+    buscarMontacarga();
+  } , [])
 
   return (
     <>

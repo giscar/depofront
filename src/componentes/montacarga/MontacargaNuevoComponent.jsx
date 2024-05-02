@@ -17,6 +17,10 @@ const MontacargaNuevoComponent = () => {
 
   const saveMontacarga = (data) => {
     debugger
+    data.serie = data.serie.toUpperCase();
+    data.nombre = data.nombre.toUpperCase();
+    data.tonelaje = data.tonelaje.toUpperCase();
+    data.tipoServicio = data.tipoServicio.toUpperCase();
     montacargaSave(data).catch(error => {
       console.error(error)
     })
@@ -52,6 +56,7 @@ const MontacargaNuevoComponent = () => {
               value={values.nombre}
               onChange={handleChange}
               isInvalid={!!errors.nombre}
+              style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
             <Form.Control.Feedback type="invalid">
