@@ -7,7 +7,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 const MontacargaNuevoComponent = () => {
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
-    autoClose: 3000,
+    autoClose: 1000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -21,6 +21,7 @@ const MontacargaNuevoComponent = () => {
     data.nombre = data.nombre.toUpperCase();
     data.tonelaje = data.tonelaje.toUpperCase();
     data.tipoServicio = data.tipoServicio.toUpperCase();
+    data.estado = "1";
     montacargaSave(data).catch(error => {
       console.error(error)
     })

@@ -1,34 +1,80 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { montacargaForAll } from '../../service/FacturaService';
-import { Button } from 'react-bootstrap';
-import { FaPencilAlt } from 'react-icons/fa';
+import { montacargaEdit, montacargaForAll, montacargaForId, montacargasActivo } from '../../service/FacturaService';
+import { Button, Modal } from 'react-bootstrap';
+import { FaPencilAlt, FaWindowClose } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const MontacargaComponent = () => {
 
-  const navigator = useNavigate();
+  const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+  });
+
+  const [show, setShow] = useState(false);
+  const [montacarga, setMontacarga] = useState([]);
   const [montacargas, setMontacargas] = useState([])
+  const [control, setControl] = useState(false)
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handleMontacarga = (id) => {
+    montacargaForId(id).then((response) => {
+      setMontacarga(response.data);
+      console.log(montacarga)
+      setShow(true);
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  const inactivaMontacarga = () => {
+    montacarga.estado = 0;
+    setControl(false)
+    montacargaEdit(montacarga).catch(error => {
+      console.error(error)
+    })
+    setShow(false);
+    buscarMontacarga();
+    setControl(!control)
+    notify();
+  }
+
+  const navigator = useNavigate();
+  
 
   const irMontacargaNuevo = () =>{
     navigator("/montacargasNuevo")
   }
 
   const irMontacargaEdit = (id) =>{
-    debugger
     navigator(`/montacargasEdit/${id}`)
   }
 
   const buscarMontacarga= () => {
-      montacargaForAll().then((response) => {
+      montacargasActivo().then((response) => {
         setMontacargas(response.data);
       }).catch(error => {
         console.error(error)
       })
+      //window.location.reload();
   }
 
   useEffect(()=>{
+    console.log("useEffect")
     buscarMontacarga();
-  } , [])
+  } , [montacarga])
+
+  useEffect(()=>{
+    console.log("useEffect2")
+    buscarMontacarga();
+  } , [control])
 
   return (
     <>
@@ -59,8 +105,11 @@ const MontacargaComponent = () => {
                 <td>{montacarga.tonelaje}</td>
                 <td>{montacarga.tipoServicio}</td>
                 <td>
-                  <Button onClick={() => irMontacargaEdit(cliente.id)}>
+                  <Button className='m-2' onClick={() => irMontacargaEdit(montacarga.id)}>
                     <FaPencilAlt />
+                  </Button>
+                  <Button className='error' variant="danger" onClick={() => handleMontacarga(montacarga.id)}>
+                    <FaWindowClose />
                   </Button>
                 </td>
               </tr>
@@ -69,6 +118,21 @@ const MontacargaComponent = () => {
         </tbody>
       </table>
       </div>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Esta seguro de eliminar el registro!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button variant="primary" onClick={() => inactivaMontacarga()}>
+            Eliminar
+          </Button>
+        </Modal.Footer>
+      </Modal>
       
     </>
   )

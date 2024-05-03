@@ -14,7 +14,7 @@ function EditaClienteComponent() {
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
-    autoClose: 3000,
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -104,7 +104,7 @@ function EditaClienteComponent() {
                 value={values.direccion}
                 onChange={handleChange}
                 isInvalid={!!errors.direccion}
-                
+                style={{ textTransform: 'uppercase' }}
                 autoComplete='off'
               />
               <Form.Control.Feedback type="invalid">
