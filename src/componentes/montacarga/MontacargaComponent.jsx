@@ -48,11 +48,11 @@ const MontacargaComponent = () => {
   }
 
   const irMontacargaNuevo = () => {
-    navigator("/montacargasNuevo")
+    navigator("/montacargaNuevo")
   }
 
   const irMontacargaEdit = (id) => {
-    navigator(`/montacargasEdit/${id}`)
+    navigator(`/montacargaEdit/${id}`)
   }
 
   const buscarMontacarga = () => {

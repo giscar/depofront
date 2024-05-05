@@ -35,11 +35,11 @@ function App() {
             <Route path='/editCliente/:id' element={<EditaClienteComponent />}></Route>
             <Route path='/addServicio' element={<ServicioComponent />}></Route>
             <Route path='/montacargas' element={<MontacargaComponent />}></Route>
-            <Route path='/montacargasNuevo' element={<MontacargaNuevoComponent />}></Route>
-            <Route path='/montacargasEdit/:id' element={<MontacargaEditComponennt />}></Route>
+            <Route path='/montacargaNuevo' element={<MontacargaNuevoComponent />}></Route>
+            <Route path='/montacargaEdit/:id' element={<MontacargaEditComponennt />}></Route>
             <Route path='/operadores' element={<OperadorComponent />}></Route>
-            <Route path='/operadoresNuevo' element={<OperadorNuevoComponent />}></Route>
-            <Route path='/operadoresEdit/:id' element={<OperadorEditComponent />}></Route>
+            <Route path='/operadorNuevo' element={<OperadorNuevoComponent />}></Route>
+            <Route path='/operadorEdit/:id' element={<OperadorEditComponent />}></Route>
           </Routes>
           <ToastContainer />
       </BrowserRouter>
