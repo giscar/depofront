@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { montacargaEdit, montacargaForAll, montacargaForId, montacargasActivo } from '../../service/FacturaService';
+import { montacargaEdit, montacargaForId, montacargasActivo } from '../../service/FacturaService';
 import { Button, Modal } from 'react-bootstrap';
 import { FaPencilAlt, FaWindowClose } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 const MontacargaComponent = () => {
+
+  const navigator = useNavigate();
 
   const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
     position: "top-right",
@@ -41,79 +43,75 @@ const MontacargaComponent = () => {
     setShow(false);
     notify();
     setTimeout(() => {
-      buscarMontacarga();
-    })
+      buscarMontacarga()
+    }, 1000);
   }
 
-  const navigator = useNavigate();
-  
-
-  const irMontacargaNuevo = () =>{
+  const irMontacargaNuevo = () => {
     navigator("/montacargasNuevo")
   }
 
-  const irMontacargaEdit = (id) =>{
+  const irMontacargaEdit = (id) => {
     navigator(`/montacargasEdit/${id}`)
   }
 
-  const buscarMontacarga= () => {
+  const buscarMontacarga = () => {
     debugger
     console.log("entro buscarMontacarga")
-      montacargasActivo().then((response) => {
-        setMontacargas(response.data);
-      }).catch(error => {
-        console.error(error)
-      })
-      //window.location.reload();
+    montacargasActivo().then((response) => {
+      setMontacargas(response.data);
+    }).catch(error => {
+      console.error(error)
+    })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("useEffect")
     buscarMontacarga();
-  } , [montacarga])
+  }, [montacarga])
 
 
   return (
     <>
-          
-        <br/>
-        <Button type="bottom" className='ms-2' variant="primary" onClick={() => irMontacargaNuevo()}>Nuevo</Button>
-      
+
+      <br />
+      <Button type="bottom" className='ms-2' variant="primary" onClick={() => irMontacargaNuevo()}>Nuevo</Button>
+
 
 
       <br />
       <div className='container tableFixHead'>
-      <table className='table table-striped table-bordered table-hover' responsive="md">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Serie</th>
-            <th>Tonelaje</th>
-            <th>Tipo de Servicio</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            montacargas.map(montacarga =>
-              <tr key={montacarga.id}>
-                <td>{montacarga.nombre}</td>
-                <td>{montacarga.serie}</td>
-                <td>{montacarga.tonelaje}</td>
-                <td>{montacarga.tipoServicio}</td>
-                <td>
-                  <Button className='m-2' onClick={() => irMontacargaEdit(montacarga.id)}>
-                    <FaPencilAlt />
-                  </Button>
-                  <Button className='error' variant="danger" onClick={() => handleMontacarga(montacarga.id)}>
-                    <FaWindowClose />
-                  </Button>
-                </td>
-              </tr>
-            )
-          }
-        </tbody>
-      </table>
+        <table className='table table-striped table-bordered table-hover' responsive="md">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Serie</th>
+              <th>Tonelaje</th>
+              <th>Tipo de Servicio</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              montacargas.map(montacarga =>
+                <tr key={montacarga.id}>
+                  <td>{montacarga.nombre}</td>
+                  <td>{montacarga.serie}</td>
+                  <td>{montacarga.tonelaje}</td>
+                  <td>{montacarga.tipoServicio}</td>
+                  <td>
+                    <Button className='m-2' onClick={() => irMontacargaEdit(montacarga.id)}>
+                      <FaPencilAlt />
+                    </Button>
+                    <Button className='error' variant="danger" onClick={() => handleMontacarga(montacarga.id)}>
+                      <FaWindowClose />
+                    </Button>
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -130,7 +128,7 @@ const MontacargaComponent = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      
+
     </>
   )
 }

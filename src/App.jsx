@@ -2,7 +2,6 @@
 import './App.css'
 import FacturaComponent from './componentes/factura/FacturaComponent'
 import FindFacturaComponent from './componentes/factura/FindFacturaComponent'
-import FooterComponent from './componentes/FooterComponent'
 import HeaderComponent from './componentes/HeaderComponent'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import ServicioComponent from './componentes/servicio/ServicioComponent'
@@ -37,10 +36,10 @@ function App() {
             <Route path='/addServicio' element={<ServicioComponent />}></Route>
             <Route path='/montacargas' element={<MontacargaComponent />}></Route>
             <Route path='/montacargasNuevo' element={<MontacargaNuevoComponent />}></Route>
-            <Route path='/montacargasEdit' element={<MontacargaEditComponennt />}></Route>
+            <Route path='/montacargasEdit/:id' element={<MontacargaEditComponennt />}></Route>
             <Route path='/operadores' element={<OperadorComponent />}></Route>
             <Route path='/operadoresNuevo' element={<OperadorNuevoComponent />}></Route>
-            <Route path='/operadoresEdit' element={<OperadorEditComponent />}></Route>
+            <Route path='/operadoresEdit/:id' element={<OperadorEditComponent />}></Route>
           </Routes>
           <ToastContainer />
       </BrowserRouter>

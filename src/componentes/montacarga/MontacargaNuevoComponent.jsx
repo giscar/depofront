@@ -16,7 +16,6 @@ const MontacargaNuevoComponent = () => {
     });
 
   const saveMontacarga = (data) => {
-    debugger
     data.serie = data.serie.toUpperCase();
     data.nombre = data.nombre.toUpperCase();
     data.tonelaje = data.tonelaje.toUpperCase();

@@ -15,7 +15,6 @@ function ClienteComponent() {
   const navigator = useNavigate();
 
   const [clientes, setClientes] = useState([])
-  const [ruc, setRuc] = useState([])
 
   const accederNuevoCliente = () =>{
     navigator("/nuevoCliente")
@@ -43,15 +42,7 @@ function ClienteComponent() {
       })
     }
   }
-
-  const limpiar = (data) => {
-    debugger;
-    console.log(Form.value)
-    setClientes([])
-    setRazonSocial("")
-    setRuc("")
-  }
-  //
+  
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
       ruc: yup.number(),
