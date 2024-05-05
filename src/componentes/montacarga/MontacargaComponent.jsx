@@ -20,7 +20,6 @@ const MontacargaComponent = () => {
   const [show, setShow] = useState(false);
   const [montacarga, setMontacarga] = useState([]);
   const [montacargas, setMontacargas] = useState([])
-  const [control, setControl] = useState(false)
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -36,14 +35,14 @@ const MontacargaComponent = () => {
 
   const inactivaMontacarga = () => {
     montacarga.estado = 0;
-    setControl(false)
     montacargaEdit(montacarga).catch(error => {
       console.error(error)
     })
     setShow(false);
-    buscarMontacarga();
-    setControl(!control)
     notify();
+    setTimeout(() => {
+      buscarMontacarga();
+    })
   }
 
   const navigator = useNavigate();
@@ -58,6 +57,8 @@ const MontacargaComponent = () => {
   }
 
   const buscarMontacarga= () => {
+    debugger
+    console.log("entro buscarMontacarga")
       montacargasActivo().then((response) => {
         setMontacargas(response.data);
       }).catch(error => {
@@ -71,10 +72,6 @@ const MontacargaComponent = () => {
     buscarMontacarga();
   } , [montacarga])
 
-  useEffect(()=>{
-    console.log("useEffect2")
-    buscarMontacarga();
-  } , [control])
 
   return (
     <>
