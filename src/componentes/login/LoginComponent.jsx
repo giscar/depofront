@@ -27,7 +27,7 @@ const LoginComponent = () => {
   const navigator = useNavigate();
 
   const acceder = () =>{
-    navigator("/addServicio")
+    navigator("/servicioNuevo")
   }
 
 

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { Formik, useFormik } from 'formik';
-import { clienteForRuc } from '../../service/FacturaService';
+import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
 import { FaCircleNotch } from 'react-icons/fa';
 
 const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {

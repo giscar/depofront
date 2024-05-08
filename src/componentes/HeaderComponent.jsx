@@ -14,7 +14,7 @@ const HeaderComponent = () => {
   }
 
   const accederServicio = () =>{
-    navigator("/addServicio")
+    navigator("/servicioNuevo")
   }
 
   const accederClientes = () =>{

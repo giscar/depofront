@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 
-const ServicioComponent = () => {
+const ServicioNuevoComponent = () => {
 
     const [codServicio, setCodServicio] = useState('')
     const [ruc, setRuc] = useState('')
@@ -38,6 +38,7 @@ const ServicioComponent = () => {
 
     function saveOrUpdateServicio(){
         validateForm()
+        
     }
 
     function validateForm(){
@@ -126,25 +127,25 @@ const ServicioComponent = () => {
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>horaSalidaLocal:</label>
-                            <input type='text' placeholder='Ingrese el horaSalidaLocal' name='txtHoraSalidaLocal' value={horaSalidaLocal} 
+                            <input type='datetime-local' placeholder='Ingrese el horaSalidaLocal' name='txtHoraSalidaLocal' value={horaSalidaLocal} 
                                 className={`form-control ${errors.horaSalidaLocal? 'is-invalid' : ''}`} onChange={(e) => {setHoraSalidaLocal(e.target.value)}}></input>
                             {errors.horaSalidaLocal && <div className='invalid-feedback'>{errors.horaSalidaLocal}</div>}
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>horaInicioServicio:</label>
-                            <input type='text' placeholder='Ingrese el horaInicioServicio' name='txtHoraInicioServicio' value={horaInicioServicio} 
+                            <input type='datetime-local' placeholder='Ingrese el horaInicioServicio' name='txtHoraInicioServicio' value={horaInicioServicio} 
                                 className={`form-control ${errors.horaInicioServicio? 'is-invalid' : ''}`} onChange={(e) => {setHoraInicioServicio(e.target.value)}}></input>
                             {errors.horaInicioServicio && <div className='invalid-feedback'>{errors.horaInicioServicio}</div>}
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>horaFinServicio:</label>
-                            <input type='text' placeholder='Ingrese el horaFinServicio' name='txtHoraFinServicio' value={horaFinServicio} 
+                            <input type='datetime-local' placeholder='Ingrese el horaFinServicio' name='txtHoraFinServicio' value={horaFinServicio} 
                                 className={`form-control ${errors.horaFinServicio? 'is-invalid' : ''}`} onChange={(e) => {setHoraFinServicio(e.target.value)}}></input>
                             {errors.horaFinServicio && <div className='invalid-feedback'>{errors.horaFinServicio}</div>}
                         </div>
                         <div className='form-group mb-2'>
                             <label className='form-label'>horaRetornoLocal:</label>
-                            <input type='text' placeholder='Ingrese el horaRetornoLocal' name='txtHoraRetornoLocal' value={horaRetornoLocal} 
+                            <input type='datetime-local' placeholder='Ingrese el horaRetornoLocal' name='txtHoraRetornoLocal' value={horaRetornoLocal} 
                                 className={`form-control ${errors.horaRetornoLocal? 'is-invalid' : ''}`} onChange={(e) => {setHoraRetornoLocal(e.target.value)}}></input>
                             {errors.horaRetornoLocal && <div className='invalid-feedback'>{errors.horaRetornoLocal}</div>}
                         </div>
@@ -160,4 +161,4 @@ const ServicioComponent = () => {
   )
 }
 
-export default ServicioComponent
+export default ServicioNuevoComponent

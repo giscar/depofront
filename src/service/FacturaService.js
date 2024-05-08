@@ -12,6 +12,9 @@ const REST_API_BASE_URL_MONTACARGA = "http://localhost:8080/montacarga"
 const REST_API_BASE_URL_OPERADOR = "http://localhost:8080/operador"
 //const REST_API_BASE_URL_OPERADOR = "http://143.198.244.41:8080/operador"
 
+const REST_API_BASE_URL_SERVICIO = "http://localhost:8080/servicio"
+//const REST_API_BASE_URL_OPERADOR = "http://143.198.244.41:8080/servicio"
+
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 
 export const nuevaFactura = (factura) => axios.post(REST_API_BASE_URL_FACTURA, factura);
@@ -44,8 +47,18 @@ export const operadorSave = (operador) => axios.post(REST_API_BASE_URL_OPERADOR,
 
 export const operadorEdit = (operador) => axios.put(REST_API_BASE_URL_OPERADOR, operador);
 
-export const operadorForId = (operadorId) => axios.get(REST_API_BASE_URL_OPERADOR+"?id="+operadorId);
+export const operadorForId = (id) => axios.get(REST_API_BASE_URL_OPERADOR+"?id="+id);
 
 export const operadorForAll = () => axios.get(REST_API_BASE_URL_OPERADOR+"/all");
 
 export const operadorActivo = (estado) => axios.get(REST_API_BASE_URL_OPERADOR+"/estado?estado="+estado);
+
+export const servicioSave = (servicio) => axios.post(REST_API_BASE_URL_SERVICIO, servicio);
+
+export const servicioEdit = (servicio) => axios.put(REST_API_BASE_URL_SERVICIO, servicio);
+
+export const servicioForId = (id) => axios.get(REST_API_BASE_URL_SERVICIO+"?id="+id);
+
+export const servicioForAll = () => axios.get(REST_API_BASE_URL_SERVICIO+"/all");
+
+export const servicioActivo = (estado) => axios.get(REST_API_BASE_URL_SERVICIO+"/estado?estado="+estado);
