@@ -17,6 +17,8 @@ import OperadorComponent from './componentes/operador/OperadorComponent'
 import OperadorNuevoComponent from './componentes/operador/OperadorNuevoComponent'
 import OperadorEditComponent from './componentes/operador/OperadorEditComponent'
 import ServicioNuevoComponent from './componentes/servicio/ServicioNuevoComponent'
+import ServicioComponent from './componentes/servicio/ServicioComponent'
+import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
 
 function App() {
 
@@ -26,20 +28,22 @@ function App() {
         <HeaderComponent />
           <br/>
           <Routes>
-            <Route path='/' element={<ServicioNuevoComponent />}></Route>
+            <Route path='/' element={<ServicioComponent />}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>
             <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>
             <Route path='/editCliente/:id' element={<EditaClienteComponent />}></Route>
-            <Route path='/servicioNuevo' element={<ServicioNuevoComponent />}></Route>
             <Route path='/montacargas' element={<MontacargaComponent />}></Route>
             <Route path='/montacargaNuevo' element={<MontacargaNuevoComponent />}></Route>
             <Route path='/montacargaEdit/:id' element={<MontacargaEditComponennt />}></Route>
             <Route path='/operadores' element={<OperadorComponent />}></Route>
             <Route path='/operadorNuevo' element={<OperadorNuevoComponent />}></Route>
             <Route path='/operadorEdit/:id' element={<OperadorEditComponent />}></Route>
+            <Route path='/servicioNuevo' element={<ServicioNuevoComponent />}></Route>
+            <Route path='/servicioEdit/:id' element={<ServicioEditComponent />}></Route>
+            <Route path='/servicios' element={<ServicioComponent />}></Route>
           </Routes>
           <ToastContainer />
       </BrowserRouter>

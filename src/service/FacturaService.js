@@ -62,3 +62,5 @@ export const servicioForId = (id) => axios.get(REST_API_BASE_URL_SERVICIO+"?id="
 export const servicioForAll = () => axios.get(REST_API_BASE_URL_SERVICIO+"/all");
 
 export const servicioActivo = (estado) => axios.get(REST_API_BASE_URL_SERVICIO+"/estado?estado="+estado);
+
+export const buscarServicioByDatos = (ruc, codServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/busqueda?codServicio="+codServicio+"&ruc="+ruc);

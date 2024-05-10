@@ -29,7 +29,7 @@ function ClienteComponent() {
       return
     }
     if (data.razonSocial) {
-      clienteForDescripcion(data.razonSocial).then((response) => {
+      clienteForServicvio(data.razonSocial).then((response) => {
         setClientes(response.data);
       }).catch(error => {
         console.error(error)
@@ -129,7 +129,6 @@ function ClienteComponent() {
         </tbody>
       </table>
       </div>
-      
     </>
   );
 }
