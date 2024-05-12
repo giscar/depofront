@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import * as yup from 'yup';
-import { useFormik } from 'formik';
+import { useFormik, useFormikContext } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { servicioSave } from '../../service/FacturaService';
@@ -9,6 +9,9 @@ import { servicioSave } from '../../service/FacturaService';
 const ServicioNuevoComponent = () => {
 
     const [cliente, setCliente] = useState([])
+    const [ruc, setRuc] = useState('')
+    const [razonSocial, setRazonSocial] = useState('')
+    const [direccion, setDireccion] = useState('')
 
     const notify = () => toast.info('Se han registrado los cambios correctamente', {
         position: "top-right",
@@ -21,7 +24,6 @@ const ServicioNuevoComponent = () => {
         });
 
     const saveServicio= (data) => {
-        debugger;
         data.codServicio = data.codServicio.toUpperCase();
         data.ruc = data.ruc.toUpperCase();
         data.razonSocial = data.razonSocial.toUpperCase();
@@ -43,6 +45,11 @@ const ServicioNuevoComponent = () => {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    //const { values } = useFormikContext();
+
+    //console.log("state: ", ruc);
+
 
     const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
         validationSchema: yup.object({
@@ -66,14 +73,32 @@ const ServicioNuevoComponent = () => {
             horaRetornoLocal: ''
         },
         onSubmit: saveServicio,
-      })
+      });
+
+      useEffect(() => {
+
+        //console.log(values.ruc);
+        //console.log(cliente);
+        //values.ruc = cliente.ruc;
+        //values.razonSocial = cliente.razonSocial;
+        //if(ruc){
+          setRuc(cliente.ruc)
+          setRazonSocial(cliente.razonSocial)
+          setDireccion(cliente.direccion)
+          values.ruc = cliente.ruc
+          values.razonSocial = cliente.razonSocial
+          values.direccion = cliente.direccion
+       // }
+        
+
+  }, [cliente])
 
   return (
     <>
       <Form noValidate onSubmit={handleSubmit}>
         <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="validationFormik01">
-            <Form.Label>Codigo del Servicicio</Form.Label>
+            <Form.Label>Codigo del Servicio</Form.Label>
             <Form.Control
               type="text"
               name="codServicio"
@@ -92,6 +117,7 @@ const ServicioNuevoComponent = () => {
             <Form.Control
               type="text"
               name="ruc"
+              onClick={handleShow} readOnly
               value={values.ruc}
               onChange={handleChange}
               isInvalid={!!errors.ruc}
@@ -107,7 +133,8 @@ const ServicioNuevoComponent = () => {
             <Form.Control
               type="text"
               name="razonSocial"
-              value={values.razonSocialrazonSocial}
+              disabled
+              value={values.razonSocial}
               onChange={handleChange}
               isInvalid={!!errors.razonSocial}
               style={{ textTransform: 'uppercase' }}
@@ -122,6 +149,7 @@ const ServicioNuevoComponent = () => {
             <Form.Control
               type="text"
               name="direccion"
+              disabled
               value={values.direccion}
               onChange={handleChange}
               isInvalid={!!errors.direccion}
@@ -150,7 +178,7 @@ const ServicioNuevoComponent = () => {
           <Form.Group as={Col} md="4" controlId="validationFormik06">
             <Form.Label>Hora de inicio del Servicio</Form.Label>
             <Form.Control
-              type="text"
+              type="datetime-local"
               name="horaInicioServicio"
               value={values.horaInicioServicio}
               onChange={handleChange}

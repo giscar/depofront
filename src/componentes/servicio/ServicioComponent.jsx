@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import { buscarServicioByDatos } from '../../service/FacturaService';
+import { FaPencilAlt } from 'react-icons/fa';
 
 const ServicioComponent = () => {
     const notify = () => toast.warning('No se han ingresado los parametros de búsqueda', {
@@ -25,7 +26,7 @@ const ServicioComponent = () => {
         navigator("/servicioNuevo")
     }
 
-    const editCliente = (id) => {
+    const editServicio = (id) => {
         navigator(`/servicioEdit/${id}`)
     }
 
@@ -121,6 +122,7 @@ const ServicioComponent = () => {
         {
           servicios.map(servicio =>
             <tr key={servicio.id}>
+              <td>{servicio.codServicio}</td>
               <td>{servicio.ruc}</td>
               <td>{servicio.razonSocial}</td>
               <td>{servicio.horaSalidaLocal}</td>
@@ -128,7 +130,7 @@ const ServicioComponent = () => {
               <td>{servicio.horaFinServicio}</td>
               <td>{servicio.horaRetornoLocal}</td>
               <td>
-                <Button onClick={() => editCliente(cliente.id)}>
+                <Button onClick={() => editServicio(cliente.id)}>
                   <FaPencilAlt />
                 </Button>
               </td>

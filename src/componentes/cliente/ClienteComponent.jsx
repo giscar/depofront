@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
+import { clienteForDescripcion, clienteForRuc, clienteForRucOrName } from '../../service/FacturaService';
 import { useState } from 'react';
 import { FaPencilAlt } from 'react-icons/fa';
 import './ClienteComponent.css';
@@ -16,15 +16,15 @@ function ClienteComponent() {
 
   const [clientes, setClientes] = useState([])
 
-  const accederNuevoCliente = () =>{
+  const accederNuevoCliente = () => {
     navigator("/nuevoCliente")
   }
 
-  const editCliente = (id) =>{
+  const editCliente = (id) => {
     navigator(`/editCliente/${id}`)
   }
-  
-  const buscarClienteByDescripcion = (data) => {
+
+  /*const buscarClienteByDescripcion = (data) => {
     if (!data.ruc && !data.razonSocial) {
       return
     }
@@ -41,8 +41,20 @@ function ClienteComponent() {
         console.error(error)
       })
     }
+  }*/
+
+  const buscarClienteByDescripcion = (data) => {
+    debugger
+    if (!data.ruc && !data.razonSocial) {
+      return
+    }
+    clienteForRucOrName(data.ruc, data.razonSocial).then((response) => {
+      setClientes(response.data);
+    }).catch(error => {
+      console.error(error)
+    })
   }
-  
+
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
       ruc: yup.number(),
@@ -91,43 +103,43 @@ function ClienteComponent() {
           <Form.Group as={Col} md="4">
             <Button type="submit" variant="info">Buscar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset(setClientes([]))}
-          variant="warning">Limpiar
-        </Button>
+              variant="warning">Limpiar
+            </Button>
           </Form.Group>
         </Row>
-        <br/>
+        <br />
         <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoCliente()}>Nuevo</Button>
       </Form>
 
 
       <br />
       <div className='container tableFixHead'>
-      <table className='table table-striped table-bordered table-hover' responsive="md">
-        <thead>
-          <tr>
-            <th>RUC</th>
-            <th>Razón Social</th>
-            <th>Dirección</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            clientes.map(cliente =>
-              <tr key={cliente.id}>
-                <td>{cliente.ruc}</td>
-                <td>{cliente.razonSocial}</td>
-                <td>{cliente.direccion}</td>
-                <td>
-                  <Button onClick={() => editCliente(cliente.id)}>
-                    <FaPencilAlt />
-                  </Button>
-                </td>
-              </tr>
-            )
-          }
-        </tbody>
-      </table>
+        <table className='table table-striped table-bordered table-hover' responsive="md">
+          <thead>
+            <tr>
+              <th>RUC</th>
+              <th>Razón Social</th>
+              <th>Dirección</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              clientes.map(cliente =>
+                <tr key={cliente.id}>
+                  <td>{cliente.ruc}</td>
+                  <td>{cliente.razonSocial}</td>
+                  <td>{cliente.direccion}</td>
+                  <td>
+                    <Button onClick={() => editCliente(cliente.id)}>
+                      <FaPencilAlt />
+                    </Button>
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
       </div>
     </>
   );

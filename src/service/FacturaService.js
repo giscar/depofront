@@ -27,6 +27,8 @@ export const clienteForRuc = (clienteRuc) => axios.get(REST_API_BASE_URL_CLIENTE
 
 export const clienteForDescripcion = (clienteDescripcion) => axios.get(REST_API_BASE_URL_CLIENTE+"/descrip?descripcion="+clienteDescripcion);
 
+export const clienteForRucOrName = (ruc, razonSocial) => axios.get(REST_API_BASE_URL_CLIENTE+"/busqueda?ruc="+ruc+"&razonSocial="+razonSocial);
+
 export const nuevoCliente = (cliente) => axios.post(REST_API_BASE_URL_CLIENTE, cliente);
 
 export const editaCliente = (cliente) => axios.put(REST_API_BASE_URL_CLIENTE, cliente);
