@@ -56,7 +56,6 @@ const OperadorComponent = () => {
   }
 
   const buscarOperador = () => {
-    debugger
     console.log("entro buscarOperador")
     operadorActivo().then((response) => {
       setOperadores(response.data);
