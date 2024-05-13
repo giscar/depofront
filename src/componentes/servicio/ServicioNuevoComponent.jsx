@@ -56,7 +56,10 @@ const ServicioNuevoComponent = () => {
       horaSalidaLocal: yup.string().required(),
       horaInicioServicio: yup.string().required(),
       horaFinServicio: yup.string().required(),
-      horaRetornoLocal: yup.string().required()
+      horaRetornoLocal: yup.string().required(),
+      operador: yup.string().required(),
+      montacarga: yup.string().required(),
+      
     }),
     initialValues: {
       codServicio: '',
@@ -66,7 +69,9 @@ const ServicioNuevoComponent = () => {
       horaSalidaLocal: '',
       horaInicioServicio: '',
       horaFinServicio: '',
-      horaRetornoLocal: ''
+      horaRetornoLocal: '',
+      operador: '',
+      montacarga: ''
     },
     onSubmit: saveServicio,
   });
@@ -165,25 +170,34 @@ const ServicioNuevoComponent = () => {
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Operador</Form.Label>
-            <Form.Select aria-label="Selecciona el operador">
+            <Form.Select 
+              name="operador"
+              value={values.operador}
+              onChange={handleChange}
+              isInvalid={!!errors.operador}
+              >
               <option>Seleccione</option>
               {
                 operadores.map(operador =>
-                  <option value={operador.id}>{operador.nombre}</option>
+                  <option key={operador.id} value={operador.id}>{operador.nombre}</option>
                 )
               }
             </Form.Select>
             <Form.Control.Feedback type="invalid">
-              {errors.direccion}
+              {errors.operador}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Vehículo</Form.Label>
-            <Form.Select aria-label="Selecciona el vehículo">
+            <Form.Select  
+            name="montacarga"
+              value={values.montacarga}
+              onChange={handleChange}
+              isInvalid={!!errors.montacarga}>
               <option>Seleccione</option>
               {
                 montacargas.map(montacarga =>
-                  <option value={montacarga.id}>{montacarga.nombre}</option>
+                  <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
                 )
               }
             </Form.Select>
