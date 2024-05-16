@@ -26,6 +26,7 @@ const ServicioNuevoComponent = () => {
   });
 
   const saveServicio = (data) => {
+    debugger
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -34,6 +35,8 @@ const ServicioNuevoComponent = () => {
     data.horaInicioServicio = data.horaInicioServicio.toUpperCase();
     data.horaFinServicio = data.horaFinServicio.toUpperCase();
     data.horaRetornoLocal = data.horaRetornoLocal.toUpperCase();
+    data.operadorId = data.operadorId;
+    data.montacargaId = data.montacargaId;
     data.estado = "1";
     servicioSave(data).catch(error => {
       console.error(error)
@@ -57,8 +60,8 @@ const ServicioNuevoComponent = () => {
       horaInicioServicio: yup.string().required(),
       horaFinServicio: yup.string().required(),
       horaRetornoLocal: yup.string().required(),
-      operador: yup.string().required(),
-      montacarga: yup.string().required(),
+      operadorId: yup.string().required(),
+      montacargaId: yup.string().required(),
       
     }),
     initialValues: {
@@ -70,8 +73,8 @@ const ServicioNuevoComponent = () => {
       horaInicioServicio: '',
       horaFinServicio: '',
       horaRetornoLocal: '',
-      operador: '',
-      montacarga: ''
+      operadorId: '',
+      montacargaId: ''
     },
     onSubmit: saveServicio,
   });
@@ -85,7 +88,7 @@ const ServicioNuevoComponent = () => {
   }, [])
 
   useEffect(() => {
-    montacargasActivo().then((response) => {
+    montacargasActivo(1).then((response) => {
       setMontacargas(response.data);
     }).catch(error => {
       console.log(error);
@@ -171,10 +174,10 @@ const ServicioNuevoComponent = () => {
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Operador</Form.Label>
             <Form.Select 
-              name="operador"
-              value={values.operador}
+              name="operadorId"
+              value={values.operadorId}
               onChange={handleChange}
-              isInvalid={!!errors.operador}
+              isInvalid={!!errors.operadorId}
               >
               <option>Seleccione</option>
               {
@@ -184,16 +187,16 @@ const ServicioNuevoComponent = () => {
               }
             </Form.Select>
             <Form.Control.Feedback type="invalid">
-              {errors.operador}
+              {errors.operadorId}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Vehículo</Form.Label>
             <Form.Select  
-            name="montacarga"
-              value={values.montacarga}
+            name="montacargaId"
+              value={values.montacargaId}
               onChange={handleChange}
-              isInvalid={!!errors.montacarga}>
+              isInvalid={!!errors.montacargaId}>
               <option>Seleccione</option>
               {
                 montacargas.map(montacarga =>
@@ -202,7 +205,7 @@ const ServicioNuevoComponent = () => {
               }
             </Form.Select>
             <Form.Control.Feedback type="invalid">
-              {errors.direccion}
+              {errors.montacargaId}
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="4" controlId="validationFormik05">

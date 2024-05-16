@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { buscarServicioByDatos } from '../../service/FacturaService';
+import { buscarServicioByDatos, buscarServicioByDatosAggregate } from '../../service/FacturaService';
 import { FaPencilAlt } from 'react-icons/fa';
 
 const ServicioComponent = () => {
@@ -38,7 +38,8 @@ const ServicioComponent = () => {
         if (!data.codServicio && !data.ruc) {
           return
       }
-        buscarServicioByDatos(data.ruc, data.codServicio).then((response) => {
+        buscarServicioByDatosAggregate(data.ruc, data.codServicio).then((response) => {
+          debugger
             setServicios(response.data);
         }).catch(error => {
             console.error(error)
