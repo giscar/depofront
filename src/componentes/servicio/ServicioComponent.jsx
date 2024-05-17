@@ -116,6 +116,8 @@ const ServicioComponent = () => {
           <th>Inicio servicio</th>
           <th>Fin servicio</th>
           <th>Retorno local</th>
+          <th>Operador</th>
+          <th>Montacarga</th>
           <th></th>
         </tr>
       </thead>
@@ -125,11 +127,13 @@ const ServicioComponent = () => {
             <tr key={servicio.id}>
               <td>{servicio.codServicio}</td>
               <td>{servicio.ruc}</td>
-              <td>{servicio.razonSocial}</td>
+              <td>{servicio.cliente[0].razonSocial}</td>
               <td>{servicio.horaSalidaLocal}</td>
               <td>{servicio.horaInicioServicio}</td>
               <td>{servicio.horaFinServicio}</td>
               <td>{servicio.horaRetornoLocal}</td>
+              <td>{servicio.operador[0].nombre}</td>
+              <td>{servicio.montacarga[0].nombre}</td>
               <td>
                 <Button onClick={() => editServicio(cliente.id)}>
                   <FaPencilAlt />
