@@ -13,8 +13,12 @@ const HeaderComponent = () => {
     navigator("/facturas")
   }
 
-  const accederServicio = () =>{
+  const accederServicioNuevo = () =>{
     navigator("/servicioNuevo")
+  }
+
+  const accederServicio = () =>{
+    navigator("/servicios")
   }
 
   const accederClientes = () =>{
@@ -32,14 +36,20 @@ const HeaderComponent = () => {
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand onClick={() => accederServicio() }>Operaciones</Navbar.Brand>
+      
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
+          
           <Nav className="me-auto">
-            <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
+            <NavDropdown title="Operaciones" id="collapsible-nav-dropdown1">
+              <NavDropdown.Item href="#action/3.1" onClick={() => accederServicio() }>Servicios</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3" onClick={() => accederServicioNuevo() }>Nuevo servicio</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Facturar</NavDropdown.Item>
+            <NavDropdown.Divider />
+              <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
             <Nav.Link onClick={() => accederOperadores() }>Operadores</Nav.Link>
             <Nav.Link onClick={() => accederClientes() }>Clientes</Nav.Link>
-            
+            </NavDropdown>
             <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Nueva</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">

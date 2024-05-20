@@ -61,6 +61,8 @@ const ServicioComponent = () => {
 
     return (
         <>
+        <div className="container">
+          <br/>
     <Form noValidate onSubmit={handleSubmit}>
       <Row className="mb-3">
         <Form.Group as={Col} md="4" controlId="validationFormik01">
@@ -78,7 +80,7 @@ const ServicioComponent = () => {
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="4" controlId="validationFormik02">
-          <Form.Label>Código del servicio</Form.Label>
+          <Form.Label>Código</Form.Label>
           <Form.Control
             type="text"
             name="codServicio"
@@ -92,15 +94,17 @@ const ServicioComponent = () => {
             {errors.codServicio}
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group as={Col} md="4">
-          <Button type="submit" variant="info">Buscar</Button>
+        <Form.Group as={Col} md="4" className='p-4'>
+          <Button type="submit" variant="info"  >Buscar</Button>
           <Button type="reset" className='ms-2' onClick={() => handleReset(setServicios([]))}
         variant="warning">Limpiar
       </Button>
         </Form.Group>
       </Row>
       <br/>
-      <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoServicio()}>Nuevo</Button>
+      <div className='float-end pb-3'>
+        <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoServicio()}>Nuevo servicio</Button>
+      </div>
     </Form>
 
 
@@ -109,7 +113,7 @@ const ServicioComponent = () => {
     <table className='table table-striped table-bordered table-hover' responsive="md">
       <thead>
         <tr>
-          <th>Codigo Servicio</th>
+          <th>Codigo</th>
           <th>RUC</th>
           <th>Razon Social</th>
           <th>Salida local</th>
@@ -144,6 +148,7 @@ const ServicioComponent = () => {
         }
       </tbody>
     </table>
+    </div>
     </div>
   </>
   )
