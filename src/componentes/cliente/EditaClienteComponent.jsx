@@ -61,7 +61,9 @@ function EditaClienteComponent() {
 
   return (
     <>
-      <div className='container'>
+      <div className='container-fluid'>
+        <h3>Editar cliente</h3>
+        <br/>
         <Form noValidate onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Form.Group as={Col} md="8" controlId="validationFormik01">

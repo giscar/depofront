@@ -12,7 +12,7 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
   const [razonSocial, setRazonSocial] = useState();
   const [clientes, setClientes] = useState([])
   
-
+//  TODO
   const buscarClienteByDescripcion = () => {
     const data = {ruc, razonSocial}
     if (!data.ruc && !data.razonSocial) {

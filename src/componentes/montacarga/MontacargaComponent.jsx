@@ -73,14 +73,13 @@ const MontacargaComponent = () => {
 
   return (
     <>
-
+      <h3>Listado de montacargas</h3>
       <br />
-      <Button type="bottom" className='ms-2' variant="primary" onClick={() => irMontacargaNuevo()}>Nuevo</Button>
-
-
-
-      <br />
-      <div className='container tableFixHead'>
+      <div className='container-fluid tableFixHead'>
+        <div className='float-end pb-3'>
+          <Button type="bottom" className='ms-2' variant="primary" onClick={() => irMontacargaNuevo()}>Nueva montacarga</Button>
+        </div>
+        <br />
         <table className='table table-striped table-bordered table-hover' responsive="md">
           <thead>
             <tr>

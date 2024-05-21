@@ -46,8 +46,11 @@ const MontacargaNuevoComponent = () => {
 
   return (
     <>
+    <div className='container-fluid'>
+      <h3>Listado de Montacargas</h3>
+      <br/>
       <Form noValidate onSubmit={handleSubmit}>
-        <Row className="mb-3">
+        <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik01">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
@@ -63,6 +66,8 @@ const MontacargaNuevoComponent = () => {
               {errors.nombre}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik02">
             <Form.Label>Serie</Form.Label>
             <Form.Control
@@ -78,6 +83,8 @@ const MontacargaNuevoComponent = () => {
               {errors.serie}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik03">
             <Form.Label>Tonelaje</Form.Label>
             <Form.Control
@@ -93,6 +100,8 @@ const MontacargaNuevoComponent = () => {
               {errors.tonelaje}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Tipo de Servicio</Form.Label>
             <Form.Control
@@ -108,7 +117,9 @@ const MontacargaNuevoComponent = () => {
               {errors.tipoServicio}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4">
+          </Row>
+          <Row>
+          <Form.Group as={Col} md="4" className='pt-4'>
             <Button type="submit" variant="info">Guardar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset()}
           variant="warning">Limpiar
@@ -117,6 +128,7 @@ const MontacargaNuevoComponent = () => {
         </Row>
         <br/>
       </Form>
+      </div>
     </>
   )
 }

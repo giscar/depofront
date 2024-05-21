@@ -72,8 +72,12 @@ const OperadorEditComponent = () => {
   })
 
   return (
+    <div className='container-fluid'>
+      <h3>Editar operador</h3>
+      <br/>
+    
     <Form noValidate onSubmit={handleSubmit}>
-      <Row className="mb-3">
+      <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik01">
           <Form.Label>Nombre</Form.Label>
           <Form.Control
@@ -89,6 +93,8 @@ const OperadorEditComponent = () => {
             {errors.nombre}
           </Form.Control.Feedback>
         </Form.Group>
+        </Row>
+        <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik02">
           <Form.Label>Documento</Form.Label>
           <Form.Control
@@ -104,6 +110,8 @@ const OperadorEditComponent = () => {
             {errors.documento}
           </Form.Control.Feedback>
         </Form.Group>
+        </Row>
+        <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik03">
           <Form.Label>Dirección</Form.Label>
           <Form.Control
@@ -119,6 +127,8 @@ const OperadorEditComponent = () => {
             {errors.direccion}
           </Form.Control.Feedback>
         </Form.Group>
+        </Row>
+        <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik04">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -134,6 +144,8 @@ const OperadorEditComponent = () => {
             {errors.email}
           </Form.Control.Feedback>
         </Form.Group>
+        </Row>
+        <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik05">
           <Form.Label>Telefono</Form.Label>
           <Form.Control
@@ -149,12 +161,15 @@ const OperadorEditComponent = () => {
             {errors.movil}
           </Form.Control.Feedback>
         </Form.Group>
+        </Row>
+        <Row className='pt-4'>
         <Form.Group as={Col} md="4">
-          <Button type="submit" variant="info">Editar</Button>
+          <Button type="submit" variant="info">Editar operador</Button>
         </Form.Group>
       </Row>
       <br />
     </Form>
+    </div>
   )
 }
 

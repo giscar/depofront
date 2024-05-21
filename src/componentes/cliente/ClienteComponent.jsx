@@ -48,7 +48,7 @@ function ClienteComponent() {
     if (!data.ruc && !data.razonSocial) {
       return
     }
-    clienteForRucOrName(data.ruc, data.razonSocial).then((response) => {
+    clienteForRucOrName(data.ruc.toUpperCase(), data.razonSocial.toUpperCase()).then((response) => {
       setClientes(response.data);
     }).catch(error => {
       console.error(error)
@@ -69,51 +69,54 @@ function ClienteComponent() {
 
   return (
     <>
-      <Form noValidate onSubmit={handleSubmit}>
-        <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationFormik01">
-            <Form.Label>Ruc</Form.Label>
-            <Form.Control
-              type="text"
-              name="ruc"
-              value={values.ruc}
-              onChange={handleChange}
-              isInvalid={!!errors.ruc}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.ruc}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="4" controlId="validationFormik02">
-            <Form.Label>Razon Social</Form.Label>
-            <Form.Control
-              type="text"
-              name="razonSocial"
-              value={values.razonSocial}
-              onChange={handleChange}
-              isInvalid={!!errors.razonSocial}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.razonSocial}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="4">
-            <Button type="submit" variant="info">Buscar</Button>
-            <Button type="reset" className='ms-2' onClick={() => handleReset(setClientes([]))}
-              variant="warning">Limpiar
-            </Button>
-          </Form.Group>
-        </Row>
+      <div className='container-fluid'>
+        <h3>Buscar clientes</h3>
         <br />
-        <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoCliente()}>Nuevo</Button>
-      </Form>
 
-
-      <br />
-      <div className='container tableFixHead'>
+        <Form noValidate onSubmit={handleSubmit}>
+          <Row className="mb-3">
+            <Form.Group as={Col} md="4" controlId="validationFormik01">
+              <Form.Label>Ruc</Form.Label>
+              <Form.Control
+                type="text"
+                name="ruc"
+                value={values.ruc}
+                onChange={handleChange}
+                isInvalid={!!errors.ruc}
+                autoComplete='off'
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.ruc}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col} md="4" controlId="validationFormik02">
+              <Form.Label>Razon Social</Form.Label>
+              <Form.Control
+                type="text"
+                name="razonSocial"
+                value={values.razonSocial}
+                onChange={handleChange}
+                isInvalid={!!errors.razonSocial}
+                style={{ textTransform: 'uppercase' }}
+                autoComplete='off'
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.razonSocial}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col} md="4" className='pt-4'>
+              <Button type="submit" variant="info">Buscar</Button>
+              <Button type="reset" className='ms-2' onClick={() => handleReset(setClientes([]))}
+                variant="warning">Limpiar
+              </Button>
+            </Form.Group>
+          </Row>
+          <br />
+          <div className='float-end pb-3'>
+            <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoCliente()}>Nuevo</Button>
+          </div>
+        </Form>
+        <br />
         <table className='table table-striped table-bordered table-hover' responsive="md">
           <thead>
             <tr>

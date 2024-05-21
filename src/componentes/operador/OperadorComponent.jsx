@@ -71,12 +71,14 @@ const OperadorComponent = () => {
 
   return (
     <>
+<div className='container-fluid'>
+    <h3>Listado de operadores</h3>
+    <br/>
 
+<div className='float-end pb-3'>
+<Button type="bottom" className='ms-2' variant="primary" onClick={() => irOperadorNuevo()}>Nuevo operador</Button>
+        </div>
       <br />
-      <Button type="bottom" className='ms-2' variant="primary" onClick={() => irOperadorNuevo()}>Nuevo</Button>
-
-      <br />
-      <div className='container tableFixHead'>
         <table className='table table-striped table-bordered table-hover' responsive="md">
           <thead>
             <tr>
@@ -111,7 +113,6 @@ const OperadorComponent = () => {
           </tbody>
         </table>
       </div>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmación</Modal.Title>

@@ -42,9 +42,9 @@ const HeaderComponent = () => {
           
           <Nav className="me-auto">
             <NavDropdown title="Operaciones" id="collapsible-nav-dropdown1">
-              <NavDropdown.Item href="#action/3.1" onClick={() => accederServicio() }>Servicios</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3" onClick={() => accederServicioNuevo() }>Nuevo servicio</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Facturar</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => accederServicio() }>Servicios</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => accederServicioNuevo() }>Nuevo servicio</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => accederFacturas() }>Facturar</NavDropdown.Item>
             <NavDropdown.Divider />
               <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
             <Nav.Link onClick={() => accederOperadores() }>Operadores</Nav.Link>

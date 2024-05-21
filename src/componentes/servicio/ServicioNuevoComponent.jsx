@@ -26,7 +26,6 @@ const ServicioNuevoComponent = () => {
   });
 
   const saveServicio = (data) => {
-    debugger
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -42,6 +41,9 @@ const ServicioNuevoComponent = () => {
       console.error(error)
     })
     handleReset()
+    setRazonSocial('')
+    setRuc('')
+    setDireccion('')
     notify()
   }
 
@@ -106,8 +108,11 @@ const ServicioNuevoComponent = () => {
 
   return (
     <>
+    <div className='container-fluid'>
+      <h3>Registrar servicio</h3>
+      <br/><br/>
       <Form noValidate onSubmit={handleSubmit}>
-        <Row className="mb-3">
+        <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik01">
             <Form.Label>Codigo del Servicio</Form.Label>
             <Form.Control
@@ -123,6 +128,8 @@ const ServicioNuevoComponent = () => {
               {errors.codServicio}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="validationFormik02">
             <Form.Label>RUC</Form.Label>
             <Form.Control
@@ -139,7 +146,9 @@ const ServicioNuevoComponent = () => {
               {errors.ruc}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="validationFormik03">
+          </Row>
+          <Row>
+          <Form.Group as={Col} md="6" controlId="validationFormik03">
             <Form.Label>Razon Social</Form.Label>
             <Form.Control
               type="text"
@@ -155,7 +164,9 @@ const ServicioNuevoComponent = () => {
               {errors.razonSocial}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="4" controlId="validationFormik04">
+          </Row>
+          <Row>
+          <Form.Group as={Col} md="6" controlId="validationFormik04">
             <Form.Label>Direccion</Form.Label>
             <Form.Control
               type="text"
@@ -171,6 +182,8 @@ const ServicioNuevoComponent = () => {
               {errors.direccion}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Operador</Form.Label>
             <Form.Select 
@@ -190,6 +203,8 @@ const ServicioNuevoComponent = () => {
               {errors.operadorId}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Vehículo</Form.Label>
             <Form.Select  
@@ -208,6 +223,8 @@ const ServicioNuevoComponent = () => {
               {errors.montacargaId}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik05">
             <Form.Label>Hora de salida de la Empresa</Form.Label>
             <Form.Control
@@ -223,6 +240,8 @@ const ServicioNuevoComponent = () => {
               {errors.horaSalidaLocal}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik06">
             <Form.Label>Hora de inicio del Servicio</Form.Label>
             <Form.Control
@@ -238,6 +257,8 @@ const ServicioNuevoComponent = () => {
               {errors.horaInicioServicio}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik07">
             <Form.Label>Hora de fin del Servicio</Form.Label>
             <Form.Control
@@ -253,6 +274,8 @@ const ServicioNuevoComponent = () => {
               {errors.horaFinServicio}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
+          <Row className="mb-3">
           <Form.Group as={Col} md="4" controlId="validationFormik08">
             <Form.Label>Hora de retorno a la empresa</Form.Label>
             <Form.Control
@@ -268,15 +291,16 @@ const ServicioNuevoComponent = () => {
               {errors.horaRetornoLocal}
             </Form.Control.Feedback>
           </Form.Group>
+          </Row>
           <Form.Group as={Col} md="4">
             <Button type="submit" variant="info">Guardar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset()}
               variant="warning">Limpiar
             </Button>
           </Form.Group>
-        </Row>
         <br />
       </Form>
+      </div>
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )

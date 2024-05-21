@@ -8,7 +8,7 @@ import { buscarServicioByDatos, buscarServicioByDatosAggregate } from '../../ser
 import { FaPencilAlt } from 'react-icons/fa';
 
 const ServicioComponent = () => {
-    const notify = () => toast.warning('No se han ingresado los parametros de búsqueda', {
+    const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
         position: "top-right",
         autoClose: 1000,
         hideProgressBar: false,
@@ -31,20 +31,16 @@ const ServicioComponent = () => {
     }
 
     const buscarServicio = (data) => {
-        debugger
         if (!data.codServicio && !data.ruc) {
             return
         }
-        if (!data.codServicio && !data.ruc) {
-          return
-      }
         buscarServicioByDatosAggregate(data.ruc, data.codServicio).then((response) => {
           debugger
             setServicios(response.data);
         }).catch(error => {
             console.error(error)
         })
-        notify
+        
     }
 
     const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
@@ -61,7 +57,7 @@ const ServicioComponent = () => {
 
     return (
         <>
-        <div className="container">
+        <div className="container-fluid">
           <br/>
     <Form noValidate onSubmit={handleSubmit}>
       <Row className="mb-3">
@@ -109,7 +105,7 @@ const ServicioComponent = () => {
 
 
     <br />
-    <div className='container tableFixHead'>
+    <div className='container-fluid tableFixHead'>
     <table className='table table-striped table-bordered table-hover' responsive="md">
       <thead>
         <tr>
