@@ -40,7 +40,7 @@ const MontacargaEditComponennt = () => {
     montacarga.estado = "1"
     montacarga.nombre = montacarga.nombre.toUpperCase();
     montacarga.serie = montacarga.serie.toUpperCase();
-    montacarga.tonelaje = montacarga.tonelaje.toUpperCase();
+    montacarga.tonelaje = montacarga.tonelaje;
     montacarga.tipoServicio = montacarga.tipoServicio.toUpperCase();
     montacargaEdit(montacarga).catch(error => {
       console.error(error)
@@ -86,6 +86,7 @@ const MontacargaEditComponennt = () => {
             isInvalid={!!errors.nombre}
             style={{ textTransform: 'uppercase' }}
             autoComplete='off'
+            readOnly
           />
           <Form.Control.Feedback type="invalid">
             {errors.nombre}
@@ -113,7 +114,7 @@ const MontacargaEditComponennt = () => {
         <Form.Group as={Col} md="4" controlId="validationFormik03">
           <Form.Label>Tonelaje</Form.Label>
           <Form.Control
-            type="text"
+            type="number"
             name="tonelaje"
             value={values.tonelaje}
             onChange={handleChange}
@@ -128,20 +129,21 @@ const MontacargaEditComponennt = () => {
         </Row>
         <Row>
         <Form.Group as={Col} md="4" controlId="validationFormik04">
-          <Form.Label>Tipo de Servicio</Form.Label>
-          <Form.Control
-            type="text"
-            name="tipoServicio"
-            value={values.tipoServicio}
-            onChange={handleChange}
-            isInvalid={!!errors.tipoServicio}
-            style={{ textTransform: 'uppercase' }}
-            autoComplete='off'
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.tipoServicio}
-          </Form.Control.Feedback>
-        </Form.Group>
+            <Form.Label>Tipo de Servicio</Form.Label>
+            <Form.Select 
+              name="tipoServicio"
+              value={values.tipoServicio}
+              onChange={handleChange}
+              isInvalid={!!errors.tipoServicio}
+              >
+              <option>Seleccione</option>
+              <option value='01'>Servicio</option>
+              <option value='02'>Maniobra</option>
+            </Form.Select>
+            <Form.Control.Feedback type="invalid">
+              {errors.tipoServicio}
+            </Form.Control.Feedback>
+          </Form.Group>
         </Row>
         <Row className='pt-4'>
         <Form.Group as={Col} md="4">

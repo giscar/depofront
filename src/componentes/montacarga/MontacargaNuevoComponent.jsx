@@ -16,9 +16,10 @@ const MontacargaNuevoComponent = () => {
     });
 
   const saveMontacarga = (data) => {
+    debugger;
     data.serie = data.serie.toUpperCase();
     data.nombre = data.nombre.toUpperCase();
-    data.tonelaje = data.tonelaje.toUpperCase();
+    data.tonelaje = data.tonelaje;
     data.tipoServicio = data.tipoServicio.toUpperCase();
     data.estado = "1";
     montacargaSave(data).catch(error => {
@@ -30,10 +31,10 @@ const MontacargaNuevoComponent = () => {
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
-      serie: yup.string(),
-      nombre: yup.string(),
-      tonelaje: yup.string(),
-      tipoServicio: yup.string(),
+      serie: yup.string().required('Debe ingresar la serie del vehículo'),
+      nombre: yup.string().required('Debe ingresar el nombre del vehículo'),
+      tonelaje: yup.string().required('Debe ingresar el número de toneladas'),
+      tipoServicio: yup.string().required('Debe ingresar el tipo de servicio'),
     }),
     initialValues: {
       nombre: '',
@@ -88,7 +89,7 @@ const MontacargaNuevoComponent = () => {
           <Form.Group as={Col} md="4" controlId="validationFormik03">
             <Form.Label>Tonelaje</Form.Label>
             <Form.Control
-              type="text"
+              type="number"
               name="tonelaje"
               value={values.tonelaje}
               onChange={handleChange}
@@ -104,15 +105,16 @@ const MontacargaNuevoComponent = () => {
           <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Tipo de Servicio</Form.Label>
-            <Form.Control
-              type="text"
+            <Form.Select 
               name="tipoServicio"
               value={values.tipoServicio}
               onChange={handleChange}
               isInvalid={!!errors.tipoServicio}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
+              >
+              <option>Seleccione</option>
+              <option value='01'>Servicio</option>
+              <option value='02'>Maniobra</option>
+            </Form.Select>
             <Form.Control.Feedback type="invalid">
               {errors.tipoServicio}
             </Form.Control.Feedback>

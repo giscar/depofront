@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useFormik, useFormikContext } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { montacargasActivo, operadorActivo, operadorForId, servicioSave } from '../../service/FacturaService';
 
 const ServicioNuevoComponent = () => {
 
@@ -26,6 +26,7 @@ const ServicioNuevoComponent = () => {
   });
 
   const saveServicio = (data) => {
+    debugger
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -58,10 +59,10 @@ const ServicioNuevoComponent = () => {
       ruc: yup.string().required(),
       razonSocial: yup.string().required(),
       direccion: yup.string().required(),
-      horaSalidaLocal: yup.string().required(),
-      horaInicioServicio: yup.string().required(),
-      horaFinServicio: yup.string().required(),
-      horaRetornoLocal: yup.string().required(),
+      //horaSalidaLocal: yup.string().required(),
+      //horaInicioServicio: yup.string().required(),
+      //horaFinServicio: yup.string().required(),
+      //horaRetornoLocal: yup.string().required(),
       operadorId: yup.string().required(),
       montacargaId: yup.string().required(),
       
@@ -76,7 +77,7 @@ const ServicioNuevoComponent = () => {
       horaFinServicio: '',
       horaRetornoLocal: '',
       operadorId: '',
-      montacargaId: ''
+      montacargaId: '',
     },
     onSubmit: saveServicio,
   });
@@ -275,7 +276,7 @@ const ServicioNuevoComponent = () => {
             </Form.Control.Feedback>
           </Form.Group>
           </Row>
-          <Row className="mb-3">
+          <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik08">
             <Form.Label>Hora de retorno a la empresa</Form.Label>
             <Form.Control
@@ -292,7 +293,41 @@ const ServicioNuevoComponent = () => {
             </Form.Control.Feedback>
           </Form.Group>
           </Row>
-          <Form.Group as={Col} md="4">
+          <Row>
+          <Form.Group as={Col} md="4" controlId="validationFormik08">
+            <Form.Label>Total horas de servicio</Form.Label>
+            <Form.Control
+              type="number"
+              name="totalHoras"
+              value={values.totalHoras}
+              onChange={handleChange}
+              isInvalid={!!errors.totalHoras}
+              style={{ textTransform: 'uppercase' }}
+              autoComplete='off'
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.horaRetornoLocal}
+            </Form.Control.Feedback>
+          </Form.Group>
+          </Row>
+          <Row>
+          <Form.Group as={Col} md="4" controlId="validationFormik08">
+            <Form.Label>Monto del servicio</Form.Label>
+            <Form.Control
+              type="text"
+              name="montoServicio"
+              value={values.montoServicio}
+              onChange={handleChange}
+              isInvalid={!!errors.montoServicio}
+              style={{ textTransform: 'uppercase' }}
+              autoComplete='off'
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.montoServicio}
+            </Form.Control.Feedback>
+          </Form.Group>
+          </Row>
+          <Form.Group as={Col} md="4" className='pt-4'>
             <Button type="submit" variant="info">Guardar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset()}
               variant="warning">Limpiar

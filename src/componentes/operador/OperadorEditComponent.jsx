@@ -88,6 +88,7 @@ const OperadorEditComponent = () => {
             isInvalid={!!errors.nombre}
             style={{ textTransform: 'uppercase' }}
             autoComplete='off'
+            readOnly
           />
           <Form.Control.Feedback type="invalid">
             {errors.nombre}
@@ -105,6 +106,7 @@ const OperadorEditComponent = () => {
             isInvalid={!!errors.documento}
             style={{ textTransform: 'uppercase' }}
             autoComplete='off'
+            readOnly
           />
           <Form.Control.Feedback type="invalid">
             {errors.documento}

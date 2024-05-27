@@ -13,7 +13,7 @@ const REST_API_BASE_URL_OPERADOR = "http://localhost:8080/operador"
 //const REST_API_BASE_URL_OPERADOR = "http://143.198.244.41:8080/operador"
 
 const REST_API_BASE_URL_SERVICIO = "http://localhost:8080/servicio"
-//const REST_API_BASE_URL_OPERADOR = "http://143.198.244.41:8080/servicio"
+//const REST_API_BASE_URL_SERVICIO = "http://143.198.244.41:8080/servicio"
 
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 

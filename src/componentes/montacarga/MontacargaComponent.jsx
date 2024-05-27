@@ -59,7 +59,14 @@ const MontacargaComponent = () => {
     debugger
     console.log("entro buscarMontacarga")
     montacargasActivo().then((response) => {
+      if(response.data.tipoServicio == '01'){
+        response.data.nombreTipoServicio = 'Servicio'
+      }
+      if(response.data.tipoServicio == '02'){
+        response.data.nombreTipoServicio = 'Maniobra'
+      }
       setMontacargas(response.data);
+      console.log(montacarga)
     }).catch(error => {
       console.error(error)
     })
@@ -73,9 +80,9 @@ const MontacargaComponent = () => {
 
   return (
     <>
-      <h3>Listado de montacargas</h3>
-      <br />
       <div className='container-fluid tableFixHead'>
+        <h3>Listado de montacargas</h3>
+          <br />
         <div className='float-end pb-3'>
           <Button type="bottom" className='ms-2' variant="primary" onClick={() => irMontacargaNuevo()}>Nueva montacarga</Button>
         </div>
@@ -97,7 +104,7 @@ const MontacargaComponent = () => {
                   <td>{montacarga.nombre}</td>
                   <td>{montacarga.serie}</td>
                   <td>{montacarga.tonelaje}</td>
-                  <td>{montacarga.tipoServicio}</td>
+                  <td>{montacarga.tipoServicio == '01'? 'Servicio' : 'Maniobra'}</td>
                   <td>
                     <Button className='m-2' onClick={() => irMontacargaEdit(montacarga.id)}>
                       <FaPencilAlt />

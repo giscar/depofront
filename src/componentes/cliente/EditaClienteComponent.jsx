@@ -76,6 +76,7 @@ function EditaClienteComponent() {
                 isInvalid={!!errors.ruc}
                 autoComplete='off'
                 maxLength={11}
+                readOnly
               />
               <Form.Control.Feedback type="invalid">
                 {errors.ruc}

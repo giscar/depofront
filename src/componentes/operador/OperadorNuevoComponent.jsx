@@ -33,11 +33,11 @@ const OperadorNuevoComponent = () => {
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
-      nombre: yup.string().required(),
-      documento: yup.string().required(),
-      movil: yup.string().required(),
-      direccion: yup.string().required(),
-      email: yup.string().required()
+      nombre: yup.string().required('Debe ingresar el nombre completo del operador'),
+      documento: yup.string().required('Debe ingresar el número del docuemento'),
+      movil: yup.string().required('Debe ingresar el telefono movil del operador'),
+      direccion: yup.string().required('Debe ingresar la dirección del operador'),
+      email: yup.string().email('Debe ingresar un email correcto').required('Debe ingresar el email del operador')
     }),
     initialValues: {
       nombre: '',

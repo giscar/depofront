@@ -29,9 +29,9 @@ function NuevoClienteComponent() {
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
-      ruc: yup.number("El RUC debe ser númerico").required("El numero de RUC es requerido").test('eq', 'Debe ingresar 11 números', val => val.toString().length === 11),
-      razonSocial: yup.string().required("La razon social es requerido"),
-      direccion: yup.string().required("La dirección es requerido"),
+      ruc: yup.number("El RUC debe ser númerico").required("Debe ingresar el número del RUC").test('eq', 'Debe ingresar 11 números', val => val.toString().length === 11),
+      razonSocial: yup.string().required("Debe ingresar la razon social del cliente"),
+      direccion: yup.string().required("Debe ingresar la dirección del cliente"),
     }),
     initialValues: {
       ruc: '',
@@ -79,7 +79,7 @@ function NuevoClienteComponent() {
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} md="8" controlId="validationFormik03">
-              <Form.Label>Razon Social</Form.Label>
+              <Form.Label>Dirección</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
