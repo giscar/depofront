@@ -21,6 +21,7 @@ const ServicioComponent = () => {
 
     const [servicio, setServicio] = useState([])
     const [servicios, setServicios] = useState([])
+    
 
     const accederNuevoServicio = () => {
         navigator("/servicioNuevo")
@@ -135,7 +136,7 @@ const ServicioComponent = () => {
               <td>{servicio.operador[0].nombre}</td>
               <td>{servicio.montacarga[0].nombre}</td>
               <td>
-                <Button onClick={() => editServicio(cliente.id)}>
+                <Button onClick={() => editServicio(servicio.id)}>
                   <FaPencilAlt />
                 </Button>
               </td>
