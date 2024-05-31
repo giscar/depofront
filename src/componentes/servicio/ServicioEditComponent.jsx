@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { servicioForId, servicioSave } from '../../service/FacturaService';
+import { clienteForRuc, montacargasActivo, operadorActivo, servicioForId, servicioSave } from '../../service/FacturaService';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import * as yup from 'yup';
@@ -34,9 +34,10 @@ const ServicioEditComponent = () => {
 
     useEffect(() => {
       if(id){
-        debugger
         servicioForId(id).then((response) => {
+          debugger
               setServicio(response.data);
+              
           }).catch(error => {
               console.log(error);
           })
@@ -61,6 +62,31 @@ const ServicioEditComponent = () => {
     })
     notify()
   }
+
+  useEffect(() => {
+    operadorActivo(1).then((response) => {
+      setOperadores(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  useEffect(() => {
+    montacargasActivo(1).then((response) => {
+      setMontacargas(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  useEffect(() => {
+    clienteForRuc(servicio.ruc).then((response) => {
+      setCliente(response.data);
+      console.log(cliente)
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
@@ -87,6 +113,8 @@ const ServicioEditComponent = () => {
       horaRetornoLocal: servicio.horaRetornoLocal,
       operadorId: servicio.operadorId,
       montacargaId: servicio.montacargaId,
+      totalHoras: servicio.totalHoras,
+      montoServicio: servicio.montoServicio,
     },
     onSubmit: saveServicio,
     enableReinitialize: true
