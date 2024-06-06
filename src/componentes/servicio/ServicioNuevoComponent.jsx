@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { montacargasActivo, operadorActivo, servicioSave, uploadFile } from '../../service/FacturaService';
 
 const ServicioNuevoComponent = () => {
 
@@ -14,6 +14,7 @@ const ServicioNuevoComponent = () => {
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
+  const [file, setFile] = useState()
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -106,6 +107,13 @@ const ServicioNuevoComponent = () => {
     values.razonSocial = cliente.razonSocial
     values.direccion = cliente.direccion
   }, [cliente])
+
+  const handleUpload = (e) => {
+    console.log(file)
+    const formdata = new FormData()
+    formdata.append('files', file)
+    uploadFile(formdata);
+  }
 
   return (
     <>
@@ -327,12 +335,34 @@ const ServicioNuevoComponent = () => {
             </Form.Control.Feedback>
           </Form.Group>
           </Row>
+         <Row>
           <Form.Group as={Col} md="4" className='pt-4'>
             <Button type="submit" variant="info">Guardar</Button>
             <Button type="reset" className='ms-2' onClick={() => handleReset()}
               variant="warning">Limpiar
             </Button>
           </Form.Group>
+          </Row>
+          <Row>
+          <Form.Group as={Col} md="4" controlId="validationFormik09">
+            <Form.Label>Imagen</Form.Label>
+            <Form.Control
+              type="file"
+              name="image"
+              value={values.image}
+              onChange={e => setFile(e.target.files[0])}
+              isInvalid={!!errors.montoServicio}
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.image}
+            </Form.Control.Feedback>
+            <br/>
+            <Button type="button" className='ms-2' onClick={() => handleUpload()}
+              variant="warning">Cargar imagen
+            </Button>
+          </Form.Group>
+          
+          </Row>
         <br />
       </Form>
       </div>
