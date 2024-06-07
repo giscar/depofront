@@ -111,7 +111,7 @@ const ServicioNuevoComponent = () => {
   const handleUpload = (e) => {
     console.log(file)
     const formdata = new FormData()
-    formdata.append('files', file)
+    formdata.append('file', file)
     uploadFile(formdata);
   }
 
@@ -349,6 +349,7 @@ const ServicioNuevoComponent = () => {
             <Form.Control
               type="file"
               name="image"
+              multiple
               value={values.image}
               onChange={e => setFile(e.target.files[0])}
               isInvalid={!!errors.montoServicio}
