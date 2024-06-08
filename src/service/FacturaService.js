@@ -69,4 +69,4 @@ export const buscarServicioByDatos = (ruc, codServicio) => axios.get(REST_API_BA
 
 export const buscarServicioByDatosAggregate = (ruc, codServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaAggregate?codServicio="+codServicio+"&ruc="+ruc);
 
-export const uploadFile = (file) => axios.post(REST_API_BASE_URL_SERVICIO+"/upload", file);
+export const uploadFile = (file, id, type, size) => axios.post(REST_API_BASE_URL_SERVICIO+"/upload", file, id, type, size);

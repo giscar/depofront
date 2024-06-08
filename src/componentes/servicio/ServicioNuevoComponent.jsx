@@ -15,6 +15,10 @@ const ServicioNuevoComponent = () => {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [file, setFile] = useState()
+  const [cargarImagen, setCargarImagen] = useState(false)
+  const [idTempServicio, setIdTempServicio] = useState("")
+  const [type, setType] = useState("")
+  const [size, setSize] = useState("")
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -27,7 +31,6 @@ const ServicioNuevoComponent = () => {
   });
 
   const saveServicio = (data) => {
-    debugger
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -41,11 +44,14 @@ const ServicioNuevoComponent = () => {
     data.estado = "1";
     servicioSave(data).catch(error => {
       console.error(error)
+    }).then(data => {
+      setIdTempServicio(data.data.id)
     })
     handleReset()
     setRazonSocial('')
     setRuc('')
     setDireccion('')
+    setCargarImagen(true)
     notify()
   }
 
@@ -110,8 +116,13 @@ const ServicioNuevoComponent = () => {
 
   const handleUpload = (e) => {
     console.log(file)
+    console.log(idTempServicio)
     const formdata = new FormData()
     formdata.append('file', file)
+    formdata.append('id', idTempServicio)
+    formdata.append('type', file.type)
+    formdata.append('size', file.size)
+    console.log(formdata)
     uploadFile(formdata);
   }
 
@@ -343,6 +354,8 @@ const ServicioNuevoComponent = () => {
             </Button>
           </Form.Group>
           </Row>
+ 
+      {cargarImagen  &&
           <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik09">
             <Form.Label>Imagen</Form.Label>
@@ -353,6 +366,7 @@ const ServicioNuevoComponent = () => {
               value={values.image}
               onChange={e => setFile(e.target.files[0])}
               isInvalid={!!errors.montoServicio}
+              accept="image/*"
             />
             <Form.Control.Feedback type="invalid">
               {errors.image}
@@ -364,6 +378,7 @@ const ServicioNuevoComponent = () => {
           </Form.Group>
           
           </Row>
+          }
         <br />
       </Form>
       </div>
