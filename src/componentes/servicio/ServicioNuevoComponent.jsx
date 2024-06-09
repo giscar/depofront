@@ -14,11 +14,6 @@ const ServicioNuevoComponent = () => {
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
-  const [file, setFile] = useState()
-  const [cargarImagen, setCargarImagen] = useState(false)
-  const [idTempServicio, setIdTempServicio] = useState("")
-  const [type, setType] = useState("")
-  const [size, setSize] = useState("")
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -45,13 +40,12 @@ const ServicioNuevoComponent = () => {
     servicioSave(data).catch(error => {
       console.error(error)
     }).then(data => {
-      setIdTempServicio(data.data.id)
+      //setIdTempServicio(data.data.id)
     })
     handleReset()
     setRazonSocial('')
     setRuc('')
     setDireccion('')
-    setCargarImagen(true)
     notify()
   }
 
@@ -114,18 +108,6 @@ const ServicioNuevoComponent = () => {
     values.direccion = cliente.direccion
   }, [cliente])
 
-  const handleUpload = (e) => {
-    console.log(file)
-    console.log(idTempServicio)
-    const formdata = new FormData()
-    formdata.append('file', file)
-    formdata.append('id', idTempServicio)
-    formdata.append('type', file.type)
-    formdata.append('size', file.size)
-    console.log(formdata)
-    uploadFile(formdata);
-  }
-
   return (
     <>
     <div className='container-fluid'>
@@ -156,8 +138,8 @@ const ServicioNuevoComponent = () => {
               type="text"
               name="ruc"
               onClick={handleShow} readOnly
-              value={values.ruc}
               onChange={handleChange}
+              value={values.ruc}
               isInvalid={!!errors.ruc}
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'
@@ -354,31 +336,6 @@ const ServicioNuevoComponent = () => {
             </Button>
           </Form.Group>
           </Row>
- 
-      {cargarImagen  &&
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik09">
-            <Form.Label>Imagen</Form.Label>
-            <Form.Control
-              type="file"
-              name="image"
-              multiple
-              value={values.image}
-              onChange={e => setFile(e.target.files[0])}
-              isInvalid={!!errors.montoServicio}
-              accept="image/*"
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.image}
-            </Form.Control.Feedback>
-            <br/>
-            <Button type="button" className='ms-2' onClick={() => handleUpload()}
-              variant="warning">Cargar imagen
-            </Button>
-          </Form.Group>
-          
-          </Row>
-          }
         <br />
       </Form>
       </div>
@@ -386,5 +343,4 @@ const ServicioNuevoComponent = () => {
     </>
   )
 }
-
 export default ServicioNuevoComponent

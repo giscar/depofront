@@ -43,7 +43,7 @@ export const montacargaForId = (montacargaId) => axios.get(REST_API_BASE_URL_MON
 
 export const montacargaForAll = () => axios.get(REST_API_BASE_URL_MONTACARGA+"/all");
 
-export const montacargasActivo = (estado) => axios.get(REST_API_BASE_URL_MONTACARGA+"/estado?estado="+estado);
+export const montacargasActivo = () => axios.get(REST_API_BASE_URL_MONTACARGA+"/estado");
 
 export const operadorSave = (operador) => axios.post(REST_API_BASE_URL_OPERADOR, operador);
 
@@ -53,7 +53,7 @@ export const operadorForId = (id) => axios.get(REST_API_BASE_URL_OPERADOR+"?id="
 
 export const operadorForAll = () => axios.get(REST_API_BASE_URL_OPERADOR+"/all");
 
-export const operadorActivo = (estado) => axios.get(REST_API_BASE_URL_OPERADOR+"/estado?estado="+estado);
+export const operadorActivo = (estado) => axios.get(REST_API_BASE_URL_OPERADOR+"/estado");
 
 export const servicioSave = (servicio) => axios.post(REST_API_BASE_URL_SERVICIO, servicio);
 

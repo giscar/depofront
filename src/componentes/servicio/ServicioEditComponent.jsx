@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { clienteForRuc, montacargasActivo, operadorActivo, servicioForId, servicioSave } from '../../service/FacturaService';
+import { clienteForRuc, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import * as yup from 'yup';
@@ -19,33 +19,26 @@ const ServicioEditComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    });
+  });
 
-    const [servicio, setServicio] = useState([])
-    const {id} = useParams();
-    const [show, setShow] = useState(false);
+  const [servicio, setServicio] = useState([])
+  const {id} = useParams();
+    
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+  const [ruc, setRuc] = useState([])
+  const [cliente, setCliente] = useState([])
+  const [razonSocial, setRazonSocial] = useState([])
+  const [direccion, setDireccion] = useState([])
+  const [operadores, setOperadores] = useState([])
+  const [montacargas, setMontacargas] = useState([])
+  const [file, setFile] = useState()
+  const [cargarImagen, setCargarImagen] = useState(false)
+  const [idTempServicio, setIdTempServicio] = useState("")
 
-    const [cliente, setCliente] = useState([])
-    const [operadores, setOperadores] = useState([])
-    const [montacargas, setMontacargas] = useState([])
-
-    useEffect(() => {
-      if(id){
-        servicioForId(id).then((response) => {
-          debugger
-              setServicio(response.data);
-              
-          }).catch(error => {
-              console.log(error);
-          })
-      }
-  }, [id])
-
-  const saveServicio = (data) => {
-    debugger
+  const editServicio = (data) => {
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -57,14 +50,29 @@ const ServicioEditComponent = () => {
     data.operadorId = data.operadorId;
     data.montacargaId = data.montacargaId;
     data.estado = "1";
-    servicioSave(data).catch(error => {
+    servicioEdit(data).catch(error => {
       console.error(error)
     })
+    setCargarImagen(true)
     notify()
+    setTimeout(() => {
+      navigator("/servicios");
+    }, 1000);
   }
 
   useEffect(() => {
-    operadorActivo(1).then((response) => {
+    if(id){
+      debugger
+      servicioForId(id).then((response) => {
+          setServicio(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+  }, [id])
+
+  useEffect(() => {
+    operadorActivo().then((response) => {
       setOperadores(response.data);
     }).catch(error => {
       console.log(error);
@@ -72,7 +80,7 @@ const ServicioEditComponent = () => {
   }, [])
 
   useEffect(() => {
-    montacargasActivo(1).then((response) => {
+    montacargasActivo().then((response) => {
       setMontacargas(response.data);
     }).catch(error => {
       console.log(error);
@@ -80,13 +88,28 @@ const ServicioEditComponent = () => {
   }, [])
 
   useEffect(() => {
-    clienteForRuc(servicio.ruc).then((response) => {
-      setCliente(response.data);
-      console.log(cliente)
+    clienteForRuc(servicio.ruc).then((data) => {
+      console.log(data)
+      setCliente(data.data);
+      setRazonSocial(data.razonSocial);
+      setDireccion(data.direccion);
+      values.ruc = cliente.ruc
+      values.razonSocial = cliente.razonSocial
+      values.direccion = cliente.direccion
     }).catch(error => {
       console.log(error);
     })
   }, [])
+
+  useEffect(() => {
+    debugger
+    setRuc(cliente.ruc)
+    setRazonSocial(cliente.razonSocial)
+    setDireccion(cliente.direccion)
+    values.ruc = cliente.ruc
+    values.razonSocial = cliente.razonSocial
+    values.direccion = cliente.direccion
+  }, [cliente])
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
@@ -104,9 +127,9 @@ const ServicioEditComponent = () => {
     }),
     initialValues: {
       codServicio: servicio.codServicio,
-      ruc: servicio.ruc,
-      razonSocial: servicio.razonSocial,
-      direccion: servicio.direccion,
+      ruc: servicio.cliente? servicio.cliente[0].ruc : "",
+      razonSocial: servicio.cliente? servicio.cliente[0]?.razonSocial : "",
+      direccion: servicio.cliente? servicio.cliente[0]?.direccion : "",
       horaSalidaLocal: servicio.horaSalidaLocal,
       horaInicioServicio: servicio.horaInicioServicio,
       horaFinServicio: servicio.horaFinServicio,
@@ -116,10 +139,21 @@ const ServicioEditComponent = () => {
       totalHoras: servicio.totalHoras,
       montoServicio: servicio.montoServicio,
     },
-    onSubmit: saveServicio,
+    onSubmit: editServicio,
     enableReinitialize: true
   });
 
+  const handleUpload = (e) => {
+    console.log(file)
+    console.log(id)
+    const formdata = new FormData()
+    formdata.append('file', file)
+    formdata.append('id', id)
+    formdata.append('type', file.type)
+    formdata.append('size', file.size)
+    console.log(formdata)
+    uploadFile(formdata);
+  }
 
   return (
     <>
@@ -138,6 +172,7 @@ const ServicioEditComponent = () => {
               isInvalid={!!errors.codServicio}
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'
+              disabled
             />
             <Form.Control.Feedback type="invalid">
               {errors.codServicio}
@@ -150,7 +185,7 @@ const ServicioEditComponent = () => {
             <Form.Control
               type="text"
               name="ruc"
-              onClick={handleShow} readOnly
+              disabled
               value={values.ruc}
               onChange={handleChange}
               isInvalid={!!errors.ruc}
@@ -206,6 +241,7 @@ const ServicioEditComponent = () => {
               value={values.operadorId}
               onChange={handleChange}
               isInvalid={!!errors.operadorId}
+              disabled
               >
               <option>Seleccione</option>
               {
@@ -226,6 +262,7 @@ const ServicioEditComponent = () => {
             name="montacargaId"
               value={values.montacargaId}
               onChange={handleChange}
+              disabled
               isInvalid={!!errors.montacargaId}>
               <option>Seleccione</option>
               {
@@ -341,18 +378,37 @@ const ServicioEditComponent = () => {
             </Form.Control.Feedback>
           </Form.Group>
           </Row>
-          <Form.Group as={Col} md="4" className='pt-4'>
-            <Button type="submit" variant="info">Guardar</Button>
-            <Button type="reset" className='ms-2' onClick={() => handleReset()}
-              variant="warning">Limpiar
-            </Button>
-          </Form.Group>
+          <Row>
+            <Form.Group as={Col} md="4" className='pt-4'>
+              <Button type="submit" variant="info">Guardar</Button>
+              <Button type="reset" className='ms-2' onClick={() => handleReset()}
+                variant="warning">Limpiar
+              </Button>
+            </Form.Group>
+          </Row>
+          <Row className='pt-4'>
+          <Form.Group as={Col} md="4" controlId="validationFormik09">
+            <Form.Control
+              type="file"
+              name="image"
+              value={values.image}
+              onChange={e => setFile(e.target.files[0])}
+              isInvalid={!!errors.montoServicio}
+              accept="image/*"
+            />
+            <Form.Control.Feedback type="invalid">
+              {errors.image}
+            </Form.Control.Feedback>
+              <br/>
+              <Button type="button" className='ms-2' onClick={() => handleUpload()}
+                variant="warning">Cargar imagen
+              </Button>
+            </Form.Group>
+          </Row>
         <br />
       </Form>
       </div>
-      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }
-
 export default ServicioEditComponent
