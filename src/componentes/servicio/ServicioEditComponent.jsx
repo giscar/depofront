@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { clienteForRuc, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -55,9 +55,6 @@ const ServicioEditComponent = () => {
     })
     setCargarImagen(true)
     notify()
-    setTimeout(() => {
-      navigator("/servicios");
-    }, 1000);
   }
 
   useEffect(() => {
@@ -102,7 +99,6 @@ const ServicioEditComponent = () => {
   }, [])
 
   useEffect(() => {
-    debugger
     setRuc(cliente.ruc)
     setRazonSocial(cliente.razonSocial)
     setDireccion(cliente.direccion)
@@ -153,6 +149,10 @@ const ServicioEditComponent = () => {
     formdata.append('size', file.size)
     console.log(formdata)
     uploadFile(formdata);
+    setTimeout(() => {
+      navigator(`/servicioEdit/${id}`)
+    }, 1000);
+    
   }
 
   return (
@@ -404,6 +404,22 @@ const ServicioEditComponent = () => {
                 variant="warning">Cargar imagen
               </Button>
             </Form.Group>
+          </Row>
+          <Row className='pt-4'>
+            
+          {
+            
+                //console.log(servicio.imagenes)
+                servicio.imagenes?.map(function (value, index, array) {
+                  return <Card key={index} style={{ width: '18rem' }}>
+                            <Card.Img variant="top" src={'/images/'+value.filename} />
+                          </Card>
+                
+                })
+              
+              
+              }
+             
           </Row>
         <br />
       </Form>
