@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { clienteForRuc, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
+import { clienteForRuc, deleteFile, inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
 import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import { FaTimes } from 'react-icons/fa';
 
 const ServicioEditComponent = () => {
 
@@ -39,6 +40,7 @@ const ServicioEditComponent = () => {
   const [idTempServicio, setIdTempServicio] = useState("")
 
   const editServicio = (data) => {
+    data.id = id;
     data.codServicio = data.codServicio.toUpperCase();
     data.ruc = data.ruc.toUpperCase();
     data.razonSocial = data.razonSocial.toUpperCase();
@@ -54,13 +56,20 @@ const ServicioEditComponent = () => {
       console.error(error)
     })
     setCargarImagen(true)
+    if(id){
+      servicioForId(id).then((response) => {
+          setServicio(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
     notify()
   }
 
   useEffect(() => {
     if(id){
-      debugger
       servicioForId(id).then((response) => {
+        debugger
           setServicio(response.data);
         }).catch(error => {
             console.log(error);
@@ -107,6 +116,13 @@ const ServicioEditComponent = () => {
     values.direccion = cliente.direccion
   }, [cliente])
 
+  useEffect(() => {
+    console.log(values.horaRetornoLocal)
+    console.log(values.horaSalidaLocal)
+  }, [])
+
+  
+
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
       codServicio: yup.string().required(),
@@ -140,19 +156,31 @@ const ServicioEditComponent = () => {
   });
 
   const handleUpload = (e) => {
-    console.log(file)
-    console.log(id)
     const formdata = new FormData()
     formdata.append('file', file)
     formdata.append('id', id)
     formdata.append('type', file.type)
     formdata.append('size', file.size)
-    console.log(formdata)
     uploadFile(formdata);
-    setTimeout(() => {
-      navigator(`/servicioEdit/${id}`)
-    }, 1000);
-    
+    //if(id){
+      servicioForId(id).then((response) => {
+          setServicio(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    //}
+    window.location.reload(); 
+  }
+
+  const handleInactiveFile = (idImagen) => {
+    //if(id){
+      console.log(idImagen);
+      deleteFile(idImagen).then(() => {
+        window.location.reload(); 
+        }).catch(error => {
+            console.log(error);
+        })
+    //}
   }
 
   return (
@@ -406,20 +434,18 @@ const ServicioEditComponent = () => {
             </Form.Group>
           </Row>
           <Row className='pt-4'>
-            
           {
-            
-                //console.log(servicio.imagenes)
-                servicio.imagenes?.map(function (value, index, array) {
-                  return <Card key={index} style={{ width: '18rem' }}>
-                            <Card.Img variant="top" src={'/images/'+value.filename} />
-                          </Card>
-                
-                })
-              
-              
-              }
-             
+            servicio.imagenes?.map(function (value, index, array) {
+              return <Card className='pb-4' key={index}  style={{ width: '18rem' }}>
+                        <Card.Body className='text-end'>
+                          <Button variant="danger" size="sm" onClick={() => handleInactiveFile(value.id)}>
+                            <FaTimes />
+                          </Button>
+                        </Card.Body>
+                        <Card.Img variant="top" src={'/images/'+value?.filename}  className='pb-1'/>
+                      </Card >
+            })
+          }
           </Row>
         <br />
       </Form>
