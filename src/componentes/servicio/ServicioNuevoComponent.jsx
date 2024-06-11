@@ -150,10 +150,10 @@ const ServicioNuevoComponent = () => {
           </Form.Group>
           </Row>
           <Row>
-          <Form.Group as={Col} md="6" controlId="validationFormik03">
+          <Form.Group as={Col} md="4" controlId="validationFormik03">
             <Form.Label>Razon Social</Form.Label>
             <Form.Control
-              type="text"
+              as="textarea"
               name="razonSocial"
               disabled
               value={values.razonSocial}
@@ -162,16 +162,13 @@ const ServicioNuevoComponent = () => {
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.razonSocial}
-            </Form.Control.Feedback>
           </Form.Group>
           </Row>
           <Row>
-          <Form.Group as={Col} md="6" controlId="validationFormik04">
+          <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Dirección</Form.Label>
             <Form.Control
-              type="text"
+              as="textarea"
               name="direccion"
               disabled
               value={values.direccion}
@@ -180,9 +177,6 @@ const ServicioNuevoComponent = () => {
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.direccion}
-            </Form.Control.Feedback>
           </Form.Group>
           </Row>
           <Row>

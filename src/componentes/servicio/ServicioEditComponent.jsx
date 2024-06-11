@@ -69,7 +69,6 @@ const ServicioEditComponent = () => {
   useEffect(() => {
     if(id){
       servicioForId(id).then((response) => {
-        debugger
           setServicio(response.data);
         }).catch(error => {
             console.log(error);
@@ -121,8 +120,6 @@ const ServicioEditComponent = () => {
     console.log(values.horaSalidaLocal)
   }, [])
 
-  
-
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
       codServicio: yup.string().required(),
@@ -156,30 +153,42 @@ const ServicioEditComponent = () => {
   });
 
   const handleUpload = (e) => {
+    debugger
     const formdata = new FormData()
     formdata.append('file', file)
     formdata.append('id', id)
     formdata.append('type', file.type)
     formdata.append('size', file.size)
-    uploadFile(formdata);
-    //if(id){
-      servicioForId(id).then((response) => {
-          setServicio(response.data);
-        }).catch(error => {
-            console.log(error);
-        })
-    //}
-    window.location.reload(); 
+    uploadFile(formdata).then(() => {
+      if(id){
+        servicioForId(id).then((response) => {
+            setServicio(response.data);
+          }).catch(error => {
+              console.log(error);
+          })
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+    notify();
+    //window.location.reload(); 
   }
 
   const handleInactiveFile = (idImagen) => {
     //if(id){
       console.log(idImagen);
-      deleteFile(idImagen).then(() => {
-        window.location.reload(); 
-        }).catch(error => {
-            console.log(error);
-        })
+      inactiveFile(idImagen).then(() => {
+        if(id){
+          servicioForId(id).then((response) => {
+              setServicio(response.data);
+              notify();
+            }).catch(error => {
+                console.log(error);
+            })
+        }
+      }).catch(error => {
+        console.log(error);
+      })
     //}
   }
 
@@ -226,10 +235,10 @@ const ServicioEditComponent = () => {
           </Form.Group>
           </Row>
           <Row>
-          <Form.Group as={Col} md="6" controlId="validationFormik03">
+          <Form.Group as={Col} md="4" controlId="validationFormik03">
             <Form.Label>Razon Social</Form.Label>
             <Form.Control
-              type="text"
+              as="textarea"
               name="razonSocial"
               disabled
               value={values.razonSocial}
@@ -244,10 +253,10 @@ const ServicioEditComponent = () => {
           </Form.Group>
           </Row>
           <Row>
-          <Form.Group as={Col} md="6" controlId="validationFormik04">
+          <Form.Group as={Col} md="4" controlId="validationFormik04">
             <Form.Label>Direccion</Form.Label>
             <Form.Control
-              type="text"
+              as="textarea"
               name="direccion"
               disabled
               value={values.direccion}
@@ -436,6 +445,7 @@ const ServicioEditComponent = () => {
           <Row className='pt-4'>
           {
             servicio.imagenes?.map(function (value, index, array) {
+              if(value.estado == 1)
               return <Card className='pb-4' key={index}  style={{ width: '18rem' }}>
                         <Card.Body className='text-end'>
                           <Button variant="danger" size="sm" onClick={() => handleInactiveFile(value.id)}>
