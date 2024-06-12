@@ -43,9 +43,6 @@ const ServicioNuevoComponent = () => {
       //setIdTempServicio(data.data.id)
     })
     handleReset()
-    setRazonSocial('')
-    setRuc('')
-    setDireccion('')
     notify()
   }
 
@@ -113,7 +110,7 @@ const ServicioNuevoComponent = () => {
     <div className='container-fluid'>
       <h3>Registrar servicio</h3>
       <br/><br/>
-      <Form noValidate onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <Row>
           <Form.Group as={Col} md="4" controlId="validationFormik01">
             <Form.Label>Codigo del Servicio</Form.Label>

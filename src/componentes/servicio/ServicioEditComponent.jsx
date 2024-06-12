@@ -37,7 +37,9 @@ const ServicioEditComponent = () => {
   const [montacargas, setMontacargas] = useState([])
   const [file, setFile] = useState()
   const [cargarImagen, setCargarImagen] = useState(false)
-  const [idTempServicio, setIdTempServicio] = useState("")
+  const [horaSalidaLocal, setHoraSalidaLocal] = useState("")
+  const [horaRetornoLocal, setHoraRetornoLocal] = useState("")
+  const [totalHoras, setTotalHoras] = useState("")
 
   const editServicio = (data) => {
     data.id = id;
@@ -93,32 +95,23 @@ const ServicioEditComponent = () => {
   }, [])
 
   useEffect(() => {
-    clienteForRuc(servicio.ruc).then((data) => {
-      console.log(data)
-      setCliente(data.data);
-      setRazonSocial(data.razonSocial);
-      setDireccion(data.direccion);
-      values.ruc = cliente.ruc
-      values.razonSocial = cliente.razonSocial
-      values.direccion = cliente.direccion
-    }).catch(error => {
-      console.log(error);
-    })
-  }, [])
-
-  useEffect(() => {
-    setRuc(cliente.ruc)
-    setRazonSocial(cliente.razonSocial)
-    setDireccion(cliente.direccion)
     values.ruc = cliente.ruc
     values.razonSocial = cliente.razonSocial
     values.direccion = cliente.direccion
   }, [cliente])
 
   useEffect(() => {
-    console.log(values.horaRetornoLocal)
-    console.log(values.horaSalidaLocal)
-  }, [])
+    if(horaSalidaLocal, horaRetornoLocal){
+      const horaSalidaLocal1 = new Date(horaSalidaLocal);
+      const horaRetornoLocal1 = new Date(horaRetornoLocal);
+      const diff =  horaRetornoLocal1.getTime() - horaSalidaLocal1.getTime();
+      const horas = diff / (1000 * 60 * 60);
+      console.log(horas.toFixed(2))
+      console.log(values.codServicio)
+      values.totalHoras = horas.toFixed(2)
+      servicio.totalHoras = horas.toFixed(2)
+    }
+  }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
@@ -136,7 +129,7 @@ const ServicioEditComponent = () => {
     }),
     initialValues: {
       codServicio: servicio.codServicio,
-      ruc: servicio.cliente? servicio.cliente[0].ruc : "",
+      ruc: servicio.ruc,
       razonSocial: servicio.cliente? servicio.cliente[0]?.razonSocial : "",
       direccion: servicio.cliente? servicio.cliente[0]?.direccion : "",
       horaSalidaLocal: servicio.horaSalidaLocal,
@@ -170,26 +163,25 @@ const ServicioEditComponent = () => {
     }).catch(error => {
       console.log(error);
     });
+    values.image = "";
     notify();
     //window.location.reload(); 
   }
 
   const handleInactiveFile = (idImagen) => {
-    //if(id){
-      console.log(idImagen);
-      inactiveFile(idImagen).then(() => {
-        if(id){
-          servicioForId(id).then((response) => {
-              setServicio(response.data);
-              notify();
-            }).catch(error => {
-                console.log(error);
-            })
-        }
-      }).catch(error => {
-        console.log(error);
-      })
-    //}
+    console.log(idImagen);
+    inactiveFile(idImagen).then(() => {
+      if(id){
+        servicioForId(id).then((response) => {
+            setServicio(response.data);
+            notify();
+          }).catch(error => {
+              console.log(error);
+          })
+      }
+    }).catch(error => {
+      console.log(error);
+    })
   }
 
   return (
@@ -222,11 +214,10 @@ const ServicioEditComponent = () => {
             <Form.Control
               type="text"
               name="ruc"
-              disabled
+              readOnly
               value={values.ruc}
               onChange={handleChange}
               isInvalid={!!errors.ruc}
-              style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
             <Form.Control.Feedback type="invalid">
@@ -243,13 +234,8 @@ const ServicioEditComponent = () => {
               disabled
               value={values.razonSocial}
               onChange={handleChange}
-              isInvalid={!!errors.razonSocial}
-              style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.razonSocial}
-            </Form.Control.Feedback>
           </Form.Group>
           </Row>
           <Row>
@@ -261,13 +247,8 @@ const ServicioEditComponent = () => {
               disabled
               value={values.direccion}
               onChange={handleChange}
-              isInvalid={!!errors.direccion}
-              style={{ textTransform: 'uppercase' }}
               autoComplete='off'
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.direccion}
-            </Form.Control.Feedback>
           </Form.Group>
           </Row>
           <Row>
@@ -319,8 +300,7 @@ const ServicioEditComponent = () => {
             <Form.Control
               type="datetime-local"
               name="horaSalidaLocal"
-              value={values.horaSalidaLocal}
-              onChange={handleChange}
+              onChange={e => setHoraSalidaLocal(e.target.value)}
               isInvalid={!!errors.horaSalidaLocal}
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'
@@ -370,8 +350,7 @@ const ServicioEditComponent = () => {
             <Form.Control
               type="datetime-local"
               name="horaRetornoLocal"
-              value={values.horaRetornoLocal}
-              onChange={handleChange}
+              onChange={e => setHoraRetornoLocal(e.target.value)}
               isInvalid={!!errors.horaRetornoLocal}
               style={{ textTransform: 'uppercase' }}
               autoComplete='off'

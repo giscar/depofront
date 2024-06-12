@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { buscarServicioByDatos, buscarServicioByDatosAggregate } from '../../service/FacturaService';
+import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
 import { FaPencilAlt } from 'react-icons/fa';
 
 const ServicioComponent = () => {
@@ -129,10 +129,10 @@ const ServicioComponent = () => {
               <td>{servicio.codServicio}</td>
               <td>{servicio.ruc}</td>
               <td>{servicio.cliente[0].razonSocial}</td>
-              <td>{servicio.horaSalidaLocal}</td>
-              <td>{servicio.horaInicioServicio}</td>
-              <td>{servicio.horaFinServicio}</td>
-              <td>{servicio.horaRetornoLocal}</td>
+              <td>{servicio.horaSalidaLocal.replace("T", " ")}</td>
+              <td>{servicio.horaInicioServicio.replace("T", " ")}</td>
+              <td>{servicio.horaFinServicio.replace("T", " ")}</td>
+              <td>{servicio.horaRetornoLocal.replace("T", " ")}</td>
               <td>{servicio.operador[0].nombre}</td>
               <td>{servicio.montacarga[0].nombre}</td>
               <td>
