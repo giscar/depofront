@@ -2,7 +2,6 @@ import React,{ useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { Formik, useFormik } from 'formik';
 import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
 import { FaCircleNotch } from 'react-icons/fa';
 
@@ -12,7 +11,6 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
   const [razonSocial, setRazonSocial] = useState();
   const [clientes, setClientes] = useState([])
   
-//  TODO
   const buscarClienteByDescripcion = () => {
     const data = {ruc, razonSocial}
     if (!data.ruc && !data.razonSocial) {
@@ -35,16 +33,11 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
 
   const seleccionarCliente = (cliente) => {
     setCliente(cliente)
+    setClientes([])
+    setRuc('')
+    setRazonSocial('')
     handleClose()
   }
-
-  const formik = useFormik({
-    initialValues : {
-      ruc : "",
-      razonSocial : ""
-    }
-  })
-  
 
   return (
     <>
@@ -59,12 +52,13 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+            <Form.Group className="mb-3">
               <Form.Label>RUC</Form.Label>
               <Form.Control
                 type="text"
                 name='ruc'
                 placeholder="Ingrese el ruc"
+                value={ ruc }
                 onChange={(e) =>{setRuc(e.target.value)}}
                 autoFocus
               />
@@ -78,6 +72,7 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
                 type="text"
                 name='razonSocial'
                 placeholder="Ingrese el nombre del cliente"
+                value={ razonSocial }
                 onChange={(e) =>{setRazonSocial(e.target.value)}}
                 autoFocus
               />
@@ -92,32 +87,34 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
             Buscar
           </Button>
           <br/>
-          <table className='table table-striped table-bordered table-hover'>
-            <thead>
-                <tr>
-                    <th>RUC</th>
-                    <th>Razon</th>
-                    <th>Dirección</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    clientes.map(cliente =>
-                        <tr key={cliente.id}>
-                            <td>{cliente.ruc}</td>
-                            <td>{cliente.razonSocial}</td>
-                            <td>{cliente.direccion}</td>
-                            <td>
-                              <Button onClick={() => seleccionarCliente(cliente)}>
-                                <FaCircleNotch />
-                              </Button>
-                            </td>
-                        </tr>
-                    )
+          {clientes.length > 0 && 
+            <table className='table table-striped table-bordered table-hover'>
+              <thead>
+                  <tr>
+                      <th>RUC</th>
+                      <th>Razon</th>
+                      <th>Dirección</th>
+                      <th></th>
+                  </tr>
+              </thead>
+              <tbody>
+                { 
+                  clientes.map(cliente =>
+                    <tr key={cliente.id}>
+                      <td>{cliente.ruc}</td>
+                      <td>{cliente.razonSocial}</td>
+                      <td>{cliente.direccion}</td>
+                      <td>
+                        <Button onClick={() => seleccionarCliente(cliente)}>
+                          <FaCircleNotch />
+                        </Button>
+                      </td>
+                    </tr>
+                  )
                 }
-            </tbody>
-        </table>
+              </tbody>
+            </table>
+          }
         </Modal.Footer>
       </Modal>
     </>

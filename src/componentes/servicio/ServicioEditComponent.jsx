@@ -44,13 +44,13 @@ const ServicioEditComponent = () => {
   const editServicio = (data) => {
     data.id = id;
     data.codServicio = data.codServicio.toUpperCase();
-    data.ruc = data.ruc.toUpperCase();
+    data.ruc = data.ruc;
     data.razonSocial = data.razonSocial.toUpperCase();
     data.direccion = data.direccion.toUpperCase();
-    data.horaSalidaLocal = data.horaSalidaLocal.toUpperCase();
-    data.horaInicioServicio = data.horaInicioServicio.toUpperCase();
-    data.horaFinServicio = data.horaFinServicio.toUpperCase();
-    data.horaRetornoLocal = data.horaRetornoLocal.toUpperCase();
+    data.horaSalidaLocal = horaSalidaLocal;
+    data.horaInicioServicio = data.horaInicioServicio;
+    data.horaFinServicio = data.horaFinServicio;
+    data.horaRetornoLocal = horaRetornoLocal;
     data.operadorId = data.operadorId;
     data.montacargaId = data.montacargaId;
     data.estado = "1";
@@ -71,6 +71,7 @@ const ServicioEditComponent = () => {
   useEffect(() => {
     if(id){
       servicioForId(id).then((response) => {
+          debugger
           setServicio(response.data);
         }).catch(error => {
             console.log(error);
@@ -108,23 +109,17 @@ const ServicioEditComponent = () => {
       const horas = diff / (1000 * 60 * 60);
       console.log(horas.toFixed(2))
       console.log(values.codServicio)
-      values.totalHoras = horas.toFixed(2)
+      setTotalHoras(horas.toFixed(2))
       servicio.totalHoras = horas.toFixed(2)
     }
   }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
     validationSchema: yup.object({
-      codServicio: yup.string().required(),
-      ruc: yup.string().required(),
-      razonSocial: yup.string().required(),
-      direccion: yup.string().required(),
-      //horaSalidaLocal: yup.string().required(),
-      //horaInicioServicio: yup.string().required(),
-      //horaFinServicio: yup.string().required(),
-      //horaRetornoLocal: yup.string().required(),
-      operadorId: yup.string().required(),
-      montacargaId: yup.string().required(),
+      codServicio: yup.string().required("Debe ingresar el código del servicio"),
+      ruc: yup.string().required("Debe seleccionar el cliente"),
+      operadorId: yup.string().required("Debe seleccionar el operador"),
+      montacargaId: yup.string().required("Debe ingresar la montacarga"),
       
     }),
     initialValues: {
@@ -146,7 +141,6 @@ const ServicioEditComponent = () => {
   });
 
   const handleUpload = (e) => {
-    debugger
     const formdata = new FormData()
     formdata.append('file', file)
     formdata.append('id', id)
