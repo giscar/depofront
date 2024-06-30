@@ -8,7 +8,7 @@ import { FaCircleNotch } from 'react-icons/fa';
 const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
 
   const [ruc, setRuc] = useState();
-  const [razonSocial, setRazonSocial] = useState();
+  const [razonSocial, setRazonSocial] = useState('');
   const [clientes, setClientes] = useState([])
   
   const buscarClienteByDescripcion = () => {
@@ -60,13 +60,10 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
                 placeholder="Ingrese el ruc"
                 value={ ruc }
                 onChange={(e) =>{setRuc(e.target.value)}}
-                autoFocus
+                autoComplete='off'
               />
             </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1"
-            >
+            <Form.Group className="mb-3">
               <Form.Label>Cliente</Form.Label>
               <Form.Control
                 type="text"
@@ -74,7 +71,7 @@ const BusquedaClienteComponent = ({show, handleClose, setCliente}) => {
                 placeholder="Ingrese el nombre del cliente"
                 value={ razonSocial }
                 onChange={(e) =>{setRazonSocial(e.target.value)}}
-                autoFocus
+                autoComplete='off'
               />
             </Form.Group>
           </Form>

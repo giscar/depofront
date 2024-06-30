@@ -53,7 +53,7 @@ export const operadorForId = (id) => axios.get(REST_API_BASE_URL_OPERADOR+"?id="
 
 export const operadorForAll = () => axios.get(REST_API_BASE_URL_OPERADOR+"/all");
 
-export const operadorActivo = (estado) => axios.get(REST_API_BASE_URL_OPERADOR+"/estado");
+export const operadorActivo = () => axios.get(REST_API_BASE_URL_OPERADOR+"/estado");
 
 export const servicioSave = (servicio) => axios.post(REST_API_BASE_URL_SERVICIO, servicio);
 
@@ -68,6 +68,8 @@ export const servicioActivo = (estado) => axios.get(REST_API_BASE_URL_SERVICIO+"
 export const buscarServicioByDatos = (ruc, codServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/busqueda?codServicio="+codServicio+"&ruc="+ruc);
 
 export const buscarServicioByDatosAggregate = (ruc, codServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaAggregate?codServicio="+codServicio+"&ruc="+ruc);
+
+export const buscarCodigoServicio = () => axios.get(REST_API_BASE_URL_SERVICIO+"/maxCodServicio"); 
 
 export const uploadFile = (file, id, type, size) => axios.post(REST_API_BASE_URL_SERVICIO+"/upload", file, id, type, size);
 

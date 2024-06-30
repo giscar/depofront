@@ -35,7 +35,7 @@ const ServicioEditComponent = () => {
   const [direccion, setDireccion] = useState([])
   const [operadores, setOperadores] = useState([])
   const [montacargas, setMontacargas] = useState([])
-  const [file, setFile] = useState()
+  const [file, setFile] = useState('')
   const [cargarImagen, setCargarImagen] = useState(false)
   const [horaSalidaLocal, setHoraSalidaLocal] = useState("")
   const [horaRetornoLocal, setHoraRetornoLocal] = useState("")
