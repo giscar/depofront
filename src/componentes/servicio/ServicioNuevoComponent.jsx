@@ -171,8 +171,12 @@ const ServicioNuevoComponent = () => {
     setHoraRetornoLocal('')
     setTotalHoras('')
     setMontoServicio('')
-
   };
+
+  const resetFormularioIngreso = () => {
+    limpiar();
+    handleCodServicio();
+  }
 
   return (
     <>
@@ -180,114 +184,199 @@ const ServicioNuevoComponent = () => {
         <h3>Registrar servicio</h3>
         <br /><br />
         <form>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Codigo del Servicio:</label>
-              <input type='number' 
-                     placeholder='Ingrese el codigo del servicio' 
-                     value={codServicio} 
-                     className={`form-control ${errors.msgCodServicio? 'is-invalid' : ''}`} 
-                     onChange={(e) =>{setCodServicio(e.target.value)}}>
-              </input>
-              {errors.msgCodServicio && <div className='invalid-feedback'>{errors.msgCodServicio}</div>}
+
+        <div className="row">
+          <div className="col-lg-6 card-deck">
+            <div className="card">
+              <div className="card-header">
+                  <h4 className="card-title">Datos Iniciales del Servicio</h4>
+                  <p className="text-muted mb-0">Debe ser ingresaado por el/la administrador del modulo de servicios.</p> 
+              </div>
+              <div className="card-body">
+                <div className="mb-3">
+                  <label for="inputCodServicio">Codigo del servicio:</label>
+                  <input type="number" 
+                    id="inputCodServicio" 
+                    aria-describedby="emailHelp" 
+                    placeholder="Codigo del servicio"
+                    value={codServicio} 
+                    className={`bg-secondary bg-opacity-10 form-control ${errors.msgCodServicio? 'is-invalid' : ''}`}
+                    readOnly
+                    onChange={(e) =>{setCodServicio(e.target.value)}}>
+                  </input>
+                  {errors.msgCodServicio && <small className='form-text text-muted invalid-feedback'>{errors.msgCodServicio}</small>}
+                </div>
+                <div className="mb-3">
+                  <label for="inputRuc">Numero de RUC:</label>
+                    <input type="number" 
+                      id="inputRuc" 
+                      placeholder="Ingrese el numero de RUC"
+                      value={ruc} 
+                      className={`form-control ${errors.msgRuc? 'is-invalid' : ''}`}
+                      onClick={handleShow} 
+                      onChange={(e) =>{setRuc(e.target.value)}}>
+                    </input>
+                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                </div>
+                <div className="mb-3">
+                  <label for="inputRazonSocial">Razon Social:</label>
+                  <input type="text" 
+                    id="inputRazonSocial"
+                    placeholder='Razon Social' 
+                    value={razonSocial}
+                    className='form-control'
+                    disabled
+                    onChange={(e) =>{setRazonSocial(e.target.value)}}>
+                  </input>
+                </div>
+                <div className="mb-3">
+                  <label for="inputRazonSocial">Dirección:</label>
+                  <input type='text' 
+                    placeholder='Dirección' 
+                    value={direccion} 
+                    className='form-control'
+                    disabled
+                    onChange={(e) =>{setDireccion(e.target.value)}}>
+                  </input>
+                </div>
+                <div className="mb-3">
+                  <label className='form-label'>Operador:</label>
+                  <select value={operadorId}
+                        className={`form-select${errors.msgOperadorId? ' is-invalid' : ''}`} 
+                        onChange={(e) =>{setOperadorId(e.target.value)}}>
+                    <option value="">Seleccione</option>
+                    {
+                      operadores.map(operador =>
+                        <option key={operador.id} value={operador.id}>{operador.nombre}</option>
+                      )
+                    }
+                  </select>
+                  {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
+                </div>
+                <div className="mb-3">
+                  <label className='form-label'>Montacarga:</label>
+                  <select value={montacargaId}
+                        className={`form-select${errors.msgMontacargaId? ' is-invalid' : ''}`} 
+                        onChange={(e) =>{setMontacargaId(e.target.value)}}>
+                    <option value="">Seleccione</option>
+                    {
+                      montacargas.map(montacarga =>
+                        <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
+                      )
+                    }
+                  </select>
+                  {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
+                </div>
+                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
+                &nbsp;&nbsp;
+                <button type="button" className="btn btn-warning" onClick={resetFormularioIngreso}>Limpiar</button>                                        
+              </div>
+            </div>
           </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Numero de RUC:</label>
-              <input type='number' 
-                     placeholder='Ingrese el numero de RUC' 
-                     value={ruc} 
-                     onClick={handleShow} 
-                     className={`form-control ${errors.msgRuc? 'is-invalid' : ''}`} 
-                     onChange={(e) =>{setRuc(e.target.value)}}>
-              </input>
-              {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+
+          <div className="col-lg-6 card-deck">
+              <div className="card">
+                  <div className="card-header">
+                      <h4 className="card-title">Datos de la ejecución del servicio</h4>
+                      <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                      </p>
+                  </div>
+                  <div className="card-body">                                    
+                      <div className="general-label">
+                          <form>
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Salida de la Empresa:</label>
+                                  <div className="col-sm-8">
+                                    <input type="datetime-local"
+                                           value={horaSalidaLocal} 
+                                           className='form-control'
+                                           onChange={(e) =>{setHoraSalidaLocal(e.target.value)}}>
+                                    </input>
+                                  </div>
+                              </div>
+
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Inicio del Servicio:</label>
+                                  <div className="col-sm-8">
+                                    <input type="datetime-local"
+                                           value={horaInicioServicio} 
+                                           className='form-control'
+                                           onChange={(e) =>{setHoraInicioServicio(e.target.value)}}>
+                                    </input>
+                                  </div>
+                              </div>
+
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Fin del Servicio:</label>
+                                  <div className="col-sm-8">
+                                    <input type="datetime-local"
+                                           value={horaFinServicio} 
+                                           className='form-control'
+                                           onChange={(e) =>{setHoraFinServicio(e.target.value)}}>
+                                    </input>
+                                  </div>
+                              </div>
+
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Retorno a la empresa:</label>
+                                  <div className="col-sm-8">
+                                    <input type="datetime-local"
+                                           value={horaRetornoLocal} 
+                                           className='form-control'
+                                           onChange={(e) =>{setHoraRetornoLocal(e.target.value)}}>
+                                    </input>
+                                  </div>
+                              </div>
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Retorno a la empresa:</label>
+                                  <div className="col-sm-8">
+                                    <input type="datetime-local"
+                                           value={horaRetornoLocal} 
+                                           className='form-control'
+                                           onChange={(e) =>{setHoraRetornoLocal(e.target.value)}}>
+                                    </input>
+                                  </div>
+                              </div>
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Horas de servicio:</label>
+                                  <div className="col-sm-8">
+                                    <input  type="number"
+                                            name="totalHoras"
+                                            placeholder='Cantidad de horas'
+                                            className='form-control'
+                                            value={ totalHoras }
+                                            onChange={(e) =>{setTotalHoras(e.target.value)}}
+                                            autoComplete='off'>
+                                    </input>
+                                  </div>
+                              </div>
+                              <div className="mb-3 row">
+                                  <label className="col-sm-4 col-form-label">Monto del servicio:</label>
+                                  <div className="col-sm-8">
+                                    <input  type="text"
+                                            name="montoServicio"
+                                            placeholder='Monto'
+                                            value={ montoServicio }
+                                            onChange={(e) =>{setMontoServicio(e.target.value)}}
+                                            className='form-control'
+                                            autoComplete='off'>
+                                    </input>
+                                  </div>
+                              </div>
+                              <div className="row">
+                                  <div className="col-sm-10">
+                                      <button type="button" className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
+                                      &nbsp;&nbsp;
+                                      <button type="button" className="btn btn-warning" onClick={resetFormularioIngreso}>Limpiar</button>
+                                  </div>
+                              </div> 
+                          </form>           
+                      </div>
+                  </div>
+              </div>
           </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Razon Social:</label>
-              <input type='text' 
-                     placeholder='Razon Social' 
-                     value={razonSocial} 
-                     style={{ textTransform: 'uppercase' }}
-                     className='form-control'
-                     disabled
-                     onChange={(e) =>{setRazonSocial(e.target.value)}}>
-              </input>
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Dirección:</label>
-              <input type='text' 
-                     placeholder='Dirección' 
-                     value={direccion} 
-                     style={{ textTransform: 'uppercase' }}
-                     className='form-control'
-                     disabled
-                     onChange={(e) =>{setDireccion(e.target.value)}}>
-              </input>
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Operador:</label>
-              <select value={operadorId}
-                    className={`form-select${errors.msgOperadorId? ' is-invalid' : ''}`} 
-                    onChange={(e) =>{setOperadorId(e.target.value)}}>
-                <option value="">Seleccione</option>
-                {
-                  operadores.map(operador =>
-                    <option key={operador.id} value={operador.id}>{operador.nombre}</option>
-                  )
-                }
-              </select>
-              {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Montacarga:</label>
-              <select value={montacargaId}
-                    className={`form-select${errors.msgMontacargaId? ' is-invalid' : ''}`} 
-                    onChange={(e) =>{setMontacargaId(e.target.value)}}>
-                <option value="">Seleccione</option>
-                {
-                  montacargas.map(montacarga =>
-                    <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
-                  )
-                }
-              </select>
-              {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Hora de salida de la Empresa:</label>
-              <input type="datetime-local"
-                     value={horaSalidaLocal} 
-                     className='form-control'
-                     onChange={(e) =>{setHoraSalidaLocal(e.target.value)}}>
-              </input>
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Hora de inicio del Servicio:</label>
-              <input type="datetime-local"
-                     placeholder='Ingrese el codigo del servicio' 
-                     value={codServicio} 
-                     className='form-control' 
-                     onChange={(e) =>{setHoraInicioServicio(e.target.value)}}>
-              </input>
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Hora de fin del Servicio:</label>
-              <input type="datetime-local"
-                     placeholder='Ingrese el codigo del servicio' 
-                     value={codServicio} 
-                     className='form-control'
-                     onChange={(e) =>{setHoraFinServicio(e.target.value)}}>
-              </input>
-          </div>
-          <div className='form-group mb-2'>
-              <label className='form-label'>Hora de retorno a la empresa:</label>
-              <input type="datetime-local"
-                     placeholder='Ingrese el codigo del servicio' 
-                     value={codServicio} 
-                     className='form-control'
-                     onChange={(e) =>{setHoraRetornoLocal(e.target.value)}}>
-              </input>
-          </div>
+        </div>
         </form>
-        <button className='btn btn-success' onClick={handleSubmit}>Enviar</button>
       </div>
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
