@@ -1,5 +1,3 @@
-
-import './App.css'
 import FacturaComponent from './componentes/factura/FacturaComponent'
 import FindFacturaComponent from './componentes/factura/FindFacturaComponent'
 import HeaderComponent from './componentes/HeaderComponent'
@@ -25,8 +23,6 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <HeaderComponent />
-          <br/>
           <Routes>
             <Route path='/' element={<LoginComponent />}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
