@@ -8555,7 +8555,7 @@ input[type=number]:focus,
   padding-top: calc(.4rem + 1px);
   padding-bottom: calc(.4rem + 1px);
   margin-bottom: 0;
-  font-size: 0.9em;
+  font-size: .8125rem;
   line-height: 1.5;
   color: #656d9a;
 }
@@ -8586,7 +8586,7 @@ input[type=number]:focus,
   display: block;
   width: 100%;
   padding: 0.375rem 2.25rem 0.375rem 0.75rem;
-  font-size: 0.9em;
+  font-size: .8125rem;
   font-weight: 400;
   line-height: 1.5;
   color: #000444;
@@ -8604,21 +8604,55 @@ input[type=number]:focus,
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.btn-primary-depo {
-  --bs-btn-color: #ffffff;
-  --bs-btn-bg: #09459c;
+button.btn-primary-depo {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #0b51b7;
   --bs-btn-border-color: #0b51b7;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #0b5ed7;
+  --bs-btn-hover-border-color: #0a58ca;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #0a58ca;
+  --bs-btn-active-border-color: #0a53be;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #0d6efd;
+  --bs-btn-disabled-border-color: #0d6efd;
+}
+
+button.btn-warning-depo {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: #ff9f43;
+  --bs-btn-border-color: #ff9f43;
   --bs-btn-hover-color: #ffffff;
-  --bs-btn-hover-bg: #09459c;
-  --bs-btn-hover-border-color: #094192;
-  --bs-btn-focus-shadow-rgb: 48, 107, 194;
+  --bs-btn-hover-bg: #d98739;
+  --bs-btn-hover-border-color: #cc7f36;
+  --bs-btn-focus-shadow-rgb: 255, 173, 95;
   --bs-btn-active-color: #ffffff;
-  --bs-btn-active-bg: #094192;
-  --bs-btn-active-border-color: #083d89;
+  --bs-btn-active-bg: #cc7f36;
+  --bs-btn-active-border-color: #bf7732;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #ffffff;
-  --bs-btn-disabled-bg: #0b51b7;
-  --bs-btn-disabled-border-color: #0b51b7;
+  --bs-btn-disabled-bg: #ff9f43;
+  --bs-btn-disabled-border-color: #ff9f43;
+}
+
+button.btn-danger-depo {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: #ef4d56;
+  --bs-btn-border-color: #ef4d56;
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: #cb4149;
+  --bs-btn-hover-border-color: #bf3e45;
+  --bs-btn-focus-shadow-rgb: 241, 104, 111;
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: #bf3e45;
+  --bs-btn-active-border-color: #b33a41;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #ffffff;
+  --bs-btn-disabled-bg: #ef4d56;
+  --bs-btn-disabled-border-color: #ef4d56;
 }
 
 .btn-depo {
@@ -8660,12 +8694,14 @@ input[type=number]:focus,
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, -webkit-box-shadow .15s ease-in-out;
 }
 
-.td-size-depo{
-  font-size: 0.9em;
+th.td-th-size-depo{
+  font-size: .8125rem;
+}
+
+td.td-th-size-depo{
+  font-size: .8125rem;
 }
 
 .icon-link-depo{
-  font-size: large;
-  vertical-align: top;
   cursor: pointer;
 }

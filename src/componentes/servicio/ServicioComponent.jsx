@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
 import { FaPencilAlt } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ServicioComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
@@ -27,34 +26,37 @@ const ServicioComponent = () => {
     navigator(`/servicioEdit/${id}`)
   }
 
-  const buscarServicio = (data) => {
-    if (!data.codServicio && !data.ruc) {
+  const findService = () => {
+    debugger
+    if (!codServicio && !ruc) {
       return
     }
-    buscarServicioByDatosAggregate(data.ruc, data.codServicio).then((response) => {
+    buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
       debugger
       setServicios(response.data);
     }).catch(error => {
       console.error(error)
     })
-
   }
-
-  const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
-    validationSchema: yup.object({
-      codServicio: yup.string(),
-      ruc: yup.string()
-    }),
-    initialValues: {
-      codServicio: '',
-      ruc: ''
-    },
-    onSubmit: buscarServicio,
-  })
 
   return (
     <>
       <div className="container-fluid">
+      <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Servicios</a></li>
+                  <li className="breadcrumb-item active">Busqueda</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Busqueda de servicio</h4>
+            </div>
+          </div>
+        </div>
+        <br />
         <div className="row">
           <div className="col-lg-12 card-deck">
             <div className="card">
@@ -65,7 +67,7 @@ const ServicioComponent = () => {
               <div className="card-body">
                 <div className='row'>
                   <div className="col-lg-6">
-                    <label for="inputCodServicio" className='col-form-label-zise'>Codigo del servicio:</label>
+                    <label className='col-form-label-zise'>Codigo del servicio:</label>
                     <input type="number"
                       id="inputCodServicio"
                       placeholder="Codigo del servicio"
@@ -75,7 +77,7 @@ const ServicioComponent = () => {
                     </input>
                   </div>
                   <div className="col-lg-6">
-                    <label for="inputRuc" className='col-form-label-zise'>Numero de RUC:</label>
+                    <label className='col-form-label-zise'>Numero de RUC:</label>
                     <input type="number"
                       id="inputRuc"
                       placeholder="Ingrese el numero de RUC"
@@ -86,7 +88,7 @@ const ServicioComponent = () => {
                   </div>
                 </div>
                 <div className='mt-4 float-rigth'>
-                  <button type="button" className="btn btn-primary" onClick={handleSubmit}>Buscar</button>
+                  <button type="button" className="btn btn-primary" onClick={findService}>Buscar</button>
                   &nbsp;&nbsp;
                   <button type="button" className="btn btn-warning" >Limpiar</button>
                 </div>
@@ -96,40 +98,40 @@ const ServicioComponent = () => {
         </div>
 
         <br />
-        <div class="table-responsive">
-          <table class="table mb-0">
-            <thead class="thead-light">
+        <div className="table-responsive">
+          <table className="table mb-0">
+            <thead className="thead-light">
               <tr>
-                <th>Codigo</th>
-                <th>RUC</th>
-                <th>Razon Social</th>
-                <th>Salida local</th>
-                <th>Inicio servicio</th>
-                <th>Fin servicio</th>
-                <th>Retorno local</th>
-                <th>Operador</th>
-                <th>Montacarga</th>
-                <th>Estado</th>
-                <th>Accion</th>
+                <th className='td-th-size-depo'>Codigo</th>
+                <th className='td-th-size-depo'>RUC</th>
+                <th className='td-th-size-depo'>Razon Social</th>
+                <th className='td-th-size-depo'>Salida local</th>
+                <th className='td-th-size-depo'>Inicio servicio</th>
+                <th className='td-th-size-depo'>Fin servicio</th>
+                <th className='td-th-size-depo'>Retorno local</th>
+                <th className='td-th-size-depo'>Operador</th>
+                <th className='td-th-size-depo'>Montacarga</th>
+                <th className='td-th-size-depo'>Estado</th>
+                <th className='td-th-size-depo'>Accion</th>
               </tr>
             </thead>
             <tbody>
               {
                 servicios.map(servicio =>
                   <tr key={servicio.id}>
-                    <td className='td-size-depo'>{servicio.codServicio}</td>
-                    <td className='td-size-depo'>{servicio.ruc}</td>
-                    <td className='td-size-depo'>{servicio.cliente[0].razonSocial}</td>
-                    <td className='td-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
-                    <td className='td-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
-                    <td className='td-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
-                    <td className='td-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
-                    <td className='td-size-depo'>{servicio.operador[0].nombre}</td>
-                    <td className='td-size-depo'>{servicio.montacarga[0].nombre}</td>
-                    <td className='td-size-depo'><span class="badge badge-boxed  badge-outline-success">Business</span></td>
+                    <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                    <td className='td-th-size-depo'>{servicio.ruc}</td>
+                    <td className='td-th-size-depo'>{servicio.cliente[0].razonSocial}</td>
+                    <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
+                    <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
+                    <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
+                    <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
+                    <td className='td-th-size-depo'>{servicio.operador[0].nombre}</td>
+                    <td className='td-th-size-depo'>{servicio.montacarga[0].nombre}</td>
+                    <td className='td-th-size-depo'><span class="badge badge-boxed  badge-outline-success">Business</span></td>
                     <td>
-                      <a className="icon-link icon-link-depo" onClick={() => editServicio(servicio.id)}>
-                      <i class="fa-solid fa-pencil"></i>
+                      <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
+                        <FaPencilAlt />
                       </a>
                     </td>
                   </tr>

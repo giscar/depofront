@@ -38,15 +38,6 @@ const ServicioNuevoComponent = () => {
     theme: "colored",
   });
 
-  const handleSubmit1 = (event) => {
-    debugger
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  };
-
   const validateForm = () => {
     debugger
     let valid = true;
@@ -198,18 +189,19 @@ const ServicioNuevoComponent = () => {
         </div>
         <br />
 
-          <div className="row">
-            <div className="col-lg-6 card-deck">
-              <div className="card">
-                <div className="card-header">
-                  <h4 className="card-title">Datos Iniciales del Servicio</h4>
-                  <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
-                </div>
-                <div className="card-body">
-                  <form>
-                  <div className="mb-3 row">
-                    <label for="inputCodServicio" className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
-                    <div className="col-sm-8">
+        <div className="row">
+
+          <div className="col-lg-6 card-deck">
+
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos Iniciales del Servicio</h4>
+                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+              </div>
+              <div className="card-body">
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
+                  <div className="col-sm-8">
                     <input type="number"
                       id="inputCodServicio"
                       placeholder="Codigo del servicio"
@@ -218,12 +210,12 @@ const ServicioNuevoComponent = () => {
                       readOnly
                       onChange={(e) => { setCodServicio(e.target.value) }}>
                     </input>
-                    </div>
-                    {errors.msgCodServicio && <small className='form-text text-muted invalid-feedback'>{errors.msgCodServicio}</small>}
                   </div>
-                  <div className="mb-3 row">
-                    <label for="inputRuc" className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
-                    <div className="col-sm-8">
+                  {errors.msgCodServicio && <small className='form-text text-muted invalid-feedback'>{errors.msgCodServicio}</small>}
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
+                  <div className="col-sm-8">
                     <input type="number"
                       id="inputRuc"
                       placeholder="Ingrese el numero de RUC"
@@ -233,11 +225,11 @@ const ServicioNuevoComponent = () => {
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
-                    </div>
                   </div>
-                  <div className="mb-3 row">
-                    <label for="inputRazonSocial" className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
-                    <div className="col-sm-8">
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
+                  <div className="col-sm-8">
                     <input type="text"
                       id="inputRazonSocial"
                       placeholder='Razon Social'
@@ -246,11 +238,11 @@ const ServicioNuevoComponent = () => {
                       disabled
                       onChange={(e) => { setRazonSocial(e.target.value) }}>
                     </input>
-                    </div>
                   </div>
-                  <div className="mb-3 row">
-                    <label for="inputRazonSocial" className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
-                    <div className="col-sm-8">
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
+                  <div className="col-sm-8">
                     <input type='text'
                       placeholder='Dirección'
                       value={direccion}
@@ -258,11 +250,11 @@ const ServicioNuevoComponent = () => {
                       disabled
                       onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>
-                    </div>
                   </div>
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
-                    <div className="col-sm-8">
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
+                  <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
                       onChange={(e) => { setOperadorId(e.target.value) }}>
@@ -274,11 +266,11 @@ const ServicioNuevoComponent = () => {
                       }
                     </select>
                     {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
-                    </div>
                   </div>
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
-                    <div className="col-sm-8">
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
+                  <div className="col-sm-8">
                     <select value={montacargaId}
                       className={`form-select-depo${errors.msgMontacargaId ? ' is-invalid' : ''}`}
                       onChange={(e) => { setMontacargaId(e.target.value) }}>
@@ -290,119 +282,99 @@ const ServicioNuevoComponent = () => {
                       }
                     </select>
                     {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
-                    </div>
-                    
                   </div>
-                  <button type="button" className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
-                  &nbsp;&nbsp;
-                  <button type="button" className="btn btn-warning" onClick={resetFormularioIngreso}>Limpiar</button>
-                  </form>
+
                 </div>
+                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                &nbsp;&nbsp;
+                <button type="button" className="btn-depo btn-warning-depo" onClick={resetFormularioIngreso}>Limpiar</button>
               </div>
             </div>
+          </div>
 
-            <div className="col-lg-6 card-deck">
-              <div className="card">
-                <div className="card-header">
-                  <h4 className="card-title">Datos de la ejecución del servicio</h4>
-                  <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
-                  </p>
-                </div>
-                <div className="card-body">
-                  <div className="general-label">
-                    <form>
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Salida de la Empresa:</label>
-                        <div className="col-sm-8">
-                          <input type="datetime-local"
-                            value={horaSalidaLocal}
-                            className='form-control-depo'
-                            onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
-                          </input>
-                        </div>
-                      </div>
+          <div className="col-lg-6 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos de la ejecución del servicio</h4>
+                <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                </p>
+              </div>
+              <div className="card-body">
+                <div className="general-label">
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Salida de la Empresa:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaSalidaLocal}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
 
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Inicio del Servicio:</label>
-                        <div className="col-sm-8">
-                          <input type="datetime-local"
-                            value={horaInicioServicio}
-                            className='form-control-depo'
-                            onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
-                          </input>
-                        </div>
-                      </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Inicio del Servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaInicioServicio}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
 
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Fin del Servicio:</label>
-                        <div className="col-sm-8">
-                          <input type="datetime-local"
-                            value={horaFinServicio}
-                            className='form-control-depo'
-                            onChange={(e) => { setHoraFinServicio(e.target.value) }}>
-                          </input>
-                        </div>
-                      </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Fin del Servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaFinServicio}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraFinServicio(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
 
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
-                        <div className="col-sm-8">
-                          <input type="datetime-local"
-                            value={horaRetornoLocal}
-                            className='form-control-depo'
-                            onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
-                          </input>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
-                        <div className="col-sm-8">
-                          <input type="datetime-local"
-                            value={horaRetornoLocal}
-                            className='form-control-depo'
-                            onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
-                          </input>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio:</label>
-                        <div className="col-sm-8">
-                          <input type="number"
-                            name="totalHoras"
-                            placeholder='Cantidad de horas'
-                            className='form-control-depo'
-                            value={totalHoras}
-                            onChange={(e) => { setTotalHoras(e.target.value) }}
-                            autoComplete='off'>
-                          </input>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
-                        <div className="col-sm-8">
-                          <input type="text"
-                            name="montoServicio"
-                            placeholder='Monto'
-                            value={montoServicio}
-                            onChange={(e) => { setMontoServicio(e.target.value) }}
-                            className='form-control-depo'
-                            autoComplete='off'>
-                          </input>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-sm-10">
-                          <button type="button" className="btn btn-primary" onClick={handleSubmit}>Guardar</button>
-                          &nbsp;&nbsp;
-                          <button type="button" className="btn btn-warning" onClick={resetFormularioIngreso}>Limpiar</button>
-                        </div>
-                      </div>
-                    </form>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaRetornoLocal}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
+                        name="totalHoras"
+                        placeholder='Cantidad de horas'
+                        className='form-control-depo'
+                        value={totalHoras}
+                        onChange={(e) => { setTotalHoras(e.target.value) }}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="montoServicio"
+                        placeholder='Monto'
+                        value={montoServicio}
+                        onChange={(e) => { setMontoServicio(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
