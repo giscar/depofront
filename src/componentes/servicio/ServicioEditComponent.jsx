@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { clienteForRuc, deleteFile, inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
 import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
-import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { FaTimes } from 'react-icons/fa';
@@ -29,17 +28,23 @@ const ServicioEditComponent = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [ruc, setRuc] = useState([])
-  const [cliente, setCliente] = useState([])
-  const [razonSocial, setRazonSocial] = useState([])
-  const [direccion, setDireccion] = useState([])
+  const [cliente, setCliente] = useState('')
   const [operadores, setOperadores] = useState([])
   const [montacargas, setMontacargas] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [razonSocial, setRazonSocial] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [codServicio, setCodServicio] = useState('')
+  const [operadorId, setOperadorId] = useState('')
+  const [montacargaId, setMontacargaId] = useState('')
+  const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
+  const [horaInicioServicio, setHoraInicioServicio] = useState('')
+  const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
+  const [horaFinServicio, setHoraFinServicio] = useState('')
+  const [totalHoras, setTotalHoras] = useState('')
+  const [montoServicio, setMontoServicio] = useState('')
   const [file, setFile] = useState('')
   const [cargarImagen, setCargarImagen] = useState(false)
-  const [horaSalidaLocal, setHoraSalidaLocal] = useState("")
-  const [horaRetornoLocal, setHoraRetornoLocal] = useState("")
-  const [totalHoras, setTotalHoras] = useState("")
 
   const editServicio = (data) => {
     data.id = id;
@@ -68,11 +73,30 @@ const ServicioEditComponent = () => {
     notify()
   }
 
+  const cargarServicio = (data) => {
+      setCodServicio(data.codServicio)
+      setRuc(data.ruc)
+      setRazonSocial(data.cliente? data.cliente[0]?.razonSocial : "")
+      setDireccion(data.cliente? data.cliente[0]?.direccion : "")
+      setHoraSalidaLocal(data.horaSalidaLocal)
+      setHoraInicioServicio(data.horaInicioServicio)
+      setHoraFinServicio(data.horaFinServicio)
+      setHoraRetornoLocal(data.horaRetornoLocal)
+      setOperadorId(data.operadorId)
+      setMontacargaId(data.montacargaId)
+      setTotalHoras(data.totalHoras)
+      setMontoServicio(data.montoServicio)
+  }
+
   useEffect(() => {
     if(id){
       servicioForId(id).then((response) => {
           debugger
           setServicio(response.data);
+          setTimeout(() => {
+            cargarServicio(response.data)
+          }, 2000);
+          
         }).catch(error => {
             console.log(error);
         })
@@ -180,6 +204,211 @@ const ServicioEditComponent = () => {
 
   return (
     <>
+    <div className='container-fluid'>
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Servicios</a></li>
+                  <li className="breadcrumb-item active">Nuevo Servicio</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Registrar servicio</h4>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div className="row">
+          <div className="col-lg-6 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos Iniciales del Servicio</h4>
+                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+              </div>
+              <div className="card-body">
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
+                  <div className="col-sm-8">
+                    <input type="number"
+                      id="inputCodServicio"
+                      placeholder="Codigo del servicio"
+                      value={codServicio}
+                      className="bg-secondary bg-opacity-10 form-control-depo"
+                      readOnly
+                      onChange={(e) => { setCodServicio(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
+                  <div className="col-sm-8">
+                    <input type="number"
+                      id="inputRuc"
+                      placeholder="Ingrese el numero de RUC"
+                      value={ruc}
+                      className="bg-secondary bg-opacity-10 form-control-depo"
+                      onClick={handleShow}
+                      readOnly
+                      onChange={(e) => { setRuc(e.target.value) }}>
+                    </input>
+                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
+                  <div className="col-sm-8">
+                    <input type="text"
+                      id="inputRazonSocial"
+                      placeholder='Razon Social'
+                      value={razonSocial}
+                      className='bg-secondary bg-opacity-10 form-control-depo'
+                      disabled
+                      onChange={(e) => { setRazonSocial(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
+                  <div className="col-sm-8">
+                    <input type='text'
+                      placeholder='Dirección'
+                      value={direccion}
+                      className='bg-secondary bg-opacity-10 form-control-depo'
+                      disabled
+                      onChange={(e) => { setDireccion(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
+                  <div className="col-sm-8">
+                    <select value={operadorId}
+                      className="bg-secondary bg-opacity-10 form-select-depo"
+                      disabled
+                      onChange={(e) => { setOperadorId(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      {
+                        operadores.map(operador =>
+                          <option key={operador.id} value={operador.id}>{operador.nombre}</option>
+                        )
+                      }
+                    </select>
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
+                  <div className="col-sm-8">
+                    <select value={montacargaId}
+                      className="bg-secondary bg-opacity-10 form-select-depo"
+                      disabled
+                      onChange={(e) => { setMontacargaId(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      {
+                        montacargas.map(montacarga =>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
+                        )
+                      }
+                    </select>
+                    {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
+                  </div>
+
+                </div>
+                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                &nbsp;&nbsp;
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-6 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos de la ejecución del servicio</h4>
+                <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                </p>
+              </div>
+              <div className="card-body">
+                <div className="general-label">
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Salida de la Empresa:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaSalidaLocal}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Inicio del Servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaInicioServicio}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Fin del Servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaFinServicio}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraFinServicio(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
+                    <div className="col-sm-8">
+                      <input type="datetime-local"
+                        value={horaRetornoLocal}
+                        className='form-control-depo'
+                        onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
+                        name="totalHoras"
+                        placeholder='Cantidad de horas'
+                        className='form-control-depo'
+                        value={totalHoras}
+                        onChange={(e) => { setTotalHoras(e.target.value) }}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="montoServicio"
+                        placeholder='Monto'
+                        value={montoServicio}
+                        onChange={(e) => { setMontoServicio(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
     <div className='container-fluid'>
       <h3>Modificar servicio</h3>
       <br/><br/>

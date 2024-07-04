@@ -184,15 +184,11 @@ const ServicioNuevoComponent = () => {
               </div>
               <h4 className="page-title">Registrar servicio</h4>
             </div>
-
           </div>
         </div>
         <br />
-
         <div className="row">
-
           <div className="col-lg-6 card-deck">
-
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos Iniciales del Servicio</h4>
