@@ -44,21 +44,27 @@ const ServicioEditComponent = () => {
   const [totalHoras, setTotalHoras] = useState('')
   const [montoServicio, setMontoServicio] = useState('')
   const [file, setFile] = useState('')
+  const [image, setImage] = useState('')
   const [cargarImagen, setCargarImagen] = useState(false)
 
-  const editServicio = (data) => {
+  const editServicio = (e) => {
+    e.preventDefault();
+    let data = {}
+    debugger
     data.id = id;
-    data.codServicio = data.codServicio.toUpperCase();
-    data.ruc = data.ruc;
-    data.razonSocial = data.razonSocial.toUpperCase();
-    data.direccion = data.direccion.toUpperCase();
+    data.codServicio = codServicio;
+    data.ruc = ruc;
+    data.razonSocial = razonSocial;
+    data.direccion = direccion;
     data.horaSalidaLocal = horaSalidaLocal;
-    data.horaInicioServicio = data.horaInicioServicio;
-    data.horaFinServicio = data.horaFinServicio;
+    data.horaInicioServicio = horaInicioServicio;
+    data.horaFinServicio = horaFinServicio;
     data.horaRetornoLocal = horaRetornoLocal;
-    data.operadorId = data.operadorId;
-    data.montacargaId = data.montacargaId;
+    data.operadorId = operadorId;
+    data.montacargaId = montacargaId;
     data.estado = "1";
+    data.totalHoras = totalHoras;
+    data.montoServicio = montoServicio;
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -91,7 +97,6 @@ const ServicioEditComponent = () => {
   useEffect(() => {
     if(id){
       servicioForId(id).then((response) => {
-          debugger
           setServicio(response.data);
           setTimeout(() => {
             cargarServicio(response.data)
@@ -212,10 +217,10 @@ const ServicioEditComponent = () => {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                   <li className="breadcrumb-item"><a href="#">Servicios</a></li>
-                  <li className="breadcrumb-item active">Nuevo Servicio</li>
+                  <li className="breadcrumb-item active">Editar Servicio</li>
                 </ol>
               </div>
-              <h4 className="page-title">Registrar servicio</h4>
+              <h4 className="page-title">Editar servicio</h4>
             </div>
           </div>
         </div>
@@ -224,7 +229,7 @@ const ServicioEditComponent = () => {
           <div className="col-lg-6 card-deck">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos Iniciales del Servicio</h4>
+                <h4 className="card-title">Datos registrados del Servicio</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
               <div className="card-body">
@@ -311,12 +316,8 @@ const ServicioEditComponent = () => {
                         )
                       }
                     </select>
-                    {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
                   </div>
-
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
-                &nbsp;&nbsp;
               </div>
             </div>
           </div>
@@ -399,12 +400,153 @@ const ServicioEditComponent = () => {
                       </input>
                     </div>
                   </div>
+                  <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-12 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Evidencias del servicio</h4>
+                <p className="text-muted mb-0">Esta seccion es opcional y son imagenes del servicio que el operador registra</p>
+              </div>
+              <div className="card-body">
+                <div className="mb-3 row">
+                  <div className='col-lg-6'>
+                    <input 
+                      className="form-control" 
+                      type="file" 
+                      name="image"
+                      value={image}
+                      onChange={e => setFile(e.target.files[0])}
+                      isInvalid={!!errors.montoServicio}
+                      accept="image/*"/>                    
+                  </div>
+                  <div className='col-lg-6'>
+                      <button type="button" className="btn-depo btn-warning-depo"  onClick={handleUpload} >Cargar imagen</button>           
+                  </div>
+                
+                </div>  
+                <div className='mb-3 row'>
+                  <div className='col-lg-12'>
+                  {
+            servicio.imagenes?.map(function (value, index, array) {
+              if(value.estado == 1)
+              return <Card className='pb-4' key={index}  style={{ width: '18rem' }}>
+                        <Card.Body className='text-end'>
+                          <Button variant="danger" size="sm" onClick={() => handleInactiveFile(value.id)}>
+                            <FaTimes />
+                          </Button>
+                        </Card.Body>
+                        <Card.Img variant="top" src={'/images/'+value?.filename}  className='pb-1'/>
+                      </Card >
+            })
+          }
+                  </div>    
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+
+
+      
+
+      
+
+      <div className="page-wrapper">
+
+<div className="page-content-tab">
+
+    <div className="container-fluid">
+        <div className="row">
+            <div className="col-sm-12">
+                <div className="page-title-box">
+                    <div className="float-end">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item"><a href="#">Metrica</a></li>
+                            <li className="breadcrumb-item"><a href="#">Pages</a></li>
+                            <li className="breadcrumb-item active">Gallery</li>
+                        </ol>
+                    </div>
+                    <h4 className="page-title">Gallery</h4>
+                </div>
+            </div>
+        </div>
+        <div className="row">
+            
+            <div className="col-md-6 col-lg-auto filters-group-wrap">
+                <div className="filters-group mb-3">
+                    <p className="filter-label mb-0">Filter</p>
+                    <div className="btn-group filter-options">
+                        <button className="btn btn-primary" data-group="fashion">Fashion</button>
+                        <button className="btn btn-primary" data-group="animal">Animal</button>
+                        <button className="btn btn-primary" data-group="food">Food</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+          
+        <div id="grid" className="row g-0">
+            <div className="col-md-4 col-lg-3 picture-item" data-groups='["fashion"]'>
+                <a href="assets/images/small/img-1.jpg" className="lightbox">
+                    <img src="assets/images/small/img-1.jpg" alt="" className="img-fluid" />
+                </a>  
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item picture-item--overlay" data-groups='["food"]'>
+                <a href="assets/images/small/img-2.jpg" className="lightbox">
+                    <img src="assets/images/small/img-2.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item" data-groups='["animal"]'>
+                <a href="assets/images/small/img-3.jpg" className="lightbox">
+                    <img src="assets/images/small/img-3.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["food"]'>
+                <a href="assets/images/small/img-4.jpg" className="lightbox">
+                    <img src="assets/images/small/img-4.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item" data-groups='["food", "animal"]'>
+                <a href="assets/images/small/img-5.jpg" className="lightbox">
+                    <img src="assets/images/small/img-5.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item picture-item--overlay" data-groups='["fashion"]'>
+                <a href="assets/images/small/img-6.jpg" className="lightbox">
+                    <img src="assets/images/small/img-6.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["food"]'>
+                <a href="assets/images/small/img-2.jpg" className="lightbox">
+                    <img src="assets/images/small/img-2.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>
+            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["fashion"]'>
+                <a href="assets/images/small/img-1.jpg" className="lightbox">
+                    <img src="assets/images/small/img-1.jpg" alt="" className="img-fluid" />
+                </a> 
+            </div>                      
+        </div>
+    </div>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -645,6 +787,7 @@ const ServicioEditComponent = () => {
             </Form.Group>
           </Row>
           <Row className='pt-4'>
+            
           {
             servicio.imagenes?.map(function (value, index, array) {
               if(value.estado == 1)
@@ -659,6 +802,7 @@ const ServicioEditComponent = () => {
             })
           }
           </Row>
+          
         <br />
       </Form>
       </div>
