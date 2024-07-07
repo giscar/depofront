@@ -405,7 +405,7 @@ const ServicioEditComponent = () => {
               </div>
             </div>
           </div>
-
+          
           <div className="col-lg-12 card-deck">
             <div className="card">
               <div className="card-header">
@@ -427,127 +427,45 @@ const ServicioEditComponent = () => {
                   <div className='col-lg-6'>
                       <button type="button" className="btn-depo btn-warning-depo"  onClick={handleUpload} >Cargar imagen</button>           
                   </div>
-                
                 </div>  
-                <div className='mb-3 row'>
-                  <div className='col-lg-12'>
-                  {
+                
+             <div className='container mt-6'>
+                <div className="mb-3 row">
+          {
             servicio.imagenes?.map(function (value, index, array) {
               if(value.estado == 1)
-              return <Card className='pb-4' key={index}  style={{ width: '18rem' }}>
-                        <Card.Body className='text-end'>
-                          <Button variant="danger" size="sm" onClick={() => handleInactiveFile(value.id)}>
-                            <FaTimes />
-                          </Button>
-                        </Card.Body>
-                        <Card.Img variant="top" src={'/images/'+value?.filename}  className='pb-1'/>
-                      </Card >
+              return <div className='col-lg-3'>
+              <div className="card">
+                        <img className="card-img-top img-fluid bg-light-alt" src={'/images/'+value?.filename} alt="Card image cap"/>
+          
+                        <div className="card-header">
+                      <div className="row align-items-center">
+                          <div className="col">                      
+                              <h4 className="card-title">Card title</h4>               
+                          </div>
+                          <div className="col-auto">    
+                              <img className="rounded-circle" src="assets/images/users/user-7.jpg" alt="" height="24"/>                  
+                              <span className="badge badge-outline-light">30 May 2020</span>              
+                          </div>                                                                          
+                      </div>                              
+                  </div>
+                  <div className="card-body">
+                      <p className="card-text text-muted ">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <a href="#" className="btn btn-de-primary btn-sm" onClick={() => handleInactiveFile(value.id)}>Go somewhere</a>   
+                  </div>
+                      </div>
+                      </div>
+           
+              
             })
           }
-                  </div>    
-                </div>
+          </div>
+        </div>
+          </div>
+          </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-
-
-      
-
-      
-
-      <div className="page-wrapper">
-
-<div className="page-content-tab">
-
-    <div className="container-fluid">
-        <div className="row">
-            <div className="col-sm-12">
-                <div className="page-title-box">
-                    <div className="float-end">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="#">Metrica</a></li>
-                            <li className="breadcrumb-item"><a href="#">Pages</a></li>
-                            <li className="breadcrumb-item active">Gallery</li>
-                        </ol>
-                    </div>
-                    <h4 className="page-title">Gallery</h4>
-                </div>
-            </div>
-        </div>
-        <div className="row">
-            
-            <div className="col-md-6 col-lg-auto filters-group-wrap">
-                <div className="filters-group mb-3">
-                    <p className="filter-label mb-0">Filter</p>
-                    <div className="btn-group filter-options">
-                        <button className="btn btn-primary" data-group="fashion">Fashion</button>
-                        <button className="btn btn-primary" data-group="animal">Animal</button>
-                        <button className="btn btn-primary" data-group="food">Food</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-          
-        <div id="grid" className="row g-0">
-            <div className="col-md-4 col-lg-3 picture-item" data-groups='["fashion"]'>
-                <a href="assets/images/small/img-1.jpg" className="lightbox">
-                    <img src="assets/images/small/img-1.jpg" alt="" className="img-fluid" />
-                </a>  
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item picture-item--overlay" data-groups='["food"]'>
-                <a href="assets/images/small/img-2.jpg" className="lightbox">
-                    <img src="assets/images/small/img-2.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item" data-groups='["animal"]'>
-                <a href="assets/images/small/img-3.jpg" className="lightbox">
-                    <img src="assets/images/small/img-3.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["food"]'>
-                <a href="assets/images/small/img-4.jpg" className="lightbox">
-                    <img src="assets/images/small/img-4.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item" data-groups='["food", "animal"]'>
-                <a href="assets/images/small/img-5.jpg" className="lightbox">
-                    <img src="assets/images/small/img-5.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item picture-item--overlay" data-groups='["fashion"]'>
-                <a href="assets/images/small/img-6.jpg" className="lightbox">
-                    <img src="assets/images/small/img-6.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["food"]'>
-                <a href="assets/images/small/img-2.jpg" className="lightbox">
-                    <img src="assets/images/small/img-2.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>
-            <div className="col-md-4 col-lg-3 picture-item picture-item--h2" data-groups='["fashion"]'>
-                <a href="assets/images/small/img-1.jpg" className="lightbox">
-                    <img src="assets/images/small/img-1.jpg" alt="" className="img-fluid" />
-                </a> 
-            </div>                      
-        </div>
-    </div>
-
-
-</div>
-
-</div>
-
-
-
-
-
-
-
-
 
 
 
