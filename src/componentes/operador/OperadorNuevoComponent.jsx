@@ -42,10 +42,19 @@ const OperadorNuevoComponent = () => {
       operadorSave(data).catch(error => {
         console.error(error)
       })
-      handleReset()
+      limpiar()
       notify()
     }
   }
+
+  const limpiar = () => {
+    setNombre('');
+    setApellidPat('');
+    setApellidMat('');
+    setTelefono('');
+    setDireccion('');
+    setDocumento('');
+    }
 
   const validateForm = () => {
     debugger
@@ -117,7 +126,7 @@ const OperadorNuevoComponent = () => {
                     <input type="text"
                       placeholder="Nombre del operador"
                       value={nombre}
-                      className={`form-control-depo ${errors.msgNombre? 'is-invalid' : ''}`}
+                      className={`w-50 form-control-depo ${errors.msgNombre? 'is-invalid' : ''}`}
                       onChange={(e) => { setNombre(e.target.value) }} />
                     {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
                   </div>            
@@ -129,7 +138,7 @@ const OperadorNuevoComponent = () => {
                     <input type="text"
                       placeholder="Apellido paterno"
                       value={apellidoPat}
-                      className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
+                      className={`w-50 form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidPat(e.target.value) }} />
                     {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
                   </div>
@@ -141,7 +150,7 @@ const OperadorNuevoComponent = () => {
                     <input type="text"
                       placeholder="Apellido materno"
                       value={apellidoMat}
-                      className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
+                      className={`w-50 form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
                   </div>
@@ -150,10 +159,10 @@ const OperadorNuevoComponent = () => {
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
                   <div className="col-sm-9">
-                    <input type="text"
+                    <input type="number"
                       placeholder="Documento"
                       value={documento}
-                      className={`form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
+                      className={`w-50 form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
                       onChange={(e) => { setDocumento(e.target.value) }} />
                     {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
@@ -165,7 +174,7 @@ const OperadorNuevoComponent = () => {
                     <input type="number"
                       placeholder="Telefono"
                       value={telefono}
-                      className="form-control-depo"
+                      className="w-50 form-control-depo"
                       onChange={(e) => { setTelefono(e.target.value) }}>
                     </input>
                   </div>
@@ -177,12 +186,14 @@ const OperadorNuevoComponent = () => {
                     <input type="Text"
                       placeholder="Direccion"
                       value={direccion}
-                      className="form-control-depo"
+                      className="w-50 form-control-depo"
                       onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>
                   </div>
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo" onClick={saveOperador}>Guardar</button>
+                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveOperador}>Guardar</button>
+                &nbsp;&nbsp;
+                <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
               </div>
             </div>
           </div>
