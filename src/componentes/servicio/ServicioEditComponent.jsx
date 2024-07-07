@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { clienteForRuc, deleteFile, inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, servicioSave, uploadFile } from '../../service/FacturaService';
-import { Button, Card, Col, Form, Image, Row } from 'react-bootstrap';
-import * as yup from 'yup';
-import { useFormik } from 'formik';
-import { FaTimes } from 'react-icons/fa';
+import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 
 const ServicioEditComponent = () => {
 
@@ -22,11 +18,7 @@ const ServicioEditComponent = () => {
   });
 
   const [servicio, setServicio] = useState([])
-  const {id} = useParams();
-    
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const { id } = useParams();
 
   const [cliente, setCliente] = useState('')
   const [operadores, setOperadores] = useState([])
@@ -45,12 +37,33 @@ const ServicioEditComponent = () => {
   const [montoServicio, setMontoServicio] = useState('')
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
-  const [cargarImagen, setCargarImagen] = useState(false)
+
+  const [errors, setErrors] = useState({
+    msgFile: '',
+  })
+
+  const validateForm = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+    
+
+    if (ruc) {
+      errorCopy.msgFile = '';
+    } else {
+      errorCopy.msgFile = 'Tiene que la imagen del servicio';
+      valid = false;
+    }
+
+   
+    setErrors(errorCopy);
+    return valid;
+  }
 
   const editServicio = (e) => {
     e.preventDefault();
-    let data = {}
-    debugger
+    //const form = e.currentTarget;
+    if (validateForm()) {
+      let data = {}
     data.id = id;
     data.codServicio = codServicio;
     data.ruc = ruc;
@@ -68,43 +81,44 @@ const ServicioEditComponent = () => {
     servicioEdit(data).catch(error => {
       console.error(error)
     })
-    setCargarImagen(true)
-    if(id){
+    if (id) {
       servicioForId(id).then((response) => {
-          setServicio(response.data);
-        }).catch(error => {
-            console.log(error);
-        })
+        setServicio(response.data);
+      }).catch(error => {
+        console.log(error);
+      })
     }
     notify()
+    }
+    
   }
 
   const cargarServicio = (data) => {
-      setCodServicio(data.codServicio)
-      setRuc(data.ruc)
-      setRazonSocial(data.cliente? data.cliente[0]?.razonSocial : "")
-      setDireccion(data.cliente? data.cliente[0]?.direccion : "")
-      setHoraSalidaLocal(data.horaSalidaLocal)
-      setHoraInicioServicio(data.horaInicioServicio)
-      setHoraFinServicio(data.horaFinServicio)
-      setHoraRetornoLocal(data.horaRetornoLocal)
-      setOperadorId(data.operadorId)
-      setMontacargaId(data.montacargaId)
-      setTotalHoras(data.totalHoras)
-      setMontoServicio(data.montoServicio)
+    setCodServicio(data.codServicio)
+    setRuc(data.ruc)
+    setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
+    setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
+    setHoraSalidaLocal(data.horaSalidaLocal)
+    setHoraInicioServicio(data.horaInicioServicio)
+    setHoraFinServicio(data.horaFinServicio)
+    setHoraRetornoLocal(data.horaRetornoLocal)
+    setOperadorId(data.operadorId)
+    setMontacargaId(data.montacargaId)
+    setTotalHoras(data.totalHoras)
+    setMontoServicio(data.montoServicio)
   }
 
   useEffect(() => {
-    if(id){
+    if (id) {
       servicioForId(id).then((response) => {
-          setServicio(response.data);
-          setTimeout(() => {
-            cargarServicio(response.data)
-          }, 2000);
-          
-        }).catch(error => {
-            console.log(error);
-        })
+        setServicio(response.data);
+        setTimeout(() => {
+          cargarServicio(response.data)
+        }, 2000);
+
+      }).catch(error => {
+        console.log(error);
+      })
     }
   }, [id])
 
@@ -125,82 +139,55 @@ const ServicioEditComponent = () => {
   }, [])
 
   useEffect(() => {
-    values.ruc = cliente.ruc
-    values.razonSocial = cliente.razonSocial
-    values.direccion = cliente.direccion
+    setRuc(cliente.ruc)
+    setRazonSocial(cliente.razonSocial)
+    setDireccion(cliente.direccion)
   }, [cliente])
 
   useEffect(() => {
-    if(horaSalidaLocal, horaRetornoLocal){
+    if (horaSalidaLocal, horaRetornoLocal) {
       const horaSalidaLocal1 = new Date(horaSalidaLocal);
       const horaRetornoLocal1 = new Date(horaRetornoLocal);
-      const diff =  horaRetornoLocal1.getTime() - horaSalidaLocal1.getTime();
+      const diff = horaRetornoLocal1.getTime() - horaSalidaLocal1.getTime();
       const horas = diff / (1000 * 60 * 60);
       console.log(horas.toFixed(2))
-      console.log(values.codServicio)
       setTotalHoras(horas.toFixed(2))
       servicio.totalHoras = horas.toFixed(2)
     }
   }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
-  const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
-    validationSchema: yup.object({
-      codServicio: yup.string().required("Debe ingresar el código del servicio"),
-      ruc: yup.string().required("Debe seleccionar el cliente"),
-      operadorId: yup.string().required("Debe seleccionar el operador"),
-      montacargaId: yup.string().required("Debe ingresar la montacarga"),
-      
-    }),
-    initialValues: {
-      codServicio: servicio.codServicio,
-      ruc: servicio.ruc,
-      razonSocial: servicio.cliente? servicio.cliente[0]?.razonSocial : "",
-      direccion: servicio.cliente? servicio.cliente[0]?.direccion : "",
-      horaSalidaLocal: servicio.horaSalidaLocal,
-      horaInicioServicio: servicio.horaInicioServicio,
-      horaFinServicio: servicio.horaFinServicio,
-      horaRetornoLocal: servicio.horaRetornoLocal,
-      operadorId: servicio.operadorId,
-      montacargaId: servicio.montacargaId,
-      totalHoras: servicio.totalHoras,
-      montoServicio: servicio.montoServicio,
-    },
-    onSubmit: editServicio,
-    enableReinitialize: true
-  });
-
   const handleUpload = (e) => {
+    debugger
     const formdata = new FormData()
     formdata.append('file', file)
     formdata.append('id', id)
     formdata.append('type', file.type)
     formdata.append('size', file.size)
     uploadFile(formdata).then(() => {
-      if(id){
+      if (id) {
         servicioForId(id).then((response) => {
-            setServicio(response.data);
-          }).catch(error => {
-              console.log(error);
-          })
+          setServicio(response.data);
+        }).catch(error => {
+          console.log(error);
+        })
       }
     }).catch(error => {
       console.log(error);
     });
-    values.image = "";
+    //values.image = "";
     notify();
-    //window.location.reload(); 
   }
 
   const handleInactiveFile = (idImagen) => {
     console.log(idImagen);
     inactiveFile(idImagen).then(() => {
-      if(id){
+      if (id) {
         servicioForId(id).then((response) => {
-            setServicio(response.data);
-            notify();
-          }).catch(error => {
-              console.log(error);
-          })
+          setServicio(response.data);
+          notify();
+        }).catch(error => {
+          console.log(error);
+        })
       }
     }).catch(error => {
       console.log(error);
@@ -209,7 +196,7 @@ const ServicioEditComponent = () => {
 
   return (
     <>
-    <div className='container-fluid'>
+      <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
             <div className="page-title-box">
@@ -254,11 +241,9 @@ const ServicioEditComponent = () => {
                       placeholder="Ingrese el numero de RUC"
                       value={ruc}
                       className="bg-secondary bg-opacity-10 form-control-depo"
-                      onClick={handleShow}
                       readOnly
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
-                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -405,7 +390,7 @@ const ServicioEditComponent = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="col-lg-12 card-deck">
             <div className="card">
               <div className="card-header">
@@ -415,314 +400,53 @@ const ServicioEditComponent = () => {
               <div className="card-body">
                 <div className="mb-3 row">
                   <div className='col-lg-6'>
-                    <input 
-                      className="form-control" 
-                      type="file" 
+                    <input
+                      className={`form-control-depo ${errors.msgFile ? 'is-invalid' : ''}`}
+                      type="file"
                       name="image"
                       value={image}
                       onChange={e => setFile(e.target.files[0])}
-                      isInvalid={!!errors.montoServicio}
-                      accept="image/*"/>                    
+                      accept="image/*" />
+                      {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
                   </div>
                   <div className='col-lg-6'>
-                      <button type="button" className="btn-depo btn-warning-depo"  onClick={handleUpload} >Cargar imagen</button>           
+                    <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
                   </div>
-                </div>  
-                
-             <div className='container mt-6'>
-                <div className="mb-3 row">
-          {
-            servicio.imagenes?.map(function (value, index, array) {
-              if(value.estado == 1)
-              return <div className='col-lg-3'>
-              <div className="card">
-                        <img className="card-img-top img-fluid bg-light-alt" src={'/images/'+value?.filename} alt="Card image cap"/>
-          
-                        <div className="card-header">
-                      <div className="row align-items-center">
-                          <div className="col">                      
-                              <h4 className="card-title">Card title</h4>               
+                </div>
+                <div className='container mt-6'>
+                  <div className="mb-3 row">
+                    {
+                      servicio.imagenes?.map(function (value, index, array) {
+                        if (value.estado == 1)
+                          return <div className='col-lg-3'>
+                            <div className="card">
+                              <img className="card-img-top img-fluid bg-light-alt" src={'/images/' + value?.filename} alt="Card image cap" />
+
+                              <div className="card-header">
+                                <div className="row align-items-center">
+                                  <div className="col">
+                                    <h4 className="card-title">Card title</h4>
+                                  </div>
+                                  <div className="col-auto">
+                                    <img className="rounded-circle" src="assets/images/users/user-7.jpg" alt="" height="24" />
+                                    <span className="badge badge-outline-light">30 May 2020</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="card-body">
+                                <p className="card-text text-muted ">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <a href="#" className="btn btn-de-primary btn-sm" onClick={() => handleInactiveFile(value.id)}>Go somewhere</a>
+                              </div>
+                            </div>
                           </div>
-                          <div className="col-auto">    
-                              <img className="rounded-circle" src="assets/images/users/user-7.jpg" alt="" height="24"/>                  
-                              <span className="badge badge-outline-light">30 May 2020</span>              
-                          </div>                                                                          
-                      </div>                              
+                      })
+                    }
                   </div>
-                  <div className="card-body">
-                      <p className="card-text text-muted ">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      <a href="#" className="btn btn-de-primary btn-sm" onClick={() => handleInactiveFile(value.id)}>Go somewhere</a>   
-                  </div>
-                      </div>
-                      </div>
-           
-              
-            })
-          }
-          </div>
-        </div>
-          </div>
-          </div>
+                </div>
               </div>
             </div>
           </div>
-
-
-
-    <div className='container-fluid'>
-      <h3>Modificar servicio</h3>
-      <br/><br/>
-      <Form noValidate onSubmit={handleSubmit}>
-        <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik01">
-            <Form.Label>Codigo del Servicio</Form.Label>
-            <Form.Control
-              type="text"
-              name="codServicio"
-              value={values.codServicio}
-              onChange={handleChange}
-              isInvalid={!!errors.codServicio}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-              disabled
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.codServicio}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row className="mb-3">
-          <Form.Group as={Col} md="4" controlId="validationFormik02">
-            <Form.Label>RUC</Form.Label>
-            <Form.Control
-              type="text"
-              name="ruc"
-              readOnly
-              value={values.ruc}
-              onChange={handleChange}
-              isInvalid={!!errors.ruc}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.ruc}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik03">
-            <Form.Label>Razon Social</Form.Label>
-            <Form.Control
-              as="textarea"
-              name="razonSocial"
-              disabled
-              value={values.razonSocial}
-              onChange={handleChange}
-              autoComplete='off'
-            />
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik04">
-            <Form.Label>Direccion</Form.Label>
-            <Form.Control
-              as="textarea"
-              name="direccion"
-              disabled
-              value={values.direccion}
-              onChange={handleChange}
-              autoComplete='off'
-            />
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik04">
-            <Form.Label>Operador</Form.Label>
-            <Form.Select 
-              name="operadorId"
-              value={values.operadorId}
-              onChange={handleChange}
-              isInvalid={!!errors.operadorId}
-              disabled
-              >
-              <option>Seleccione</option>
-              {
-                operadores.map(operador =>
-                  <option key={operador.id} value={operador.id}>{operador.nombre}</option>
-                )
-              }
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.operadorId}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik04">
-            <Form.Label>Vehículo</Form.Label>
-            <Form.Select  
-            name="montacargaId"
-              value={values.montacargaId}
-              onChange={handleChange}
-              disabled
-              isInvalid={!!errors.montacargaId}>
-              <option>Seleccione</option>
-              {
-                montacargas.map(montacarga =>
-                  <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
-                )
-              }
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.montacargaId}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik05">
-            <Form.Label>Hora de salida de la Empresa</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              name="horaSalidaLocal"
-              onChange={e => setHoraSalidaLocal(e.target.value)}
-              isInvalid={!!errors.horaSalidaLocal}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.horaSalidaLocal}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik06">
-            <Form.Label>Hora de inicio del Servicio</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              name="horaInicioServicio"
-              value={values.horaInicioServicio}
-              onChange={handleChange}
-              isInvalid={!!errors.horaInicioServicio}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.horaInicioServicio}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik07">
-            <Form.Label>Hora de fin del Servicio</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              name="horaFinServicio"
-              value={values.horaFinServicio}
-              onChange={handleChange}
-              isInvalid={!!errors.horaFinServicio}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.horaFinServicio}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik08">
-            <Form.Label>Hora de retorno a la empresa</Form.Label>
-            <Form.Control
-              type="datetime-local"
-              name="horaRetornoLocal"
-              onChange={e => setHoraRetornoLocal(e.target.value)}
-              isInvalid={!!errors.horaRetornoLocal}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.horaRetornoLocal}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik08">
-            <Form.Label>Total horas de servicio</Form.Label>
-            <Form.Control
-              type="number"
-              name="totalHoras"
-              value={values.totalHoras}
-              onChange={handleChange}
-              isInvalid={!!errors.totalHoras}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.horaRetornoLocal}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-          <Form.Group as={Col} md="4" controlId="validationFormik08">
-            <Form.Label>Monto del servicio</Form.Label>
-            <Form.Control
-              type="text"
-              name="montoServicio"
-              value={values.montoServicio}
-              onChange={handleChange}
-              isInvalid={!!errors.montoServicio}
-              style={{ textTransform: 'uppercase' }}
-              autoComplete='off'
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.montoServicio}
-            </Form.Control.Feedback>
-          </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col} md="4" className='pt-4'>
-              <Button type="submit" variant="info">Guardar</Button>
-              <Button type="reset" className='ms-2' onClick={() => handleReset()}
-                variant="warning">Limpiar
-              </Button>
-            </Form.Group>
-          </Row>
-          <Row className='pt-4'>
-          <Form.Group as={Col} md="4" controlId="validationFormik09">
-            <Form.Control
-              type="file"
-              name="image"
-              value={values.image}
-              onChange={e => setFile(e.target.files[0])}
-              isInvalid={!!errors.montoServicio}
-              accept="image/*"
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors.image}
-            </Form.Control.Feedback>
-              <br/>
-              <Button type="button" className='ms-2' onClick={() => handleUpload()}
-                variant="warning">Cargar imagen
-              </Button>
-            </Form.Group>
-          </Row>
-          <Row className='pt-4'>
-            
-          {
-            servicio.imagenes?.map(function (value, index, array) {
-              if(value.estado == 1)
-              return <Card className='pb-4' key={index}  style={{ width: '18rem' }}>
-                        <Card.Body className='text-end'>
-                          <Button variant="danger" size="sm" onClick={() => handleInactiveFile(value.id)}>
-                            <FaTimes />
-                          </Button>
-                        </Card.Body>
-                        <Card.Img variant="top" src={'/images/'+value?.filename}  className='pb-1'/>
-                      </Card >
-            })
-          }
-          </Row>
-          
-        <br />
-      </Form>
+        </div>
       </div>
     </>
   )

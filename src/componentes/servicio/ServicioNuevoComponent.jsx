@@ -82,7 +82,7 @@ const ServicioNuevoComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const form = e.currentTarget;
+    //const form = e.currentTarget;
     if (validateForm()) {
       const data = {}
       data.codServicio = codServicio;
@@ -105,7 +105,7 @@ const ServicioNuevoComponent = () => {
       notify()
       setTimeout(() => {
         handleCodServicio()
-      }, 2000);
+      }, 1000);
 
     }
   }
