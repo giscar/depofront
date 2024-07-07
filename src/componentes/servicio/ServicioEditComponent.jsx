@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 
 const ServicioEditComponent = () => {
-
-  const navigator = useNavigate();
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -37,6 +35,7 @@ const ServicioEditComponent = () => {
   const [montoServicio, setMontoServicio] = useState('')
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
+  const [estadoRegistro, setEstadoRegistro] = useState('')
 
   const [errors, setErrors] = useState({
     msgFile: '',
@@ -45,9 +44,23 @@ const ServicioEditComponent = () => {
   const validateForm = () => {
     let valid = true;
     const errorCopy = { ...errors }
+    if (ruc) {
+      errorCopy.msgFile = '';
+    } else {
+      errorCopy.msgFile = 'Tiene que la imagen del servicio';
+      valid = false;
+    }
+    setErrors(errorCopy);
+    return valid;
+  }
+
+  const validateUpload = () => {
+    debugger
+    let valid = true;
+    const errorCopy = { ...errors }
     
 
-    if (ruc) {
+    if (file) {
       errorCopy.msgFile = '';
     } else {
       errorCopy.msgFile = 'Tiene que la imagen del servicio';
@@ -61,7 +74,6 @@ const ServicioEditComponent = () => {
 
   const editServicio = (e) => {
     e.preventDefault();
-    //const form = e.currentTarget;
     if (validateForm()) {
       let data = {}
     data.id = id;
@@ -78,6 +90,7 @@ const ServicioEditComponent = () => {
     data.estado = "1";
     data.totalHoras = totalHoras;
     data.montoServicio = montoServicio;
+    data.estadoRegistro = "En proceso";
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -90,7 +103,39 @@ const ServicioEditComponent = () => {
     }
     notify()
     }
-    
+  }
+
+  const publicServicio = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      let data = {}
+    data.id = id;
+    data.codServicio = codServicio;
+    data.ruc = ruc;
+    data.razonSocial = razonSocial;
+    data.direccion = direccion;
+    data.horaSalidaLocal = horaSalidaLocal;
+    data.horaInicioServicio = horaInicioServicio;
+    data.horaFinServicio = horaFinServicio;
+    data.horaRetornoLocal = horaRetornoLocal;
+    data.operadorId = operadorId;
+    data.montacargaId = montacargaId;
+    data.estado = "1";
+    data.totalHoras = totalHoras;
+    data.montoServicio = montoServicio;
+    data.estadoRegistro = "Concluido";
+    servicioEdit(data).catch(error => {
+      console.error(error)
+    })
+    if (id) {
+      servicioForId(id).then((response) => {
+        setServicio(response.data);
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+    notify()
+    }
   }
 
   const cargarServicio = (data) => {
@@ -106,6 +151,7 @@ const ServicioEditComponent = () => {
     setMontacargaId(data.montacargaId)
     setTotalHoras(data.totalHoras)
     setMontoServicio(data.montoServicio)
+    setEstadoRegistro(data.estadoRegistro? data.estadoRegistro : "En proceso")
   }
 
   useEffect(() => {
@@ -114,7 +160,7 @@ const ServicioEditComponent = () => {
         setServicio(response.data);
         setTimeout(() => {
           cargarServicio(response.data)
-        }, 2000);
+        }, 1000);
 
       }).catch(error => {
         console.log(error);
@@ -157,8 +203,9 @@ const ServicioEditComponent = () => {
   }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
   const handleUpload = (e) => {
-    debugger
-    const formdata = new FormData()
+    e.preventDefault();
+    if(validateUpload()){
+      const formdata = new FormData()
     formdata.append('file', file)
     formdata.append('id', id)
     formdata.append('type', file.type)
@@ -166,7 +213,11 @@ const ServicioEditComponent = () => {
     uploadFile(formdata).then(() => {
       if (id) {
         servicioForId(id).then((response) => {
-          setServicio(response.data);
+          setTimeout(() => {
+            debugger
+            setServicio(response.data);
+          }, 1000);
+          
         }).catch(error => {
           console.log(error);
         })
@@ -174,8 +225,11 @@ const ServicioEditComponent = () => {
     }).catch(error => {
       console.log(error);
     });
-    //values.image = "";
+    setFile("")
     notify();
+    }
+
+    
   }
 
   const handleInactiveFile = (idImagen) => {
@@ -386,6 +440,8 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
+                  &nbsp;
+                  <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
                 </div>
               </div>
             </div>
@@ -401,7 +457,7 @@ const ServicioEditComponent = () => {
                 <div className="mb-3 row">
                   <div className='col-lg-6'>
                     <input
-                      className={`form-control-depo ${errors.msgFile ? 'is-invalid' : ''}`}
+                      className={`form-control ${errors.msgFile ? 'is-invalid' : ''}`}
                       type="file"
                       name="image"
                       value={image}
@@ -418,24 +474,21 @@ const ServicioEditComponent = () => {
                     {
                       servicio.imagenes?.map(function (value, index, array) {
                         if (value.estado == 1)
-                          return <div className='col-lg-3'>
+                          return <div className='col-lg-3' key={index}>
                             <div className="card">
                               <img className="card-img-top img-fluid bg-light-alt" src={'/images/' + value?.filename} alt="Card image cap" />
 
                               <div className="card-header">
                                 <div className="row align-items-center">
                                   <div className="col">
-                                    <h4 className="card-title">Card title</h4>
+                                    <h4 className="card-title">Imagen del Servicio</h4>
                                   </div>
-                                  <div className="col-auto">
-                                    <img className="rounded-circle" src="assets/images/users/user-7.jpg" alt="" height="24" />
-                                    <span className="badge badge-outline-light">30 May 2020</span>
-                                  </div>
+                                  
                                 </div>
                               </div>
                               <div className="card-body">
-                                <p className="card-text text-muted ">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <a href="#" className="btn btn-de-primary btn-sm" onClick={() => handleInactiveFile(value.id)}>Go somewhere</a>
+                                <p className="card-text text-muted ">Cargado al sistema con fecha: <b>{value.fechaRegistro.substring(0, 16).replace("T", " ")}</b>.</p>
+                                <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
                               </div>
                             </div>
                           </div>
