@@ -39,15 +39,57 @@ const ServicioEditComponent = () => {
 
   const [errors, setErrors] = useState({
     msgFile: '',
+    msgHoraSalidaLocal: '',
+    msgHoraInicioServicio: '',
+    msgHoraRetornoLocal: '',
+    msgHoraFinServicio: '',
+    msgTotalHoras: '',
+    msgMontoServicio: '',
   })
 
   const validateForm = () => {
+    debugger;
     let valid = true;
     const errorCopy = { ...errors }
-    if (ruc) {
-      errorCopy.msgFile = '';
+    if (horaSalidaLocal) {
+      errorCopy.msgHoraSalidaLocal = '';
     } else {
-      errorCopy.msgFile = 'Tiene que la imagen del servicio';
+      errorCopy.msgHoraSalidaLocal = 'Tiene que ingresar la hora de salida de Depovent';
+      valid = false;
+    }
+
+    if (horaFinServicio) {
+      errorCopy.msgHoraFinServicio = '';
+    } else {
+      errorCopy.msgHoraFinServicio = 'Tiene que ingresar la hora de inicio del servicio';
+      valid = false;
+    }
+
+    if (horaInicioServicio) {
+      errorCopy.msgHoraInicioServicio = '';
+    } else {
+      errorCopy.msgHoraInicioServicio = 'Tiene que ingresar la hora de fin del servicio';
+      valid = false;
+    }
+
+    if (horaRetornoLocal) {
+      errorCopy.msgHoraRetornoLocal = '';
+    } else {
+      errorCopy.msgHoraRetornoLocal = 'Tiene que ingresar la hora de retorno a Depovent';
+      valid = false;
+    }
+
+    if (totalHoras) {
+      errorCopy.msgTotalHoras = '';
+    } else {
+      errorCopy.msgTotalHoras = 'Tiene que ingresar el total de horas del servicio';
+      valid = false;
+    }
+
+    if (montoServicio) {
+      errorCopy.msgMontoServicio = '';
+    } else {
+      errorCopy.msgMontoServicio = 'Tiene que ingresar el monto total del servicio';
       valid = false;
     }
     setErrors(errorCopy);
@@ -74,8 +116,7 @@ const ServicioEditComponent = () => {
 
   const editServicio = (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      let data = {}
+    let data = {}
     data.id = id;
     data.codServicio = codServicio;
     data.ruc = ruc;
@@ -102,7 +143,6 @@ const ServicioEditComponent = () => {
       })
     }
     notify()
-    }
   }
 
   const publicServicio = (e) => {
@@ -228,8 +268,6 @@ const ServicioEditComponent = () => {
     setFile("")
     notify();
     }
-
-    
   }
 
   const handleInactiveFile = (idImagen) => {
@@ -247,7 +285,6 @@ const ServicioEditComponent = () => {
       console.log(error);
     })
   }
-
   return (
     <>
       <div className='container-fluid'>
@@ -375,9 +412,10 @@ const ServicioEditComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaSalidaLocal}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgHoraSalidaLocal ? 'is-invalid' : ''}`}
                         onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
                       </input>
+                      {errors.msgHoraSalidaLocal && <div className='invalid-feedback'>{errors.msgHoraSalidaLocal}</div>}
                     </div>
                   </div>
 
@@ -386,9 +424,10 @@ const ServicioEditComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaInicioServicio}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgHoraInicioServicio ? 'is-invalid' : ''}`}
                         onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
                       </input>
+                      {errors.msgHoraInicioServicio && <div className='invalid-feedback'>{errors.msgHoraInicioServicio}</div>}
                     </div>
                   </div>
 
@@ -397,9 +436,10 @@ const ServicioEditComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaFinServicio}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgHoraFinServicio ? 'is-invalid' : ''}`}
                         onChange={(e) => { setHoraFinServicio(e.target.value) }}>
                       </input>
+                      {errors.msgHoraFinServicio && <div className='invalid-feedback'>{errors.msgHoraFinServicio}</div>}
                     </div>
                   </div>
 
@@ -408,22 +448,24 @@ const ServicioEditComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaRetornoLocal}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgHoraRetornoLocal ? 'is-invalid' : ''}`}
                         onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
                       </input>
+                      {errors.msgHoraRetornoLocal && <div className='invalid-feedback'>{errors.msgHoraRetornoLocal}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio (este monto es autocalculado):</label>
                     <div className="col-sm-8">
                       <input type="number"
                         name="totalHoras"
                         placeholder='Cantidad de horas'
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgTotalHoras ? 'is-invalid' : ''}`}
                         value={totalHoras}
                         onChange={(e) => { setTotalHoras(e.target.value) }}
                         autoComplete='off'>
                       </input>
+                      {errors.msgTotalHoras && <div className='invalid-feedback'>{errors.msgTotalHoras}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -434,9 +476,10 @@ const ServicioEditComponent = () => {
                         placeholder='Monto'
                         value={montoServicio}
                         onChange={(e) => { setMontoServicio(e.target.value) }}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgMontoServicio ? 'is-invalid' : ''}`}
                         autoComplete='off'>
                       </input>
+                      {errors.msgMontoServicio && <div className='invalid-feedback'>{errors.msgMontoServicio}</div>}
                     </div>
                   </div>
                   <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
