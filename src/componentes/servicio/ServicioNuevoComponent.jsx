@@ -82,7 +82,6 @@ const ServicioNuevoComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //const form = e.currentTarget;
     if (validateForm()) {
       const data = {}
       data.codServicio = codServicio;
@@ -207,13 +206,11 @@ const ServicioNuevoComponent = () => {
                       onChange={(e) => { setCodServicio(e.target.value) }}>
                     </input>
                   </div>
-                  {errors.msgCodServicio && <small className='form-text text-muted invalid-feedback'>{errors.msgCodServicio}</small>}
                 </div>
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
                   <div className="col-sm-8">
                     <input type="number"
-                      id="inputRuc"
                       placeholder="Ingrese el numero de RUC"
                       value={ruc}
                       className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
@@ -227,7 +224,6 @@ const ServicioNuevoComponent = () => {
                   <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
                   <div className="col-sm-8">
                     <input type="text"
-                      id="inputRazonSocial"
                       placeholder='Razon Social'
                       value={razonSocial}
                       className='bg-secondary bg-opacity-10 form-control-depo'
@@ -281,10 +277,8 @@ const ServicioNuevoComponent = () => {
                   </div>
 
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
-                &nbsp;&nbsp;
-                <button type="button" className="btn-depo btn-warning-depo" onClick={resetFormularioIngreso}>Limpiar</button>
-              </div>
+                  <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                </div>
             </div>
           </div>
 

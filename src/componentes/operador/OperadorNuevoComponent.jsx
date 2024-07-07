@@ -1,11 +1,22 @@
-import React from 'react'
-import * as yup from 'yup';
-import { useFormik } from 'formik';
+import React, { useState } from 'react'
 import { toast } from 'react-toastify';
-import { Button, Col, Form, Row } from 'react-bootstrap';
 import { operadorSave } from '../../service/FacturaService';
 
 const OperadorNuevoComponent = () => {
+
+  const [nombre, setNombre] = useState('')
+  const [apellidoPat, setApellidPat] = useState('')
+  const [apellidoMat, setApellidMat] = useState('')
+  const [documento, setDocumento] = useState('')
+  const [telefono, setTelefono] = useState('')
+  const [direccion, setDireccion] = useState('')
+
+  const [errors, setErrors] = useState({
+    msgNombre: '',
+    msgApellidoPat: '',
+    msgApellidoMat: '',
+    msgDocumento: '',
+  })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -17,139 +28,165 @@ const OperadorNuevoComponent = () => {
     theme: "colored",
   });
 
-  const saveOperador = (data) => {
-    data.nombre = data.nombre.toUpperCase();
-    data.documento = data.documento.toUpperCase();
-    data.movil = data.movil.toUpperCase();
-    data.direccion = data.direccion.toUpperCase();
-    data.email = data.email.toUpperCase();
-    data.estado = "1";
-    operadorSave(data).catch(error => {
-      console.error(error)
-    })
-    handleReset()
-    notify()
+  const saveOperador = (e) => {
+    e.preventDefault();
+    if (validateForm()){
+      const data = {}
+      data.nombre = nombre.toUpperCase();
+      data.apellidoPat = apellidoPat.toUpperCase();
+      data.apellidoMat = apellidoMat.toUpperCase();
+      data.documento = documento;
+      data.telefono = telefono;
+      data.direccion = direccion.toUpperCase();
+      data.estado = "1";
+      operadorSave(data).catch(error => {
+        console.error(error)
+      })
+      handleReset()
+      notify()
+    }
   }
 
-  const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
-    validationSchema: yup.object({
-      nombre: yup.string().required('Debe ingresar el nombre completo del operador'),
-      documento: yup.string().required('Debe ingresar el número del docuemento'),
-      movil: yup.string().required('Debe ingresar el telefono movil del operador'),
-      direccion: yup.string().required('Debe ingresar la dirección del operador'),
-      email: yup.string().email('Debe ingresar un email correcto').required('Debe ingresar el email del operador')
-    }),
-    initialValues: {
-      nombre: '',
-      documento: '',
-      movil: '',
-      direccion: '',
-      email: ''
-    },
-    onSubmit: saveOperador,
-  })
+  const validateForm = () => {
+    debugger
+    let valid = true;
+    const errorCopy = { ...errors }
+
+    if (nombre) {
+      errorCopy.msgNombre = '';
+    } else {
+      errorCopy.msgNombre = 'Tiene que ingresar el nombre del operador';
+      valid = false;
+    }
+
+    if (apellidoPat) {
+      errorCopy.msgApellidoPat = '';
+    } else {
+      errorCopy.msgApellidoPat = 'Tiene que ingresar el apellido paterno del operador';
+      valid = false;
+    }
+
+    if (apellidoMat) {
+      errorCopy.msgApellidoMat = '';
+    } else {
+      errorCopy.msgApellidoMat = 'Tiene que ingresar el apellido materno del operador';
+      valid = false;
+    }
+
+    if (documento) {
+      errorCopy.msgDocumento = '';
+    } else {
+      errorCopy.msgDocumento = 'Tiene que ingresar el apellido numero de documento del operador';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+
+    return valid;
+  }
 
   return (
     <>
       <div className='container-fluid'>
-        <h3>Registrar Operador</h3>
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Operadores</a></li>
+                  <li className="breadcrumb-item active">Nuevo Operador</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Registrar operador</h4>
+            </div>
+          </div>
+        </div>
         <br />
-        <Form noValidate onSubmit={handleSubmit}>
-          <Row>
-            <Form.Group as={Col} md="4" controlId="validationFormik01">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                name="nombre"
-                value={values.nombre}
-                onChange={handleChange}
-                isInvalid={!!errors.nombre}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.nombre}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col} md="4" controlId="validationFormik02">
-              <Form.Label>Documento</Form.Label>
-              <Form.Control
-                type="text"
-                name="documento"
-                value={values.documento}
-                onChange={handleChange}
-                isInvalid={!!errors.documento}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.documento}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col} md="4" controlId="validationFormik03">
-              <Form.Label>Telefono</Form.Label>
-              <Form.Control
-                type="text"
-                name="movil"
-                value={values.movil}
-                onChange={handleChange}
-                isInvalid={!!errors.movil}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.movil}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col} md="4" controlId="validationFormik04">
-              <Form.Label>Dirección</Form.Label>
-              <Form.Control
-                type="text"
-                name="direccion"
-                value={values.direccion}
-                onChange={handleChange}
-                isInvalid={!!errors.direccion}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.direccion}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row>
-            <Form.Group as={Col} md="4" controlId="validationFormik05">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="text"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                isInvalid={!!errors.email}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-          <Row className='pt-4'>
-            <Form.Group as={Col} md="4">
-              <Button type="submit" variant="info">Guardar</Button>
-              <Button type="reset" className='ms-2' onClick={() => handleReset()}
-                variant="warning">Limpiar
-              </Button>
-            </Form.Group>
-          </Row>
-          <br />
-        </Form>
+        <div className="row">
+          <div className="col-lg-12 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos del Operador</h4>
+                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+              </div>
+              <div className="card-body">
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Nombres:</label>
+                  <div className="col-sm-9">
+                    <input type="text"
+                      placeholder="Nombre del operador"
+                      value={nombre}
+                      className={`form-control-depo ${errors.msgNombre? 'is-invalid' : ''}`}
+                      onChange={(e) => { setNombre(e.target.value) }} />
+                    {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
+                  </div>            
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Apellido Paterno:</label>
+                  <div className="col-sm-9">
+                    <input type="text"
+                      placeholder="Apellido paterno"
+                      value={apellidoPat}
+                      className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setApellidPat(e.target.value) }} />
+                    {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Apellido Materno:</label>
+                  <div className="col-sm-9">
+                    <input type="text"
+                      placeholder="Apellido materno"
+                      value={apellidoMat}
+                      className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setApellidMat(e.target.value) }} />
+                    {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
+                  <div className="col-sm-9">
+                    <input type="text"
+                      placeholder="Documento"
+                      value={documento}
+                      className={`form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setDocumento(e.target.value) }} />
+                    {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Telefono:</label>
+                  <div className="col-sm-9">
+                    <input type="number"
+                      placeholder="Telefono"
+                      value={telefono}
+                      className="form-control-depo"
+                      onChange={(e) => { setTelefono(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Direccion:</label>
+                  <div className="col-sm-9">
+                    <input type="Text"
+                      placeholder="Direccion"
+                      value={direccion}
+                      className="form-control-depo"
+                      onChange={(e) => { setDireccion(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <button type="button" className="btn-depo btn-primary-depo" onClick={saveOperador}>Guardar</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   )
