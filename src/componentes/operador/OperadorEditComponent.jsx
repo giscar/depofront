@@ -76,7 +76,7 @@ const OperadorEditComponent = () => {
       operadorForId(id).then((response) => {
         setOperador(response.data);
         setTimeout(() => {
-          cargarServicio(response.data)
+          cargarOperador(response.data)
         }, 1000);
       }).catch(error => {
         console.log(error);
@@ -84,7 +84,7 @@ const OperadorEditComponent = () => {
     }
   }, [id])
 
-  const cargarServicio = (data) => {
+  const cargarOperador = (data) => {
     setNombre(data.nombre);
     setApellidPat(data.apellidoPat);
     setApellidMat(data.apellidoMat);
