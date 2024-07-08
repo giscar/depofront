@@ -1,13 +1,7 @@
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { clienteForDescripcion, clienteForRuc, clienteForRucOrName } from '../../service/FacturaService';
+import { clienteForRucOrName } from '../../service/FacturaService';
 import { useState } from 'react';
-import { FaPencilAlt } from 'react-icons/fa';
-import './ClienteComponent.css';
 import { useNavigate } from 'react-router-dom';
 
 function ClienteComponent() {
@@ -15,6 +9,8 @@ function ClienteComponent() {
   const navigator = useNavigate();
 
   const [clientes, setClientes] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [razonSocial, setRazonSocial] = useState('')
 
   const accederNuevoCliente = () => {
     navigator("/nuevoCliente")
@@ -24,35 +20,22 @@ function ClienteComponent() {
     navigator(`/editCliente/${id}`)
   }
 
-  /*const buscarClienteByDescripcion = (data) => {
-    if (!data.ruc && !data.razonSocial) {
-      return
-    }
-    if (data.razonSocial) {
-      clienteForServicvio(data.razonSocial).then((response) => {
-        setClientes(response.data);
-      }).catch(error => {
-        console.error(error)
-      })
-    } else {
-      clienteForRuc(data.ruc).then((response) => {
-        setClientes(response.data);
-      }).catch(error => {
-        console.error(error)
-      })
-    }
-  }*/
-
   const buscarClienteByDescripcion = (data) => {
     debugger
-    if (!data.ruc && !data.razonSocial) {
+    if (!ruc && !razonSocial) {
       return
     }
-    clienteForRucOrName(data.ruc.toUpperCase(), data.razonSocial.toUpperCase()).then((response) => {
+    clienteForRucOrName(ruc, razonSocial.toUpperCase()).then((response) => {
       setClientes(response.data);
     }).catch(error => {
       console.error(error)
     })
+  }
+
+  const limpiar = () => {
+    setRuc('');
+    setRazonSocial('');
+    setClientes([]);
   }
 
   const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
@@ -69,83 +52,95 @@ function ClienteComponent() {
 
   return (
     <>
-      <div className='container-fluid'>
-        <h3>Buscar clientes</h3>
-        <br />
-
-        <Form noValidate onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Form.Group as={Col} md="4" controlId="validationFormik01">
-              <Form.Label>Ruc</Form.Label>
-              <Form.Control
-                type="text"
-                name="ruc"
-                value={values.ruc}
-                onChange={handleChange}
-                isInvalid={!!errors.ruc}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.ruc}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="4" controlId="validationFormik02">
-              <Form.Label>Razon Social</Form.Label>
-              <Form.Control
-                type="text"
-                name="razonSocial"
-                value={values.razonSocial}
-                onChange={handleChange}
-                isInvalid={!!errors.razonSocial}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.razonSocial}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="4" className='pt-4'>
-              <Button type="submit" variant="info">Buscar</Button>
-              <Button type="reset" className='ms-2' onClick={() => handleReset(setClientes([]))}
-                variant="warning">Limpiar
-              </Button>
-            </Form.Group>
-          </Row>
-          <br />
-          <div className='float-end pb-3'>
-            <Button type="bottom" className='ms-2' variant="primary" onClick={() => accederNuevoCliente()}>Nuevo</Button>
+    <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Clientes</a></li>
+                  <li className="breadcrumb-item active">listado</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Buscar clientes</h4>
+            </div>
           </div>
-        </Form>
+        </div>
+        <div className="row">
+          <div className="col-lg-12 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Busqueda de clientes</h4>
+                <p className="text-muted mb-0">Debe ser ingresado por el/la administrador(a) del modulo de servicios.</p>
+              </div>
+              <div className="card-body">
+                <div className='row'>
+                  <div className="col-lg-6">
+                    <label className='col-form-label-zise'>Razon social:</label>
+                    <input type="text"
+                      placeholder="Razon social"
+                      value={razonSocial}
+                      className="form-control-depo"
+                      onChange={(e) => { setRazonSocial(e.target.value) }}>
+                    </input>
+                  </div>
+                  <div className="col-lg-6">
+                    <label className='col-form-label-zise'>Numero de RUC:</label>
+                    <input type="number"
+                      id="inputRuc"
+                      placeholder="Ingrese el numero de RUC"
+                      value={ruc}
+                      className="form-control-depo"
+                      onChange={(e) => { setRuc(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <div className='mt-4 float-rigth'>
+                  <button type="button" className="btn-depo btn-primary-depo" onClick={buscarClienteByDescripcion}>Buscar</button>
+                  &nbsp;&nbsp;
+                  <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='float-end pb-3 pt-4'>
+          <button className='ms-2 btn-depo btn-primary-depo' onClick={() => accederNuevoCliente()}>Nuevo</button>
+          </div>
+        </div>
         <br />
-        <table className='table table-striped table-bordered table-hover' responsive="md">
-          <thead>
+        <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
             <tr>
-              <th>RUC</th>
-              <th>Razón Social</th>
-              <th>Dirección</th>
-              <th></th>
+              <th className='td-th-size-depo'>RUC</th>
+              <th className='td-th-size-depo'>Razón Social</th>
+              <th className='td-th-size-depo'>Dirección</th>
+              <th className='td-th-size-depo'>Accion</th>
             </tr>
           </thead>
           <tbody>
             {
               clientes.map(cliente =>
                 <tr key={cliente.id}>
-                  <td>{cliente.ruc}</td>
-                  <td>{cliente.razonSocial}</td>
-                  <td>{cliente.direccion}</td>
+                  <td  className='td-th-size-depo'>{cliente.ruc}</td>
+                  <td  className='td-th-size-depo'>{cliente.razonSocial}</td>
+                  <td  className='td-th-size-depo'>{cliente.direccion}</td>
                   <td>
-                    <Button onClick={() => editCliente(cliente.id)}>
-                      <FaPencilAlt />
-                    </Button>
+                  <a className='icon-link-depo' onClick={() => editCliente(cliente.id)}>
+                  <i className="bi bi-pencil-fill"></i>
+                        </a>
                   </td>
                 </tr>
               )
             }
           </tbody>
         </table>
+        </div>
       </div>
     </>
   );
 }
-
 export default ClienteComponent;

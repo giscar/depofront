@@ -64,7 +64,7 @@ const ServicioComponent = () => {
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Busqueda de servicios</h4>
-                <p className="text-muted mb-0">Debe ser ingresaado por el/la administrador(a) del modulo de servicios.</p>
+                <p className="text-muted mb-0">Debe ser ingresado por el/la administrador(a) del modulo de servicios.</p>
               </div>
               <div className="card-body">
                 <div className='row'>
