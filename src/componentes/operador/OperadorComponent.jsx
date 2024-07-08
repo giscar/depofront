@@ -43,7 +43,6 @@ const OperadorComponent = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         inactivaOperador(id)
-        
         Swal.fire({
           title: "Operador Eliminado!",
           text: "La accion se ejecuto correctamente.",
@@ -60,13 +59,12 @@ const OperadorComponent = () => {
         console.error(error)
       })
       notify();
-    setTimeout(() => {
-      buscarOperador()
-    }, 1000);
+      setTimeout(() => {
+        buscarOperador()
+      }, 1000);
     }).catch(error => {
       console.error(error)
     })
-    
   }
 
   const buscarOperador = () => {

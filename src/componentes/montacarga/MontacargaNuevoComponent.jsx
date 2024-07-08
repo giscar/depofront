@@ -4,16 +4,16 @@ import { toast } from 'react-toastify';
 
 const MontacargaNuevoComponent = () => {
 
-const [codigo, setCodigo] = useState('')
-const [tonelaje, setTonelaje] = useState('')
-const [marca, setMarca] = useState('')
-const [modelo, setModelo] = useState('')
-const [serie, setSerie] = useState('')
-const [anhoFabricacion, setAnhoFabricacion] = useState('')
-const [color, setColor] = useState('')
-const [ubicacion, setUbicacion] = useState('')
-const [estado, setEstado] = useState('')
-const [revisionOperatividad, setRevisionOperatividad] = useState('')
+  const [codigo, setCodigo] = useState('')
+  const [tonelaje, setTonelaje] = useState('')
+  const [marca, setMarca] = useState('')
+  const [modelo, setModelo] = useState('')
+  const [serie, setSerie] = useState('')
+  const [anhoFabricacion, setAnhoFabricacion] = useState('')
+  const [color, setColor] = useState('')
+  const [ubicacion, setUbicacion] = useState('')
+  const [estado, setEstado] = useState('')
+  const [revisionOperatividad, setRevisionOperatividad] = useState('')
 
   const [errors, setErrors] = useState({
     msgCodigo: '',
@@ -33,106 +33,106 @@ const [revisionOperatividad, setRevisionOperatividad] = useState('')
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    });
+  });
 
-    const limpiar = () => {
-      setCodigo('');
-      setTonelaje('');
-      setMarca('');
-      setModelo('');
-      setSerie('');
-      setAnhoFabricacion('');
-      setColor('');
-      setUbicacion('');
-      setEstado('');
-      setRevisionOperatividad('');
+  const limpiar = () => {
+    setCodigo('');
+    setTonelaje('');
+    setMarca('');
+    setModelo('');
+    setSerie('');
+    setAnhoFabricacion('');
+    setColor('');
+    setUbicacion('');
+    setEstado('');
+    setRevisionOperatividad('');
+  }
+
+  const validateForm = () => {
+    debugger
+    let valid = true;
+    const errorCopy = { ...errors }
+
+    if (codigo) {
+      errorCopy.msgCodigo = '';
+    } else {
+      errorCopy.msgCodigo = 'Tiene que ingresar el codigo del montacarga';
+      valid = false;
     }
 
-    const validateForm = () => {
-      debugger
-      let valid = true;
-      const errorCopy = { ...errors }
-  
-      if (codigo) {
-        errorCopy.msgCodigo = '';
-      } else {
-        errorCopy.msgCodigo = 'Tiene que ingresar el codigo del montacarga';
-        valid = false;
-      }
-  
-      if (tonelaje) {
-        errorCopy.msgTonelaje = '';
-      } else {
-        errorCopy.msgTonelaje = 'Tiene que ingresar el tonelaje del montacarga';
-        valid = false;
-      }
-  
-      if (marca) {
-        errorCopy.msgMarca = '';
-      } else {
-        errorCopy.msgMarca = 'Tiene que ingresar la marca del montacarga';
-        valid = false;
-      }
-  
-      if (modelo) {
-        errorCopy.msgModelo = '';
-      } else {
-        errorCopy.msgModelo = 'Tiene que ingresar el modelo del montacarga';
-        valid = false;
-      }
-
-      if (serie) {
-        errorCopy.msgSerie = '';
-      } else {
-        errorCopy.msgSerie = 'Tiene que ingresar el numero de serie del montacarga';
-        valid = false;
-      }
-
-      if (anhoFabricacion) {
-        errorCopy.msgAnhoFabricacion = '';
-      } else {
-        errorCopy.msgAnhoFabricacion = 'Tiene que ingresar el año de fabricacion del montacarga';
-        valid = false;
-      }
-
-      if (estado) {
-        errorCopy.msgEstado = '';
-      } else {
-        errorCopy.msgEstado = 'Tiene que ingresar el estado del montacarga';
-        valid = false;
-      }
-  
-      setErrors(errorCopy);
-  
-      return valid;
+    if (tonelaje) {
+      errorCopy.msgTonelaje = '';
+    } else {
+      errorCopy.msgTonelaje = 'Tiene que ingresar el tonelaje del montacarga';
+      valid = false;
     }
+
+    if (marca) {
+      errorCopy.msgMarca = '';
+    } else {
+      errorCopy.msgMarca = 'Tiene que ingresar la marca del montacarga';
+      valid = false;
+    }
+
+    if (modelo) {
+      errorCopy.msgModelo = '';
+    } else {
+      errorCopy.msgModelo = 'Tiene que ingresar el modelo del montacarga';
+      valid = false;
+    }
+
+    if (serie) {
+      errorCopy.msgSerie = '';
+    } else {
+      errorCopy.msgSerie = 'Tiene que ingresar el numero de serie del montacarga';
+      valid = false;
+    }
+
+    if (anhoFabricacion) {
+      errorCopy.msgAnhoFabricacion = '';
+    } else {
+      errorCopy.msgAnhoFabricacion = 'Tiene que ingresar el año de fabricacion del montacarga';
+      valid = false;
+    }
+
+    if (estado) {
+      errorCopy.msgEstado = '';
+    } else {
+      errorCopy.msgEstado = 'Tiene que ingresar el estado del montacarga';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+
+    return valid;
+  }
 
   const saveMontacarga = (e) => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
-    data.codigo = codigo.toUpperCase();
-    data.marca = marca.toUpperCase();
-    data.tonelaje = tonelaje.toUpperCase();
-    data.serie = serie.toUpperCase();
-    data.modelo = modelo.toUpperCase();
-    data.anhoFabricacion = anhoFabricacion;
-    data.color = color.toUpperCase();
-    data.ubicacion = ubicacion.toUpperCase();
-    data.estado = estado.toUpperCase();
-    data.revisionOperatividad = revisionOperatividad.toUpperCase();
-    data.estadoRegistro = 1;
-    montacargaSave(data).catch(error => {
-      console.error(error)
-    })
-    limpiar()
-    notify()
+      data.codigo = codigo.toUpperCase();
+      data.marca = marca.toUpperCase();
+      data.tonelaje = tonelaje.toUpperCase();
+      data.serie = serie.toUpperCase();
+      data.modelo = modelo.toUpperCase();
+      data.anhoFabricacion = anhoFabricacion;
+      data.color = color.toUpperCase();
+      data.ubicacion = ubicacion.toUpperCase();
+      data.estado = estado.toUpperCase();
+      data.revisionOperatividad = revisionOperatividad.toUpperCase();
+      data.estadoRegistro = 1;
+      montacargaSave(data).catch(error => {
+        console.error(error)
+      })
+      limpiar()
+      notify()
+    }
   }
-}
 
   return (
     <>
-    <div className='container-fluid'>
+      <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
             <div className="page-title-box">
