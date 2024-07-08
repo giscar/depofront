@@ -30,7 +30,7 @@ const OperadorNuevoComponent = () => {
 
   const saveOperador = (e) => {
     e.preventDefault();
-    if (validateForm()){
+    if (validateForm()) {
       const data = {}
       data.nombre = nombre.toUpperCase();
       data.apellidoPat = apellidoPat.toUpperCase();
@@ -54,7 +54,7 @@ const OperadorNuevoComponent = () => {
     setTelefono('');
     setDireccion('');
     setDocumento('');
-    }
+  }
 
   const validateForm = () => {
     debugger
@@ -119,17 +119,31 @@ const OperadorNuevoComponent = () => {
                 <h4 className="card-title">Datos del Operador</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
+
               <div className="card-body">
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
+                  <div className="col-sm-9">
+                    <input type="number"
+                      placeholder="Documento"
+                      value={documento}
+                      className={`w-50 form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setDocumento(e.target.value) }} />
+                    {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
+                  </div>
+                </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise text-end">Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
                       value={nombre}
-                      className={`w-50 form-control-depo ${errors.msgNombre? 'is-invalid' : ''}`}
+                      className={`w-50 form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
                       onChange={(e) => { setNombre(e.target.value) }} />
                     {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
-                  </div>            
+                  </div>
                 </div>
 
                 <div className="mb-3 row">
@@ -153,18 +167,6 @@ const OperadorNuevoComponent = () => {
                       className={`w-50 form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
-                  </div>
-                </div>
-
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
-                  <div className="col-sm-9">
-                    <input type="number"
-                      placeholder="Documento"
-                      value={documento}
-                      className={`w-50 form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setDocumento(e.target.value) }} />
-                    {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
                 </div>
 
