@@ -85,7 +85,7 @@ const OperadorNuevoComponent = () => {
     if (documento) {
       errorCopy.msgDocumento = '';
     } else {
-      errorCopy.msgDocumento = 'Tiene que ingresar el apellido numero de documento del operador';
+      errorCopy.msgDocumento = 'Tiene que ingresar el numero de documento del operador';
       valid = false;
     }
 
