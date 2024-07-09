@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
+import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 const ServicioComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
@@ -43,6 +45,22 @@ const ServicioComponent = () => {
 
   return (
     <>
+    <div>
+      <PDFDownloadLink document={<HojaServicioReportComponent />} fileName="myfirstpdf.pdf">
+        {({ loading, url, error, blob }) =>
+          loading ? (
+            <button>Loading Document ...</button>
+          ) : (
+            <button>Download now!</button>
+          )
+        }
+      </PDFDownloadLink>
+
+      <PDFViewer>
+        <HojaServicioReportComponent />
+      </PDFViewer>
+    </div>
+  
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
