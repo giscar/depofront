@@ -1,10 +1,4 @@
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import {  nuevoCliente } from '../../service/FacturaService';
+import { nuevoCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
@@ -29,58 +23,58 @@ function NuevoClienteComponent() {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-    });
+  });
 
-    const limpiar = () => {
-      setRuc('');
-      setRazonSocial('');
-      setDireccion('');
+  const limpiar = () => {
+    setRuc('');
+    setRazonSocial('');
+    setDireccion('');
+  }
+
+  const validateForm = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+
+    if (ruc) {
+      errorCopy.msgRuc = '';
+    } else {
+      errorCopy.msgRuc = 'Tiene que ingresar el RUC del cliente';
+      valid = false;
     }
-  
-    const validateForm = () => {
-      let valid = true;
-      const errorCopy = { ...errors }
-  
-      if (ruc) {
-        errorCopy.msgRuc= '';
-      } else {
-        errorCopy.msgRuc = 'Tiene que ingresar el RUC del cliente';
-        valid = false;
-      }
-  
-      if (razonSocial) {
-        errorCopy.msgRazonSocial = '';
-      } else {
-        errorCopy.msgRazonSocial = 'Tiene que ingresar la razon social del cliente';
-        valid = false;
-      }
-  
-      if (direccion) {
-        errorCopy.msgDireccion = '';
-      } else {
-        errorCopy.msgDireccion = 'Tiene que ingresar la direccion del cliente';
-        valid = false;
-      }
-  
-      setErrors(errorCopy);
-  
-      return valid;
+
+    if (razonSocial) {
+      errorCopy.msgRazonSocial = '';
+    } else {
+      errorCopy.msgRazonSocial = 'Tiene que ingresar la razon social del cliente';
+      valid = false;
     }
+
+    if (direccion) {
+      errorCopy.msgDireccion = '';
+    } else {
+      errorCopy.msgDireccion = 'Tiene que ingresar la direccion del cliente';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+
+    return valid;
+  }
 
   const saveCliente = (data) => {
-    if(validateForm()){
+    if (validateForm()) {
       const data = {}
       data.ruc = ruc;
       data.razonSocial = razonSocial.toUpperCase();
       data.direccion = direccion.toUpperCase();
       data.estado = "1";
-    nuevoCliente(data).catch(error => {
-      console.error(error)
-    })
-    limpiar()
-    notify()
+      nuevoCliente(data).catch(error => {
+        console.error(error)
+      })
+      limpiar()
+      notify()
     }
-    
+
   }
 
   return (
@@ -142,12 +136,12 @@ function NuevoClienteComponent() {
                       placeholder="Direccion del cliente"
                       value={direccion}
                       className={`w-50 form-control-depo ${errors.msgDireccion ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setDireccion(e.target.value) }} ></textarea>  
+                      onChange={(e) => { setDireccion(e.target.value) }} ></textarea>
                     {errors.msgDireccion && <div className='invalid-feedback'>{errors.msgDireccion}</div>}
                   </div>
                 </div>
 
-                
+
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveCliente}>Guardar</button>
                 &nbsp;&nbsp;
                 <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>

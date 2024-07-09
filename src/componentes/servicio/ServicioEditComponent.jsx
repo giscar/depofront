@@ -131,7 +131,7 @@ const ServicioEditComponent = () => {
     data.estado = "1";
     data.totalHoras = totalHoras;
     data.montoServicio = montoServicio;
-    data.estadoRegistro = "En proceso";
+    data.estadoRegistro = "Proceso";
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -388,7 +388,7 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo}</option>
                         )
                       }
                     </select>

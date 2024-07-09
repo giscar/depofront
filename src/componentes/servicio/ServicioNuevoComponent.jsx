@@ -97,6 +97,7 @@ const ServicioNuevoComponent = () => {
       data.totalHoras = totalHoras;
       data.montoServicio = montoServicio;
       data.estado = "1";
+      data.estadoRegistro = "Proceso";
       servicioSave(data).catch(error => {
         console.error(error)
       });
@@ -269,7 +270,7 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.nombre}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo}</option>
                         )
                       }
                     </select>

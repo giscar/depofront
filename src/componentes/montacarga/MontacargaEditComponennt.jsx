@@ -42,8 +42,11 @@ const MontacargaEditComponennt = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    debugger
     if (id) {
+      debugger
       montacargaForId(id).then((response) => {
+        debugger
         setMontacarga(response.data);
         setTimeout(() => {
           cargarMontacarga(response.data)

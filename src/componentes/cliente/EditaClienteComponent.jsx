@@ -1,9 +1,3 @@
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import {  clienteForId, editaCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -23,103 +17,148 @@ function EditaClienteComponent() {
     });
 
   const [cliente, setCliente] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [razonSocial, setRazonSocial] = useState('')
+  const [direccion, setDireccion] = useState('')
+
+  const [errors, setErrors] = useState({
+    msgRuc: '',
+    msgRazonSocial: '',
+    msgDireccion: '',
+  })
+
   const {id} = useParams();
 
   useEffect(() => {
       if(id){
           clienteForId(id).then((response) => {
               setCliente(response.data);
+              setTimeout(() => {
+                cargarCliente(response.data)
+              }, 1000);
           }).catch(error => {
               console.log(error);
           })
       }
   }, [id])
 
-  const saveCliente = (cliente) => {
-    editaCliente(cliente).catch(error => {
-      console.error(error)
-    })
-    notify()
-    navigator("/clientes")
+  const cargarCliente = (data) => {
+    setRuc(data.ruc);
+    setRazonSocial(data.razonSocial);
+    setDireccion(data.direccion);
   }
 
-  const { handleSubmit, handleChange, values, errors } = useFormik({
-    validationSchema: yup.object({
-      ruc: yup.number("El RUC debe ser númerico").required("El numero de RUC es requerido").test('eq', 'Debe ingresar 11 números', val => val.toString().length === 11),
-      razonSocial: yup.string().required("La razon social es requerido"),
-      direccion: yup.string().required("La dirección es requerido"),
-    }),
-    initialValues: {
-      ruc: cliente.ruc,
-      razonSocial: cliente.razonSocial,
-      direccion: cliente.direccion,
-      id: cliente.id
-    },
-    onSubmit: saveCliente,
-    enableReinitialize: true
-  })
+  const validateForm = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
 
+    if (ruc) {
+      errorCopy.msgRuc = '';
+    } else {
+      errorCopy.msgRuc = 'Tiene que ingresar el RUC del cliente';
+      valid = false;
+    }
+
+    if (razonSocial) {
+      errorCopy.msgRazonSocial = '';
+    } else {
+      errorCopy.msgRazonSocial = 'Tiene que ingresar la razon social del cliente';
+      valid = false;
+    }
+
+    if (direccion) {
+      errorCopy.msgDireccion = '';
+    } else {
+      errorCopy.msgDireccion = 'Tiene que ingresar la direccion del cliente';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+
+    return valid;
+  }
+
+  const editCliente = (cliente) => {
+    if(validateForm()){
+      cliente.ruc = ruc;
+      cliente.razonSocial = razonSocial.toUpperCase();
+      cliente.direccion = direccion.toUpperCase();
+      editaCliente(cliente).catch(error => {
+        console.error(error)
+      })
+      notify()
+      navigator("/clientes")
+    }
+    
+  }
   return (
     <>
       <div className='container-fluid'>
-        <h3>Editar cliente</h3>
-        <br/>
-        <Form noValidate onSubmit={handleSubmit}>
-          <Row className="mb-3">
-            <Form.Group as={Col} md="8" controlId="validationFormik01">
-              <Form.Label>Ruc</Form.Label>
-              <Form.Control
-                type="text"
-                name="ruc"
-                value={values.ruc}
-                onChange={handleChange}
-                isInvalid={!!errors.ruc}
-                autoComplete='off'
-                maxLength={11}
-                readOnly
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.ruc}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="8" controlId="validationFormik02">
-              <Form.Label>Razon Social</Form.Label>
-              <Form.Control
-                type="text"
-                name="razonSocial"
-                value={values.razonSocial}
-                onChange={handleChange}
-                isInvalid={!!errors.razonSocial}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.razonSocial}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="8" controlId="validationFormik03">
-              <Form.Label>Razon Social</Form.Label>
-              <Form.Control
-                className='text-uppercase'
-                as="textarea"
-                rows={3}
-                name="direccion"
-                value={values.direccion}
-                onChange={handleChange}
-                isInvalid={!!errors.direccion}
-                style={{ textTransform: 'uppercase' }}
-                autoComplete='off'
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.direccion}
-              </Form.Control.Feedback>
-            </Form.Group>
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Cliente</a></li>
+                  <li className="breadcrumb-item active">Edita cliente</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Edita cliente</h4>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div className="row">
+          <div className="col-lg-12 card-deck">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos del cliente</h4>
+                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+              </div>
 
-          </Row>
-          <Form.Group as={Col} md="4">
-            <Button type="bottom" className='ms-2' variant="primary">Guardar</Button>
-          </Form.Group>
-        </Form>
+              <div className="card-body">
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">ruc:</label>
+                  <div className="col-sm-9">
+                    <input type="number"
+                      placeholder="Ruc del cliente"
+                      value={ruc}
+                      className="w-50 bg-secondary bg-opacity-10 form-control-depo"
+                      onChange={(e) => { setRuc(e.target.value) }} />
+                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Razon Social:</label>
+                  <div className="col-sm-9">
+                    <input type="text"
+                      placeholder="Razon Social"
+                      value={razonSocial}
+                      className={`w-50 form-control-depo ${errors.msgRazonSocial ? 'is-invalid' : ''}`}
+                      onChange={(e) => { setRazonSocial(e.target.value) }} />
+                    {errors.msgRazonSocial && <div className='invalid-feedback'>{errors.msgRazonSocial}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Direccion:</label>
+                  <div className="col-sm-9">
+                    <textarea type="text"
+                      placeholder="Direccion del cliente"
+                      value={direccion}
+                      className={`w-50 form-control-depo ${errors.msgDireccion ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setDireccion(e.target.value) }} ></textarea>
+                    {errors.msgDireccion && <div className='invalid-feedback'>{errors.msgDireccion}</div>}
+                  </div>
+                </div>
+                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editCliente}>Editar</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
