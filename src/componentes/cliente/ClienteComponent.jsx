@@ -118,6 +118,7 @@ function ClienteComponent() {
               <th className='td-th-size-depo'>RUC</th>
               <th className='td-th-size-depo'>Razón Social</th>
               <th className='td-th-size-depo'>Dirección</th>
+              <th className='td-th-size-depo'>Correo electronico</th>
               <th className='td-th-size-depo'>Accion</th>
             </tr>
           </thead>
@@ -128,6 +129,7 @@ function ClienteComponent() {
                   <td  className='td-th-size-depo'>{cliente.ruc}</td>
                   <td  className='td-th-size-depo'>{cliente.razonSocial}</td>
                   <td  className='td-th-size-depo'>{cliente.direccion}</td>
+                  <td  className='td-th-size-depo'>{cliente.email}</td>
                   <td>
                   <a className='icon-link-depo' onClick={() => editCliente(cliente.id)}>
                   <i className="bi bi-pencil-fill"></i>

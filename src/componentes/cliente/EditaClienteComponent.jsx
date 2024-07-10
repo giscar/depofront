@@ -20,6 +20,7 @@ function EditaClienteComponent() {
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
+  const [email, setEmail] = useState('')
 
   const [errors, setErrors] = useState({
     msgRuc: '',
@@ -46,6 +47,7 @@ function EditaClienteComponent() {
     setRuc(data.ruc);
     setRazonSocial(data.razonSocial);
     setDireccion(data.direccion);
+    setEmail(data.email)
   }
 
   const validateForm = () => {
@@ -154,6 +156,19 @@ function EditaClienteComponent() {
                     {errors.msgDireccion && <div className='invalid-feedback'>{errors.msgDireccion}</div>}
                   </div>
                 </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise text-end">Correo Electronico:</label>
+                  <div className="col-sm-9">
+                    <input type="Text"
+                      placeholder="Correo electronico"
+                      value={email}
+                      className="w-50 form-control-depo"
+                      onChange={(e) => { setEmail(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editCliente}>Editar</button>
               </div>
             </div>
