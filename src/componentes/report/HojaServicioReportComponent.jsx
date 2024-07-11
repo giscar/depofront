@@ -6,13 +6,21 @@ import {
     Image,
     View,
   } from "@react-pdf/renderer";
+  import Logo from "../../assets/Logo.png"
 
   
   const styles = StyleSheet.create({
     page: {
-      backgroundColor: "#E4E4E4",
+      
       padding: 30,
     },
+    logo: {
+      width: '200px',
+      height: '100px',
+      objectFit: 'cover',
+      borderRadius: '3px',
+      margin: 'auto'
+  },
     title: {
       fontSize: 24,
       textAlign: "center",
@@ -38,30 +46,134 @@ import {
       right: 0,
       textAlign: "center",
       color: "grey",
-    }
+    },
+
+    table: {
+      width: '100%',
+      margin: '10rem auto',
+      padding: '5px',
+      fontSize: '10px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
+  },
+  row:{
+      flexDirection: 'row',
+      borderBottom: '1px solid #ccc',
+      marginTop: '5px',
+      padding: '10px'
+  },
+  header:{
+      width: '50%',
+      textAlign: 'center',
+      fontWeight: '800',
+      textTransform: 'uppercase',
+      color: 'royalblue'
+  },
+  cell: {
+      width: '50%',
+      textAlign: 'left', 
+      color: '#222'
+  },
+
+  cell1: {
+    width: '100%',
+    textAlign: 'left', 
+    color: '#222'
+},
+
+cell2: {
+  width: '25%',
+  textAlign: 'left', 
+  color: '#222'
+},
+
   });
   
   function HojaServicioReportComponent() {
     return (
       <Document>
-        <Page style={styles.page}>
-          <Text style={styles.title}>Hello world</Text>
-          <View style={styles.section}>
-            <Text>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur
-              ad, rem iste similique voluptatem totam earum minima veritatis porro
-              illum alias quasi maxime labore voluptatibus reiciendis ipsa,
-              sapiente velit, facere quibusdam doloremque impedit expedita
-              laudantium. Fugiat quod reprehenderit a vero, non in reiciendis iure
-              doloribus id ipsa recusandae tempore, blanditiis quia totam
-              temporibus voluptatum? Dolorem, repellat ducimus tenetur expedita
-              natus deleniti quaerat magni itaque beatae animi nemo dolorum, modi
-              accusantium cumque atque rerum nobis sit dolor non quae, quibusdam
-              aliquam dolores delectus? Ipsam in perspiciatis id, temporibus dicta
-              odio corporis adipisci, distinctio inventore dolor fugiat modi eos
-              sint unde culpa.
-            </Text>
-          </View>
+        <Page size={"A4"} style={styles.page}>
+            <View style={styles.table}>
+                <View style={styles.row}>
+                    <View style={styles.cell}>
+                    <Image src={Logo} style={styles.logo}/>
+                    </View>
+                    <View style={styles.cell}>
+                        <Text>EQUIPOS DE TRANSPORTE</Text>
+                        <Text>SERVICIOS MECANICOS</Text>
+                    </View>
+                    
+                    
+                </View>
+
+                <View style={styles.row}>
+                    <View style={styles.cell}>
+                    <Text>Hoja de Servicio de Montacarga</Text>
+                    </View>
+                    <View style={styles.cell}>
+                        <Text>Nº 100000</Text>
+                    </View>
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.cell}>
+                    <Text></Text>
+                    </View>
+                    <View style={styles.cell}>
+                        <Text>Callao, 18 deel 03 del 2024 </Text>
+                    </View>
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.cell1}>
+                    <Text>Cliente: cliente 000000001</Text>
+                    </View>
+
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.cell1}>
+                    <Text>Direccion: calle la peruanidad 4343 jesus</Text>
+                    </View>
+
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.cell}>
+                    <Text>Ruc: 10923993484</Text>
+                    </View>
+                    <View style={styles.cell}>
+                        <Text>Solicitante: Miguel rosales</Text>
+                    </View>
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.cell}>
+                    <Text>Montacarga: montacarga 20 tn</Text>
+                    </View>
+                    <View style={styles.cell}>
+                        <Text>Operador: operador juan silva</Text>
+                    </View>
+                    </View>
+
+                    <View style={styles.row}>
+                    <View style={styles.row}>
+                      <View style={styles.cell2}>
+                        <Text>Hora Salida Local</Text>
+                      </View>
+                      <View style={styles.cell2}>
+                        <Text>Hora Inicio Servicio</Text>
+                      </View>
+                      </View>
+                      <View style={styles.cell}>
+                        <Text></Text>
+                      </View>
+                    </View>
+
+                </View>
+                
           <Text style={styles.parragraph}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus, totam explicabo quam officiis illo optio eum distinctio nihil in quidem delectus ex expedita voluptatibus. Est nobis ex beatae doloribus illum, autem maiores pariatur ea sed soluta nesciunt debitis corporis. Soluta, quis dolor deleniti quibusdam iste eveniet aliquid minus dolorem, molestias natus quam quo labore repellendus! Saepe magni doloribus suscipit quas consectetur velit facere dolorem culpa? Eveniet nihil quo accusamus. Numquam vero quos nobis veniam sequi, nihil earum voluptatibus aliquam id tempora non suscipit beatae, quo distinctio totam repellendus recusandae optio ex? Qui maxime veritatis quaerat esse nam repellendus sed, tempora, illum aliquam dolorum praesentium soluta excepturi fuga, minus consequatur suscipit. Cumque odio sapiente molestiae non, fugit culpa dolore aspernatur ea placeat suscipit reprehenderit rerum quia, fugiat ex, sequi sunt autem totam eius delectus! Eos beatae incidunt, recusandae rem possimus repellat architecto ipsa obcaecati reprehenderit quia magni dignissimos quae? Excepturi, sed culpa quo autem ipsum nobis hic recusandae modi facere optio provident odit corporis tempora voluptatum facilis earum qui laboriosam? Quisquam blanditiis consequuntur nam! Reprehenderit explicabo illo, mollitia non cumque sunt sapiente aut esse laborum quis excepturi saepe architecto ipsum repudiandae quasi beatae necessitatibus neque facere laboriosam fugit? Officia, illo officiis!
           </Text>

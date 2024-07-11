@@ -56,7 +56,7 @@ const ServicioComponent = () => {
         }
       </PDFDownloadLink>
 
-      <PDFViewer>
+      <PDFViewer width={800} height={900}>
         <HojaServicioReportComponent />
       </PDFViewer>
     </div>
