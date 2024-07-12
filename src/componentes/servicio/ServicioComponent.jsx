@@ -26,7 +26,6 @@ const ServicioComponent = () => {
   }
 
   const findService = () => {
-    debugger
     if (!codServicio && !ruc) {
       return
     }
@@ -45,22 +44,6 @@ const ServicioComponent = () => {
 
   return (
     <>
-    <div>
-      <PDFDownloadLink document={<HojaServicioReportComponent />} fileName="myfirstpdf.pdf">
-        {({ loading, url, error, blob }) =>
-          loading ? (
-            <button>Loading Document ...</button>
-          ) : (
-            <button>Download now!</button>
-          )
-        }
-      </PDFDownloadLink>
-
-      <PDFViewer width={800} height={900}>
-        <HojaServicioReportComponent />
-      </PDFViewer>
-    </div>
-  
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">

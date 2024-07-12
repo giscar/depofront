@@ -7,6 +7,8 @@ import {
   View,
 } from "@react-pdf/renderer";
 import Logo from "../../assets/Logo.png"
+import { useEffect, useState } from "react";
+import { servicioForId } from "../../service/FacturaService";
 
 
 const styles = StyleSheet.create({
@@ -97,7 +99,63 @@ const styles = StyleSheet.create({
 
 });
 
-function HojaServicioReportComponent() {
+const HojaServicioReportComponent = ({id}) => {
+
+  const [servicio, setServicio] = useState([])
+
+  const [cliente, setCliente] = useState('')
+  const [operadores, setOperadores] = useState([])
+  const [montacargas, setMontacargas] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [razonSocial, setRazonSocial] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [codServicio, setCodServicio] = useState('')
+  const [operadorId, setOperadorId] = useState('')
+  const [montacargaId, setMontacargaId] = useState('')
+  const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
+  const [horaInicioServicio, setHoraInicioServicio] = useState('')
+  const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
+  const [horaFinServicio, setHoraFinServicio] = useState('')
+  const [totalHoras, setTotalHoras] = useState('')
+  const [montoServicio, setMontoServicio] = useState('')
+  const [file, setFile] = useState('')
+  const [image, setImage] = useState('')
+  const [estadoRegistro, setEstadoRegistro] = useState('')
+  const [montacargaModelo, setMontacargaModelo] = useState('')
+  const [operadorNombreCompleto, setOperadorNombreCompleto] = useState('')
+
+  useEffect(() => {
+    if (id) {
+      servicioForId(id).then((response) => {
+        setServicio(response.data);
+        setTimeout(() => {
+          cargarServicio(response.data)
+        }, 1000);
+
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+  }, [id])
+
+  const cargarServicio = (data) => {
+    setCodServicio(data.codServicio)
+    setRuc(data.ruc)
+    setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
+    setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
+    setMontacargaModelo(data.montacarga[0].modelo)
+    setOperadorNombreCompleto(data.operador[0].nombre+" "+data.operador[0].apellidoPat+" "+data.operador[0].apellidoMat)
+    setHoraSalidaLocal(data.horaSalidaLocal)
+    setHoraInicioServicio(data.horaInicioServicio)
+    setHoraFinServicio(data.horaFinServicio)
+    setHoraRetornoLocal(data.horaRetornoLocal)
+    setOperadorId(data.operadorId)
+    setMontacargaId(data.montacargaId)
+    setTotalHoras(data.totalHoras)
+    setMontoServicio(data.montoServicio)
+    setEstadoRegistro(data.estadoRegistro? data.estadoRegistro : "En proceso")
+  }
+
   return (
     <Document>
       <Page size={"A4"} style={styles.page}>
@@ -119,7 +177,7 @@ function HojaServicioReportComponent() {
               <Text>Hoja de Servicio de Montacarga</Text>
             </View>
             <View style={styles.cell}>
-              <Text>Nº 100000</Text>
+              <Text>Nº {codServicio}</Text>
             </View>
           </View>
 
@@ -134,21 +192,21 @@ function HojaServicioReportComponent() {
 
           <View style={styles.row}>
             <View style={styles.cell1}>
-              <Text>Cliente: cliente 000000001</Text>
+              <Text>Cliente: {razonSocial}</Text>
             </View>
 
           </View>
 
           <View style={styles.row}>
             <View style={styles.cell1}>
-              <Text>Direccion: calle la peruanidad 4343 jesus</Text>
+              <Text>Direccion: {direccion}</Text>
             </View>
 
           </View>
 
           <View style={styles.row}>
             <View style={styles.cell}>
-              <Text>Ruc: 10923993484</Text>
+              <Text>Ruc: {ruc}</Text>
             </View>
             <View style={styles.cell}>
               <Text>Solicitante: Miguel rosales</Text>
@@ -157,17 +215,17 @@ function HojaServicioReportComponent() {
 
           <View style={styles.row}>
             <View style={styles.cell}>
-              <Text>Montacarga: montacarga 20 tn</Text>
+              <Text>Montacarga: {montacargaModelo}</Text>
             </View>
             <View style={styles.cell}>
-              <Text>Operador: operador juan silva</Text>
+              <Text>Operador: {operadorNombreCompleto}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
             
           <View style={styles.cell2}>
-              <Text>10:00</Text>
+              <Text>{horaSalidaLocal.replace("T", " ")}</Text>
             </View>
             <View style={styles.cell2}>
               <Text>Hora Salida Local</Text>
@@ -186,7 +244,7 @@ function HojaServicioReportComponent() {
             <View style={styles.row}>
             
           <View style={styles.cell2}>
-              <Text>11:00</Text>
+              <Text>{horaInicioServicio.replace("T", " ")}</Text>
             </View>
             <View style={styles.cell2}>
               <Text>Hora Inicio Servicio</Text>
@@ -206,7 +264,7 @@ function HojaServicioReportComponent() {
             <View style={styles.row}>
             
           <View style={styles.cell2}>
-              <Text>12:00</Text>
+              <Text>{horaFinServicio.replace("T", " ")}</Text>
             </View>
             <View style={styles.cell2}>
               <Text>Hora Termino Servicio</Text>
@@ -226,7 +284,7 @@ function HojaServicioReportComponent() {
             <View style={styles.row}>
             
           <View style={styles.cell2}>
-              <Text>13:00</Text>
+              <Text>{horaRetornoLocal.replace("T", " ")}</Text>
             </View>
             <View style={styles.cell2}>
               <Text>Hora Regreso Local</Text>
@@ -245,7 +303,7 @@ function HojaServicioReportComponent() {
             <View style={styles.row}>
             
           <View style={styles.cell2}>
-              <Text>9.00</Text>
+              <Text>{totalHoras}</Text>
             </View>
             <View style={styles.cell2}>
               <Text>Total Horas trabajadas</Text>

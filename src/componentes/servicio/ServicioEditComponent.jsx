@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
+import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 const ServicioEditComponent = () => {
 
@@ -36,6 +38,7 @@ const ServicioEditComponent = () => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
+  const [documento, setDocumento] = useState('')
 
   const [errors, setErrors] = useState({
     msgFile: '',
@@ -97,7 +100,6 @@ const ServicioEditComponent = () => {
   }
 
   const validateUpload = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
     
@@ -132,6 +134,7 @@ const ServicioEditComponent = () => {
     data.totalHoras = totalHoras;
     data.montoServicio = montoServicio;
     data.estadoRegistro = "Proceso";
+    setDocumento(data)
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -179,6 +182,7 @@ const ServicioEditComponent = () => {
   }
 
   const cargarServicio = (data) => {
+    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
@@ -207,22 +211,6 @@ const ServicioEditComponent = () => {
       })
     }
   }, [id])
-
-  useEffect(() => {
-    operadorActivo().then((response) => {
-      setOperadores(response.data);
-    }).catch(error => {
-      console.log(error);
-    })
-  }, [])
-
-  useEffect(() => {
-    montacargasActivo().then((response) => {
-      setMontacargas(response.data);
-    }).catch(error => {
-      console.log(error);
-    })
-  }, [])
 
   useEffect(() => {
     setRuc(cliente.ruc)
@@ -287,6 +275,25 @@ const ServicioEditComponent = () => {
   }
   return (
     <>
+     <div>
+      <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="myfirstpdf.pdf">
+        {({ loading, url, error, blob }) =>
+          loading ? (
+            <button>Loading Document ...</button>
+          ) : (
+            <button>Download now!</button>
+          )
+        }
+      </PDFDownloadLink>
+
+      <PDFViewer width={800} height={900}>
+        <HojaServicioReportComponent id={id} />
+      </PDFViewer>
+    </div>
+
+
+
+
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
