@@ -5,7 +5,7 @@ import { buscarCodigoServicio, montacargasActivo, operadorActivo, servicioSave }
 
 const ServicioNuevoComponent = () => {
 
-  const [cliente, setCliente] = useState('')
+  const [cliente, setCliente] = useState([])
   const [operadores, setOperadores] = useState([])
   const [montacargas, setMontacargas] = useState([])
   const [ruc, setRuc] = useState('')

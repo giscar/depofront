@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
-import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 
 const ServicioComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {

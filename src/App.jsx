@@ -19,16 +19,21 @@ import OperadorEditComponent from './componentes/operador/OperadorEditComponent'
 import ServicioNuevoComponent from './componentes/servicio/ServicioNuevoComponent'
 import ServicioComponent from './componentes/servicio/ServicioComponent'
 import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
+import { useState } from 'react'
 
 function App() {
+
+  const [user, setUser] = useState({})
+  debugger
+  console.log(user)
 
   return (
     <>
       <BrowserRouter>
-        <HeaderComponent />
+      {user.usuario && <HeaderComponent />}
           <br/>
           <Routes>
-            <Route path='/' element={<LoginComponent />}></Route>
+            <Route path='/' element={<LoginComponent setUser={setUser}/>}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
