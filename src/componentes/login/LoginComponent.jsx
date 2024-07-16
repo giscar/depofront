@@ -22,8 +22,8 @@ const LoginComponent = ({setUser}) => {
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
-            setUser(acceso)
             acceder();
+            sessionStorage.setItem('user', acceso)  
         }
 
         setLoading(false);

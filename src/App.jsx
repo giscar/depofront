@@ -3,7 +3,7 @@ import './App.css'
 import FacturaComponent from './componentes/factura/FacturaComponent'
 import FindFacturaComponent from './componentes/factura/FindFacturaComponent'
 import HeaderComponent from './componentes/HeaderComponent'
-import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import {BrowserRouter, Route, Routes, UNSAFE_RouteContext} from 'react-router-dom'
 import LoginComponent from './componentes/login/LoginComponent'
 import ClienteComponent from './componentes/cliente/ClienteComponent'
 import NuevoClienteComponent from './componentes/cliente/NuevoClienteComponent'
@@ -22,18 +22,17 @@ import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
 import { useState } from 'react'
 
 function App() {
-
-  const [user, setUser] = useState({})
-  debugger
-  console.log(user)
+  let initialLogin = sessionStorage.getItem('user') || undefined;
+  //const [user, setUser] = useState({})
+  //debugger
+  console.log(initialLogin)
 
   return (
     <>
       <BrowserRouter>
-      {user.usuario && <HeaderComponent />}
-          <br/>
+      {initialLogin && <HeaderComponent />}
           <Routes>
-            <Route path='/' element={<LoginComponent setUser={setUser}/>}></Route>
+            <Route path='/' element={<LoginComponent/>}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
