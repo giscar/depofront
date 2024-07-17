@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 
 const ServicioComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
@@ -40,8 +41,13 @@ const ServicioComponent = () => {
     setServicios([]);
   }
 
+  const initialLogin = JSON.parse(localStorage.getItem('user'));
+  console.log(initialLogin)
+  console.log(initialLogin.usuario)
+
   return (
     <>
+    {initialLogin.usuario && <HeaderComponent />}
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -122,7 +128,7 @@ const ServicioComponent = () => {
                     <tr key={servicio.id}>
                       <td className='td-th-size-depo'>{servicio.codServicio}</td>
                       <td className='td-th-size-depo'>{servicio.ruc}</td>
-                      <td className='td-th-size-depo'>{servicio.cliente[0].razonSocial}</td>
+                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                       <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>

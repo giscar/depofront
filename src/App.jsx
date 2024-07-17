@@ -22,15 +22,10 @@ import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
 import { useState } from 'react'
 
 function App() {
-  let initialLogin = sessionStorage.getItem('user') || undefined;
-  //const [user, setUser] = useState({})
-  //debugger
-  console.log(initialLogin)
 
   return (
     <>
       <BrowserRouter>
-      {initialLogin && <HeaderComponent />}
           <Routes>
             <Route path='/' element={<LoginComponent/>}></Route>
             <Route path='/facturas' element={<FindFacturaComponent />}></Route>

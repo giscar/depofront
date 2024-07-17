@@ -9,21 +9,55 @@ const LoginComponent = ({setUser}) => {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    localStorage.setItem('user', {}) 
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
         delay(500);
         console.log(`Username :${inputUsername}, Password :${inputPassword}`);
+        debugger
         if (inputUsername !== "admin" || inputPassword !== "admin") {
             setShow(true);
         }
-        if (inputUsername === "admin" || inputPassword === "admin") {
-            debugger
+        if (inputUsername === "46931245" || inputPassword === "46931245") {
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
+            acceso.nombre = "Perez Arellano Geraldine"
+            acceso.rol = "adm"
+            localStorage.setItem('user', JSON.stringify(acceso))  
             acceder();
-            sessionStorage.setItem('user', acceso)  
+        }
+
+        if (inputUsername === "75880169" || inputPassword === "75880169") {
+            const acceso = {}
+            acceso.usuario = inputUsername;
+            acceso.pass = inputPassword;
+            acceso.nombre = "Salazar Guerrero Christopher"
+            acceso.rol = "adm"
+            localStorage.setItem('user', JSON.stringify(acceso))  
+            acceder();
+        }
+
+        if (inputUsername === "47276371" || inputPassword === "47276371") {
+            const acceso = {}
+            acceso.usuario = inputUsername;
+            acceso.pass = inputPassword;
+            acceso.nombre = "Salvador Pastor Andre"
+            acceso.rol = "adm"
+            localStorage.setItem('user', JSON.stringify(acceso))  
+            acceder();
+        }
+
+        if (inputUsername === "46923787" || inputPassword === "46923787") {
+            const acceso = {}
+            acceso.usuario = inputUsername;
+            acceso.pass = inputPassword;
+            acceso.nombre = "Allauca Ayala Cesar"
+            acceso.rol = "ope"
+            localStorage.setItem('user', JSON.stringify(acceso))  
+            acceder();
         }
 
         setLoading(false);

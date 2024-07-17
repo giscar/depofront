@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import HeaderComponent from '../HeaderComponent';
+import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 
 const ServicioEditComponent = () => {
 
@@ -39,6 +41,10 @@ const ServicioEditComponent = () => {
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [documento, setDocumento] = useState('')
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const [errors, setErrors] = useState({
     msgFile: '',
@@ -199,6 +205,22 @@ const ServicioEditComponent = () => {
   }
 
   useEffect(() => {
+    operadorActivo().then((response) => {
+      setOperadores(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  useEffect(() => {
+    montacargasActivo().then((response) => {
+      setMontacargas(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  useEffect(() => {
     if (id) {
       servicioForId(id).then((response) => {
         setServicio(response.data);
@@ -273,27 +295,14 @@ const ServicioEditComponent = () => {
       console.log(error);
     })
   }
+
+  const initialLogin = JSON.parse(localStorage.getItem('user'));
+  console.log(initialLogin)
+  console.log(initialLogin.usuario)
+
   return (
     <>
-     <div>
-      <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="myfirstpdf.pdf">
-        {({ loading, url, error, blob }) =>
-          loading ? (
-            <button>Loading Document ...</button>
-          ) : (
-            <button>Download now!</button>
-          )
-        }
-      </PDFDownloadLink>
-
-      <PDFViewer width={800} height={900}>
-        <HojaServicioReportComponent id={id} />
-      </PDFViewer>
-    </div>
-
-
-
-
+    {initialLogin.usuario && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -338,8 +347,9 @@ const ServicioEditComponent = () => {
                       id="inputRuc"
                       placeholder="Ingrese el numero de RUC"
                       value={ruc}
-                      className="bg-secondary bg-opacity-10 form-control-depo"
-                      readOnly
+                      className={`form-control-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
+                      readOnly={!initialLogin.rol === "adm"}
+                      onClick={handleShow}
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
                   </div>
@@ -373,13 +383,13 @@ const ServicioEditComponent = () => {
                   <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
                   <div className="col-sm-8">
                     <select value={operadorId}
-                      className="bg-secondary bg-opacity-10 form-select-depo"
-                      disabled
+                      className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
+                      disabled={!initialLogin.rol === "adm"}
                       onChange={(e) => { setOperadorId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
                         )
                       }
                     </select>
@@ -389,8 +399,8 @@ const ServicioEditComponent = () => {
                   <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
                   <div className="col-sm-8">
                     <select value={montacargaId}
-                      className="bg-secondary bg-opacity-10 form-select-depo"
-                      disabled
+                      className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10'}`}
+                      disabled={!initialLogin.rol === "adm"}
                       onChange={(e) => { setMontacargaId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
@@ -399,6 +409,21 @@ const ServicioEditComponent = () => {
                         )
                       }
                     </select>
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Hoja de servicio preliminar:</label>
+                  <div className="col-sm-8">
+                  <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="preliminar_hoja_servicio.pdf">
+        {({ loading, url, error, blob }) =>
+          loading ? (
+            <button className="btn-depo btn-primary-depo">Loading Document ...</button>
+          ) : (
+            <button className="btn-depo btn-primary-depo">Descargar</button>
+          )
+        }
+      </PDFDownloadLink>
                   </div>
                 </div>
               </div>
@@ -551,6 +576,7 @@ const ServicioEditComponent = () => {
           </div>
         </div>
       </div>
+      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }
