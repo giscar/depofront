@@ -1,5 +1,6 @@
 import {  clienteForId, editaCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
+import HeaderComponent from '../HeaderComponent';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 

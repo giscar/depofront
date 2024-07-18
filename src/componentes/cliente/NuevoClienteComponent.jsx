@@ -1,5 +1,6 @@
 import { nuevoCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
+import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
 
 function NuevoClienteComponent() {

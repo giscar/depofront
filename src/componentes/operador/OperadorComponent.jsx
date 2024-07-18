@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { operadorActivo, operadorEdit, operadorForId } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2'
 

@@ -1,6 +1,7 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { clienteForRucOrName } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

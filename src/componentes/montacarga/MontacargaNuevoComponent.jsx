@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { montacargaSave } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 
 const MontacargaNuevoComponent = () => {

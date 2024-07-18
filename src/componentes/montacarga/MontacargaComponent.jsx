@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { montacargaEdit, montacargaForId, montacargasActivo } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 

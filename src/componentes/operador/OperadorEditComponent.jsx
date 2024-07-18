@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
+import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import { operadorEdit, operadorForId } from '../../service/FacturaService';
 
