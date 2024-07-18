@@ -19,7 +19,7 @@ import OperadorEditComponent from './componentes/operador/OperadorEditComponent'
 import ServicioNuevoComponent from './componentes/servicio/ServicioNuevoComponent'
 import ServicioComponent from './componentes/servicio/ServicioComponent'
 import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
-import { useState } from 'react'
+import ServicioComponentOperador from './componentes/servicio/ServicioComponentOperador'
 
 function App() {
 
@@ -43,6 +43,7 @@ function App() {
             <Route path='/servicioNuevo' element={<ServicioNuevoComponent />}></Route>
             <Route path='/servicioEdit/:id' element={<ServicioEditComponent />}></Route>
             <Route path='/servicios' element={<ServicioComponent />}></Route>
+            <Route path='/servicioOperador' element={<ServicioComponentOperador />}></Route>
           </Routes>
           <ToastContainer />
       </BrowserRouter>

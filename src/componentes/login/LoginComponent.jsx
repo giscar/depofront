@@ -16,7 +16,6 @@ const LoginComponent = ({setUser}) => {
         setLoading(true);
         delay(500);
         console.log(`Username :${inputUsername}, Password :${inputPassword}`);
-        debugger
         if (inputUsername !== "admin" || inputPassword !== "admin") {
             setShow(true);
         }
@@ -27,7 +26,7 @@ const LoginComponent = ({setUser}) => {
             acceso.nombre = "Perez Arellano Geraldine"
             acceso.rol = "adm"
             localStorage.setItem('user', JSON.stringify(acceso))  
-            acceder();
+            acceder(acceso.rol);
         }
 
         if (inputUsername === "75880169" || inputPassword === "75880169") {
@@ -37,7 +36,7 @@ const LoginComponent = ({setUser}) => {
             acceso.nombre = "Salazar Guerrero Christopher"
             acceso.rol = "adm"
             localStorage.setItem('user', JSON.stringify(acceso))  
-            acceder();
+            acceder(acceso.rol);
         }
 
         if (inputUsername === "47276371" || inputPassword === "47276371") {
@@ -47,7 +46,7 @@ const LoginComponent = ({setUser}) => {
             acceso.nombre = "Salvador Pastor Andre"
             acceso.rol = "adm"
             localStorage.setItem('user', JSON.stringify(acceso))  
-            acceder();
+            acceder(acceso.rol);
         }
 
         if (inputUsername === "46923787" || inputPassword === "46923787") {
@@ -57,7 +56,7 @@ const LoginComponent = ({setUser}) => {
             acceso.nombre = "Allauca Ayala Cesar"
             acceso.rol = "ope"
             localStorage.setItem('user', JSON.stringify(acceso))  
-            acceder();
+            acceder(acceso.rol);
         }
 
         setLoading(false);
@@ -65,8 +64,12 @@ const LoginComponent = ({setUser}) => {
 
     const navigator = useNavigate();
 
-    const acceder = () => {
-        navigator("/servicios")
+    const acceder = (rol) => {
+        debugger
+        if(rol == "adm")
+            navigator("/servicios")
+        if(rol == "ope")
+            navigator("/servicioOperador")
     }
 
 
