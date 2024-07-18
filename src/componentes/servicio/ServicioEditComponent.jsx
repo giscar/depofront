@@ -173,16 +173,22 @@ const ServicioEditComponent = () => {
     data.totalHoras = totalHoras;
     data.montoServicio = montoServicio;
     data.estadoRegistro = "Concluido";
-    servicioEdit(data).catch(error => {
-      console.error(error)
+    setEstadoRegistro("Concluido")
+    servicioEdit(data).then(() => {
+      setTimeout(() => {
+        if (id) {
+          servicioForId(id).then((response) => {
+            setServicio(response.data);
+          }).catch(error => {
+            console.log(error);
+          })
+        }
+      }, 1000);
+      
+    }).catch(error => {
+      console.log(error);
     })
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
-    }
+    
     notify()
     }
   }
@@ -514,9 +520,20 @@ const ServicioEditComponent = () => {
                       {errors.msgMontoServicio && <div className='invalid-feedback'>{errors.msgMontoServicio}</div>}
                     </div>
                   </div>
-                  <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
-                  &nbsp;
-                  <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                    <div className="col-sm-8">
+                    <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                    </div>
+                  </div>
+                      {estadoRegistro !== "Concluido" &&
+                      <div>
+                          <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
+                          &nbsp;
+                          <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
+                        </div>
+                        }
+                  
                 </div>
               </div>
             </div>
@@ -541,7 +558,10 @@ const ServicioEditComponent = () => {
                       {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
                   </div>
                   <div className='col-lg-6'>
-                    <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
+                  {estadoRegistro !== "Concluido" &&
+                         <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
+                        }
+                    
                   </div>
                 </div>
                 <div className='container mt-6'>
@@ -563,7 +583,10 @@ const ServicioEditComponent = () => {
                               </div>
                               <div className="card-body">
                                 <p className="card-text text-muted ">Cargado al sistema con fecha: <b>{value.fechaRegistro.substring(0, 16).replace("T", " ")}</b>.</p>
-                                <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
+                                {estadoRegistro !== "Concluido" &&
+                         <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
+                        }
+                                
                               </div>
                             </div>
                           </div>
