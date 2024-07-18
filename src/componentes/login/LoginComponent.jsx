@@ -9,7 +9,7 @@ const LoginComponent = ({setUser}) => {
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    localStorage.setItem('user', {}) 
+    sessionStorage.setItem('user', {}) 
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,7 +25,7 @@ const LoginComponent = ({setUser}) => {
             acceso.pass = inputPassword;
             acceso.nombre = "Perez Arellano Geraldine"
             acceso.rol = "adm"
-            localStorage.setItem('user', JSON.stringify(acceso))  
+            sessionStorage.setItem('user', JSON.stringify(acceso))  
             acceder(acceso.rol);
         }
 
@@ -35,7 +35,7 @@ const LoginComponent = ({setUser}) => {
             acceso.pass = inputPassword;
             acceso.nombre = "Salazar Guerrero Christopher"
             acceso.rol = "adm"
-            localStorage.setItem('user', JSON.stringify(acceso))  
+            sessionStorage.setItem('user', JSON.stringify(acceso))  
             acceder(acceso.rol);
         }
 
@@ -45,7 +45,7 @@ const LoginComponent = ({setUser}) => {
             acceso.pass = inputPassword;
             acceso.nombre = "Salvador Pastor Andre"
             acceso.rol = "adm"
-            localStorage.setItem('user', JSON.stringify(acceso))  
+            sessionStorage.setItem('user', JSON.stringify(acceso))  
             acceder(acceso.rol);
         }
 
@@ -55,7 +55,7 @@ const LoginComponent = ({setUser}) => {
             acceso.pass = inputPassword;
             acceso.nombre = "Allauca Ayala Cesar"
             acceso.rol = "ope"
-            localStorage.setItem('user', JSON.stringify(acceso))  
+            sessionStorage.setItem('user', JSON.stringify(acceso))  
             acceder(acceso.rol);
         }
 

@@ -33,6 +33,15 @@ const HeaderComponent = () => {
     navigator("/operadores")
   }
 
+
+  const cerrarSession = () => {
+    sessionStorage.getItem('user');
+    navigator("/")
+  }
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
       <Container>
@@ -63,10 +72,11 @@ const HeaderComponent = () => {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">Administrador</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              cleov
+            <Nav.Link><b>{initialLogin.rol == "adm"? 'Administrativo' : 'Operario'}</b></Nav.Link>
+            <Nav.Link eventKey={2} >
+              <span className='text-white'><b>{initialLogin.nombre}</b></span>
             </Nav.Link>
+            <Nav.Link className='text-warning' onClick={() => cerrarSession() }><b>Cerrar</b></Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

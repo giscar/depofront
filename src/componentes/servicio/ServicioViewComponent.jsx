@@ -3,11 +3,10 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import HeaderComponent from '../HeaderComponent';
-import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 
-const ServicioEditComponent = () => {
+const ServicioViewComponent = () => {
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -41,10 +40,6 @@ const ServicioEditComponent = () => {
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [documento, setDocumento] = useState('')
-
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const [errors, setErrors] = useState({
     msgFile: '',
@@ -349,7 +344,6 @@ const ServicioEditComponent = () => {
                       value={ruc}
                       className={`form-control-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
                       readOnly={!initialLogin.rol === "adm"}
-                      onClick={handleShow}
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
                   </div>
@@ -514,9 +508,6 @@ const ServicioEditComponent = () => {
                       {errors.msgMontoServicio && <div className='invalid-feedback'>{errors.msgMontoServicio}</div>}
                     </div>
                   </div>
-                  <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
-                  &nbsp;
-                  <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
                 </div>
               </div>
             </div>
@@ -540,9 +531,6 @@ const ServicioEditComponent = () => {
                       accept="image/*" />
                       {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
                   </div>
-                  <div className='col-lg-6'>
-                    <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
-                  </div>
                 </div>
                 <div className='container mt-6'>
                   <div className="mb-3 row">
@@ -563,7 +551,6 @@ const ServicioEditComponent = () => {
                               </div>
                               <div className="card-body">
                                 <p className="card-text text-muted ">Cargado al sistema con fecha: <b>{value.fechaRegistro.substring(0, 16).replace("T", " ")}</b>.</p>
-                                <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
                               </div>
                             </div>
                           </div>
@@ -576,8 +563,7 @@ const ServicioEditComponent = () => {
           </div>
         </div>
       </div>
-      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }
-export default ServicioEditComponent
+export default ServicioViewComponent

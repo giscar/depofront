@@ -130,8 +130,11 @@ const MontacargaNuevoComponent = () => {
     }
   }
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
   return (
     <>
+    {initialLogin.usuario && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">

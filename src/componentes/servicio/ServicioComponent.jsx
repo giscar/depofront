@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { buscarServicioByDatosAggregate } from '../../service/FacturaService';
+import { buscarServicioByDatosAggregate, buscarServiciosPendientes } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 
 const ServicioComponent = () => {
@@ -24,6 +24,10 @@ const ServicioComponent = () => {
     navigator(`/servicioEdit/${id}`)
   }
 
+  const verServicio = (id) => {
+    navigator(`/ServicioView/${id}`)
+  }
+
   const findService = () => {
     if (!codServicio && !ruc) {
       return
@@ -35,15 +39,21 @@ const ServicioComponent = () => {
     })
   }
 
+  useEffect(() => {
+    buscarServiciosPendientes().then((response) => {
+    setServicios(response.data);
+  }).catch(error => {
+    console.log(error);
+  })
+  }, [])
+
   const limpiar = () => {
     setRuc('');
     setCodServicio('');
     setServicios([]);
   }
 
-  const initialLogin = JSON.parse(localStorage.getItem('user'));
-  console.log(initialLogin)
-  console.log(initialLogin.usuario)
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>
@@ -134,7 +144,7 @@ const ServicioComponent = () => {
                       <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.nombre}</td>
+                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.marca}</td>
                       <td className='td-th-size-depo'>
                         {servicio.estadoRegistro === "Concluido" &&
                           <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
@@ -144,9 +154,16 @@ const ServicioComponent = () => {
                         }
                       </td>
                       <td className='text-center'>
-                        <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
+                      {servicio.estadoRegistro === "Concluido" &&
+                          <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
+                          <i className="bi bi-search"></i>
+                        </a>
+                        }
+                      {servicio.estadoRegistro !== "Concluido" &&
+                          <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
                           <i className="bi bi-pencil-fill"></i>
                         </a>
+                        }
                       </td>
                     </tr>
                   )
