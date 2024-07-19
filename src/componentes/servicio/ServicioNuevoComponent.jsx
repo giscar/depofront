@@ -21,12 +21,15 @@ const ServicioNuevoComponent = () => {
   const [horaFinServicio, setHoraFinServicio] = useState('')
   const [totalHoras, setTotalHoras] = useState('')
   const [montoServicio, setMontoServicio] = useState('')
+  const [tipoServicio, setTipoServicio] = useState('')
+  const [solicitante, setSolicitante] = useState('')
 
   const [errors, setErrors] = useState({
     msgCodServicio: '',
     msgRuc: '',
     msgOperadorId: '',
     msgMontacargaId: '',
+    msgTipoServicio: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -76,8 +79,14 @@ const ServicioNuevoComponent = () => {
       valid = false;
     }
 
-    setErrors(errorCopy);
+    if (tipoServicio) {
+      errorCopy.msgTipoServicio = '';
+    } else {
+      errorCopy.msgTipoServicio = 'Tiene que ingresar el tipo de servicio';
+      valid = false;
+    }
 
+    setErrors(errorCopy);
     return valid;
   }
 
@@ -99,6 +108,8 @@ const ServicioNuevoComponent = () => {
       data.montoServicio = montoServicio;
       data.estado = "1";
       data.estadoRegistro = "Proceso";
+      data.tipoServicio = tipoServicio;
+      data.solicitante = solicitante;
       servicioSave(data).catch(error => {
         console.error(error)
       });
@@ -163,12 +174,8 @@ const ServicioNuevoComponent = () => {
     setHoraRetornoLocal('')
     setTotalHoras('')
     setMontoServicio('')
+    setTipoServicio('')
   };
-
-  const resetFormularioIngreso = () => {
-    limpiar();
-    handleCodServicio();
-  }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -280,7 +287,20 @@ const ServicioNuevoComponent = () => {
                     </select>
                     {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
                   </div>
-
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
+                  <div className="col-sm-8">
+                    <select value={tipoServicio}
+                      className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setTipoServicio(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Externo">Externo</option>
+                      <option value="Interno">Interno</option>
+                      
+                    </select>
+                    {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
+                  </div>
                 </div>
                   <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                 </div>
@@ -360,6 +380,19 @@ const ServicioNuevoComponent = () => {
                         placeholder='Monto'
                         value={montoServicio}
                         onChange={(e) => { setMontoServicio(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="solicitante"
+                        placeholder='Nombre del solicitante'
+                        value={solicitante}
+                        onChange={(e) => { setSolicitante(e.target.value) }}
                         className='form-control-depo'
                         autoComplete='off'>
                       </input>

@@ -41,6 +41,8 @@ const ServicioEditComponent = () => {
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [documento, setDocumento] = useState('')
+  const [tipoServicio, setTipoServicio] = useState('')
+  const [solicitante, setSolicitante] = useState('')
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -54,10 +56,10 @@ const ServicioEditComponent = () => {
     msgHoraFinServicio: '',
     msgTotalHoras: '',
     msgMontoServicio: '',
+    msgSolicitante: '',
   })
 
   const validateForm = () => {
-    debugger;
     let valid = true;
     const errorCopy = { ...errors }
     if (horaSalidaLocal) {
@@ -101,6 +103,14 @@ const ServicioEditComponent = () => {
       errorCopy.msgMontoServicio = 'Tiene que ingresar el monto total del servicio';
       valid = false;
     }
+
+    if (solicitante) {
+      errorCopy.msgSolicitante = '';
+    } else {
+      errorCopy.msgSolicitante = 'Tiene que ingresar el nombre del solicitante';
+      valid = false;
+    }
+
     setErrors(errorCopy);
     return valid;
   }
@@ -108,7 +118,7 @@ const ServicioEditComponent = () => {
   const validateUpload = () => {
     let valid = true;
     const errorCopy = { ...errors }
-    
+
 
     if (file) {
       errorCopy.msgFile = '';
@@ -117,7 +127,7 @@ const ServicioEditComponent = () => {
       valid = false;
     }
 
-   
+
     setErrors(errorCopy);
     return valid;
   }
@@ -140,6 +150,8 @@ const ServicioEditComponent = () => {
     data.totalHoras = totalHoras;
     data.montoServicio = montoServicio;
     data.estadoRegistro = "Proceso";
+    data.tipoServicio = tipoServicio;
+    data.solicitante = solicitante;
     setDocumento(data)
     servicioEdit(data).catch(error => {
       console.error(error)
@@ -155,41 +167,44 @@ const ServicioEditComponent = () => {
   }
 
   const publicServicio = (e) => {
+    debugger
     e.preventDefault();
     if (validateForm()) {
       let data = {}
-    data.id = id;
-    data.codServicio = codServicio;
-    data.ruc = ruc;
-    data.razonSocial = razonSocial;
-    data.direccion = direccion;
-    data.horaSalidaLocal = horaSalidaLocal;
-    data.horaInicioServicio = horaInicioServicio;
-    data.horaFinServicio = horaFinServicio;
-    data.horaRetornoLocal = horaRetornoLocal;
-    data.operadorId = operadorId;
-    data.montacargaId = montacargaId;
-    data.estado = "1";
-    data.totalHoras = totalHoras;
-    data.montoServicio = montoServicio;
-    data.estadoRegistro = "Concluido";
-    setEstadoRegistro("Concluido")
-    servicioEdit(data).then(() => {
-      setTimeout(() => {
-        if (id) {
-          servicioForId(id).then((response) => {
-            setServicio(response.data);
-          }).catch(error => {
-            console.log(error);
-          })
-        }
-      }, 1000);
-      
-    }).catch(error => {
-      console.log(error);
-    })
-    
-    notify()
+      data.id = id;
+      data.codServicio = codServicio;
+      data.ruc = ruc;
+      data.razonSocial = razonSocial;
+      data.direccion = direccion;
+      data.horaSalidaLocal = horaSalidaLocal;
+      data.horaInicioServicio = horaInicioServicio;
+      data.horaFinServicio = horaFinServicio;
+      data.horaRetornoLocal = horaRetornoLocal;
+      data.operadorId = operadorId;
+      data.montacargaId = montacargaId;
+      data.estado = "1";
+      data.totalHoras = totalHoras;
+      data.montoServicio = montoServicio;
+      data.estadoRegistro = "Concluido";
+      data.tipoServicio = tipoServicio;
+      data.solicitante = solicitante;
+      setEstadoRegistro("Concluido")
+      servicioEdit(data).then(() => {
+        setTimeout(() => {
+          if (id) {
+            servicioForId(id).then((response) => {
+              setServicio(response.data);
+            }).catch(error => {
+              console.log(error);
+            })
+          }
+        }, 1000);
+
+      }).catch(error => {
+        console.log(error);
+      })
+
+      notify()
     }
   }
 
@@ -207,7 +222,9 @@ const ServicioEditComponent = () => {
     setMontacargaId(data.montacargaId)
     setTotalHoras(data.totalHoras)
     setMontoServicio(data.montoServicio)
-    setEstadoRegistro(data.estadoRegistro? data.estadoRegistro : "En proceso")
+    setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
+    setTipoServicio(data.tipoServicio)
+    setSolicitante(data.solicitante)
   }
 
   useEffect(() => {
@@ -260,29 +277,29 @@ const ServicioEditComponent = () => {
 
   const handleUpload = (e) => {
     e.preventDefault();
-    if(validateUpload()){
+    if (validateUpload()) {
       const formdata = new FormData()
-    formdata.append('file', file)
-    formdata.append('id', id)
-    formdata.append('type', file.type)
-    formdata.append('size', file.size)
-    uploadFile(formdata).then(() => {
-      if (id) {
-        servicioForId(id).then((response) => {
-          setTimeout(() => {
-            debugger
-            setServicio(response.data);
-          }, 1000);
-          
-        }).catch(error => {
-          console.log(error);
-        })
-      }
-    }).catch(error => {
-      console.log(error);
-    });
-    setFile("")
-    notify();
+      formdata.append('file', file)
+      formdata.append('id', id)
+      formdata.append('type', file.type)
+      formdata.append('size', file.size)
+      uploadFile(formdata).then(() => {
+        if (id) {
+          servicioForId(id).then((response) => {
+            setTimeout(() => {
+              debugger
+              setServicio(response.data);
+            }, 1000);
+
+          }).catch(error => {
+            console.log(error);
+          })
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+      setFile("")
+      notify();
     }
   }
 
@@ -308,7 +325,7 @@ const ServicioEditComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -395,7 +412,7 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )
                       }
                     </select>
@@ -419,17 +436,32 @@ const ServicioEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
+                  <div className="col-sm-8">
+                    <select value={tipoServicio}
+                      className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setTipoServicio(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Externo">Externo</option>
+                      <option value="Interno">Interno</option>
+                      
+                    </select>
+                    {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Hoja de servicio preliminar:</label>
                   <div className="col-sm-8">
-                  <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="preliminar_hoja_servicio.pdf">
-        {({ loading, url, error, blob }) =>
-          loading ? (
-            <button className="btn-depo btn-primary-depo">Loading Document ...</button>
-          ) : (
-            <button className="btn-depo btn-primary-depo">Descargar</button>
-          )
-        }
-      </PDFDownloadLink>
+                    <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="preliminar_hoja_servicio.pdf">
+                      {({ loading, url, error, blob }) =>
+                        loading ? (
+                          <button className="btn-depo btn-primary-depo">Loading Document ...</button>
+                        ) : (
+                          <button className="btn-depo btn-primary-depo">Descargar</button>
+                        )
+                      }
+                    </PDFDownloadLink>
                   </div>
                 </div>
               </div>
@@ -521,19 +553,32 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                    <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
                     <div className="col-sm-8">
-                    <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                      <input type="text"
+                        name="solicitante"
+                        placeholder='Nombre del solicitante'
+                        value={solicitante}
+                        onChange={(e) => { setSolicitante(e.target.value) }}
+                        className={`form-control-depo ${errors.msgMontoServicio ? 'is-invalid' : ''}`}
+                        autoComplete='off'>
+                      </input>
+                      {errors.msgSolicitante && <div className='invalid-feedback'>{errors.msgSolicitante}</div>}
                     </div>
                   </div>
-                      {estadoRegistro !== "Concluido" &&
-                      <div>
-                          <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
-                          &nbsp;
-                          <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
-                        </div>
-                        }
-                  
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                    <div className="col-sm-8">
+                      <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                    </div>
+                  </div>
+                  {estadoRegistro !== "Concluido" &&
+                    <div>
+                      <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>
+                      &nbsp;
+                      <button type="button" className="btn-depo btn-dark-depo" onClick={publicServicio}>Concluir</button>
+                    </div>
+                  }
                 </div>
               </div>
             </div>
@@ -555,13 +600,12 @@ const ServicioEditComponent = () => {
                       value={image}
                       onChange={e => setFile(e.target.files[0])}
                       accept="image/*" />
-                      {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
+                    {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
                   </div>
                   <div className='col-lg-6'>
-                  {estadoRegistro !== "Concluido" &&
-                         <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
-                        }
-                    
+                    {estadoRegistro !== "Concluido" &&
+                      <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
+                    }
                   </div>
                 </div>
                 <div className='container mt-6'>
@@ -572,21 +616,18 @@ const ServicioEditComponent = () => {
                           return <div className='col-lg-3' key={index}>
                             <div className="card">
                               <img className="card-img-top img-fluid bg-light-alt" src={'/images/' + value?.filename} alt="Card image cap" />
-
                               <div className="card-header">
                                 <div className="row align-items-center">
                                   <div className="col">
                                     <h4 className="card-title">Imagen del Servicio</h4>
                                   </div>
-                                  
                                 </div>
                               </div>
                               <div className="card-body">
                                 <p className="card-text text-muted ">Cargado al sistema con fecha: <b>{value.fechaRegistro.substring(0, 16).replace("T", " ")}</b>.</p>
                                 {estadoRegistro !== "Concluido" &&
-                         <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
-                        }
-                                
+                                  <button className="btn-depo btn-danger-depo btn-sm" onClick={() => handleInactiveFile(value.id)}>Eliminar</button>
+                                }
                               </div>
                             </div>
                           </div>

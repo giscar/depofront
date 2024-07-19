@@ -121,6 +121,7 @@ const ServicioComponentOperador = () => {
                   <th className='td-th-size-depo'>Codigo</th>
                   <th className='td-th-size-depo'>RUC</th>
                   <th className='td-th-size-depo'>Razon Social</th>
+                  <th className='td-th-size-depo'>Tipo</th>
                   <th className='td-th-size-depo'>Salida local</th>
                   <th className='td-th-size-depo'>Inicio servicio</th>
                   <th className='td-th-size-depo'>Fin servicio</th>
@@ -138,6 +139,7 @@ const ServicioComponentOperador = () => {
                       <td className='td-th-size-depo'>{servicio.codServicio}</td>
                       <td className='td-th-size-depo'>{servicio.ruc}</td>
                       <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
+                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
                       <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>

@@ -118,6 +118,8 @@ const HojaServicioReportComponent = ({ id }) => {
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [montacargaModelo, setMontacargaModelo] = useState('')
   const [operadorNombreCompleto, setOperadorNombreCompleto] = useState('')
+  const [tipoServicio, setTipoServicio] = useState('')
+  const [solicitante, setSolicitante] = useState('')
 
   useEffect(() => {
     if (id) {
@@ -149,6 +151,8 @@ const HojaServicioReportComponent = ({ id }) => {
     setTotalHoras(data.totalHoras)
     setMontoServicio(data.montoServicio)
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
+    setTipoServicio(data.tipoServicio)
+    setSolicitante(data.solicitante)
   }
 
   return (
@@ -207,7 +211,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Ruc: {ruc}</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.parragraph}>Solicitante: Miguel rosales</Text>
+              <Text style={styles.parragraph}>Solicitante: {solicitante}</Text>
             </View>
           </View>
 
@@ -350,7 +354,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Tipo de servicio:</Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.parragraph}>Externo</Text>
+              <Text style={styles.parragraph}>{tipoServicio}</Text>
             </View>
             <View style={styles.cell2}>
               <Text style={styles.parragraph}>Tipo de pago:</Text>
