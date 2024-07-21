@@ -31,6 +31,7 @@ function NuevoClienteComponent() {
     setRuc('');
     setRazonSocial('');
     setDireccion('');
+    setEmail('')
   }
 
   const validateForm = () => {
@@ -69,6 +70,7 @@ function NuevoClienteComponent() {
       data.ruc = ruc;
       data.razonSocial = razonSocial.toUpperCase();
       data.direccion = direccion.toUpperCase();
+      data.email = email.toUpperCase();
       data.estado = "1";
       nuevoCliente(data).catch(error => {
         console.error(error)
@@ -116,8 +118,10 @@ function NuevoClienteComponent() {
                     <input type="number"
                       placeholder="Ruc del cliente"
                       value={ruc}
+                      maxlength="11"
                       className={`w-50 form-control-depo ${errors.msgRuc ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setRuc(e.target.value) }} />
+                      onChange={(e) => { setRuc(e.target.value) }} 
+                      />
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>

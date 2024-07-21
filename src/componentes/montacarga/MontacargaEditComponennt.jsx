@@ -43,11 +43,8 @@ const MontacargaEditComponennt = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    debugger
     if (id) {
-      debugger
       montacargaForId(id).then((response) => {
-        debugger
         setMontacarga(response.data);
         setTimeout(() => {
           cargarMontacarga(response.data)
@@ -72,7 +69,6 @@ const MontacargaEditComponennt = () => {
   }
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
 
@@ -131,19 +127,22 @@ const MontacargaEditComponennt = () => {
   }
 
   const editMontacarga = (montacarga) => {
+    debugger
     if (validateForm()) {
-      montacarga.estadoRegistro = "1"
-      montacarga.codigo = codigo.toUpperCase();
-      montacarga.tonelaje = tonelaje.toUpperCase();
-      montacarga.marca = marca.toUpperCase();
-      montacarga.modelo = modelo.toUpperCase();
-      montacarga.serie = serie.toUpperCase();
-      montacarga.anhoFabricacion = anhoFabricacion;
-      montacarga.color = color.toUpperCase();
-      montacarga.ubicacion = ubicacion.toUpperCase();
-      montacarga.estado = estado.toUpperCase();
-      montacarga.revisionOperatividad = revisionOperatividad.toUpperCase();
-      montacargaEdit(montacarga).catch(error => {
+      const data = {}
+      data.id = id;
+      data.estadoRegistro = "1";
+      data.codigo = codigo.toUpperCase();
+      data.tonelaje = tonelaje.toUpperCase();
+      data.marca = marca.toUpperCase();
+      data.modelo = modelo.toUpperCase();
+      data.serie = serie.toUpperCase();
+      data.anhoFabricacion = anhoFabricacion;
+      data.color = color.toUpperCase();
+      data.ubicacion = ubicacion.toUpperCase();
+      data.estado = estado.toUpperCase();
+      data.revisionOperatividad = revisionOperatividad.toUpperCase();
+      montacargaEdit(data).catch(error => {
         console.error(error)
       })
       notify()

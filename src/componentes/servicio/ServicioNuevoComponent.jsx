@@ -265,7 +265,7 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
                         )
                       }
                     </select>
@@ -281,7 +281,7 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo+" "+montacarga.marca}</option>
                         )
                       }
                     </select>

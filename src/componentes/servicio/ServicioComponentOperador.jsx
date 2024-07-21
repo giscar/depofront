@@ -145,7 +145,7 @@ const ServicioComponentOperador = () => {
                       <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
                       <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.marca}</td>
+                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
                       <td className='td-th-size-depo'>
                         {servicio.estadoRegistro === "Concluido" &&
                           <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>

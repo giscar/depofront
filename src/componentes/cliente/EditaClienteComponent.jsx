@@ -81,12 +81,16 @@ function EditaClienteComponent() {
     return valid;
   }
 
-  const editCliente = (cliente) => {
+  const editCliente = () => {
+    debugger
     if(validateForm()){
-      cliente.ruc = ruc;
-      cliente.razonSocial = razonSocial.toUpperCase();
-      cliente.direccion = direccion.toUpperCase();
-      editaCliente(cliente).catch(error => {
+      const data = {}
+      data.id = id;
+      data.ruc = ruc;
+      data.razonSocial = razonSocial.toUpperCase();
+      data.direccion = direccion.toUpperCase();
+      data.email = email.toUpperCase();
+      editaCliente(data).catch(error => {
         console.error(error)
       })
       notify()

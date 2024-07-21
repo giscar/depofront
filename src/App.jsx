@@ -21,6 +21,7 @@ import ServicioComponent from './componentes/servicio/ServicioComponent'
 import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
 import ServicioComponentOperador from './componentes/servicio/ServicioComponentOperador'
 import ServicioViewComponent from './componentes/servicio/ServicioViewComponent'
+import ServicioReportComponent from './componentes/estadisticas/ServicioReportComponent'
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
             <Route path='/ServicioView/:id' element={<ServicioViewComponent />}></Route>
             <Route path='/servicios' element={<ServicioComponent />}></Route>
             <Route path='/servicioOperador' element={<ServicioComponentOperador />}></Route>
+            <Route path='/servicioReportOperaciones' element={<ServicioReportComponent />}></Route>
           </Routes>
           <ToastContainer />
       </BrowserRouter>

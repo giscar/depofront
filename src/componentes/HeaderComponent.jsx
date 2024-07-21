@@ -33,6 +33,9 @@ const HeaderComponent = () => {
     navigator("/operadores")
   }
 
+  const accederReporteOperaciones = () =>{
+    navigator("/servicioReportOperaciones")
+  }
 
   const cerrarSession = () => {
     sessionStorage.getItem('user');
@@ -58,6 +61,7 @@ const HeaderComponent = () => {
               <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
             <Nav.Link onClick={() => accederOperadores() }>Operadores</Nav.Link>
             <Nav.Link onClick={() => accederClientes() }>Clientes</Nav.Link>
+            <Nav.Link onClick={() => accederReporteOperaciones() }>Estadisticas</Nav.Link>
             </NavDropdown>
             <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
               <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Nueva</NavDropdown.Item>

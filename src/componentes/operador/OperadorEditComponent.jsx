@@ -96,14 +96,15 @@ const OperadorEditComponent = () => {
 
   const editOperador = (operador) => {
     if (validateForm()) {
-      debugger
-      operador.estado = "1"
-      operador.nombre = nombre.toUpperCase();
-      operador.documento = documento;
-      operador.telefono = telefono;
-      operador.apellidoPat = apellidoPat.toUpperCase();
-      operador.apellidoMat = apellidoMat.toUpperCase();
-      operadorEdit(operador).catch(error => {
+      const data = {}
+      data.id = id;
+      data.estado = "1"
+      data.nombre = nombre.toUpperCase();
+      data.documento = documento;
+      data.telefono = telefono;
+      data.apellidoPat = apellidoPat.toUpperCase();
+      data.apellidoMat = apellidoMat.toUpperCase();
+      operadorEdit(data).catch(error => {
         console.error(error)
       })
       notify()

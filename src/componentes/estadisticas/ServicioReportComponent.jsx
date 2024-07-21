@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { buscarServicioByDatosAggregate, buscarServiciosPendientes } from '../../service/FacturaService';
+import { buscarServicioByDatosAggregate, buscarServiciosPendientes, busquedaEstadisticaAgregate, montacargasActivo, operadorActivo } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 
-const ServicioComponent = () => {
+const ServicioReportComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
     position: "top-right",
     autoClose: 1000,
@@ -17,8 +17,13 @@ const ServicioComponent = () => {
   const navigator = useNavigate();
 
   const [servicios, setServicios] = useState([])
+  const [operadores, setOperadores] = useState([])
+  const [montacargas, setMontacargas] = useState([])
   const [ruc, setRuc] = useState('')
+  const [operadorId, setOperadorId] = useState('')
+  const [montacargaId, setMontacargaId] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [estadoRegistro, setEstadoRegistro] = useState('')
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -29,29 +34,40 @@ const ServicioComponent = () => {
   }
 
   const findService = () => {
-    if (!codServicio && !ruc) {
+    if (!codServicio && !ruc && !operadorId && !montacargaId && !estadoRegistro)  {
       return
     }
-    buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
+    busquedaEstadisticaAgregate(ruc, codServicio, operadorId, montacargaId, estadoRegistro).then((response) => {
       setServicios(response.data);
     }).catch(error => {
       console.error(error)
     })
   }
 
-  useEffect(() => {
-    buscarServiciosPendientes().then((response) => {
-    setServicios(response.data);
-  }).catch(error => {
-    console.log(error);
-  })
-  }, [])
-
   const limpiar = () => {
     setRuc('');
     setCodServicio('');
+    setMontacargaId('');
+    setOperadorId('');
+    setEstadoRegistro('');
     setServicios([]);
   }
+
+  useEffect(() => {
+    operadorActivo().then((response) => {
+      setOperadores(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
+
+  useEffect(() => {
+    montacargasActivo().then((response) => {
+      setMontacargas(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -66,7 +82,7 @@ const ServicioComponent = () => {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                   <li className="breadcrumb-item"><a href="#">Servicios</a></li>
-                  <li className="breadcrumb-item active">Busqueda</li>
+                  <li className="breadcrumb-item active">Estadisticas</li>
                 </ol>
               </div>
               <h4 className="page-title">Busqueda de servicio</h4>
@@ -83,7 +99,7 @@ const ServicioComponent = () => {
               </div>
               <div className="card-body">
                 <div className='row'>
-                  <div className="col-lg-6">
+                  <div className="col-lg-3">
                     <label className='col-form-label-zise'>Codigo del servicio:</label>
                     <input type="number"
                       id="inputCodServicio"
@@ -93,7 +109,7 @@ const ServicioComponent = () => {
                       onChange={(e) => { setCodServicio(e.target.value) }}>
                     </input>
                   </div>
-                  <div className="col-lg-6">
+                  <div className="col-lg-3">
                     <label className='col-form-label-zise'>Numero de RUC:</label>
                     <input type="number"
                       id="inputRuc"
@@ -103,7 +119,49 @@ const ServicioComponent = () => {
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
                   </div>
+                  <div className="col-lg-3">
+                  <label className="col-form-label-zise" >Operador:</label>
+                    <select value={operadorId}
+                      className='form-select-depo'
+                      onChange={(e) => { setOperadorId(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      {
+                        operadores.map(operador =>
+                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
+                        )
+                      }
+                    </select>
                 </div>
+                
+                <div className="col-lg-3">
+                  <label className="col-form-label-zise" >Montacarga:</label>
+                    <select value={montacargaId}
+                      className='form-select-depo'
+                      onChange={(e) => { setMontacargaId(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      {
+                        montacargas.map(montacarga =>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo+" "+montacarga.marca}</option>
+                        )
+                      }
+                    </select>
+                </div>
+                </div>
+
+                <div className='row pt-3'>
+                  <div className="col-lg-3">
+                    <label className='col-form-label-zise'>Estado del servicio:</label>
+                    <select value={estadoRegistro}
+                      className='form-select-depo'
+                      onChange={(e) => { setEstadoRegistro(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Proceso">Proceso</option>
+                      <option value="Concluido">Concluido</option>
+                    </select>
+                  </div>
+                  </div>
+
+
                 <div className='mt-4 float-rigth'>
                   <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
                   &nbsp;&nbsp;
@@ -179,4 +237,4 @@ const ServicioComponent = () => {
   )
 }
 
-export default ServicioComponent
+export default ServicioReportComponent
