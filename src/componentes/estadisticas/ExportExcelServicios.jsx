@@ -6,7 +6,7 @@ const ExportExcelServicios = ({ servicios }) => {
 
   const titulo = [{ A: "Reporte de servicios de operaciones" }, {}];
 
-  const longitudes = [5, 35, 25, 20, 10, 10, 10];
+  const longitudes = [5, 12, 80, 10, 16, 16, 16, 16, 20, 12, 10,];
 
   const handleDownload = () => {
     setLoading(true);
@@ -43,7 +43,7 @@ const ExportExcelServicios = ({ servicios }) => {
       });
     });
 
-    const dataFinal = [...titulo, ...tabla];
+    const dataFinal = [..."", ...tabla];
 
     setTimeout(() => {
       creandoArchivo(dataFinal);
@@ -57,9 +57,9 @@ const ExportExcelServicios = ({ servicios }) => {
     const hoja = XLSX.utils.json_to_sheet(dataFinal, { skipHeader: true });
 
     hoja["!merges"] = [
-      XLSX.utils.decode_range("A1:G1"),
-      XLSX.utils.decode_range("A2:G2"),
-      XLSX.utils.decode_range("A34:G34"),
+      //XLSX.utils.decode_range("A1:G1"),
+      //XLSX.utils.decode_range("A2:G2"),
+      XLSX.utils.decode_range("A34:L34"),
     ];
 
     let propiedades = [];
@@ -80,14 +80,14 @@ const ExportExcelServicios = ({ servicios }) => {
   return (
     <>
       {!loading ? (
-        <button color="success" onClick={handleDownload}>
+        <button color="success" className="btn-depo btn-dark-depo" onClick={handleDownload}>
           Exportar Excel
         </button>
       ) : (
         <button color="success" disabled>
-          <div className="spinner-border" role="status">
-            <span> Generando...</span>
-          </div>
+          <div class="spinner-border text-dark" role="status">
+  <span class="visually-hidden">Generando...</span>
+</div>
         </button>
       )}
     </>

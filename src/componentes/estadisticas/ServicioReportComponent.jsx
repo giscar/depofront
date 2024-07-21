@@ -25,6 +25,8 @@ const ServicioReportComponent = () => {
   const [montacargaId, setMontacargaId] = useState('')
   const [codServicio, setCodServicio] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
+  const [tipoServicio, setTipoServicio] = useState('')
+
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -35,10 +37,10 @@ const ServicioReportComponent = () => {
   }
 
   const findService = () => {
-    if (!codServicio && !ruc && !operadorId && !montacargaId && !estadoRegistro)  {
+    if (!codServicio && !ruc && !operadorId && !montacargaId && !estadoRegistro && !tipoServicio) {
       return
     }
-    busquedaEstadisticaAgregate(ruc, codServicio, operadorId, montacargaId, estadoRegistro).then((response) => {
+    busquedaEstadisticaAgregate(ruc, codServicio, operadorId, montacargaId, estadoRegistro, tipoServicio).then((response) => {
       setServicios(response.data);
     }).catch(error => {
       console.error(error)
@@ -51,6 +53,7 @@ const ServicioReportComponent = () => {
     setMontacargaId('');
     setOperadorId('');
     setEstadoRegistro('');
+    setTipoServicio('');
     setServicios([]);
   }
 
@@ -74,7 +77,7 @@ const ServicioReportComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -121,37 +124,35 @@ const ServicioReportComponent = () => {
                     </input>
                   </div>
                   <div className="col-lg-3">
-                  <label className="col-form-label-zise" >Operador:</label>
+                    <label className="col-form-label-zise" >Operador:</label>
                     <select value={operadorId}
                       className='form-select-depo'
                       onChange={(e) => { setOperadorId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )
                       }
                     </select>
-                </div>
-                
-                <div className="col-lg-3">
-                  <label className="col-form-label-zise" >Montacarga:</label>
+                  </div>
+
+                  <div className="col-lg-3">
+                    <label className="col-form-label-zise" >Montacarga:</label>
                     <select value={montacargaId}
                       className='form-select-depo'
                       onChange={(e) => { setMontacargaId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo+" "+montacarga.marca}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
                         )
                       }
                     </select>
-                </div>
-                </div>
+                  </div>
 
-                <div className='row pt-3'>
                   <div className="col-lg-3">
-                    <label className='col-form-label-zise'>Estado del servicio:</label>
+                    <label className="col-form-label-zise" >Tipo servicio:</label>
                     <select value={estadoRegistro}
                       className='form-select-depo'
                       onChange={(e) => { setEstadoRegistro(e.target.value) }}>
@@ -160,13 +161,25 @@ const ServicioReportComponent = () => {
                       <option value="Concluido">Concluido</option>
                     </select>
                   </div>
-                  </div>
 
+                  <div className="col-lg-3">
+                    <label className='col-form-label-zise'>Estado del servicio:</label>
+                    <select value={tipoServicio}
+                      className='form-select-depo'
+                      onChange={(e) => { setTipoServicio(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Externo">Externo</option>
+                      <option value="Interno">Interno</option>
+                    </select>
+                  </div>
+                </div>
 
                 <div className='mt-4 float-rigth'>
                   <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
                   &nbsp;&nbsp;
                   <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                  &nbsp;&nbsp;
+                  <ExportExcelServicios servicios={servicios} />
                 </div>
               </div>
             </div>
@@ -215,15 +228,15 @@ const ServicioReportComponent = () => {
                         }
                       </td>
                       <td className='text-center'>
-                      {servicio.estadoRegistro === "Concluido" &&
+                        {servicio.estadoRegistro === "Concluido" &&
                           <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
-                          <i className="bi bi-search"></i>
-                        </a>
+                            <i className="bi bi-search"></i>
+                          </a>
                         }
-                      {servicio.estadoRegistro !== "Concluido" &&
+                        {servicio.estadoRegistro !== "Concluido" &&
                           <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
+                            <i className="bi bi-pencil-fill"></i>
+                          </a>
                         }
                       </td>
                     </tr>
@@ -231,7 +244,6 @@ const ServicioReportComponent = () => {
                 }
               </tbody>
             </table>
-            <ExportExcelServicios servicios={servicios} />
           </div>
         }
       </div>
