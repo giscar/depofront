@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BotonExcelDefault from "./BotonExcelDefault";
-import BotonExcelEstilizado from "./BotonExcelEstilizado";
+import ExportExcelServicios from "./ExportExcelServicios";
 
 const AdmProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -30,7 +30,7 @@ const AdmProductos = () => {
 
             <div>
               <BotonExcelDefault productos={productos} />
-              <BotonExcelEstilizado productos={productos} />
+              <ExportExcelServicios productos={productos} />
             </div>
           </div>
 

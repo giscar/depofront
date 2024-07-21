@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate, buscarServiciosPendientes, busquedaEstadisticaAgregate, montacargasActivo, operadorActivo } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
+import ExportExcelServicios from './ExportExcelServicios';
 
 const ServicioReportComponent = () => {
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
@@ -230,6 +231,7 @@ const ServicioReportComponent = () => {
                 }
               </tbody>
             </table>
+            <ExportExcelServicios servicios={servicios} />
           </div>
         }
       </div>
