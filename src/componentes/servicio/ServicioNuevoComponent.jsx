@@ -227,7 +227,8 @@ const ServicioNuevoComponent = () => {
                       value={ruc}
                       className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
                       onClick={handleShow}
-                      onChange={(e) => { setRuc(e.target.value) }}>
+                      onChange={(e) => { setRuc(e.target.value) }}
+                      readOnly>
                     </input>
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
