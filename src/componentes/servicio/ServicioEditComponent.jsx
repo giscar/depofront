@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import SignatureCanvas from 'react-signature-canvas'
 import HeaderComponent from '../HeaderComponent';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 
@@ -43,6 +44,8 @@ const ServicioEditComponent = () => {
   const [documento, setDocumento] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
+  const [sign, setSign] = useState('')
+  const [url, setUrl] = useState('')
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -57,6 +60,7 @@ const ServicioEditComponent = () => {
     msgTotalHoras: '',
     msgMontoServicio: '',
     msgSolicitante: '',
+    msgTipoServicio: ''
   })
 
   const validateForm = () => {
@@ -110,6 +114,15 @@ const ServicioEditComponent = () => {
       errorCopy.msgSolicitante = 'Tiene que ingresar el nombre del solicitante';
       valid = false;
     }
+
+    if (tipoServicio) {
+      errorCopy.msgTipoServicio = '';
+    } else {
+      errorCopy.msgTipoServicio = 'Tiene que ingresar el tipo de servicio';
+      valid = false;
+    }
+
+
 
     setErrors(errorCopy);
     return valid;
@@ -167,7 +180,6 @@ const ServicioEditComponent = () => {
   }
 
   const publicServicio = (e) => {
-    debugger
     e.preventDefault();
     if (validateForm()) {
       let data = {}
@@ -225,6 +237,7 @@ const ServicioEditComponent = () => {
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
+    setUrl(data.url)
   }
 
   useEffect(() => {
@@ -287,7 +300,6 @@ const ServicioEditComponent = () => {
         if (id) {
           servicioForId(id).then((response) => {
             setTimeout(() => {
-              debugger
               setServicio(response.data);
             }, 1000);
 
@@ -322,6 +334,29 @@ const ServicioEditComponent = () => {
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
   console.log(initialLogin)
   console.log(initialLogin.usuario)
+
+  const handleClear = () => {
+    sign.clear();
+  }
+
+  const handleGenerate = () => {
+    debugger
+    if (id) {
+      servicioForId(id).then((response) => {
+        setServicio(response.data);
+        setTimeout(() => {
+          response.data.url = sign.getTrimmedCanvas().toDataURL('image/png');
+          debugger
+          servicioEdit(response.data)
+        }, 1000);
+
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+    setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
+
+  }
 
   return (
     <>
@@ -412,7 +447,7 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )
                       }
                     </select>
@@ -428,7 +463,7 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo+" "+montacarga.marca}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
                         )
                       }
                     </select>
@@ -444,9 +479,15 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       <option value="Externo">Externo</option>
                       <option value="Interno">Interno</option>
-                      
+
                     </select>
                     {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                  <div className="col-sm-8">
+                    <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
                   </div>
                 </div>
 
@@ -566,10 +607,25 @@ const ServicioEditComponent = () => {
                       {errors.msgSolicitante && <div className='invalid-feedback'>{errors.msgSolicitante}</div>}
                     </div>
                   </div>
+
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                    <label className="col-sm-4 col-form-label-zise text-end">Firma del Solicitante:</label>
                     <div className="col-sm-8">
-                      <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                      
+                      <div>
+                      <div className='w-100' style={{ border: "2px solid #E8E3E1", height: 150 }}>
+                        <SignatureCanvas ref={data => setSign(data)} className='w-100'
+                          canvasProps={{ width: 300, height: 150, className: 'sigCanvas' }} />
+                          
+                      </div>
+                      <button className="btn-depo btn-warning-depo" onClick={handleClear}>Borrar</button>
+                      &nbsp;&nbsp;
+                      <button className="btn-depo btn-primary-depo" onClick={handleGenerate}>Guardar</button>
+                      </div>
+                      
+                    
+                      <br />
+                      <img src={url} />
                     </div>
                   </div>
                   {estadoRegistro !== "Concluido" &&

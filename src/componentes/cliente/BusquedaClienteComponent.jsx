@@ -9,7 +9,9 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
   const [razonSocial, setRazonSocial] = useState('');
   const [clientes, setClientes] = useState([])
 
-  const buscarClienteByDescripcion = () => {
+  const buscarClienteByDescripcion = (e) => {
+    debugger
+    e.preventDefault();
     const data = { ruc, razonSocial }
     if (!data.ruc && !data.razonSocial) {
       return
@@ -74,7 +76,7 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
               <div className='pt-3 float-rigth'>
                 <button className='btn-depo btn-danger-depo' onClick={handleClose}>Salir</button>
                 &nbsp;&nbsp;&nbsp;
-                <button className='btn-depo btn-primary-depo' onClick={() => buscarClienteByDescripcion()}>Buscar</button>
+                <button className='btn-depo btn-primary-depo' onClick={buscarClienteByDescripcion}>Buscar</button>
               </div>
             </Form.Group>
           </Form>

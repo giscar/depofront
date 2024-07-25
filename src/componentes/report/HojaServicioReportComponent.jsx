@@ -120,6 +120,7 @@ const HojaServicioReportComponent = ({ id }) => {
   const [operadorNombreCompleto, setOperadorNombreCompleto] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     if (id) {
@@ -153,6 +154,7 @@ const HojaServicioReportComponent = ({ id }) => {
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
+    setUrl(data.url)
   }
 
   return (
@@ -162,6 +164,7 @@ const HojaServicioReportComponent = ({ id }) => {
           <View style={styles.row}>
             <View style={styles.cell}>
               <Image src={Logo} style={styles.logo} />
+              <Image src={url} />
             </View>
             <View style={styles.cell}>
               <Text style={styles.title}>EQUIPOS DE TRANSPORTE Y SERVICIOS MECANICOS</Text>
