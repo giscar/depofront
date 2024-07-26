@@ -20,6 +20,11 @@ const styles = StyleSheet.create({
     height: '70px',
     objectFit: 'cover',
   },
+  firma: {
+    width: '120px',
+    height: '50px',
+    objectFit: 'cover',
+  },
   title: {
     fontSize: 20,
     textAlign: "center",
@@ -121,6 +126,9 @@ const HojaServicioReportComponent = ({ id }) => {
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
   const [url, setUrl] = useState('')
+  const [fechaRegistro, setFechaRegistro] = useState('')
+  const [fechaConclusion, setFechaConclusion] = useState('')
+  
 
   useEffect(() => {
     if (id) {
@@ -155,6 +163,8 @@ const HojaServicioReportComponent = ({ id }) => {
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
     setUrl(data.url)
+    setFechaRegistro(data.fechaRegistro)
+    setFechaConclusion(data.fechaConclusion)
   }
 
   return (
@@ -164,7 +174,6 @@ const HojaServicioReportComponent = ({ id }) => {
           <View style={styles.row}>
             <View style={styles.cell}>
               <Image src={Logo} style={styles.logo} />
-              <Image src={url} />
             </View>
             <View style={styles.cell}>
               <Text style={styles.title}>EQUIPOS DE TRANSPORTE Y SERVICIOS MECANICOS</Text>
@@ -188,10 +197,10 @@ const HojaServicioReportComponent = ({ id }) => {
 
           <View style={styles.row}>
             <View style={styles.cell}>
-              <Text></Text>
+              <Text style={styles.parragraph}>fecha de registro:</Text>
             </View>
             <View style={styles.cell}>
-              <Text  style={styles.parragraph}>Callao, 18 del 03 del 2024 </Text>
+              <Text  style={styles.parragraph}>{fechaConclusion}</Text>
             </View>
           </View>
 
@@ -381,7 +390,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Firma Operador</Text>
             </View>
             <View style={styles.cell2}>
-              <Text>------------------------------</Text>
+              <Image src={url} style={styles.firma}/>
               <Text style={styles.parragraph}>Firma Solicitante-Cliente</Text>
             </View>
           </View>

@@ -8,16 +8,6 @@ import HeaderComponent from '../HeaderComponent';
 
 const ServicioViewComponent = () => {
 
-  const notify = () => toast.info('Se han registrado los cambios correctamente', {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-  });
-
   const [servicio, setServicio] = useState([])
   const { id } = useParams();
 
@@ -40,150 +30,13 @@ const ServicioViewComponent = () => {
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [documento, setDocumento] = useState('')
-
-  const [errors, setErrors] = useState({
-    msgFile: '',
-    msgHoraSalidaLocal: '',
-    msgHoraInicioServicio: '',
-    msgHoraRetornoLocal: '',
-    msgHoraFinServicio: '',
-    msgTotalHoras: '',
-    msgMontoServicio: '',
-  })
-
-  const validateForm = () => {
-    debugger;
-    let valid = true;
-    const errorCopy = { ...errors }
-    if (horaSalidaLocal) {
-      errorCopy.msgHoraSalidaLocal = '';
-    } else {
-      errorCopy.msgHoraSalidaLocal = 'Tiene que ingresar la hora de salida de Depovent';
-      valid = false;
-    }
-
-    if (horaFinServicio) {
-      errorCopy.msgHoraFinServicio = '';
-    } else {
-      errorCopy.msgHoraFinServicio = 'Tiene que ingresar la hora de inicio del servicio';
-      valid = false;
-    }
-
-    if (horaInicioServicio) {
-      errorCopy.msgHoraInicioServicio = '';
-    } else {
-      errorCopy.msgHoraInicioServicio = 'Tiene que ingresar la hora de fin del servicio';
-      valid = false;
-    }
-
-    if (horaRetornoLocal) {
-      errorCopy.msgHoraRetornoLocal = '';
-    } else {
-      errorCopy.msgHoraRetornoLocal = 'Tiene que ingresar la hora de retorno a Depovent';
-      valid = false;
-    }
-
-    if (totalHoras) {
-      errorCopy.msgTotalHoras = '';
-    } else {
-      errorCopy.msgTotalHoras = 'Tiene que ingresar el total de horas del servicio';
-      valid = false;
-    }
-
-    if (montoServicio) {
-      errorCopy.msgMontoServicio = '';
-    } else {
-      errorCopy.msgMontoServicio = 'Tiene que ingresar el monto total del servicio';
-      valid = false;
-    }
-    setErrors(errorCopy);
-    return valid;
-  }
-
-  const validateUpload = () => {
-    let valid = true;
-    const errorCopy = { ...errors }
-    
-
-    if (file) {
-      errorCopy.msgFile = '';
-    } else {
-      errorCopy.msgFile = 'Tiene que la imagen del servicio';
-      valid = false;
-    }
-
-   
-    setErrors(errorCopy);
-    return valid;
-  }
-
-  const editServicio = (e) => {
-    e.preventDefault();
-    let data = {}
-    data.id = id;
-    data.codServicio = codServicio;
-    data.ruc = ruc;
-    data.razonSocial = razonSocial;
-    data.direccion = direccion;
-    data.horaSalidaLocal = horaSalidaLocal;
-    data.horaInicioServicio = horaInicioServicio;
-    data.horaFinServicio = horaFinServicio;
-    data.horaRetornoLocal = horaRetornoLocal;
-    data.operadorId = operadorId;
-    data.montacargaId = montacargaId;
-    data.estado = "1";
-    data.totalHoras = totalHoras;
-    data.montoServicio = montoServicio;
-    data.estadoRegistro = "Proceso";
-    setDocumento(data)
-    servicioEdit(data).catch(error => {
-      console.error(error)
-    })
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
-    }
-    notify()
-  }
-
-  const publicServicio = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      let data = {}
-    data.id = id;
-    data.codServicio = codServicio;
-    data.ruc = ruc;
-    data.razonSocial = razonSocial;
-    data.direccion = direccion;
-    data.horaSalidaLocal = horaSalidaLocal;
-    data.horaInicioServicio = horaInicioServicio;
-    data.horaFinServicio = horaFinServicio;
-    data.horaRetornoLocal = horaRetornoLocal;
-    data.operadorId = operadorId;
-    data.montacargaId = montacargaId;
-    data.estado = "1";
-    data.totalHoras = totalHoras;
-    data.montoServicio = montoServicio;
-    data.estadoRegistro = "Concluido";
-    servicioEdit(data).catch(error => {
-      console.error(error)
-    })
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
-    }
-    notify()
-    }
-  }
+  const [tipoServicio, setTipoServicio] = useState('')
+  const [solicitante, setSolicitante] = useState('')
+  const [sign, setSign] = useState('')
+  const [url, setUrl] = useState('')
+  const [fechaConclusion, setFechaConclusion] = useState('')
 
   const cargarServicio = (data) => {
-    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
@@ -197,6 +50,7 @@ const ServicioViewComponent = () => {
     setTotalHoras(data.totalHoras)
     setMontoServicio(data.montoServicio)
     setEstadoRegistro(data.estadoRegistro? data.estadoRegistro : "En proceso")
+    setTipoServicio(data.tipoServicio)
   }
 
   useEffect(() => {
@@ -405,6 +259,24 @@ const ServicioViewComponent = () => {
                     </select>
                   </div>
                 </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
+                  <div className="col-sm-8">
+                    <select value={tipoServicio}
+                      className='form-select-depo'
+                      onChange={(e) => { setTipoServicio(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Externo">Externo</option>
+                      <option value="Interno">Interno</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                  <div className="col-sm-8">
+                    <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                  </div>
+                </div>
 
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Hoja de servicio preliminar:</label>
@@ -438,10 +310,9 @@ const ServicioViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaSalidaLocal}
-                        className={`form-control-depo ${errors.msgHoraSalidaLocal ? 'is-invalid' : ''}`}
+                        className='form-control-depo'
                         onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
-                      </input>
-                      {errors.msgHoraSalidaLocal && <div className='invalid-feedback'>{errors.msgHoraSalidaLocal}</div>}
+                      </input>                    
                     </div>
                   </div>
 
@@ -450,10 +321,9 @@ const ServicioViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaInicioServicio}
-                        className={`form-control-depo ${errors.msgHoraInicioServicio ? 'is-invalid' : ''}`}
+                        className='form-control-depo'                        
                         onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
                       </input>
-                      {errors.msgHoraInicioServicio && <div className='invalid-feedback'>{errors.msgHoraInicioServicio}</div>}
                     </div>
                   </div>
 
@@ -462,10 +332,9 @@ const ServicioViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaFinServicio}
-                        className={`form-control-depo ${errors.msgHoraFinServicio ? 'is-invalid' : ''}`}
+                        className='form-control-depo'                        
                         onChange={(e) => { setHoraFinServicio(e.target.value) }}>
                       </input>
-                      {errors.msgHoraFinServicio && <div className='invalid-feedback'>{errors.msgHoraFinServicio}</div>}
                     </div>
                   </div>
 
@@ -474,10 +343,9 @@ const ServicioViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaRetornoLocal}
-                        className={`form-control-depo ${errors.msgHoraRetornoLocal ? 'is-invalid' : ''}`}
+                        className='form-control-depo'                        
                         onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
                       </input>
-                      {errors.msgHoraRetornoLocal && <div className='invalid-feedback'>{errors.msgHoraRetornoLocal}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -486,12 +354,11 @@ const ServicioViewComponent = () => {
                       <input type="number"
                         name="totalHoras"
                         placeholder='Cantidad de horas'
-                        className={`form-control-depo ${errors.msgTotalHoras ? 'is-invalid' : ''}`}
+                        className='form-control-depo'                        
                         value={totalHoras}
                         onChange={(e) => { setTotalHoras(e.target.value) }}
                         autoComplete='off'>
                       </input>
-                      {errors.msgTotalHoras && <div className='invalid-feedback'>{errors.msgTotalHoras}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -502,10 +369,23 @@ const ServicioViewComponent = () => {
                         placeholder='Monto'
                         value={montoServicio}
                         onChange={(e) => { setMontoServicio(e.target.value) }}
-                        className={`form-control-depo ${errors.msgMontoServicio ? 'is-invalid' : ''}`}
+                        className='form-control-depo'                        
                         autoComplete='off'>
                       </input>
-                      {errors.msgMontoServicio && <div className='invalid-feedback'>{errors.msgMontoServicio}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="solicitante"
+                        placeholder='Nombre del solicitante'
+                        value={solicitante}
+                        onChange={(e) => { setSolicitante(e.target.value) }}
+                        className='form-control-depo'                         
+                        autoComplete='off'>
+                      </input>
                     </div>
                   </div>
                 </div>
@@ -523,13 +403,12 @@ const ServicioViewComponent = () => {
                 <div className="mb-3 row">
                   <div className='col-lg-6'>
                     <input
-                      className={`form-control ${errors.msgFile ? 'is-invalid' : ''}`}
+                      className='form-control'
                       type="file"
                       name="image"
                       value={image}
                       onChange={e => setFile(e.target.files[0])}
                       accept="image/*" />
-                      {errors.msgFile && <div className='invalid-feedback'>{errors.msgFile}</div>}
                   </div>
                 </div>
                 <div className='container mt-6'>
@@ -540,13 +419,11 @@ const ServicioViewComponent = () => {
                           return <div className='col-lg-3' key={index}>
                             <div className="card">
                               <img className="card-img-top img-fluid bg-light-alt" src={'/images/' + value?.filename} alt="Card image cap" />
-
                               <div className="card-header">
                                 <div className="row align-items-center">
                                   <div className="col">
                                     <h4 className="card-title">Imagen del Servicio</h4>
                                   </div>
-                                  
                                 </div>
                               </div>
                               <div className="card-body">

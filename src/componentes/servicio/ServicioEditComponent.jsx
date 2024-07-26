@@ -46,6 +46,8 @@ const ServicioEditComponent = () => {
   const [solicitante, setSolicitante] = useState('')
   const [sign, setSign] = useState('')
   const [url, setUrl] = useState('')
+  const [fechaConclusion, setFechaConclusion] = useState('')
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -146,6 +148,7 @@ const ServicioEditComponent = () => {
   }
 
   const editServicio = (e) => {
+    debugger
     e.preventDefault();
     let data = {}
     data.id = id;
@@ -165,6 +168,7 @@ const ServicioEditComponent = () => {
     data.estadoRegistro = "Proceso";
     data.tipoServicio = tipoServicio;
     data.solicitante = solicitante;
+    data.url = url;
     setDocumento(data)
     servicioEdit(data).catch(error => {
       console.error(error)
@@ -180,8 +184,11 @@ const ServicioEditComponent = () => {
   }
 
   const publicServicio = (e) => {
+    debugger
     e.preventDefault();
     if (validateForm()) {
+      const today  = new Date();
+      console.log(today.toLocaleDateString("en-US")); // 9/17/2016
       let data = {}
       data.id = id;
       data.codServicio = codServicio;
@@ -200,6 +207,8 @@ const ServicioEditComponent = () => {
       data.estadoRegistro = "Concluido";
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
+      data.url = url;
+      data.fechaConclusion = today.toLocaleDateString("en-US");
       setEstadoRegistro("Concluido")
       servicioEdit(data).then(() => {
         setTimeout(() => {
@@ -211,11 +220,9 @@ const ServicioEditComponent = () => {
             })
           }
         }, 1000);
-
       }).catch(error => {
         console.log(error);
       })
-
       notify()
     }
   }
@@ -332,30 +339,13 @@ const ServicioEditComponent = () => {
   }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-  console.log(initialLogin)
-  console.log(initialLogin.usuario)
 
   const handleClear = () => {
     sign.clear();
   }
 
   const handleGenerate = () => {
-    debugger
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-        setTimeout(() => {
-          response.data.url = sign.getTrimmedCanvas().toDataURL('image/png');
-          debugger
-          servicioEdit(response.data)
-        }, 1000);
-
-      }).catch(error => {
-        console.log(error);
-      })
-    }
     setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
-
   }
 
   return (
@@ -611,19 +601,15 @@ const ServicioEditComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise text-end">Firma del Solicitante:</label>
                     <div className="col-sm-8">
-                      
-                      <div>
-                      <div className='w-100' style={{ border: "2px solid #E8E3E1", height: 150 }}>
-                        <SignatureCanvas ref={data => setSign(data)} className='w-100'
-                          canvasProps={{ width: 300, height: 150, className: 'sigCanvas' }} />
-                          
-                      </div>
-                      <button className="btn-depo btn-warning-depo" onClick={handleClear}>Borrar</button>
-                      &nbsp;&nbsp;
-                      <button className="btn-depo btn-primary-depo" onClick={handleGenerate}>Guardar</button>
-                      </div>
-                      
-                    
+                      {!url && <div>
+                        <div className='w-100' style={{ border: "2px solid #E8E3E1", height: 150 }}>
+                          <SignatureCanvas ref={data => setSign(data)} className='w-100'
+                            canvasProps={{ width: 300, height: 150, className: 'sigCanvas' }} />
+                        </div>
+                        <button className="btn-depo btn-warning-depo" onClick={handleClear}>Borrar</button>
+                        &nbsp;&nbsp;
+                        <button className="btn-depo btn-primary-depo" onClick={handleGenerate}>Guardar</button>
+                      </div>}
                       <br />
                       <img src={url} />
                     </div>
