@@ -51,6 +51,8 @@ const ServicioViewComponent = () => {
     setMontoServicio(data.montoServicio)
     setEstadoRegistro(data.estadoRegistro? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
+    setSolicitante(data.solicitante)
+    setUrl(data.url)
   }
 
   useEffect(() => {
@@ -88,62 +90,6 @@ const ServicioViewComponent = () => {
     setRazonSocial(cliente.razonSocial)
     setDireccion(cliente.direccion)
   }, [cliente])
-
-  useEffect(() => {
-    if (horaSalidaLocal, horaRetornoLocal) {
-      const horaSalidaLocal1 = new Date(horaSalidaLocal);
-      const horaRetornoLocal1 = new Date(horaRetornoLocal);
-      const diff = horaRetornoLocal1.getTime() - horaSalidaLocal1.getTime();
-      const horas = diff / (1000 * 60 * 60);
-      console.log(horas.toFixed(2))
-      setTotalHoras(horas.toFixed(2))
-      servicio.totalHoras = horas.toFixed(2)
-    }
-  }, [horaSalidaLocal, horaRetornoLocal, cliente])
-
-  const handleUpload = (e) => {
-    e.preventDefault();
-    if(validateUpload()){
-      const formdata = new FormData()
-    formdata.append('file', file)
-    formdata.append('id', id)
-    formdata.append('type', file.type)
-    formdata.append('size', file.size)
-    uploadFile(formdata).then(() => {
-      if (id) {
-        servicioForId(id).then((response) => {
-          setTimeout(() => {
-            debugger
-            setServicio(response.data);
-          }, 1000);
-          
-        }).catch(error => {
-          console.log(error);
-        })
-      }
-    }).catch(error => {
-      console.log(error);
-    });
-    setFile("")
-    notify();
-    }
-  }
-
-  const handleInactiveFile = (idImagen) => {
-    console.log(idImagen);
-    inactiveFile(idImagen).then(() => {
-      if (id) {
-        servicioForId(id).then((response) => {
-          setServicio(response.data);
-          notify();
-        }).catch(error => {
-          console.log(error);
-        })
-      }
-    }).catch(error => {
-      console.log(error);
-    })
-  }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
   console.log(initialLogin)
@@ -386,6 +332,13 @@ const ServicioViewComponent = () => {
                         className='form-control-depo'                         
                         autoComplete='off'>
                       </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Firma del Solicitante:</label>
+                    <div className="col-sm-8">
+                      <img src={url} />
                     </div>
                   </div>
                 </div>

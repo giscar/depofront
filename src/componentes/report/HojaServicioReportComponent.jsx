@@ -71,6 +71,12 @@ const styles = StyleSheet.create({
     marginTop: '5px',
     padding: '8px',
   },
+  row2: {
+    flexDirection: 'row',
+    borderBottom: '1px solid #ccc',
+    marginTop: '15px',
+    padding: '8px',
+  },
   row1: {
     width: '50%',
     flexDirection: 'row',
@@ -145,6 +151,7 @@ const HojaServicioReportComponent = ({ id }) => {
   }, [id])
 
   const cargarServicio = (data) => {
+    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
@@ -319,6 +326,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>DUA Nro:</Text>
             </View>
             <View style={styles.cell2}>
+              <Text></Text>
               <Text>-----</Text>
             </View>
 
@@ -390,7 +398,9 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Firma Operador</Text>
             </View>
             <View style={styles.cell2}>
-              <Image src={url} style={styles.firma}/>
+              {url && 
+                <Image src={url} style={styles.firma}/>
+              }
               <Text style={styles.parragraph}>Firma Solicitante-Cliente</Text>
             </View>
           </View>

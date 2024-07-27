@@ -52,6 +52,7 @@ const ExportExcelServicios = ({ servicios }) => {
   };
 
   const creandoArchivo = (dataFinal) => {
+    debugger
     const libro = XLSX.utils.book_new();
 
     const hoja = XLSX.utils.json_to_sheet(dataFinal, { skipHeader: true });
@@ -85,9 +86,9 @@ const ExportExcelServicios = ({ servicios }) => {
         </button>
       ) : (
         <button color="success" disabled>
-          <div class="spinner-border text-dark" role="status">
-  <span class="visually-hidden">Generando...</span>
-</div>
+          <div className="spinner-border text-dark" role="status">
+            <span className="visually-hidden">Generando...</span>
+          </div>
         </button>
       )}
     </>

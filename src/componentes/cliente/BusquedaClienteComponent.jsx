@@ -104,7 +104,7 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
                         <td className='td-th-size-depo'>{cliente.direccion}</td>
                         <td className='td-th-size-depo text-center'>
                           <a className='icon-link-depo' onClick={() => seleccionarCliente(cliente)}>
-                          <i class="bi bi-patch-plus-fill"></i>
+                          <i className="bi bi-patch-plus-fill"></i>
                           </a>
                         </td>
                       </tr>
