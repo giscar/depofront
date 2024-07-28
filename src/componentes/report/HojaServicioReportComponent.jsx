@@ -7,7 +7,7 @@ import {
   View,
 } from "@react-pdf/renderer";
 import Logo from "../../assets/Logo.png"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { servicioForId } from "../../service/FacturaService";
 
 
@@ -16,13 +16,13 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   logo: {
-    width: '160px',
-    height: '70px',
+    width: '140px',
+    height: '60px',
     objectFit: 'cover',
   },
   firma: {
-    width: '120px',
-    height: '50px',
+    width: '100px',
+    height: '40px',
     objectFit: 'cover',
   },
   title: {
@@ -109,11 +109,14 @@ const styles = StyleSheet.create({
     color: '#222'
   },
 
+  textFirma: {
+    paddingTop: 25,
+  },
+
 });
 
 const HojaServicioReportComponent = ({ id }) => {
 
-  const [servicio, setServicio] = useState([])
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
@@ -134,24 +137,18 @@ const HojaServicioReportComponent = ({ id }) => {
   const [url, setUrl] = useState('')
   const [fechaRegistro, setFechaRegistro] = useState('')
   const [fechaConclusion, setFechaConclusion] = useState('')
-  
 
-  useEffect(() => {
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-        setTimeout(() => {
-          cargarServicio(response.data)
-        }, 1000);
-
-      }).catch(error => {
-        console.log(error);
-      })
-    }
-  }, [id])
+  if (id) {
+    servicioForId(id).then((response) => {
+      setTimeout(() => {
+        cargarServicio(response.data)
+      }, 1000);
+    }).catch(error => {
+      console.log(error);
+    })
+  }
 
   const cargarServicio = (data) => {
-    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
@@ -187,10 +184,10 @@ const HojaServicioReportComponent = ({ id }) => {
             </View>
           </View>
           <View style={styles.row}>
-          <View style={styles.cell1}>
-          <Text style={styles.subtitle}>Jr. Victor A. Belaúnde 901 - CALLAO (Cdra. 57 Av. Argentina) Telf.: 451-7949</Text>
+            <View style={styles.cell1}>
+              <Text style={styles.subtitle}>Jr. Victor A. Belaúnde 901 - CALLAO (Cdra. 57 Av. Argentina) Telf.: 451-7949</Text>
               <Text style={styles.subtitle}>Entel: 987319510 / 981441566 / 981454935</Text>
-          </View>
+            </View>
           </View>
 
           <View style={styles.row}>
@@ -204,16 +201,16 @@ const HojaServicioReportComponent = ({ id }) => {
 
           <View style={styles.row}>
             <View style={styles.cell}>
-              <Text style={styles.parragraph}>fecha de registro:</Text>
+              <Text style={styles.parragraph}>Fecha de registro:</Text>
             </View>
             <View style={styles.cell}>
-              <Text  style={styles.parragraph}>{fechaConclusion}</Text>
+              <Text style={styles.parragraph}>{fechaConclusion}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
             <View style={styles.cell1}>
-              <Text  style={styles.parragraph}>Cliente: {razonSocial}</Text>
+              <Text style={styles.parragraph}>Cliente: {razonSocial}</Text>
             </View>
 
           </View>
@@ -305,7 +302,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text></Text>
             </View>
           </View>
-          
+
           <View style={styles.row}>
             <View style={styles.cell2}>
               <Text style={styles.parragraph}>{totalHoras}</Text>
@@ -326,7 +323,6 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>DUA Nro:</Text>
             </View>
             <View style={styles.cell2}>
-              <Text></Text>
               <Text>-----</Text>
             </View>
 
@@ -386,20 +382,20 @@ const HojaServicioReportComponent = ({ id }) => {
 
           <View style={styles.row}>
             <View style={styles.cell2}>
-              <Text>------------------------------</Text>
+              <Text style={styles.textFirma}>------------------------------</Text>
               <Text style={styles.parragraph}>V.B. Depovent</Text>
             </View>
             <View style={styles.cell2}>
-              <Text>------------------------------</Text>
+              <Text style={styles.textFirma}>------------------------------</Text>
               <Text style={styles.parragraph}>Firma Almacenero</Text>
             </View>
             <View style={styles.cell2}>
-              <Text>------------------------------</Text>
+              <Text style={styles.textFirma}>------------------------------</Text>
               <Text style={styles.parragraph}>Firma Operador</Text>
             </View>
             <View style={styles.cell2}>
-              {url && 
-                <Image src={url} style={styles.firma}/>
+              {url &&
+                <Image src={url} style={styles.firma} />
               }
               <Text style={styles.parragraph}>Firma Solicitante-Cliente</Text>
             </View>

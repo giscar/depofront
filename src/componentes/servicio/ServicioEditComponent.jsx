@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import SignatureCanvas from 'react-signature-canvas'
 import HeaderComponent from '../HeaderComponent';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
@@ -41,12 +41,10 @@ const ServicioEditComponent = () => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
-  const [documento, setDocumento] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
   const [sign, setSign] = useState('')
   const [url, setUrl] = useState('')
-  const [fechaConclusion, setFechaConclusion] = useState('')
 
 
   const [show, setShow] = useState(false);
@@ -123,9 +121,6 @@ const ServicioEditComponent = () => {
       errorCopy.msgTipoServicio = 'Tiene que ingresar el tipo de servicio';
       valid = false;
     }
-
-
-
     setErrors(errorCopy);
     return valid;
   }
@@ -133,22 +128,17 @@ const ServicioEditComponent = () => {
   const validateUpload = () => {
     let valid = true;
     const errorCopy = { ...errors }
-
-
     if (file) {
       errorCopy.msgFile = '';
     } else {
       errorCopy.msgFile = 'Tiene que la imagen del servicio';
       valid = false;
     }
-
-
     setErrors(errorCopy);
     return valid;
   }
 
   const editServicio = (e) => {
-    debugger
     e.preventDefault();
     let data = {}
     data.id = id;
@@ -167,9 +157,8 @@ const ServicioEditComponent = () => {
     data.montoServicio = montoServicio;
     data.estadoRegistro = "Proceso";
     data.tipoServicio = tipoServicio;
-    data.solicitante = solicitante;
+    data.solicitante = solicitante.toUpperCase();
     data.url = url;
-    setDocumento(data)
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -184,11 +173,9 @@ const ServicioEditComponent = () => {
   }
 
   const publicServicio = (e) => {
-    debugger
     e.preventDefault();
     if (validateForm()) {
       const today  = new Date();
-      console.log(today.toLocaleDateString("en-US")); // 9/17/2016
       let data = {}
       data.id = id;
       data.codServicio = codServicio;
@@ -228,7 +215,6 @@ const ServicioEditComponent = () => {
   }
 
   const cargarServicio = (data) => {
-    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
@@ -602,9 +588,9 @@ const ServicioEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise text-end">Firma del Solicitante:</label>
                     <div className="col-sm-8">
                       {!url && <div>
-                        <div className='w-100' style={{ border: "2px solid #E8E3E1", height: 150 }}>
-                          <SignatureCanvas ref={data => setSign(data)} className='w-100'
-                            canvasProps={{ width: 300, height: 150, className: 'sigCanvas' }} />
+                        <div className='w-90' style={{ border: "2px solid #E8E3E1", height: 150 }}>
+                          <SignatureCanvas ref={data => setSign(data)} className='w-90'
+                            canvasProps={{ width: 250, height: 100, className: 'sigCanvas' }} />
                         </div>
                         <button className="btn-depo btn-warning-depo" onClick={handleClear}>Borrar</button>
                         &nbsp;&nbsp;

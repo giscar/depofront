@@ -23,6 +23,8 @@ const ServicioNuevoComponent = () => {
   const [montoServicio, setMontoServicio] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
+  const [moneda, setMoneda] = useState('')
+  const [observaciones, setObservaciones] = useState('')
 
   const [errors, setErrors] = useState({
     msgCodServicio: '',
@@ -110,6 +112,8 @@ const ServicioNuevoComponent = () => {
       data.estadoRegistro = "Proceso";
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
+      data.moneda = moneda;
+      data.observaciones = observaciones
       servicioSave(data).catch(error => {
         console.error(error)
       });
@@ -175,13 +179,16 @@ const ServicioNuevoComponent = () => {
     setTotalHoras('')
     setMontoServicio('')
     setTipoServicio('')
+    setSolicitante('')
+    setMoneda('')
+    setObservaciones('');
   };
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -205,6 +212,7 @@ const ServicioNuevoComponent = () => {
                 <h4 className="card-title">Datos Iniciales del Servicio</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
+
               <div className="card-body">
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
@@ -219,6 +227,7 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
                   <div className="col-sm-8">
@@ -233,6 +242,7 @@ const ServicioNuevoComponent = () => {
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
                   <div className="col-sm-8">
@@ -245,6 +255,7 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
                   <div className="col-sm-8">
@@ -257,6 +268,7 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
                   <div className="col-sm-8">
@@ -266,13 +278,14 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre+" "+operador.apellidoPat+" "+operador.apellidoMat}</option>
+                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )
                       }
                     </select>
                     {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
                   <div className="col-sm-8">
@@ -282,13 +295,14 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       {
                         montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo+" "+montacarga.marca}</option>
+                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
                         )
                       }
                     </select>
                     {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
                   <div className="col-sm-8">
@@ -298,13 +312,12 @@ const ServicioNuevoComponent = () => {
                       <option value="">Seleccione</option>
                       <option value="Externo">Externo</option>
                       <option value="Interno">Interno</option>
-                      
                     </select>
                     {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
                   </div>
                 </div>
-                  <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
-                </div>
+                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+              </div>
             </div>
           </div>
 
@@ -374,11 +387,11 @@ const ServicioNuevoComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise text-end">Costo del servicio:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         name="montoServicio"
-                        placeholder='Monto'
+                        placeholder='Costo del servicio'
                         value={montoServicio}
                         onChange={(e) => { setMontoServicio(e.target.value) }}
                         className='form-control-depo'
@@ -386,6 +399,20 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end" >Moneda:</label>
+                    <div className="col-sm-8">
+                      <select value={moneda}
+                        className='form-select-depo'
+                        onChange={(e) => { setMoneda(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Externo">Soles</option>
+                        <option value="Interno">Dolares</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
                     <div className="col-sm-8">
@@ -399,6 +426,21 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise text-end">Observaciones:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="observaciones"
+                        placeholder='Observaciones del servicio'
+                        value={observaciones}
+                        onChange={(e) => { setObservaciones(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

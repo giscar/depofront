@@ -68,14 +68,8 @@ const MontacargaComponent = () => {
   }
 
   const buscarMontacarga = () => {
-    console.log("entro buscarMontacarga")
     montacargasActivo().then((response) => {
-      if (response.data.tipoServicio == '01') {
-        response.data.nombreTipoServicio = 'Servicio'
-      }
-      if (response.data.tipoServicio == '02') {
-        response.data.nombreTipoServicio = 'Maniobra'
-      }
+      debugger
       setMontacargas(response.data);
       console.log(montacarga)
     }).catch(error => {
@@ -104,7 +98,7 @@ const MontacargaComponent = () => {
                   <li className="breadcrumb-item active">listado</li>
                 </ol>
               </div>
-              <h4 className="page-title">Listado de Operadores</h4>
+              <h4 className="page-title">Listado de Montacargas</h4>
             </div>
           </div>
         </div>

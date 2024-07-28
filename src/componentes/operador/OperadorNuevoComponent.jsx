@@ -125,7 +125,6 @@ const OperadorNuevoComponent = () => {
               </div>
 
               <div className="card-body">
-
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
                   <div className="col-sm-9">
