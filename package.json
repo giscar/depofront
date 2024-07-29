@@ -15,7 +15,6 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
-    "formik": "^2.4.5",
     "html-react-table": "^1.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
@@ -26,8 +25,7 @@
     "react-signature-canvas": "^1.0.6",
     "react-toastify": "^10.0.5",
     "sweetalert2": "^11.12.2",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
-    "yup": "^1.4.0"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

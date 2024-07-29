@@ -46,45 +46,36 @@ const HeaderComponent = () => {
   
 
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
+    <>
+    
+    <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-      
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          
+        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <NavDropdown title="Operaciones" id="collapsible-nav-dropdown1">
-              <NavDropdown.Item onClick={() => accederServicio() }>Servicios</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => accederServicioNuevo() }>Nuevo servicio</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => accederFacturas() }>Facturar</NavDropdown.Item>
-            <NavDropdown.Divider />
-              <Nav.Link onClick={() => accederMontacargas() }>Montacargas</Nav.Link>
-            <Nav.Link onClick={() => accederOperadores() }>Operadores</Nav.Link>
-            <Nav.Link onClick={() => accederClientes() }>Clientes</Nav.Link>
-            <Nav.Link onClick={() => accederReporteOperaciones() }>Estadisticas</Nav.Link>
-            </NavDropdown>
-            <NavDropdown title="Facturas" id="collapsible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1" onClick={() => accederFacturas() }>Nueva</NavDropdown.Item>
+            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#link">Link</Nav.Link>
+            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
-                Revisar
+                Another action
               </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Cancelar</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
-                Modificar
+                Separated link
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>
-          <Nav>
-            <Nav.Link><b>{initialLogin.rol == "adm"? 'Administrativo' : 'Operario'}</b></Nav.Link>
-            <Nav.Link eventKey={2} >
-              <span className='text-white'><b>{initialLogin.nombre}</b></span>
-            </Nav.Link>
-            <Nav.Link className='text-warning' onClick={() => cerrarSession() }><b>Cerrar</b></Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    
+    
+    
+    
+    </>
   )
 }
 

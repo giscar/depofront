@@ -5,6 +5,7 @@ import { buscarServicioByDatosAggregate, buscarServiciosPendientes } from '../..
 import HeaderComponent from '../HeaderComponent';
 
 const ServicioComponent = () => {
+  
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
     position: "top-right",
     autoClose: 1000,
@@ -75,7 +76,7 @@ const ServicioComponent = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Busqueda de servicios</h4>
@@ -83,7 +84,7 @@ const ServicioComponent = () => {
               </div>
               <div className="card-body">
                 <div className='row'>
-                  <div className="col-lg-6">
+                  <div className="col-lg-12">
                     <label className='col-form-label-zise'>Codigo del servicio:</label>
                     <input type="number"
                       id="inputCodServicio"

@@ -2,7 +2,6 @@
 import './App.css'
 import FacturaComponent from './componentes/factura/FacturaComponent'
 import FindFacturaComponent from './componentes/factura/FindFacturaComponent'
-import HeaderComponent from './componentes/HeaderComponent'
 import {BrowserRouter, Route, Routes, UNSAFE_RouteContext} from 'react-router-dom'
 import LoginComponent from './componentes/login/LoginComponent'
 import ClienteComponent from './componentes/cliente/ClienteComponent'
