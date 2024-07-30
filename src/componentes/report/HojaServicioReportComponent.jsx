@@ -137,6 +137,8 @@ const HojaServicioReportComponent = ({ id }) => {
   const [url, setUrl] = useState('')
   const [fechaRegistro, setFechaRegistro] = useState('')
   const [fechaConclusion, setFechaConclusion] = useState('')
+  const [observaciones, setObservaciones] = useState('')
+  const [tipoPago, setTipoPago] = useState('')
 
   if (id) {
     servicioForId(id).then((response) => {
@@ -169,6 +171,8 @@ const HojaServicioReportComponent = ({ id }) => {
     setUrl(data.url)
     setFechaRegistro(data.fechaRegistro)
     setFechaConclusion(data.fechaConclusion)
+    setObservaciones(data.observaciones)
+    setTipoPago(data.tipoPago)
   }
 
   return (
@@ -376,7 +380,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Tipo de pago:</Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.parragraph}>Facturado</Text>
+              <Text style={styles.parragraph}>{tipoPago}</Text>
             </View>
           </View>
 
@@ -402,7 +406,7 @@ const HojaServicioReportComponent = ({ id }) => {
           </View>
         </View>
         <Text style={styles.parragraph}>
-          Observaciones: Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus.
+          Observaciones: {observaciones}
         </Text>
         <Text style={styles.parragraph}>
           Nota: Las horas de servicio se computaran desde que sale el montacarga de nuestro local hasta que reingrese al mismo, y asi se comunica que los fraccionarios de minutos de conputraran como 1 hora, ni la empresa ni el operador se hace responsable por daños causados por la maquina durante el servicio, si ellos se originan en casos fortuitos o en maniobras exigidas por el comitente.

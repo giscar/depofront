@@ -1,12 +1,4 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-.topbar {
-  right: 0;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 999;
-}
 
 .button-menu-mobile {
   border: none;
@@ -14,10 +6,6 @@
   width: 60px;
   background-color: transparent;
   cursor: pointer;
-}
-
-.nav-user .nav-user-name {
-  vertical-align: middle;
 }
 
 /* Notification */
@@ -8355,4 +8343,46 @@ td.td-th-size-depo{
 
 .icon-link-depo{
   cursor: pointer;
+}
+
+.bg-body-tertiary-depo {
+  --bs-bg-opacity: 1;
+  background-color: orange;
+}
+
+.item-menu-depo {
+  color: white;
+}
+
+.navbar-brand-depo {
+  padding-top: var(--bs-navbar-brand-padding-y);
+  padding-bottom: var(--bs-navbar-brand-padding-y);
+  margin-right: var(--bs-navbar-brand-margin-end);
+  font-size: var(--bs-navbar-brand-font-size);
+  color: white;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-link-depo {
+  display: block;
+  padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+  font-size: var(--bs-nav-link-font-size);
+  font-weight: var(--bs-nav-link-font-weight);
+  color: white;
+  text-decoration: none;
+  background: 0 0;
+  border: 0;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
+}
+
+.navbar-toggler-depo {
+  padding: var(--bs-navbar-toggler-padding-y) var(--bs-navbar-toggler-padding-x);
+  font-size: var(--bs-navbar-toggler-font-size);
+  line-height: 1;
+  color: var(--bs-navbar-color);
+  background-color: transparent;
+  border: var(--bs-border-width) solid var(--bs-navbar-toggler-border-color);
+  border-radius: var(--bs-navbar-toggler-border-radius);
+  transition: var(--bs-navbar-toggler-transition);
 }

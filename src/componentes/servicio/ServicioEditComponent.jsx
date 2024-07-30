@@ -45,7 +45,8 @@ const ServicioEditComponent = () => {
   const [solicitante, setSolicitante] = useState('')
   const [sign, setSign] = useState('')
   const [url, setUrl] = useState('')
-
+  const [observaciones, setObservaciones] = useState('')
+  const [tipoPago, setTipoPago] = useState('')
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -159,6 +160,8 @@ const ServicioEditComponent = () => {
     data.tipoServicio = tipoServicio;
     data.solicitante = solicitante.toUpperCase();
     data.url = url;
+    data.observaciones = observaciones.toUpperCase();
+    data.tipoPago = tipoPago;
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -195,6 +198,8 @@ const ServicioEditComponent = () => {
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
       data.url = url;
+      data.observaciones = observaciones;
+      data.tipoPago = tipoPago;
       data.fechaConclusion = today.toLocaleDateString("en-US");
       setEstadoRegistro("Concluido")
       servicioEdit(data).then(() => {
@@ -231,6 +236,8 @@ const ServicioEditComponent = () => {
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
     setUrl(data.url)
+    setObservaciones(data.observaciones)
+    setTipoPago(data.tipoPago)
   }
 
   useEffect(() => {
@@ -256,7 +263,6 @@ const ServicioEditComponent = () => {
         setTimeout(() => {
           cargarServicio(response.data)
         }, 1000);
-
       }).catch(error => {
         console.log(error);
       })
@@ -334,6 +340,8 @@ const ServicioEditComponent = () => {
     setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
   }
 
+  console.log(url)
+
   return (
     <>
       {initialLogin.usuario && <HeaderComponent />}
@@ -354,7 +362,7 @@ const ServicioEditComponent = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-6 card-deck">
+          <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos registrados del Servicio</h4>
@@ -362,7 +370,7 @@ const ServicioEditComponent = () => {
               </div>
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
                   <div className="col-sm-8">
                     <input type="number"
                       id="inputCodServicio"
@@ -375,7 +383,7 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
+                  <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                   <div className="col-sm-8">
                     <input type="number"
                       id="inputRuc"
@@ -389,7 +397,7 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
+                  <label className="col-sm-4 col-form-label-zise">Razon Social:</label>
                   <div className="col-sm-8">
                     <input type="text"
                       id="inputRazonSocial"
@@ -402,7 +410,7 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
+                  <label className="col-sm-4 col-form-label-zise">Dirección:</label>
                   <div className="col-sm-8">
                     <input type='text'
                       placeholder='Dirección'
@@ -414,7 +422,7 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Operador:</label>
                   <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
@@ -430,7 +438,7 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Montacarga:</label>
                   <div className="col-sm-8">
                     <select value={montacargaId}
                       className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10'}`}
@@ -447,7 +455,7 @@ const ServicioEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                   <div className="col-sm-8">
                     <select value={tipoServicio}
                       className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
@@ -461,14 +469,14 @@ const ServicioEditComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Estado del registro:</label>
+                  <label className="col-sm-4 col-form-label-zise">Estado del registro:</label>
                   <div className="col-sm-8">
-                    <label className="col-sm-4 col-form-label-zise text-end text-danger"><b>{estadoRegistro}</b></label>
+                    <label className="col-sm-4 col-form-label-zise text-danger"><b>{estadoRegistro}</b></label>
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Hoja de servicio preliminar:</label>
+                  <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
                   <div className="col-sm-8">
                     <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="preliminar_hoja_servicio.pdf">
                       {({ loading, url, error, blob }) =>
@@ -485,7 +493,7 @@ const ServicioEditComponent = () => {
             </div>
           </div>
 
-          <div className="col-lg-6 card-deck">
+          <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos de la ejecución del servicio</h4>
@@ -495,7 +503,7 @@ const ServicioEditComponent = () => {
               <div className="card-body">
                 <div className="general-label">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Salida de la Empresa:</label>
+                    <label className="col-sm-4 col-form-label-zise">Salida de la Empresa:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaSalidaLocal}
@@ -507,7 +515,7 @@ const ServicioEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Inicio del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Inicio del Servicio:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaInicioServicio}
@@ -519,7 +527,7 @@ const ServicioEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Fin del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Fin del Servicio:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaFinServicio}
@@ -531,7 +539,7 @@ const ServicioEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
+                    <label className="col-sm-4 col-form-label-zise">Retorno a la empresa:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaRetornoLocal}
@@ -542,7 +550,7 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio (este monto es autocalculado):</label>
+                    <label className="col-sm-4 col-form-label-zise">Horas de servicio (este monto es autocalculado):</label>
                     <div className="col-sm-8">
                       <input type="number"
                         name="totalHoras"
@@ -556,7 +564,7 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Monto del servicio:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         name="montoServicio"
@@ -570,7 +578,32 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
+                    <label className="col-sm-4 col-form-label-zise" >Tipo de Pago:</label>
+                    <div className="col-sm-8">
+                      <select value={tipoPago}
+                        className='form-select-depo'
+                        onChange={(e) => { setTipoPago(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Externo">Facturado</option>
+                        <option value="Interno">Contado</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="observaciones"
+                        placeholder='Observaciones'
+                        value={observaciones}
+                        onChange={(e) => { setObservaciones(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Solicitante:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         name="solicitante"
@@ -585,16 +618,20 @@ const ServicioEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Firma del Solicitante:</label>
+                    <label className="col-sm-4 col-form-label-zise">Firma del Solicitante:</label>
                     <div className="col-sm-8">
                       {!url && <div>
-                        <div className='w-90' style={{ border: "2px solid #E8E3E1", height: 150 }}>
+                        <div className='w-90' style={{ border: "2px solid #E8E3E1" }}>
                           <SignatureCanvas ref={data => setSign(data)} className='w-90'
-                            canvasProps={{ width: 250, height: 100, className: 'sigCanvas' }} />
+                            canvasProps={{ width: 330, height: 150, className: 'sigCanvas' }} />
                         </div>
-                        <button className="btn-depo btn-warning-depo" onClick={handleClear}>Borrar</button>
+                        <button className="btn-depo btn-danger-depo mt-1" onClick={handleClear}>
+                          <i class="bi bi-trash-fill"></i>
+                        </button>
                         &nbsp;&nbsp;
-                        <button className="btn-depo btn-primary-depo" onClick={handleGenerate}>Guardar</button>
+                        <button className="btn-depo btn-primary-depo  mt-1" onClick={handleGenerate}>
+                          <i class="bi bi-floppy-fill"></i>
+                        </button>
                       </div>}
                       <br />
                       <img src={url} />
@@ -612,7 +649,7 @@ const ServicioEditComponent = () => {
             </div>
           </div>
 
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Evidencias del servicio</h4>
@@ -632,7 +669,7 @@ const ServicioEditComponent = () => {
                   </div>
                   <div className='col-lg-6'>
                     {estadoRegistro !== "Concluido" &&
-                      <button type="button" className="btn-depo btn-warning-depo" onClick={handleUpload} >Cargar imagen</button>
+                      <button type="button" className="btn-depo btn-warning-depo mt-1" onClick={handleUpload} >Cargar imagen</button>
                     }
                   </div>
                 </div>

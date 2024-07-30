@@ -25,6 +25,7 @@ const ServicioNuevoComponent = () => {
   const [solicitante, setSolicitante] = useState('')
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
+  const [tipoPago, setTipoPago] = useState('')
 
   const [errors, setErrors] = useState({
     msgCodServicio: '',
@@ -113,7 +114,8 @@ const ServicioNuevoComponent = () => {
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
       data.moneda = moneda;
-      data.observaciones = observaciones
+      data.observaciones = observaciones;
+      data.tipoPago = tipoPago;
       servicioSave(data).catch(error => {
         console.error(error)
       });
@@ -182,6 +184,7 @@ const ServicioNuevoComponent = () => {
     setSolicitante('')
     setMoneda('')
     setObservaciones('');
+    setTipoPago('')
   };
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -206,19 +209,17 @@ const ServicioNuevoComponent = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-6 card-deck">
+          <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos Iniciales del Servicio</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
-
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
                   <div className="col-sm-8">
                     <input type="number"
-                      id="inputCodServicio"
                       placeholder="Codigo del servicio"
                       value={codServicio}
                       className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
@@ -227,9 +228,8 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Numero de RUC:</label>
+                  <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                   <div className="col-sm-8">
                     <input type="number"
                       placeholder="Ingrese el numero de RUC"
@@ -242,9 +242,8 @@ const ServicioNuevoComponent = () => {
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Razon Social:</label>
+                  <label className="col-sm-4 col-form-label-zise">Razon Social:</label>
                   <div className="col-sm-8">
                     <input type="text"
                       placeholder='Razon Social'
@@ -255,9 +254,8 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end">Dirección:</label>
+                  <label className="col-sm-4 col-form-label-zise">Dirección:</label>
                   <div className="col-sm-8">
                     <input type='text'
                       placeholder='Dirección'
@@ -268,9 +266,8 @@ const ServicioNuevoComponent = () => {
                     </input>
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Operador:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Operador:</label>
                   <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
@@ -285,9 +282,8 @@ const ServicioNuevoComponent = () => {
                     {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Montacarga:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Montacarga:</label>
                   <div className="col-sm-8">
                     <select value={montacargaId}
                       className={`form-select-depo${errors.msgMontacargaId ? ' is-invalid' : ''}`}
@@ -302,9 +298,8 @@ const ServicioNuevoComponent = () => {
                     {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise text-end" >Tipo de servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                   <div className="col-sm-8">
                     <select value={tipoServicio}
                       className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
@@ -320,8 +315,7 @@ const ServicioNuevoComponent = () => {
               </div>
             </div>
           </div>
-
-          <div className="col-lg-6 card-deck">
+          <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos de la ejecución del servicio</h4>
@@ -331,7 +325,7 @@ const ServicioNuevoComponent = () => {
               <div className="card-body">
                 <div className="general-label">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Salida de la Empresa:</label>
+                    <label className="col-sm-4 col-form-label-zise">Salida de la Empresa:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaSalidaLocal}
@@ -340,9 +334,8 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Inicio del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Inicio del Servicio:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaInicioServicio}
@@ -351,9 +344,8 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Fin del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Fin del Servicio:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaFinServicio}
@@ -362,9 +354,8 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Retorno a la empresa:</label>
+                    <label className="col-sm-4 col-form-label-zise">Retorno a la empresa:</label>
                     <div className="col-sm-8">
                       <input type="datetime-local"
                         value={horaRetornoLocal}
@@ -374,7 +365,7 @@ const ServicioNuevoComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Horas de servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Horas de servicio:</label>
                     <div className="col-sm-8">
                       <input type="number"
                         name="totalHoras"
@@ -387,7 +378,7 @@ const ServicioNuevoComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Costo del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Costo del servicio:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         name="montoServicio"
@@ -399,9 +390,8 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end" >Moneda:</label>
+                    <label className="col-sm-4 col-form-label-zise" >Moneda:</label>
                     <div className="col-sm-8">
                       <select value={moneda}
                         className='form-select-depo'
@@ -412,23 +402,20 @@ const ServicioNuevoComponent = () => {
                       </select>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Solicitante:</label>
+                    <label className="col-sm-4 col-form-label-zise" >Tipo de Pago:</label>
                     <div className="col-sm-8">
-                      <input type="text"
-                        name="solicitante"
-                        placeholder='Nombre del solicitante'
-                        value={solicitante}
-                        onChange={(e) => { setSolicitante(e.target.value) }}
-                        className='form-control-depo'
-                        autoComplete='off'>
-                      </input>
+                      <select value={tipoPago}
+                        className='form-select-depo'
+                        onChange={(e) => { setTipoPago(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Externo">Facturado</option>
+                        <option value="Interno">Contado</option>
+                      </select>
                     </div>
                   </div>
-
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise text-end">Observaciones:</label>
+                    <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         name="observaciones"
@@ -440,7 +427,19 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Solicitante:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        name="solicitante"
+                        placeholder='Nombre del solicitante'
+                        value={solicitante}
+                        onChange={(e) => { setSolicitante(e.target.value) }}
+                        className='form-control-depo'
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
