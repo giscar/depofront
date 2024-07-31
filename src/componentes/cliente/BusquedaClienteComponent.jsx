@@ -10,7 +10,6 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
   const [clientes, setClientes] = useState([])
 
   const buscarClienteByDescripcion = (e) => {
-    debugger
     e.preventDefault();
     const data = { ruc, razonSocial }
     if (!data.ruc && !data.razonSocial) {

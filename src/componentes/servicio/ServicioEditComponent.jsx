@@ -47,6 +47,7 @@ const ServicioEditComponent = () => {
   const [url, setUrl] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
+  const [moneda, setMoneda] = useState('')
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -162,6 +163,7 @@ const ServicioEditComponent = () => {
     data.url = url;
     data.observaciones = observaciones.toUpperCase();
     data.tipoPago = tipoPago;
+    data.moneda = moneda;
     servicioEdit(data).catch(error => {
       console.error(error)
     })
@@ -200,6 +202,7 @@ const ServicioEditComponent = () => {
       data.url = url;
       data.observaciones = observaciones;
       data.tipoPago = tipoPago;
+      data.moneda = moneda;
       data.fechaConclusion = today.toLocaleDateString("en-US");
       setEstadoRegistro("Concluido")
       servicioEdit(data).then(() => {
@@ -238,6 +241,7 @@ const ServicioEditComponent = () => {
     setUrl(data.url)
     setObservaciones(data.observaciones)
     setTipoPago(data.tipoPago)
+    setMoneda(data.moneda)
   }
 
   useEffect(() => {
@@ -339,8 +343,6 @@ const ServicioEditComponent = () => {
   const handleGenerate = () => {
     setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
   }
-
-  console.log(url)
 
   return (
     <>
@@ -453,7 +455,6 @@ const ServicioEditComponent = () => {
                     </select>
                   </div>
                 </div>
-
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                   <div className="col-sm-8">
@@ -474,7 +475,6 @@ const ServicioEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise text-danger"><b>{estadoRegistro}</b></label>
                   </div>
                 </div>
-
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
                   <div className="col-sm-8">
@@ -492,7 +492,6 @@ const ServicioEditComponent = () => {
               </div>
             </div>
           </div>
-
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
@@ -513,7 +512,6 @@ const ServicioEditComponent = () => {
                       {errors.msgHoraSalidaLocal && <div className='invalid-feedback'>{errors.msgHoraSalidaLocal}</div>}
                     </div>
                   </div>
-
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Inicio del Servicio:</label>
                     <div className="col-sm-8">
@@ -525,7 +523,6 @@ const ServicioEditComponent = () => {
                       {errors.msgHoraInicioServicio && <div className='invalid-feedback'>{errors.msgHoraInicioServicio}</div>}
                     </div>
                   </div>
-
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Fin del Servicio:</label>
                     <div className="col-sm-8">
@@ -537,7 +534,6 @@ const ServicioEditComponent = () => {
                       {errors.msgHoraFinServicio && <div className='invalid-feedback'>{errors.msgHoraFinServicio}</div>}
                     </div>
                   </div>
-
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Retorno a la empresa:</label>
                     <div className="col-sm-8">
@@ -578,14 +574,26 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise" >Moneda:</label>
+                    <div className="col-sm-8">
+                      <select value={moneda}
+                        className='form-select-depo'
+                        onChange={(e) => { setMoneda(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="soles">Soles</option>
+                        <option value="dolares">Dolares</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de Pago:</label>
                     <div className="col-sm-8">
                       <select value={tipoPago}
                         className='form-select-depo'
                         onChange={(e) => { setTipoPago(e.target.value) }}>
-                        <option value="">Seleccione</option>
-                        <option value="Externo">Facturado</option>
-                        <option value="Interno">Contado</option>
+                        <option className='form-control' value="">Seleccione</option>
+                        <option className='form-control' value="Facturado">Facturado</option>
+                        <option className='form-control' value="Contado">Contado</option>
                       </select>
                     </div>
                   </div>

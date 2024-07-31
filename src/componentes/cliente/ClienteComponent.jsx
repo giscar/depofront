@@ -1,5 +1,3 @@
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { clienteForRucOrName } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
@@ -22,7 +20,6 @@ function ClienteComponent() {
   }
 
   const buscarClienteByDescripcion = (data) => {
-    debugger
     if (!ruc && !razonSocial) {
       return
     }
@@ -38,18 +35,6 @@ function ClienteComponent() {
     setRazonSocial('');
     setClientes([]);
   }
-
-  const { handleSubmit, handleChange, handleReset, values, errors } = useFormik({
-    validationSchema: yup.object({
-      ruc: yup.number(),
-      razonSocial: yup.string(),
-    }),
-    initialValues: {
-      ruc: '',
-      razonSocial: '',
-    },
-    onSubmit: buscarClienteByDescripcion,
-  })
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -72,7 +57,7 @@ function ClienteComponent() {
           </div>
         </div>
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Busqueda de clientes</h4>

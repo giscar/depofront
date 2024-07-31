@@ -1,8 +1,4 @@
 import React from 'react'
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
 
 const HeaderComponent = () => {
@@ -93,7 +89,6 @@ const HeaderComponent = () => {
           <a className='text-danger' onClick={() => cerrarSession() }><b>Cerrar</b></a>
         </li>
       </ul>
-              
     </div>
   </div>
 </nav>

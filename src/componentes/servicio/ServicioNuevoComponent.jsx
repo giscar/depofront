@@ -397,8 +397,8 @@ const ServicioNuevoComponent = () => {
                         className='form-select-depo'
                         onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Externo">Soles</option>
-                        <option value="Interno">Dolares</option>
+                        <option value="soles">Soles</option>
+                        <option value="dolares">Dolares</option>
                       </select>
                     </div>
                   </div>
@@ -409,8 +409,8 @@ const ServicioNuevoComponent = () => {
                         className='form-select-depo'
                         onChange={(e) => { setTipoPago(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Externo">Facturado</option>
-                        <option value="Interno">Contado</option>
+                        <option value="Facturado">Facturado</option>
+                        <option value="Contado">Contado</option>
                       </select>
                     </div>
                   </div>

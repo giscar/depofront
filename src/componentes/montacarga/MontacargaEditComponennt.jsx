@@ -174,7 +174,7 @@ const MontacargaEditComponennt = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos de la Montacarga</h4>
@@ -183,12 +183,12 @@ const MontacargaEditComponennt = () => {
 
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Codigo:</label>
+                  <label className="col-sm-3 col-form-label-zise">Codigo:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Codigo de la montacarga"
                       value={codigo}
-                      className="w-50 bg-secondary bg-opacity-10 form-control-depo"
+                      className="bg-secondary bg-opacity-10 form-control-depo"
                       readOnly
                       onChange={(e) => { setCodigo(e.target.value) }} />
                     {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
@@ -196,48 +196,48 @@ const MontacargaEditComponennt = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Tonelaje:</label>
+                  <label className="col-sm-3 col-form-label-zise">Tonelaje:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Tonelaje de la montacarga"
                       value={tonelaje}
-                      className={`w-50 form-control-depo ${errors.msgTonelaje ? 'is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgTonelaje ? 'is-invalid' : ''}`}
                       onChange={(e) => { setTonelaje(e.target.value) }} />
                     {errors.msgTonelaje && <div className='invalid-feedback'>{errors.msgTonelaje}</div>}
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Marca:</label>
+                  <label className="col-sm-3 col-form-label-zise">Marca:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Marca de la montacarga"
                       value={marca}
-                      className={`w-50 form-control-depo ${errors.msgMarca ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgMarca ? ' is-invalid' : ''}`}
                       onChange={(e) => { setMarca(e.target.value) }} />
                     {errors.msgMarca && <div className='invalid-feedback'>{errors.msgMarca}</div>}
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Serie:</label>
+                  <label className="col-sm-3 col-form-label-zise">Serie:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Serie"
                       value={serie}
-                      className={`w-50 form-control-depo ${errors.msgSerie ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgSerie ? ' is-invalid' : ''}`}
                       onChange={(e) => { setSerie(e.target.value) }} />
                     {errors.msgSerie && <div className='invalid-feedback'>{errors.msgSerie}</div>}
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Modelo:</label>
+                  <label className="col-sm-3 col-form-label-zise">Modelo:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Modelo"
                       value={modelo}
-                      className={`w-50 form-control-depo ${errors.msgModelo ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgModelo ? ' is-invalid' : ''}`}
                       onChange={(e) => { setModelo(e.target.value) }}>
                     </input>
                     {errors.msgModelo && <div className='invalid-feedback'>{errors.msgModelo}</div>}
@@ -245,12 +245,12 @@ const MontacargaEditComponennt = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Año de fabricacion:</label>
+                  <label className="col-sm-3 col-form-label-zise">Año de fabricacion:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Año de fabricacion"
                       value={anhoFabricacion}
-                      className={`w-50 form-control-depo ${errors.msgAnhoFabricacion ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgAnhoFabricacion ? ' is-invalid' : ''}`}
                       onChange={(e) => { setAnhoFabricacion(e.target.value) }}>
                     </input>
                     {errors.msgAnhoFabricacion && <div className='invalid-feedback'>{errors.msgAnhoFabricacion}</div>}
@@ -258,12 +258,12 @@ const MontacargaEditComponennt = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Estado:</label>
+                  <label className="col-sm-3 col-form-label-zise">Estado:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Estado de la montacarga"
                       value={estado}
-                      className={`w-50 form-control-depo ${errors.msgEstado ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgEstado ? ' is-invalid' : ''}`}
                       onChange={(e) => { setEstado(e.target.value) }}>
                     </input>
                     {errors.msgEstado && <div className='invalid-feedback'>{errors.msgEstado}</div>}
@@ -271,36 +271,36 @@ const MontacargaEditComponennt = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Color:</label>
+                  <label className="col-sm-3 col-form-label-zise">Color:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Color de la montacarga"
                       value={color}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setColor(e.target.value) }}>
                     </input>
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Ubicacion:</label>
+                  <label className="col-sm-3 col-form-label-zise">Ubicacion:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Ubicacion de la montacarga"
                       value={ubicacion}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setUbicacion(e.target.value) }}>
                     </input>
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Revision de operatividad:</label>
+                  <label className="col-sm-3 col-form-label-zise">Revision de operatividad:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Revision de operatividad"
                       value={revisionOperatividad}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setRevisionOperatividad(e.target.value) }}>
                     </input>
                   </div>

@@ -120,63 +120,57 @@ function EditaClienteComponent() {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos del cliente</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
-
               <div className="card-body">
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">ruc:</label>
+                  <label className="col-sm-3 col-form-label-zise ">ruc:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Ruc del cliente"
                       value={ruc}
-                      className="w-50 bg-secondary bg-opacity-10 form-control-depo"
+                      className="bg-secondary bg-opacity-10 form-control-depo"
                       onChange={(e) => { setRuc(e.target.value) }} />
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Razon Social:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Razon Social:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Razon Social"
                       value={razonSocial}
-                      className={`w-50 form-control-depo ${errors.msgRazonSocial ? 'is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgRazonSocial ? 'is-invalid' : ''}`}
                       onChange={(e) => { setRazonSocial(e.target.value) }} />
                     {errors.msgRazonSocial && <div className='invalid-feedback'>{errors.msgRazonSocial}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Direccion:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
                   <div className="col-sm-9">
                     <textarea type="text"
                       placeholder="Direccion del cliente"
                       value={direccion}
-                      className={`w-50 form-control-depo ${errors.msgDireccion ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgDireccion ? ' is-invalid' : ''}`}
                       onChange={(e) => { setDireccion(e.target.value) }} ></textarea>
                     {errors.msgDireccion && <div className='invalid-feedback'>{errors.msgDireccion}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Correo Electronico:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Correo Electronico:</label>
                   <div className="col-sm-9">
                     <input type="Text"
                       placeholder="Correo electronico"
                       value={email}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setEmail(e.target.value) }}>
                     </input>
                   </div>
                 </div>
-
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editCliente}>Editar</button>
               </div>
             </div>

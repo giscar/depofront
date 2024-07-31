@@ -103,7 +103,7 @@ function NuevoClienteComponent() {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12 ">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos del cliente</h4>
@@ -113,7 +113,7 @@ function NuevoClienteComponent() {
               <div className="card-body">
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">ruc:</label>
+                  <label className="col-sm-3 col-form-label-zise ">ruc:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Ruc del cliente"
@@ -127,7 +127,7 @@ function NuevoClienteComponent() {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Razon Social:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Razon Social:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Razon Social"
@@ -139,7 +139,7 @@ function NuevoClienteComponent() {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Direccion:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
                   <div className="col-sm-9">
                     <textarea type="text"
                       placeholder="Direccion del cliente"
@@ -151,7 +151,7 @@ function NuevoClienteComponent() {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Correo Electronico:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Correo Electronico:</label>
                   <div className="col-sm-9">
                     <input type="Text"
                       placeholder="Correo electronico"

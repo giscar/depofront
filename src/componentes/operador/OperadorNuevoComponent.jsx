@@ -117,81 +117,76 @@ const OperadorNuevoComponent = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos del Operador</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
               </div>
-
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Documento:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Documento:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Documento"
                       value={documento}
-                      className={`w-50 form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
                       onChange={(e) => { setDocumento(e.target.value) }} />
                     {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
                       value={nombre}
-                      className={`w-50 form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
                       onChange={(e) => { setNombre(e.target.value) }} />
                     {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Apellido Paterno:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Apellido Paterno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido paterno"
                       value={apellidoPat}
-                      className={`w-50 form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidPat(e.target.value) }} />
                     {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Apellido Materno:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Apellido Materno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido materno"
                       value={apellidoMat}
-                      className={`w-50 form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
+                      className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
                   </div>
                 </div>
-
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Telefono:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Telefono:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Telefono"
                       value={telefono}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setTelefono(e.target.value) }}>
                     </input>
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise text-end">Direccion:</label>
+                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
                   <div className="col-sm-9">
                     <input type="Text"
                       placeholder="Direccion"
                       value={direccion}
-                      className="w-50 form-control-depo"
+                      className="form-control-depo"
                       onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>
                   </div>
