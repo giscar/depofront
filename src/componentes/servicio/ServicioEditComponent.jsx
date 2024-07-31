@@ -392,7 +392,7 @@ const ServicioEditComponent = () => {
                       placeholder="Ingrese el numero de RUC"
                       value={ruc}
                       className={`form-control-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
-                      readOnly={!initialLogin.rol === "adm"}
+                      readOnly
                       onClick={handleShow}
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
@@ -618,7 +618,7 @@ const ServicioEditComponent = () => {
                         placeholder='Nombre del solicitante'
                         value={solicitante}
                         onChange={(e) => { setSolicitante(e.target.value) }}
-                        className={`form-control-depo ${errors.msgMontoServicio ? 'is-invalid' : ''}`}
+                        className={`form-control-depo ${errors.msgSolicitante ? 'is-invalid' : ''}`}
                         autoComplete='off'>
                       </input>
                       {errors.msgSolicitante && <div className='invalid-feedback'>{errors.msgSolicitante}</div>}
@@ -629,8 +629,8 @@ const ServicioEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Firma del Solicitante:</label>
                     <div className="col-sm-8">
                       {!url && <div>
-                        <div className='w-90' style={{ border: "2px solid #E8E3E1" }}>
-                          <SignatureCanvas ref={data => setSign(data)} className='w-90'
+                        <div className='w-100' style={{ border: "2px solid #E8E3E1" }}>
+                          <SignatureCanvas ref={data => setSign(data)}
                             canvasProps={{ width: 330, height: 150, className: 'sigCanvas' }} />
                         </div>
                         <button className="btn-depo btn-danger-depo mt-1" onClick={handleClear}>

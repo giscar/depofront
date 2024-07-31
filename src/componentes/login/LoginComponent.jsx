@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./LoginComponent.css";
 import { useNavigate } from "react-router-dom";
+import { operadorForDocumento } from "../../service/FacturaService";
 
 const LoginComponent = ({setUser}) => {
     const [inputUsername, setInputUsername] = useState("");
@@ -14,12 +15,10 @@ const LoginComponent = ({setUser}) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
-        delay(500);
-        console.log(`Username :${inputUsername}, Password :${inputPassword}`);
         if (inputUsername !== "admin" || inputPassword !== "admin") {
             setShow(true);
         }
-        if (inputUsername === "46931245" || inputPassword === "46931245") {
+        if (inputUsername === "46931245" && inputPassword === "46931245") {
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
@@ -29,7 +28,7 @@ const LoginComponent = ({setUser}) => {
             acceder(acceso.rol);
         }
 
-        if (inputUsername === "75880169" || inputPassword === "75880169") {
+        if (inputUsername === "75880169" && inputPassword === "75880169") {
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
@@ -39,7 +38,7 @@ const LoginComponent = ({setUser}) => {
             acceder(acceso.rol);
         }
 
-        if (inputUsername === "47276371" || inputPassword === "47276371") {
+        if (inputUsername === "47276371" && inputPassword === "47276371") {
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
@@ -49,14 +48,20 @@ const LoginComponent = ({setUser}) => {
             acceder(acceso.rol);
         }
 
-        if (inputUsername === "46923787" || inputPassword === "46923787") {
+        if (inputUsername === "46923787" && inputPassword === "46923787") {
+            debugger
             const acceso = {}
             acceso.usuario = inputUsername;
             acceso.pass = inputPassword;
             acceso.nombre = "Allauca Ayala Cesar"
             acceso.rol = "ope"
-            sessionStorage.setItem('user', JSON.stringify(acceso))  
-            acceder(acceso.rol);
+            operadorForDocumento(acceso.usuario).then((response) => {
+                acceso.id = response.data.id;
+                sessionStorage.setItem('user', JSON.stringify(acceso)) 
+            }).catch(error => {
+                console.log(error);
+            })
+            acceder(acceso.rol); 
         }
 
         setLoading(false);
@@ -65,18 +70,10 @@ const LoginComponent = ({setUser}) => {
     const navigator = useNavigate();
 
     const acceder = (rol) => {
-        debugger
         if(rol == "adm")
             navigator("/servicios")
         if(rol == "ope")
             navigator("/servicioOperador")
-    }
-
-
-    const handlePassword = () => { };
-
-    function delay(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     return (

@@ -3,6 +3,7 @@ import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoServicio, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { useNavigate } from 'react-router-dom';
 
 const ServicioNuevoComponent = () => {
 
@@ -27,6 +28,12 @@ const ServicioNuevoComponent = () => {
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
 
+  const navigator = useNavigate();
+
+  const editServicio = (id) => {
+    navigator(`/servicioEdit/${id}`)
+  }
+
   const [errors, setErrors] = useState({
     msgCodServicio: '',
     msgRuc: '',
@@ -46,7 +53,6 @@ const ServicioNuevoComponent = () => {
   });
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -116,7 +122,11 @@ const ServicioNuevoComponent = () => {
       data.moneda = moneda;
       data.observaciones = observaciones;
       data.tipoPago = tipoPago;
-      servicioSave(data).catch(error => {
+      servicioSave(data).then((response) => {
+        if(response.data.id){
+          editServicio(response.data.id);
+        }
+      }).catch(error => {
         console.error(error)
       });
       limpiar()
@@ -188,6 +198,7 @@ const ServicioNuevoComponent = () => {
   };
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  console.log(initialLogin.id)
 
   return (
     <>
@@ -272,8 +283,14 @@ const ServicioNuevoComponent = () => {
                     <select value={operadorId}
                       className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
                       onChange={(e) => { setOperadorId(e.target.value) }}>
-                      <option value="">Seleccione</option>
-                      {
+                      
+                      {initialLogin.id && 
+                        <option selected key={initialLogin.id} value={initialLogin.id}>{initialLogin.nombre}</option>
+                      }
+                      {!initialLogin.id && 
+                        <option value="">Seleccione</option>
+                      }
+                      {!initialLogin.id && 
                         operadores.map(operador =>
                           <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )

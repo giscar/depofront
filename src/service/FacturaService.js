@@ -51,6 +51,8 @@ export const operadorEdit = (operador) => axios.put(REST_API_BASE_URL_OPERADOR, 
 
 export const operadorForId = (id) => axios.get(REST_API_BASE_URL_OPERADOR+"?id="+id);
 
+export const operadorForDocumento = (documento) => axios.get(REST_API_BASE_URL_OPERADOR+"/documento?documento="+documento);
+
 export const operadorForAll = () => axios.get(REST_API_BASE_URL_OPERADOR+"/all");
 
 export const operadorActivo = () => axios.get(REST_API_BASE_URL_OPERADOR+"/estado");

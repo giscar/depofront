@@ -74,7 +74,7 @@ const ServicioComponentOperador = () => {
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12 card-deck">
+          <div className="col-lg-12 ">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Busqueda de servicios</h4>

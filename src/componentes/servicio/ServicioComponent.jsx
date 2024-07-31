@@ -6,15 +6,6 @@ import HeaderComponent from '../HeaderComponent';
 
 const ServicioComponent = () => {
   
-  const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-  });
   const navigator = useNavigate();
 
   const [servicios, setServicios] = useState([])

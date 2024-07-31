@@ -8373,6 +8373,7 @@ td.td-th-size-depo{
   text-decoration: none;
   background: 0 0;
   border: 0;
+  cursor: pointer;
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out;
 }
 
