@@ -310,7 +310,7 @@ const ServicioViewComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise text-end">Monto del servicio:</label>
                     <div className="col-sm-8">
-                      <input type="text"
+                      <input type="number"
                         name="montoServicio"
                         placeholder='Monto'
                         value={montoServicio}

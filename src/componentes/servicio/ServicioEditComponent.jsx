@@ -142,6 +142,11 @@ const ServicioEditComponent = () => {
 
   const editServicio = (e) => {
     e.preventDefault();
+    editaServicioOperaciones();
+  }
+
+  const editaServicioOperaciones = () => {
+    debugger
     let data = {}
     data.id = id;
     data.codServicio = codServicio;
@@ -161,7 +166,7 @@ const ServicioEditComponent = () => {
     data.tipoServicio = tipoServicio;
     data.solicitante = solicitante.toUpperCase();
     data.url = url;
-    data.observaciones = observaciones.toUpperCase();
+    data.observaciones = observaciones?.toUpperCase();
     data.tipoPago = tipoPago;
     data.moneda = moneda;
     servicioEdit(data).catch(error => {
@@ -342,7 +347,25 @@ const ServicioEditComponent = () => {
 
   const handleGenerate = () => {
     setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
+    const urlSign = sign.getTrimmedCanvas().toDataURL('image/png');
+    servicioForId(id).then((response) => {
+      setServicio(response.data);
+      setTimeout(() => {
+        debugger
+          response.data.url = urlSign;
+          servicioEdit(response.data).then(() => {
+          notify();
+        })
+        //cargarServicio(response.data)
+      }, 1000);
+    }).catch(error => {
+      console.log(error);
+    })
   }
+
+  useEffect(() => {
+    
+  }, [url])
 
   return (
     <>
@@ -428,7 +451,7 @@ const ServicioEditComponent = () => {
                   <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10 '}`}
-                      disabled={!initialLogin.rol === "adm"}
+                      disabled={initialLogin.rol !== "adm"? 'disabled' : ''}
                       onChange={(e) => { setOperadorId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
@@ -443,8 +466,7 @@ const ServicioEditComponent = () => {
                   <label className="col-sm-4 col-form-label-zise" >Montacarga:</label>
                   <div className="col-sm-8">
                     <select value={montacargaId}
-                      className={`form-select-depo ${initialLogin.rol === "adm" ? '' : 'bg-secondary bg-opacity-10'}`}
-                      disabled={!initialLogin.rol === "adm"}
+                      className='form-select-depo'
                       onChange={(e) => { setMontacargaId(e.target.value) }}>
                       <option value="">Seleccione</option>
                       {
@@ -562,7 +584,7 @@ const ServicioEditComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Monto del servicio:</label>
                     <div className="col-sm-8">
-                      <input type="text"
+                      <input type="number"
                         name="montoServicio"
                         placeholder='Monto'
                         value={montoServicio}

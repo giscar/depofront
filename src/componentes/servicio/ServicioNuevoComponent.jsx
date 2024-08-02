@@ -30,6 +30,9 @@ const ServicioNuevoComponent = () => {
 
   const navigator = useNavigate();
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  console.log(initialLogin.id === undefined)
+
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
   }
@@ -53,6 +56,7 @@ const ServicioNuevoComponent = () => {
   });
 
   const validateForm = () => {
+    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -145,6 +149,9 @@ const ServicioNuevoComponent = () => {
   useEffect(() => {
     operadorActivo().then((response) => {
       setOperadores(response.data);
+      if(initialLogin.id){
+        setOperadorId(initialLogin.id);
+      }
     }).catch(error => {
       console.log(error);
     })
@@ -196,9 +203,6 @@ const ServicioNuevoComponent = () => {
     setObservaciones('');
     setTipoPago('')
   };
-
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-  console.log(initialLogin.id)
 
   return (
     <>
@@ -282,15 +286,10 @@ const ServicioNuevoComponent = () => {
                   <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setOperadorId(e.target.value) }}>
-                      
-                      {initialLogin.id && 
-                        <option selected key={initialLogin.id} value={initialLogin.id}>{initialLogin.nombre}</option>
-                      }
-                      {!initialLogin.id && 
-                        <option value="">Seleccione</option>
-                      }
-                      {!initialLogin.id && 
+                      onChange={(e) => { setOperadorId(e.target.value) }}
+                      disabled={`${initialLogin.id !== undefined ? 'disabled' : ''}`}>
+                      <option value="">Seleccione</option>
+                      {
                         operadores.map(operador =>
                           <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
                         )

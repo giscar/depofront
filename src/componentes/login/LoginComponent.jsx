@@ -58,10 +58,11 @@ const LoginComponent = ({setUser}) => {
             operadorForDocumento(acceso.usuario).then((response) => {
                 acceso.id = response.data.id;
                 sessionStorage.setItem('user', JSON.stringify(acceso)) 
+                acceder(acceso.rol); 
             }).catch(error => {
                 console.log(error);
             })
-            acceder(acceso.rol); 
+            
         }
 
         setLoading(false);

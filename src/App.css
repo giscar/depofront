@@ -8387,3 +8387,8 @@ td.td-th-size-depo{
   border-radius: var(--bs-navbar-toggler-border-radius);
   transition: var(--bs-navbar-toggler-transition);
 }
+
+.sigCanvasTamanio{
+  width: 330;
+  height: 150
+}

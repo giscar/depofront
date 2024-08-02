@@ -73,8 +73,6 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
                 autoComplete='off'
               />
               <div className='pt-3 float-rigth'>
-                <button className='btn-depo btn-danger-depo' onClick={handleClose}>Salir</button>
-                &nbsp;&nbsp;&nbsp;
                 <button className='btn-depo btn-primary-depo' onClick={buscarClienteByDescripcion}>Buscar</button>
               </div>
             </Form.Group>

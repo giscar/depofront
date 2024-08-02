@@ -41,6 +41,8 @@ const ServicioComponentOperador = () => {
     setServicios([]);
   }
 
+  debugger
+  console.log(sessionStorage.getItem('user'))
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   useEffect(() => {
