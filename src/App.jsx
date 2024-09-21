@@ -1,7 +1,6 @@
 
 import './App.css'
 import FacturaComponent from './componentes/factura/FacturaComponent'
-import FindFacturaComponent from './componentes/factura/FindFacturaComponent'
 import {BrowserRouter, Route, Routes, UNSAFE_RouteContext} from 'react-router-dom'
 import LoginComponent from './componentes/login/LoginComponent'
 import ClienteComponent from './componentes/cliente/ClienteComponent'
@@ -21,6 +20,7 @@ import ServicioEditComponent from './componentes/servicio/ServicioEditComponent'
 import ServicioComponentOperador from './componentes/servicio/ServicioComponentOperador'
 import ServicioViewComponent from './componentes/servicio/ServicioViewComponent'
 import ServicioReportComponent from './componentes/estadisticas/ServicioReportComponent'
+import FacturaRegistroComponent from './componentes/factura/FacturaRegistroComponent'
 
 function App() {
 
@@ -29,8 +29,9 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route path='/' element={<LoginComponent/>}></Route>
-            <Route path='/facturas' element={<FindFacturaComponent />}></Route>
+            <Route path='/facturas' element={<FacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
+            <Route path='/facturaRegistro' element={<FacturaRegistroComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>
             <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>

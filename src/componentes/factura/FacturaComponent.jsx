@@ -1,129 +1,167 @@
-import React, {useEffect, useState} from 'react'
-
-import { useNavigate, useParams } from 'react-router-dom'
-import { editaFactura, facturaForId, nuevaFactura } from '../../service/FacturaService'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { buscarServicioByDatosAggregate, buscarServiciosConcluidos, buscarServiciosPendientes } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
 
 const FacturaComponent = () => {
+  
+  const navigator = useNavigate();
 
-    const [ruc, setRuc] = useState('')
-    const [monto, setMonto] = useState('')
-    const [moneda, setMoneda] = useState('')
+  const [servicios, setServicios] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [codServicio, setCodServicio] = useState('')
 
-    const {id} = useParams();
+  const editServicio = (id) => {
+    navigator(`/servicioEdit/${id}`)
+  }
 
-    const [errors, setErrors] = useState({
-        ruc : '',
-        monto : '',
-        moneda : ''
+  const registrarFactura = () => {
+    navigator(`/facturaRegistro`)
+  }
+
+  const findService = () => {
+    if (!codServicio && !ruc) {
+      return
+    }
+    buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
+      setServicios(response.data);
+    }).catch(error => {
+      console.error(error)
     })
+  }
 
-    const navigator = useNavigate();
+  useEffect(() => {
+    buscarServiciosConcluidos().then((response) => {
+    setServicios(response.data);
+  }).catch(error => {
+    console.log(error);
+  })
+  }, [])
 
-    useEffect(() => {
-        if(id){
-            facturaForId(id).then((response) => {
-                setRuc(response.data.ruc);
-                setMonto(response.data.monto);
-                setMoneda(response.data.moneda);
-            }).catch(error => {
-                console.log(error);
-            })
-        }
-    }, [id])
+  const limpiar = () => {
+    setRuc('');
+    setCodServicio('');
+    setServicios([]);
+  }
 
-    function saveOrUpdateFactura(e){
-        e.preventDefault();
-        if(validateForm()){
-            if(id){
-                const factura = {ruc, monto, moneda, id}
-                editaFactura(factura).then((response) => {
-                    console.log(response.data);
-                    navigator('/facturas')
-                }).catch(error => {
-                    console.log(error)
-                })
-            }else{
-                const factura = {ruc, monto, moneda}
-                nuevaFactura(factura).then((response) => {
-                    console.log(response.data);
-                    navigator('/facturas')
-                }).catch(error => {
-                    console.log(error)
-                })
-            }
-        }
-        
-    }
-
-    function validateForm(){
-        let valid = true;
-        const errorCopy = {... errors}
-
-        if (ruc.trim()){
-            errorCopy.ruc = '';
-        }else{
-            errorCopy.ruc = 'Tiene que ingresar el ruc';
-            valid = false;
-        }
-
-        if (monto){
-            errorCopy.monto = '';
-        }else{
-            errorCopy.monto = 'Tiene que ingresar el monto';
-            valid = false;
-        }
-
-        if (moneda){
-            errorCopy.moneda = '';
-        }else{
-            errorCopy.moneda = 'Tiene que ingresar la moneda';
-            valid = false;
-        }
-
-        setErrors(errorCopy);
-
-        return valid;
-    }
-
-    function pageTitle(){
-        if(id){
-            return <h2>Actualizar Facturas</h2>
-        }else{
-            return <h2>Agregar de Facturas</h2>
-        }
-    }
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
-    <div className='container'>
-        <div className='row'>
-            <div className='card'>
-                {
-                    pageTitle()
-                }
-                <div className='card-body'>
-                    <form>
-                        <div className='form-group mb-2'>
-                            <label className='form-label'>RUC:</label>
-                            <input type='text' placeholder='Ingrese el RUC' name='txtRuc' value={ruc} className={`form-control ${errors.ruc? 'is-invalid' : ''}`} onChange={(e) =>{setRuc(e.target.value)}}></input>
-                            {errors.ruc && <div className='invalid-feedback'>{errors.ruc}</div>}
-                        </div>
-                        <div className='form-group mb-2'>
-                            <label className='form-label'>Monto:</label>
-                            <input type='text' placeholder='Ingrese el Monto' name='txtMonto' value={monto} className={`form-control ${errors.monto? 'is-invalid' : ''}`} onChange={(e) =>{setMonto(e.target.value)}}></input>
-                            {errors.monto && <div className='invalid-feedback'>{errors.monto}</div>}
-                        </div>
-                        <div className='form-group mb-2'>
-                            <label className='form-label'>Moneda:</label>
-                            <input type='text' placeholder='Ingrese el Moneda' name='txtMoneda' value={moneda} className={`form-control ${errors.moneda? 'is-invalid' : ''}`} onChange={(e) => {setMoneda(e.target.value)}}></input>
-                            {errors.moneda && <div className='invalid-feedback'>{errors.moneda}</div>}
-                        </div>
-                        
-                        <button className='btn btn-success' onClick={saveOrUpdateFactura}>Enviar</button>
-                    </form>
-                </div>
+    <>
+    {initialLogin.usuario && <HeaderComponent />}
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Servicios</a></li>
+                  <li className="breadcrumb-item active">Busqueda</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Busqueda de servicio a facturar</h4>
             </div>
+          </div>
         </div>
-    </div>
+        <br />
+        <div className="row">
+          <div className="col-lg-12">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Busqueda de servicios concluidos</h4>
+                <p className="text-muted mb-0">Debe ser ingresado por el/la administrador(a) del modulo de servicios.</p>
+              </div>
+              <div className="card-body">
+                <div className='row'>
+                  <div className="col-lg-12">
+                    <label className='col-form-label-zise'>Codigo del servicio:</label>
+                    <input type="number"
+                      id="inputCodServicio"
+                      placeholder="Codigo del servicio"
+                      value={codServicio}
+                      className="form-control-depo"
+                      onChange={(e) => { setCodServicio(e.target.value) }}>
+                    </input>
+                  </div>
+                  <div className="col-lg-6">
+                    <label className='col-form-label-zise'>Numero de RUC:</label>
+                    <input type="number"
+                      id="inputRuc"
+                      placeholder="Ingrese el numero de RUC"
+                      value={ruc}
+                      className="form-control-depo"
+                      onChange={(e) => { setRuc(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+                <div className='mt-4 float-rigth'>
+                  <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
+                  &nbsp;&nbsp;
+                  <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+            <button type='button' className='btn btn-primary' onClick={registrarFactura}>Registrar Factura</button>
+        </div>
+        <br />
+        {servicios.length > 0 &&
+          <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+                <tr>
+                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>RUC</th>
+                  <th className='td-th-size-depo'>Razon Social</th>
+                  <th className='td-th-size-depo'>Tipo</th>
+                  <th className='td-th-size-depo'>Salida local</th>
+                  <th className='td-th-size-depo'>Inicio servicio</th>
+                  <th className='td-th-size-depo'>Fin servicio</th>
+                  <th className='td-th-size-depo'>Retorno local</th>
+                  <th className='td-th-size-depo'>Operador</th>
+                  <th className='td-th-size-depo'>Montacarga</th>
+                  <th className='td-th-size-depo'>Estado</th>
+                  <th className='td-th-size-depo'>Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  servicios.map(servicio =>
+                    <tr key={servicio.id}>
+                      <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                      <td className='td-th-size-depo'>{servicio.ruc}</td>
+                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
+                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
+                      <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
+                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
+                      <td className='td-th-size-depo'>
+                        {servicio.estadoRegistro === "Concluido" &&
+                          <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
+                        }
+                        {servicio.estadoRegistro !== "Concluido" &&
+                          <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
+                        }
+                      </td>
+                      <td className='text-center'>
+                        <input class="form-check-input" type="checkbox" value="" />
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </div>
+    </>
   )
 }
 

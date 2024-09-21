@@ -5,7 +5,7 @@ import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoServicio, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 
-const ServicioNuevoComponent = () => {
+const FacturaRegistroComponent = () => {
 
   const [cliente, setCliente] = useState([])
   const [operadores, setOperadores] = useState([])
@@ -214,11 +214,11 @@ const ServicioNuevoComponent = () => {
               <div className="float-end">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Servicios</a></li>
-                  <li className="breadcrumb-item active">Nuevo Servicio</li>
+                  <li className="breadcrumb-item"><a href="#">Factura</a></li>
+                  <li className="breadcrumb-item active">Nuevo Factura</li>
                 </ol>
               </div>
-              <h4 className="page-title">Registrar servicio</h4>
+              <h4 className="page-title">Registrar Factura</h4>
             </div>
           </div>
         </div>
@@ -227,16 +227,16 @@ const ServicioNuevoComponent = () => {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos Iniciales del Servicio</h4>
-                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <h4 className="card-title">Datos del emisor</h4>
+                <p className="text-muted mb-0">Las hojas de servicio a facturar provienen del modulo de servicios de operaciones.</p>
               </div>
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
                   <div className="col-sm-8">
-                    <input type="number"
+                    <input type="text"
                       placeholder="Codigo del servicio"
-                      value={codServicio}
+                      value="BF006-00004733"
                       className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
                       readOnly
                       onChange={(e) => { setCodServicio(e.target.value) }}>
@@ -248,7 +248,7 @@ const ServicioNuevoComponent = () => {
                   <div className="col-sm-8">
                     <input type="number"
                       placeholder="Ingrese el numero de RUC"
-                      value={ruc}
+                      value="20100014476"
                       className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
                       onClick={handleShow}
                       onChange={(e) => { setRuc(e.target.value) }}
@@ -262,7 +262,7 @@ const ServicioNuevoComponent = () => {
                   <div className="col-sm-8">
                     <input type="text"
                       placeholder='Razon Social'
-                      value={razonSocial}
+                      value="DEPOSITOS Y VENTAS S.A."
                       className='bg-secondary bg-opacity-10 form-control-depo'
                       disabled
                       onChange={(e) => { setRazonSocial(e.target.value) }}>
@@ -270,127 +270,79 @@ const ServicioNuevoComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Dirección:</label>
+                  <label className="col-sm-4 col-form-label-zise">Fecha de emisión:</label>
                   <div className="col-sm-8">
-                    <input type='text'
-                      placeholder='Dirección'
-                      value={direccion}
-                      className='bg-secondary bg-opacity-10 form-control-depo'
-                      disabled
-                      onChange={(e) => { setDireccion(e.target.value) }}>
+                    <input type="datetime-local"
+                      value={horaFinServicio}
+                      className='form-control-depo'
+                      onChange={(e) => { setHoraFinServicio(e.target.value) }}>
                     </input>
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Operador:</label>
+                  <label className="col-sm-4 col-form-label-zise">RUC del setCliente:</label>
                   <div className="col-sm-8">
-                    <select value={operadorId}
-                      className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setOperadorId(e.target.value) }}
-                      disabled={`${initialLogin.id !== undefined ? 'disabled' : ''}`}>
-                      <option value="">Seleccione</option>
-                      {
-                        operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
-                        )
-                      }
-                    </select>
-                    {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
+                    <input type="number"
+                      placeholder="Ingrese el numero de RUC"
+                      className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
+                      onClick={handleShow}
+                      onChange={(e) => { setRuc(e.target.value) }}
+                      >
+                    </input>
+                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Montacarga:</label>
+                  <label className="col-sm-4 col-form-label-zise">Razon Social del cliente:</label>
                   <div className="col-sm-8">
-                    <select value={montacargaId}
-                      className={`form-select-depo${errors.msgMontacargaId ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setMontacargaId(e.target.value) }}>
-                      <option value="">Seleccione</option>
-                      {
-                        montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
-                        )
-                      }
-                    </select>
-                    {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
+                    <input type="text"
+                      placeholder='Razon Social'
+                      className='bg-secondary bg-opacity-10 form-control-depo'
+                      onChange={(e) => { setRazonSocial(e.target.value) }}>
+                    </input>
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
+                  <label className="col-sm-4 col-form-label-zise" >Tipo de Documento:</label>
                   <div className="col-sm-8">
-                    <select value={tipoServicio}
+                    <select 
                       className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
                       onChange={(e) => { setTipoServicio(e.target.value) }}>
-                      <option value="">Seleccione</option>
+                      <option value="">Factura</option>
                       <option value="Externo">Externo</option>
                       <option value="Interno">Interno</option>
                     </select>
                     {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
                   </div>
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
               </div>
             </div>
           </div>
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos de la ejecución del servicio</h4>
+                <h4 className="card-title">Datos de la factura</h4>
                 <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
                 </p>
               </div>
               <div className="card-body">
                 <div className="general-label">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Salida de la Empresa:</label>
+                    <label className="col-sm-4 col-form-label-zise">Operaciones gratuitas:</label>
                     <div className="col-sm-8">
-                      <input type="datetime-local"
-                        value={horaSalidaLocal}
-                        className='form-control-depo'
-                        onChange={(e) => { setHoraSalidaLocal(e.target.value) }}>
-                      </input>
+                    <input class="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Inicio del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Exportación de servicios:</label>
                     <div className="col-sm-8">
-                      <input type="datetime-local"
-                        value={horaInicioServicio}
-                        className='form-control-depo'
-                        onChange={(e) => { setHoraInicioServicio(e.target.value) }}>
-                      </input>
+                    <input class="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Fin del Servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Ley 31556 para mypes:</label>
                     <div className="col-sm-8">
-                      <input type="datetime-local"
-                        value={horaFinServicio}
-                        className='form-control-depo'
-                        onChange={(e) => { setHoraFinServicio(e.target.value) }}>
-                      </input>
-                    </div>
-                  </div>
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Retorno a la empresa:</label>
-                    <div className="col-sm-8">
-                      <input type="datetime-local"
-                        value={horaRetornoLocal}
-                        className='form-control-depo'
-                        onChange={(e) => { setHoraRetornoLocal(e.target.value) }}>
-                      </input>
-                    </div>
-                  </div>
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Horas de servicio:</label>
-                    <div className="col-sm-8">
-                      <input type="number"
-                        name="totalHoras"
-                        placeholder='Cantidad de horas'
-                        className='form-control-depo'
-                        value={totalHoras}
-                        onChange={(e) => { setTotalHoras(e.target.value) }}
-                        autoComplete='off'>
-                      </input>
+                    <input class="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -443,27 +395,55 @@ const ServicioNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Solicitante:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        name="solicitante"
-                        placeholder='Nombre del solicitante'
-                        value={solicitante}
-                        onChange={(e) => { setSolicitante(e.target.value) }}
-                        className='form-control-depo'
-                        autoComplete='off'>
-                      </input>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
+        <div className='row'>
+        <div className="col-lg-12">
+            <div className="card">
+              <div className="card-header">
+                <h4 className="card-title">Datos de la factura</h4>
+                <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                </p>
+              </div>
+              <div className="card-body">
+              <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+                <tr>
+                  <th className='td-th-size-depo'>Hoja de Servicio</th>
+                  <th className='td-th-size-depo'>RUC</th>
+                  <th className='td-th-size-depo'>Razon Social</th>
+                  <th className='td-th-size-depo'>Operador</th>
+                  <th className='td-th-size-depo'>Montacarga</th>
+                  <th className='td-th-size-depo'>Horas de servicio acumulado</th>
+                  <th className='td-th-size-depo'>Monto</th>
+                  <th className='td-th-size-depo'>Moneda</th>
+                </tr>
+              </thead>
+              <tbody>
+                    <tr>
+                      <td className='td-th-size-depo'>001122</td>
+                      <td className='td-th-size-depo'>20503801575</td>
+                      <td className='td-th-size-depo'>RECTIFICACIONES Y FABRICACIONES MECANICAS BUDGE SOCIEDAD ANONIMA CERRADA - R.BUDGE S.A.C.</td>
+                      <td className='td-th-size-depo'>JIMMY</td>
+                      <td className='td-th-size-depo'>M-2.5A</td>
+                      <td className='td-th-size-depo'>20</td>
+                      <td className='td-th-size-depo'>500</td>
+                      <td className='td-th-size-depo'>Soles</td>
+                      
+                    </tr>
+              </tbody>
+            </table>
+            </div>
+            </div>
+            </div>
+              </div>
+            </div>
+          </div>
     </>
   )
 }
-export default ServicioNuevoComponent
+export default FacturaRegistroComponent
