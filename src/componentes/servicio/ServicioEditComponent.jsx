@@ -656,11 +656,11 @@ const ServicioEditComponent = () => {
                             canvasProps={{ width: 330, height: 150, className: 'sigCanvas' }} />
                         </div>
                         <button className="btn-depo btn-danger-depo mt-1" onClick={handleClear}>
-                          <i class="bi bi-trash-fill"></i>
+                          <i className="bi bi-trash-fill"></i>
                         </button>
                         &nbsp;&nbsp;
                         <button className="btn-depo btn-primary-depo  mt-1" onClick={handleGenerate}>
-                          <i class="bi bi-floppy-fill"></i>
+                          <i className="bi bi-floppy-fill"></i>
                         </button>
                       </div>}
                       <br />

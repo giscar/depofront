@@ -31,7 +31,7 @@ function App() {
             <Route path='/' element={<LoginComponent/>}></Route>
             <Route path='/facturas' element={<FacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
-            <Route path='/facturaRegistro' element={<FacturaRegistroComponent />}></Route>
+            <Route path='/facturaRegistro/:ids' element={<FacturaRegistroComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>
             <Route path='/nuevoCliente' element={<NuevoClienteComponent />}></Route>

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoServicio, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
-import { useNavigate } from 'react-router-dom';
+import { buscarCodigoServicio, buscarServiciosConcluidosForFacturar, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const FacturaRegistroComponent = () => {
 
@@ -28,10 +27,20 @@ const FacturaRegistroComponent = () => {
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
 
+  const [servicios, setServicios] = useState([])
+
   const navigator = useNavigate();
 
+  const {ids} = useParams();
+  
+  useEffect(() => {
+    console.log(ids)
+    buscarServiciosConcluidosForFacturar(ids).then((response) => {
+      setServicios(response.data);
+    })
+  }, [])
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-  console.log(initialLogin.id === undefined)
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -330,19 +339,19 @@ const FacturaRegistroComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Operaciones gratuitas:</label>
                     <div className="col-sm-8">
-                    <input class="form-check-input" type="checkbox" value="" />
+                    <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Exportación de servicios:</label>
                     <div className="col-sm-8">
-                    <input class="form-check-input" type="checkbox" value="" />
+                    <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Ley 31556 para mypes:</label>
                     <div className="col-sm-8">
-                    <input class="form-check-input" type="checkbox" value="" />
+                    <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -410,38 +419,50 @@ const FacturaRegistroComponent = () => {
               </div>
               <div className="card-body">
               <div className="table-responsive">
+              <div className="table-responsive">
             <table className="table mb-0">
               <thead className="thead-light">
                 <tr>
-                  <th className='td-th-size-depo'>Hoja de Servicio</th>
+                  <th className='td-th-size-depo'>Codigo</th>
                   <th className='td-th-size-depo'>RUC</th>
                   <th className='td-th-size-depo'>Razon Social</th>
+                  <th className='td-th-size-depo'>Tipo</th>
+                  <th className='td-th-size-depo'>Salida local</th>
+                  <th className='td-th-size-depo'>Inicio servicio</th>
+                  <th className='td-th-size-depo'>Fin servicio</th>
+                  <th className='td-th-size-depo'>Retorno local</th>
                   <th className='td-th-size-depo'>Operador</th>
                   <th className='td-th-size-depo'>Montacarga</th>
-                  <th className='td-th-size-depo'>Horas de servicio acumulado</th>
-                  <th className='td-th-size-depo'>Monto</th>
-                  <th className='td-th-size-depo'>Moneda</th>
+                  <th className='td-th-size-depo'>Estado</th>
+   
                 </tr>
               </thead>
               <tbody>
-                    <tr>
-                      <td className='td-th-size-depo'>001122</td>
-                      <td className='td-th-size-depo'>20503801575</td>
-                      <td className='td-th-size-depo'>RECTIFICACIONES Y FABRICACIONES MECANICAS BUDGE SOCIEDAD ANONIMA CERRADA - R.BUDGE S.A.C.</td>
-                      <td className='td-th-size-depo'>JIMMY</td>
-                      <td className='td-th-size-depo'>M-2.5A</td>
-                      <td className='td-th-size-depo'>20</td>
-                      <td className='td-th-size-depo'>500</td>
-                      <td className='td-th-size-depo'>Soles</td>
+                {
+                  servicios.map(servicio =>
+                    <tr key={servicio.id}>
+                      <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                      <td className='td-th-size-depo'>{servicio.ruc}</td>
+                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
+                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
+                      <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
+                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
+                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
                       
                     </tr>
+                  )
+                }
               </tbody>
             </table>
-            </div>
+          </div>
             </div>
             </div>
               </div>
             </div>
+          </div>
           </div>
     </>
   )

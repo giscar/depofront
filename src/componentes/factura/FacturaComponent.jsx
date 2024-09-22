@@ -11,13 +11,14 @@ const FacturaComponent = () => {
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [serviciosSeleccionados, setServiciosSeleccionados] = useState([])
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
   }
 
   const registrarFactura = () => {
-    navigator(`/facturaRegistro`)
+    navigator(`/facturaRegistro/${serviciosSeleccionados}`)
   }
 
   const findService = () => {
@@ -44,6 +45,18 @@ const FacturaComponent = () => {
     setCodServicio('');
     setServicios([]);
   }
+
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    const {value, checked} = event.target;
+    if(checked){
+      setServiciosSeleccionados([...serviciosSeleccionados, value])
+    }else{
+      setServiciosSeleccionados(serviciosSeleccionados.filter(p => p !== value))
+    }
+  }
+
+  console.log(serviciosSeleccionados)
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -151,7 +164,7 @@ const FacturaComponent = () => {
                         }
                       </td>
                       <td className='text-center'>
-                        <input class="form-check-input" type="checkbox" value="" />
+                        <input className="form-check-input" type="checkbox" value={servicio.codServicio} onChange={handleChange}/>
                       </td>
                     </tr>
                   )

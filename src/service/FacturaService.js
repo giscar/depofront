@@ -79,6 +79,8 @@ export const buscarServiciosPendientes = () => axios.get(REST_API_BASE_URL_SERVI
 
 export const buscarServiciosConcluidos = () => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaServiciosConcluidos");
 
+export const buscarServiciosConcluidosForFacturar = (idServicios) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaServiciosParaFacturar?idServicios="+idServicios);
+
 export const buscarCodigoServicio = () => axios.get(REST_API_BASE_URL_SERVICIO+"/maxCodServicio"); 
 
 export const uploadFile = (file, id, type, size) => axios.post(REST_API_BASE_URL_SERVICIO+"/upload", file, id, type, size);
