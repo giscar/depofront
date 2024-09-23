@@ -9,9 +9,6 @@ const FacturaRegistroComponent = () => {
   const [cliente, setCliente] = useState([])
   const [operadores, setOperadores] = useState([])
   const [montacargas, setMontacargas] = useState([])
-  const [ruc, setRuc] = useState('')
-  const [razonSocial, setRazonSocial] = useState('')
-  const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
@@ -26,8 +23,20 @@ const FacturaRegistroComponent = () => {
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
-
+  const [emisor, setEmisor] = useState({})
+  const [receptor, setReceptor] = useState('')
+  const [fechaFacturacion, setFechaFacturacion] = useState('')
   const [servicios, setServicios] = useState([])
+  const [ruc, setRuc] = useState('')
+  const [razonSocial, setRazonSocial] = useState('')
+  const [direccion, setDireccion] = useState('')
+  const [rucCliente, setRucCliente] = useState('')
+  const [razonSocialCliente, setRazonSocialCliente] = useState('')
+  const [direccionCliente, setDireccionCliente] = useState('')
+  const [nroDocumento, setNroDocumento] = useState('')
+  const [tipoDocumento, setTipoDocumento] = useState('')
+
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   const navigator = useNavigate();
 
@@ -35,12 +44,29 @@ const FacturaRegistroComponent = () => {
   
   useEffect(() => {
     console.log(ids)
+    cargarEmisor()
     buscarServiciosConcluidosForFacturar(ids).then((response) => {
       setServicios(response.data);
+      response.data.map((item) => {
+        setRucCliente(item.cliente[0].ruc);
+        setRazonSocialCliente(item.cliente[0].razonSocial);
+        setDireccionCliente(item.cliente[0].direccion);
+      })
     })
   }, [])
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  const cargarEmisor = () =>{
+    setRazonSocial("Depositos y Ventas S.A.");
+    setRuc("20100014476");
+    setDireccion("jr. victor a. belaunde 901 carmen de la legua");
+    let curr = new Date();
+    curr.setDate(curr.getDate()-1);
+    setFechaFacturacion(curr.toISOString().substring(0,10));
+  }
+
+  console.log(ruc)
+  console.log(razonSocial)
+  console.log(direccion)
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -186,12 +212,6 @@ const FacturaRegistroComponent = () => {
     })
   }
 
-  useEffect(() => {
-    setRuc(cliente?.ruc)
-    setRazonSocial(cliente?.razonSocial)
-    setDireccion(cliente?.direccion)
-  }, [cliente])
-
   const limpiar = () => {
     setRuc('')
     setRazonSocial('')
@@ -236,32 +256,21 @@ const FacturaRegistroComponent = () => {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos del emisor</h4>
+                <h4 className="card-title">Datos del emisor y cliente</h4>
                 <p className="text-muted mb-0">Las hojas de servicio a facturar provienen del modulo de servicios de operaciones.</p>
               </div>
               <div className="card-body">
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
-                  <div className="col-sm-8">
-                    <input type="text"
-                      placeholder="Codigo del servicio"
-                      value="BF006-00004733"
-                      className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
-                      readOnly
-                      onChange={(e) => { setCodServicio(e.target.value) }}>
-                    </input>
-                  </div>
-                </div>
+                
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                   <div className="col-sm-8">
                     <input type="number"
                       placeholder="Ingrese el numero de RUC"
-                      value="20100014476"
-                      className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
+                      value={ruc}
+                      className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
                       onClick={handleShow}
                       onChange={(e) => { setRuc(e.target.value) }}
-                      readOnly>
+                      disabled>
                     </input>
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
@@ -271,7 +280,7 @@ const FacturaRegistroComponent = () => {
                   <div className="col-sm-8">
                     <input type="text"
                       placeholder='Razon Social'
-                      value="DEPOSITOS Y VENTAS S.A."
+                      value={razonSocial}
                       className='bg-secondary bg-opacity-10 form-control-depo'
                       disabled
                       onChange={(e) => { setRazonSocial(e.target.value) }}>
@@ -279,23 +288,25 @@ const FacturaRegistroComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Fecha de emisión:</label>
+                  <label className="col-sm-4 col-form-label-zise">Dirección:</label>
                   <div className="col-sm-8">
-                    <input type="datetime-local"
-                      value={horaFinServicio}
-                      className='form-control-depo'
-                      onChange={(e) => { setHoraFinServicio(e.target.value) }}>
+                    <input type="text"
+                      placeholder='Razon Social'
+                      value={direccion}
+                      className='bg-secondary bg-opacity-10 form-control-depo'
+                      disabled
+                      onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">RUC del setCliente:</label>
+                  <label className="col-sm-4 col-form-label-zise">RUC del Cliente:</label>
                   <div className="col-sm-8">
                     <input type="number"
                       placeholder="Ingrese el numero de RUC"
                       className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
-                      onClick={handleShow}
-                      onChange={(e) => { setRuc(e.target.value) }}
+                      value={rucCliente}
+                      onChange={(e) => { setRucCliente(e.target.value) }}
                       >
                     </input>
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
@@ -305,23 +316,22 @@ const FacturaRegistroComponent = () => {
                   <label className="col-sm-4 col-form-label-zise">Razon Social del cliente:</label>
                   <div className="col-sm-8">
                     <input type="text"
+                      value={razonSocialCliente}
                       placeholder='Razon Social'
                       className='bg-secondary bg-opacity-10 form-control-depo'
-                      onChange={(e) => { setRazonSocial(e.target.value) }}>
+                      onChange={(e) => { setRazonSocialCliente(e.target.value) }}>
                     </input>
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Tipo de Documento:</label>
+                  <label className="col-sm-4 col-form-label-zise">Dirección cliente:</label>
                   <div className="col-sm-8">
-                    <select 
-                      className={`form-select-depo${errors.msgTipoServicio ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setTipoServicio(e.target.value) }}>
-                      <option value="">Factura</option>
-                      <option value="Externo">Externo</option>
-                      <option value="Interno">Interno</option>
-                    </select>
-                    {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
+                    <input type="text"
+                      value={direccionCliente}
+                      placeholder='Razon Social'
+                      className='bg-secondary bg-opacity-10 form-control-depo'
+                      onChange={(e) => { setDireccionCliente(e.target.value) }}>
+                    </input>
                   </div>
                 </div>
               </div>
@@ -330,11 +340,50 @@ const FacturaRegistroComponent = () => {
           <div className="col-lg-6">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos de la factura</h4>
+                <h4 className="card-title">Datos del documento</h4>
                 <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
                 </p>
               </div>
               <div className="card-body">
+
+              <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
+                  <div className="col-sm-8">
+                    <input type="text"
+                      placeholder="Codigo del servicio"
+                      value={nroDocumento}
+                      className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                      readOnly
+                      onChange={(e) => { setNroDocumento(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise">Fecha de emisión:</label>
+                  <div className="col-sm-8">
+                    <input type="date"
+                      value={fechaFacturacion}
+                      className='form-control-depo'
+                      defaultValue={fechaFacturacion}
+                      onChange={(e) => { setFechaFacturacion(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise" >Tipo de Documento:</label>
+                    <div className="col-sm-8">
+                      <select value={tipoDocumento}
+                        className='form-select-depo'
+                        onChange={(e) => { setTipoDocumento(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Credito">Credito</option>
+                        <option value="Contado">Contado</option>
+                      </select>
+                    </div>
+                  </div>
+
                 <div className="general-label">
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Operaciones gratuitas:</label>
