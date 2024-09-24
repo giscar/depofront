@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoServicio, buscarServiciosConcluidosForFacturar, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoFactura, buscarCodigoServicio, buscarServiciosConcluidosForFacturar, montacargasActivo, nuevaFactura, operadorActivo, servicioSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const FacturaRegistroComponent = () => {
-
-  const [cliente, setCliente] = useState([])
-  const [operadores, setOperadores] = useState([])
-  const [montacargas, setMontacargas] = useState([])
+  
   const [codServicio, setCodServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
@@ -25,7 +22,7 @@ const FacturaRegistroComponent = () => {
   const [tipoPago, setTipoPago] = useState('')
   const [emisor, setEmisor] = useState({})
   const [receptor, setReceptor] = useState('')
-  const [fechaFacturacion, setFechaFacturacion] = useState('')
+  const [fechaEmision, setFechaEmision] = useState('')
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
@@ -40,8 +37,8 @@ const FacturaRegistroComponent = () => {
 
   const navigator = useNavigate();
 
-  const {ids} = useParams();
-  
+  const { ids } = useParams();
+
   useEffect(() => {
     console.log(ids)
     cargarEmisor()
@@ -55,18 +52,21 @@ const FacturaRegistroComponent = () => {
     })
   }, [])
 
-  const cargarEmisor = () =>{
+  useEffect(() => {
+    buscarCodigoFactura().then((response) => {
+      setNroDocumento(response.data + 1)
+    })
+    console.log(tipoDocumento)
+  }, [tipoDocumento])
+
+  const cargarEmisor = () => {
     setRazonSocial("Depositos y Ventas S.A.");
     setRuc("20100014476");
     setDireccion("jr. victor a. belaunde 901 carmen de la legua");
     let curr = new Date();
-    curr.setDate(curr.getDate()-1);
-    setFechaFacturacion(curr.toISOString().substring(0,10));
+    curr.setDate(curr.getDate());
+    setFechaEmision(curr.toISOString().substring(0, 10));
   }
-
-  console.log(ruc)
-  console.log(razonSocial)
-  console.log(direccion)
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -91,7 +91,7 @@ const FacturaRegistroComponent = () => {
   });
 
   const validateForm = () => {
-    debugger
+    
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -139,32 +139,25 @@ const FacturaRegistroComponent = () => {
   }
 
   const handleSubmit = (e) => {
+    
     e.preventDefault();
-    if (validateForm()) {
+    //if (validateForm()) {
+
       const data = {}
-      data.codServicio = codServicio;
+      data.codigoFactura = nroDocumento;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
-      data.horaSalidaLocal = horaSalidaLocal;
-      data.horaInicioServicio = horaInicioServicio;
-      data.horaFinServicio = horaFinServicio;
-      data.horaRetornoLocal = horaRetornoLocal;
-      data.operadorId = operadorId;
-      data.montacargaId = montacargaId;
-      data.totalHoras = totalHoras;
-      data.montoServicio = montoServicio;
-      data.estado = "1";
-      data.estadoRegistro = "Proceso";
-      data.tipoServicio = tipoServicio;
-      data.solicitante = solicitante;
-      data.moneda = moneda;
-      data.observaciones = observaciones;
+      data.rucCliente = rucCliente;
+      data.razonSocialCliente = razonSocialCliente?.toUpperCase();
+      data.direccionCliente = direccionCliente?.toUpperCase();
+      data.fechaEmision = fechaEmision;
+      data.tipoDocumento = tipoDocumento;
       data.tipoPago = tipoPago;
-      servicioSave(data).then((response) => {
-        if(response.data.id){
-          editServicio(response.data.id);
-        }
+      data.moneda = moneda;
+      
+      nuevaFactura(data).then((response) => {
+        console.log(response.data)
       }).catch(error => {
         console.error(error)
       });
@@ -174,7 +167,7 @@ const FacturaRegistroComponent = () => {
         handleCodServicio()
       }, 1000);
 
-    }
+    //}
   }
 
   const [show, setShow] = useState(false);
@@ -184,17 +177,9 @@ const FacturaRegistroComponent = () => {
   useEffect(() => {
     operadorActivo().then((response) => {
       setOperadores(response.data);
-      if(initialLogin.id){
+      if (initialLogin.id) {
         setOperadorId(initialLogin.id);
       }
-    }).catch(error => {
-      console.log(error);
-    })
-  }, [])
-
-  useEffect(() => {
-    montacargasActivo().then((response) => {
-      setMontacargas(response.data);
     }).catch(error => {
       console.log(error);
     })
@@ -260,7 +245,6 @@ const FacturaRegistroComponent = () => {
                 <p className="text-muted mb-0">Las hojas de servicio a facturar provienen del modulo de servicios de operaciones.</p>
               </div>
               <div className="card-body">
-                
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                   <div className="col-sm-8">
@@ -307,7 +291,7 @@ const FacturaRegistroComponent = () => {
                       className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
                       value={rucCliente}
                       onChange={(e) => { setRucCliente(e.target.value) }}
-                      >
+                    >
                     </input>
                     {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                   </div>
@@ -345,8 +329,19 @@ const FacturaRegistroComponent = () => {
                 </p>
               </div>
               <div className="card-body">
-
-              <div className="mb-3 row">
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise" >Tipo de Documento:</label>
+                  <div className="col-sm-8">
+                    <select value={tipoDocumento}
+                      className='form-select-depo'
+                      onChange={(e) => { setTipoDocumento(e.target.value) }}>
+                      <option value="">Seleccione</option>
+                      <option value="Factura">Factura</option>
+                      <option value="Boleta">Boleta</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
                   <div className="col-sm-8">
                     <input type="text"
@@ -363,44 +358,30 @@ const FacturaRegistroComponent = () => {
                   <label className="col-sm-4 col-form-label-zise">Fecha de emisión:</label>
                   <div className="col-sm-8">
                     <input type="date"
-                      value={fechaFacturacion}
+                      value={fechaEmision}
                       className='form-control-depo'
-                      defaultValue={fechaFacturacion}
-                      onChange={(e) => { setFechaFacturacion(e.target.value) }}>
+                      defaultValue={fechaEmision}
+                      onChange={(e) => { setFechaEmision(e.target.value) }}>
                     </input>
                   </div>
                 </div>
-
-                <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise" >Tipo de Documento:</label>
-                    <div className="col-sm-8">
-                      <select value={tipoDocumento}
-                        className='form-select-depo'
-                        onChange={(e) => { setTipoDocumento(e.target.value) }}>
-                        <option value="">Seleccione</option>
-                        <option value="Credito">Credito</option>
-                        <option value="Contado">Contado</option>
-                      </select>
-                    </div>
-                  </div>
-
                 <div className="general-label">
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Operaciones gratuitas:</label>
                     <div className="col-sm-8">
-                    <input className="form-check-input" type="checkbox" value="" />
+                      <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Exportación de servicios:</label>
                     <div className="col-sm-8">
-                    <input className="form-check-input" type="checkbox" value="" />
+                      <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Ley 31556 para mypes:</label>
                     <div className="col-sm-8">
-                    <input className="form-check-input" type="checkbox" value="" />
+                      <input className="form-check-input" type="checkbox" value="" />
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -453,13 +434,16 @@ const FacturaRegistroComponent = () => {
                       </input>
                     </div>
                   </div>
+                  <div>
+                    <button className='btn btn-primary' onClick={handleSubmit}>Registrar factura</button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className='row'>
-        <div className="col-lg-12">
+          <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos de la factura</h4>
@@ -467,52 +451,52 @@ const FacturaRegistroComponent = () => {
                 </p>
               </div>
               <div className="card-body">
-              <div className="table-responsive">
-              <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-                <tr>
-                  <th className='td-th-size-depo'>Codigo</th>
-                  <th className='td-th-size-depo'>RUC</th>
-                  <th className='td-th-size-depo'>Razon Social</th>
-                  <th className='td-th-size-depo'>Tipo</th>
-                  <th className='td-th-size-depo'>Salida local</th>
-                  <th className='td-th-size-depo'>Inicio servicio</th>
-                  <th className='td-th-size-depo'>Fin servicio</th>
-                  <th className='td-th-size-depo'>Retorno local</th>
-                  <th className='td-th-size-depo'>Operador</th>
-                  <th className='td-th-size-depo'>Montacarga</th>
-                  <th className='td-th-size-depo'>Estado</th>
-   
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  servicios.map(servicio =>
-                    <tr key={servicio.id}>
-                      <td className='td-th-size-depo'>{servicio.codServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.ruc}</td>
-                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
-                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
-                      
-                    </tr>
-                  )
-                }
-              </tbody>
-            </table>
-          </div>
-            </div>
-            </div>
+                <div className="table-responsive">
+                  <div className="table-responsive">
+                    <table className="table mb-0">
+                      <thead className="thead-light">
+                        <tr>
+                          <th className='td-th-size-depo'>Codigo</th>
+                          <th className='td-th-size-depo'>RUC</th>
+                          <th className='td-th-size-depo'>Razon Social</th>
+                          <th className='td-th-size-depo'>Tipo</th>
+                          <th className='td-th-size-depo'>Salida local</th>
+                          <th className='td-th-size-depo'>Inicio servicio</th>
+                          <th className='td-th-size-depo'>Fin servicio</th>
+                          <th className='td-th-size-depo'>Retorno local</th>
+                          <th className='td-th-size-depo'>Operador</th>
+                          <th className='td-th-size-depo'>Montacarga</th>
+                          <th className='td-th-size-depo'>Estado</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          servicios.map(servicio =>
+                            <tr key={servicio.id}>
+                              <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                              <td className='td-th-size-depo'>{servicio.ruc}</td>
+                              <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
+                              <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
+                              <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
+                              <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
+                              <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
+                              <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
+                              <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
+                              <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
+
+                            </tr>
+                          )
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          </div>
+        </div>
+      </div>
     </>
   )
 }
