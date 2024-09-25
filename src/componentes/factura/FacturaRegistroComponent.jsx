@@ -54,7 +54,6 @@ const FacturaRegistroComponent = () => {
 
   useEffect(() => {
     buscarCodigoFactura().then((response) => {
-      debugger
       let nroDoc = "";
       let sec = 0;
       let secCompleta = "";
@@ -151,9 +150,9 @@ const FacturaRegistroComponent = () => {
     
     e.preventDefault();
     //if (validateForm()) {
-
+      debugger
       const data = {}
-      data.codigoFactura = nroDocumento;
+      data.nroDocumento = nroDocumento;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
@@ -185,7 +184,6 @@ const FacturaRegistroComponent = () => {
     setRuc('')
     setRazonSocial('')
     setDireccion('')
-    setCliente([])
     setOperadorId('')
     setMontacargaId('')
     setCodServicio('')
