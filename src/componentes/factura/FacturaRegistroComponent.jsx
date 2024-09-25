@@ -54,7 +54,16 @@ const FacturaRegistroComponent = () => {
 
   useEffect(() => {
     buscarCodigoFactura().then((response) => {
-      setNroDocumento(response.data + 1)
+      debugger
+      let nroDoc = "";
+      let sec = 0;
+      let secCompleta = "";
+      sec = response.data + 1;
+      secCompleta = sec.toString().padStart(7, '0');
+      if(tipoDocumento == "Factura"){
+        nroDoc = "BF006-"+secCompleta
+      }
+      setNroDocumento(nroDoc)
     })
     console.log(tipoDocumento)
   }, [tipoDocumento])
@@ -163,9 +172,7 @@ const FacturaRegistroComponent = () => {
       });
       limpiar()
       notify()
-      setTimeout(() => {
-        handleCodServicio()
-      }, 1000);
+
 
     //}
   }
@@ -173,29 +180,6 @@ const FacturaRegistroComponent = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  useEffect(() => {
-    operadorActivo().then((response) => {
-      setOperadores(response.data);
-      if (initialLogin.id) {
-        setOperadorId(initialLogin.id);
-      }
-    }).catch(error => {
-      console.log(error);
-    })
-  }, [])
-
-  useEffect(() => {
-    handleCodServicio();
-  }, [])
-
-  const handleCodServicio = () => {
-    buscarCodigoServicio().then((response) => {
-      setCodServicio(response.data + 1)
-    }).catch(error => {
-      console.log(error);
-    })
-  }
 
   const limpiar = () => {
     setRuc('')
