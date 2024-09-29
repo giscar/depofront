@@ -413,8 +413,8 @@ const ServicioNuevoComponent = () => {
                         className='form-select-depo'
                         onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="soles">Soles</option>
-                        <option value="dolares">Dolares</option>
+                        <option value="PEN">PEN</option>
+                        <option value="USD">USD</option>
                       </select>
                     </div>
                   </div>

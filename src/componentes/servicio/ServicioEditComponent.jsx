@@ -61,6 +61,7 @@ const ServicioEditComponent = () => {
     msgHoraFinServicio: '',
     msgTotalHoras: '',
     msgMontoServicio: '',
+    msgMoneda: '',
     msgSolicitante: '',
     msgTipoServicio: ''
   })
@@ -110,6 +111,13 @@ const ServicioEditComponent = () => {
       valid = false;
     }
 
+    if (moneda) {
+      errorCopy.msgMoneda = '';
+    } else {
+      errorCopy.msgMoneda = 'Tiene que ingresar la moneda del monto total del servicio';
+      valid = false;
+    }
+
     if (solicitante) {
       errorCopy.msgSolicitante = '';
     } else {
@@ -146,7 +154,6 @@ const ServicioEditComponent = () => {
   }
 
   const editaServicioOperaciones = () => {
-    debugger
     let data = {}
     data.id = id;
     data.codServicio = codServicio;
@@ -290,7 +297,6 @@ const ServicioEditComponent = () => {
       const horaRetornoLocal1 = new Date(horaRetornoLocal);
       const diff = horaRetornoLocal1.getTime() - horaSalidaLocal1.getTime();
       const horas = diff / (1000 * 60 * 60);
-      console.log(horas.toFixed(2))
       setTotalHoras(horas.toFixed(2))
       servicio.totalHoras = horas.toFixed(2)
     }
@@ -351,7 +357,6 @@ const ServicioEditComponent = () => {
     servicioForId(id).then((response) => {
       setServicio(response.data);
       setTimeout(() => {
-        debugger
           response.data.url = urlSign;
           servicioEdit(response.data).then(() => {
           notify();
@@ -486,7 +491,6 @@ const ServicioEditComponent = () => {
                       <option value="">Seleccione</option>
                       <option value="Externo">Externo</option>
                       <option value="Interno">Interno</option>
-
                     </select>
                     {errors.msgTipoServicio && <div className='invalid-feedback'>{errors.msgTipoServicio}</div>}
                   </div>
@@ -599,12 +603,13 @@ const ServicioEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise" >Moneda:</label>
                     <div className="col-sm-8">
                       <select value={moneda}
-                        className='form-select-depo'
-                        onChange={(e) => { setMoneda(e.target.value) }}>
+                      className={`form-select${errors.msgMoneda ? ' is-invalid' : ''}`}
+                      onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="soles">Soles</option>
-                        <option value="dolares">Dolares</option>
+                        <option value="PEN">PEN</option>
+                        <option value="USD">USD</option>
                       </select>
+                      {errors.msgMoneda && <div className='invalid-feedback'>{errors.msgMoneda}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">

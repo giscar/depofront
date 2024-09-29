@@ -21,9 +21,10 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
   },
   firma: {
-    width: '100px',
+    width: '120px',
     height: '40px',
     objectFit: 'cover',
+    paddingBottom: '20px'
   },
   title: {
     fontSize: 20,
@@ -129,6 +130,7 @@ const HojaServicioReportComponent = ({ id }) => {
   const [horaFinServicio, setHoraFinServicio] = useState('')
   const [totalHoras, setTotalHoras] = useState('')
   const [montoServicio, setMontoServicio] = useState('')
+  const [moneda, setMoneda] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [montacargaModelo, setMontacargaModelo] = useState('')
   const [operadorNombreCompleto, setOperadorNombreCompleto] = useState('')
@@ -142,6 +144,7 @@ const HojaServicioReportComponent = ({ id }) => {
 
   if (id) {
     servicioForId(id).then((response) => {
+      debugger
       setTimeout(() => {
         cargarServicio(response.data)
       }, 1000);
@@ -151,11 +154,12 @@ const HojaServicioReportComponent = ({ id }) => {
   }
 
   const cargarServicio = (data) => {
+    debugger
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
-    setMontacargaModelo(data.montacarga[0].modelo)
+    setMontacargaModelo(data.montacarga[0]?.modelo+' - '+data.montacarga[0]?.codigo)
     setOperadorNombreCompleto(data.operador[0].nombre + " " + data.operador[0].apellidoPat + " " + data.operador[0].apellidoMat)
     setHoraSalidaLocal(data.horaSalidaLocal)
     setHoraInicioServicio(data.horaInicioServicio)
@@ -165,6 +169,7 @@ const HojaServicioReportComponent = ({ id }) => {
     setMontacargaId(data.montacargaId)
     setTotalHoras(data.totalHoras)
     setMontoServicio(data.montoServicio)
+    setMoneda(data.moneda)
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
@@ -284,10 +289,10 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Hora Termino Servicio</Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.parragraph}>Costo por hora (Soles):</Text>
+              <Text style={styles.parragraph}>Costo ({moneda}):</Text>
             </View>
             <View style={styles.cell2}>
-              <Text></Text>
+              <Text>{montoServicio}</Text>
             </View>
           </View>
 
@@ -300,7 +305,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Hora Regreso Local</Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.parragraph}>Costo por hora (Dolares):</Text>
+              <Text style={styles.parragraph}></Text>
             </View>
             <View style={styles.cell2}>
               <Text></Text>
@@ -386,16 +391,16 @@ const HojaServicioReportComponent = ({ id }) => {
 
           <View style={styles.row}>
             <View style={styles.cell2}>
-              <Text style={styles.textFirma}>------------------------------</Text>
-              <Text style={styles.parragraph}>V.B. Depovent</Text>
+              <Text style={styles.textFirma}></Text>
+              <Text style={styles.parragraph}></Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.textFirma}>------------------------------</Text>
-              <Text style={styles.parragraph}>Firma Almacenero</Text>
+              <Text style={styles.textFirma}></Text>
+              <Text style={styles.parragraph}></Text>
             </View>
             <View style={styles.cell2}>
-              <Text style={styles.textFirma}>------------------------------</Text>
-              <Text style={styles.parragraph}>Firma Operador</Text>
+              <Text style={styles.textFirma}></Text>
+              <Text style={styles.parragraph}></Text>
             </View>
             <View style={styles.cell2}>
               {url &&
