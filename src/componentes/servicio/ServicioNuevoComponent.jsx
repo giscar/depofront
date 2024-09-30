@@ -106,6 +106,7 @@ const ServicioNuevoComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      debugger
       const data = {}
       data.codServicio = codServicio;
       data.ruc = ruc;
@@ -138,7 +139,6 @@ const ServicioNuevoComponent = () => {
       setTimeout(() => {
         handleCodServicio()
       }, 1000);
-
     }
   }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { buscarServicioByDatosAggregate, buscarServiciosConcluidos, buscarServiciosPendientes } from '../../service/FacturaService';
+import { buscarServicioByDatosEstadoConcluido, buscarServiciosConcluidos } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 
 const FacturaComponent = () => {
@@ -13,10 +13,6 @@ const FacturaComponent = () => {
   const [codServicio, setCodServicio] = useState('')
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState([])
 
-  const editServicio = (id) => {
-    navigator(`/servicioEdit/${id}`)
-  }
-
   const registrarFactura = () => {
     navigator(`/facturaRegistro/${serviciosSeleccionados}`)
   }
@@ -25,7 +21,7 @@ const FacturaComponent = () => {
     if (!codServicio && !ruc) {
       return
     }
-    buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
+    buscarServicioByDatosEstadoConcluido(ruc, codServicio).then((response) => {
       setServicios(response.data);
     }).catch(error => {
       console.error(error)
@@ -55,8 +51,6 @@ const FacturaComponent = () => {
       setServiciosSeleccionados(serviciosSeleccionados.filter(p => p !== value))
     }
   }
-
-  console.log(serviciosSeleccionados)
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -88,7 +82,7 @@ const FacturaComponent = () => {
               </div>
               <div className="card-body">
                 <div className='row'>
-                  <div className="col-lg-12">
+                  <div className="col-lg-4">
                     <label className='col-form-label-zise'>Codigo del servicio:</label>
                     <input type="number"
                       id="inputCodServicio"
@@ -98,7 +92,7 @@ const FacturaComponent = () => {
                       onChange={(e) => { setCodServicio(e.target.value) }}>
                     </input>
                   </div>
-                  <div className="col-lg-6">
+                  <div className="col-lg-4">
                     <label className='col-form-label-zise'>Numero de RUC:</label>
                     <input type="number"
                       id="inputRuc"
@@ -149,12 +143,12 @@ const FacturaComponent = () => {
                       <td className='td-th-size-depo'>{servicio.ruc}</td>
                       <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                       <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
-                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
+                      <td className='td-th-size-depo'>{(new Date(servicio.horaSalidaLocal)).toLocaleString()}</td>
+                      <td className='td-th-size-depo'>{(new Date(servicio.horaInicioServicio)).toLocaleString()}</td>
+                      <td className='td-th-size-depo'>{(new Date(servicio.horaFinServicio)).toLocaleString()}</td>
+                      <td className='td-th-size-depo'>{(new Date(servicio.horaRetornoLocal)).toLocaleString()}</td>
+                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre+' '+servicio.operador[0]?.apellidoPat+' '+servicio.operador[0]?.apellidoMat}</td>
+                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo+' '+servicio.montacarga[0]?.marca}</td>
                       <td className='td-th-size-depo'>
                         {servicio.estadoRegistro === "Concluido" &&
                           <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
@@ -164,7 +158,7 @@ const FacturaComponent = () => {
                         }
                       </td>
                       <td className='text-center'>
-                        <input className="form-check-input" type="checkbox" value={servicio.codServicio} onChange={handleChange}/>
+                        <input className="form-check-input" type="checkbox" value={servicio.codServicio} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
                       </td>
                     </tr>
                   )

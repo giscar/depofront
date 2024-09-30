@@ -144,7 +144,6 @@ const HojaServicioReportComponent = ({ id }) => {
 
   if (id) {
     servicioForId(id).then((response) => {
-      debugger
       setTimeout(() => {
         cargarServicio(response.data)
       }, 1000);
@@ -154,17 +153,22 @@ const HojaServicioReportComponent = ({ id }) => {
   }
 
   const cargarServicio = (data) => {
-    debugger
+    let horaSalidaLocal1 = new Date(data.horaSalidaLocal);
+    let horaInicioServicio1 = new Date(data.horaInicioServicio);
+    let horaFinServicio1 = new Date(data.horaFinServicio);
+    let horaRetornoLocal1 = new Date(data.horaRetornoLocal);
+    let fechaConclusion1 = new Date(data.fechaConclusion);
+    console.log(horaSalidaLocal1.toLocaleString())
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
     setMontacargaModelo(data.montacarga[0]?.modelo+' - '+data.montacarga[0]?.codigo)
     setOperadorNombreCompleto(data.operador[0].nombre + " " + data.operador[0].apellidoPat + " " + data.operador[0].apellidoMat)
-    setHoraSalidaLocal(data.horaSalidaLocal)
-    setHoraInicioServicio(data.horaInicioServicio)
-    setHoraFinServicio(data.horaFinServicio)
-    setHoraRetornoLocal(data.horaRetornoLocal)
+    setHoraSalidaLocal(horaSalidaLocal1.toLocaleString())
+    setHoraInicioServicio(horaInicioServicio1.toLocaleString())
+    setHoraFinServicio(horaFinServicio1.toLocaleString())
+    setHoraRetornoLocal(horaRetornoLocal1.toLocaleString())
     setOperadorId(data.operadorId)
     setMontacargaId(data.montacargaId)
     setTotalHoras(data.totalHoras)
@@ -175,7 +179,7 @@ const HojaServicioReportComponent = ({ id }) => {
     setSolicitante(data.solicitante)
     setUrl(data.url)
     setFechaRegistro(data.fechaRegistro)
-    setFechaConclusion(data.fechaConclusion)
+    setFechaConclusion(fechaConclusion1.toLocaleDateString())
     setObservaciones(data.observaciones)
     setTipoPago(data.tipoPago)
   }

@@ -8388,6 +8388,27 @@ td.td-th-size-depo{
   transition: var(--bs-navbar-toggler-transition);
 }
 
+.form-check-input-depo {
+  --bs-form-check-bg: red;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: .25em;
+  vertical-align: top;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: red;
+  background-image: var(--bs-form-check-bg-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+  print-color-adjust: exact;
+}
+
 .sigCanvasTamanio{
   width: 330;
   height: 150
