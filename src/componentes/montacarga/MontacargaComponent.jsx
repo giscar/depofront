@@ -69,9 +69,7 @@ const MontacargaComponent = () => {
 
   const buscarMontacarga = () => {
     montacargasActivo().then((response) => {
-      debugger
       setMontacargas(response.data);
-      console.log(montacarga)
     }).catch(error => {
       console.error(error)
     })

@@ -1,19 +1,17 @@
 import axios from "axios";
 
-const REST_API_BASE_URL_FACTURA = "http://localhost:8080/factura"
-//const REST_API_BASE_URL_FACTURA = "http://143.244.202.26:8080/factura"
+//const url = "http://165.227.252.245:8080/";
+const url = "http://localhost:8080/";
 
-const REST_API_BASE_URL_CLIENTE = "http://localhost:8080/cliente"
-//const REST_API_BASE_URL_CLIENTE = "http://143.244.202.26:8080/cliente"
+const REST_API_BASE_URL_FACTURA = `${url}factura`
 
-const REST_API_BASE_URL_MONTACARGA = "http://localhost:8080/montacarga"
-//const REST_API_BASE_URL_MONTACARGA = "http://143.244.202.26:8080/montacarga"
+const REST_API_BASE_URL_CLIENTE = `${url}cliente`
 
-const REST_API_BASE_URL_OPERADOR = "http://localhost:8080/operador"
-//const REST_API_BASE_URL_OPERADOR = "http://143.244.202.26:8080/operador"
+const REST_API_BASE_URL_MONTACARGA = `${url}montacarga`
 
-const REST_API_BASE_URL_SERVICIO = "http://localhost:8080/servicio"
-//const REST_API_BASE_URL_SERVICIO = "http://143.244.202.26:8080/servicio"
+const REST_API_BASE_URL_OPERADOR = `${url}operador`
+
+const REST_API_BASE_URL_SERVICIO = `${url}servicio`
 
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 

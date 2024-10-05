@@ -127,7 +127,6 @@ const MontacargaEditComponennt = () => {
   }
 
   const editMontacarga = (montacarga) => {
-    debugger
     if (validateForm()) {
       const data = {}
       data.id = id;

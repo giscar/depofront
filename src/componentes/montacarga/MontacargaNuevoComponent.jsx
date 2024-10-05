@@ -50,7 +50,6 @@ const MontacargaNuevoComponent = () => {
   }
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
 
