@@ -26,6 +26,8 @@ const MontacargaNuevoComponent = () => {
     msgEstado: '',
   })
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
     autoClose: 1000,
@@ -122,6 +124,8 @@ const MontacargaNuevoComponent = () => {
       data.estado = estado.toUpperCase();
       data.revisionOperatividad = revisionOperatividad.toUpperCase();
       data.estadoRegistro = 1;
+      data.indInactivo = "0";
+      data.usuarioRegistro = initialLogin.usuario;
       montacargaSave(data).catch(error => {
         console.error(error)
       })
@@ -129,8 +133,6 @@ const MontacargaNuevoComponent = () => {
       notify()
     }
   }
-
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>
@@ -157,11 +159,12 @@ const MontacargaNuevoComponent = () => {
               <div className="card-header">
                 <h4 className="card-title">Datos de la Montacarga</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
 
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Codigo:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Codigo:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Codigo de la montacarga"
@@ -173,7 +176,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Tonelaje:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Tonelaje:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Tonelaje de la montacarga"
@@ -185,7 +188,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Marca:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Marca:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Marca de la montacarga"
@@ -197,7 +200,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Serie:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Serie:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Serie"
@@ -209,7 +212,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Modelo:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Modelo:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Modelo"
@@ -222,7 +225,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Año de fabricacion:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Año de fabricacion:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Año de fabricacion"
@@ -235,7 +238,7 @@ const MontacargaNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Estado:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Estado:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Estado de la montacarga"
@@ -274,7 +277,7 @@ const MontacargaNuevoComponent = () => {
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise">Revision de operatividad:</label>
                   <div className="col-sm-9">
-                    <input type="text"
+                    <input type="date"
                       placeholder="Revision de operatividad"
                       value={revisionOperatividad}
                       className="form-control-depo"

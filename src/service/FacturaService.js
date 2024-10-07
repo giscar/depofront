@@ -39,6 +39,8 @@ export const montacargaSave = (montacarga) => axios.post(REST_API_BASE_URL_MONTA
 
 export const montacargaEdit = (montacarga) => axios.put(REST_API_BASE_URL_MONTACARGA, montacarga);
 
+export const montacargaInactiva = (montacarga) => axios.put(REST_API_BASE_URL_MONTACARGA+"/inactiva", montacarga);
+
 export const montacargaForId = (montacargaId) => axios.get(REST_API_BASE_URL_MONTACARGA+"?id="+montacargaId);
 
 export const montacargaForAll = () => axios.get(REST_API_BASE_URL_MONTACARGA+"/all");

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { montacargaEdit, montacargaForId, montacargasActivo } from '../../service/FacturaService';
+import { montacargaEdit, montacargaForId, montacargaInactiva, montacargasActivo } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
@@ -47,7 +47,7 @@ const MontacargaComponent = () => {
   const inactivaMontacarga = (id) => {
     montacargaForId(id).then((response) => {
       response.data.estadoRegistro = 0;
-      montacargaEdit(response.data).catch(error => {
+      montacargaInactiva(response.data).catch(error => {
         console.error(error)
       })
       notify();
