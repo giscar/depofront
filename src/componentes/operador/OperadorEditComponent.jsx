@@ -20,6 +20,8 @@ const OperadorEditComponent = () => {
     msgDocumento: '',
   })
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
   const validateForm = () => {
     debugger
     let valid = true;
@@ -102,8 +104,11 @@ const OperadorEditComponent = () => {
       data.nombre = nombre.toUpperCase();
       data.documento = documento;
       data.telefono = telefono;
+      data.direccion = direccion.toUpperCase();
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
+      data.indInactivo = "0";
+      data.usuarioRegistro = initialLogin.usuario;
       operadorEdit(data).catch(error => {
         console.error(error)
       })
@@ -113,8 +118,6 @@ const OperadorEditComponent = () => {
       }, 1000);
     }
   }
-
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>
@@ -141,28 +144,31 @@ const OperadorEditComponent = () => {
               <div className="card-header">
                 <h4 className="card-title">Datos del Operador</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
 
               <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Documento:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Documento:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Documento"
                       value={documento}
                       className="bg-secondary bg-opacity-10 form-control-depo"
                       readOnly
+                      autoComplete='false'
                       onChange={(e) => { setDocumento(e.target.value) }} />
                     {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
                       value={nombre}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
                       onChange={(e) => { setNombre(e.target.value) }} />
                     {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
@@ -170,11 +176,12 @@ const OperadorEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Apellido Paterno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido paterno"
                       value={apellidoPat}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidPat(e.target.value) }} />
                     {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
@@ -182,11 +189,12 @@ const OperadorEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise">Apellido Materno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido materno"
                       value={apellidoMat}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
@@ -199,6 +207,7 @@ const OperadorEditComponent = () => {
                     <input type="number"
                       placeholder="Telefono"
                       value={telefono}
+                      autoComplete='off'
                       className="form-control-depo"
                       onChange={(e) => { setTelefono(e.target.value) }}>
                     </input>
@@ -211,6 +220,7 @@ const OperadorEditComponent = () => {
                     <input type="Text"
                       placeholder="Direccion"
                       value={direccion}
+                      autoComplete='off'
                       className="form-control-depo"
                       onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>

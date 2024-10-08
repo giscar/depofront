@@ -10,6 +10,8 @@ const OperadorComponent = () => {
 
   const navigator = useNavigate();
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
   const notify = () => toast.info('Se ha eliminado el operador correctamente', {
     position: "top-right",
     autoClose: 2000,
@@ -82,8 +84,6 @@ const OperadorComponent = () => {
     buscarOperador();
   }, [operador])
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-
   return (
     <>
     {initialLogin.usuario && <HeaderComponent />}
@@ -119,7 +119,7 @@ const OperadorComponent = () => {
                   <th className='td-th-size-depo'>Documento</th>
                   <th className='td-th-size-depo'>Direccion</th>
                   <th className='td-th-size-depo'>Telefono</th>
-                  <th className='td-th-size-depo'>Acciones</th>
+                  <th className='td-th-size-depo text-center'>Acciones</th>
                 </tr>
               </thead>
               <tbody>

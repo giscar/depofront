@@ -40,6 +40,7 @@ const OperadorNuevoComponent = () => {
       data.telefono = telefono;
       data.direccion = direccion.toUpperCase();
       data.estado = "1";
+      data.indInactivo = "0";
       operadorSave(data).catch(error => {
         console.error(error)
       })
@@ -122,21 +123,23 @@ const OperadorNuevoComponent = () => {
               <div className="card-header">
                 <h4 className="card-title">Datos del Operador</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Documento:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Documento:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Documento"
                       value={documento}
+                      maxLength={8}
                       className={`form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
                       onChange={(e) => { setDocumento(e.target.value) }} />
                     {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
@@ -147,7 +150,7 @@ const OperadorNuevoComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Apellido Paterno:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido paterno"
@@ -158,7 +161,7 @@ const OperadorNuevoComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Apellido Materno:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido materno"
