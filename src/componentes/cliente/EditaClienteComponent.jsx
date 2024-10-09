@@ -90,6 +90,8 @@ function EditaClienteComponent() {
       data.razonSocial = razonSocial.toUpperCase();
       data.direccion = direccion.toUpperCase();
       data.email = email.toUpperCase();
+      data.estado = "1";
+      data.usuarioRegistro = initialLogin.usuario;
       editaCliente(data).catch(error => {
         console.error(error)
       })

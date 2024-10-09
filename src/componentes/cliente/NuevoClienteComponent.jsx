@@ -16,6 +16,7 @@ function NuevoClienteComponent() {
     msgDireccion: '',
   })
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -72,6 +73,7 @@ function NuevoClienteComponent() {
       data.direccion = direccion.toUpperCase();
       data.email = email.toUpperCase();
       data.estado = "1";
+      data.usuarioRegistro = initialLogin.usuario;
       nuevoCliente(data).catch(error => {
         console.error(error)
       })
@@ -80,8 +82,6 @@ function NuevoClienteComponent() {
     }
 
   }
-
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>
