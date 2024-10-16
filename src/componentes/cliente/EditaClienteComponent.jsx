@@ -127,10 +127,11 @@ function EditaClienteComponent() {
               <div className="card-header">
                 <h4 className="card-title">Datos del cliente</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">ruc:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>RUC:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Ruc del cliente"
@@ -141,7 +142,7 @@ function EditaClienteComponent() {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Razon Social:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Razon Social:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Razon Social"
@@ -152,7 +153,7 @@ function EditaClienteComponent() {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Direccion:</label>
                   <div className="col-sm-9">
                     <textarea type="text"
                       placeholder="Direccion del cliente"
