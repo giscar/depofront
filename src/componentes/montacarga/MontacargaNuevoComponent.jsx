@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { montacargaSave } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const MontacargaNuevoComponent = () => {
 
@@ -15,6 +16,8 @@ const MontacargaNuevoComponent = () => {
   const [ubicacion, setUbicacion] = useState('')
   const [estado, setEstado] = useState('')
   const [revisionOperatividad, setRevisionOperatividad] = useState('')
+
+  const navigator = useNavigate();
 
   const [errors, setErrors] = useState({
     msgCodigo: '',
@@ -131,6 +134,9 @@ const MontacargaNuevoComponent = () => {
       })
       limpiar()
       notify()
+      setTimeout(() => {
+        navigator("/montacargas");
+      }, 1000);
     }
   }
 

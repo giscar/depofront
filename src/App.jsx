@@ -21,6 +21,9 @@ import ServicioComponentOperador from './componentes/servicio/ServicioComponentO
 import ServicioViewComponent from './componentes/servicio/ServicioViewComponent'
 import ServicioReportComponent from './componentes/estadisticas/ServicioReportComponent'
 import FacturaRegistroComponent from './componentes/factura/FacturaRegistroComponent'
+import UsuarioComponent from './componentes/acceso/usuario/UsuarioComponent'
+import UsuarioNuevoComponent from './componentes/acceso/usuario/UsuarioNuevoComponent'
+import UsuarioEditComponent from './componentes/acceso/usuario/UsuarioEditComponent'
 
 function App() {
 
@@ -48,6 +51,10 @@ function App() {
             <Route path='/servicios' element={<ServicioComponent />}></Route>
             <Route path='/servicioOperador' element={<ServicioComponentOperador />}></Route>
             <Route path='/servicioReportOperaciones' element={<ServicioReportComponent />}></Route>
+            <Route path='/usuarios' element={<UsuarioComponent />}></Route>
+            <Route path='/usuarioNuevo' element={<UsuarioNuevoComponent />}></Route>
+            <Route path='/usuarioEdit/:id' element={<UsuarioEditComponent />}></Route>
+
           </Routes>
           <ToastContainer />
       </BrowserRouter>

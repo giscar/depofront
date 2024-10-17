@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
-import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
-import { operadorSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
+import HeaderComponent from '../../HeaderComponent';
+import { usuarioSave } from '../../../service/FacturaService';
 
-const OperadorNuevoComponent = () => {
+const UsuarioNuevoComponent = () => {
 
   const [nombre, setNombre] = useState('')
   const [apellidoPat, setApellidPat] = useState('')
   const [apellidoMat, setApellidMat] = useState('')
   const [documento, setDocumento] = useState('')
-  const [telefono, setTelefono] = useState('')
-  const [direccion, setDireccion] = useState('')
 
   const navigator = useNavigate();
 
@@ -32,7 +30,7 @@ const OperadorNuevoComponent = () => {
     theme: "colored",
   });
 
-  const saveOperador = (e) => {
+  const saveUsuario = (e) => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
@@ -40,18 +38,16 @@ const OperadorNuevoComponent = () => {
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.documento = documento;
-      data.telefono = telefono;
-      data.direccion = direccion.toUpperCase();
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
-      operadorSave(data).catch(error => {
+      usuarioSave(data).catch(error => {
         console.error(error)
       })
       limpiar()
       notify()
       setTimeout(() => {
-        navigator("/operadores");
+        navigator("/usuarios");
       }, 1000);
     }
   }
@@ -60,41 +56,38 @@ const OperadorNuevoComponent = () => {
     setNombre('');
     setApellidPat('');
     setApellidMat('');
-    setTelefono('');
-    setDireccion('');
     setDocumento('');
   }
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
 
     if (nombre) {
       errorCopy.msgNombre = '';
     } else {
-      errorCopy.msgNombre = 'Tiene que ingresar el nombre del operador';
+      errorCopy.msgNombre = 'Tiene que ingresar el nombre del usuario';
       valid = false;
     }
 
     if (apellidoPat) {
       errorCopy.msgApellidoPat = '';
     } else {
-      errorCopy.msgApellidoPat = 'Tiene que ingresar el apellido paterno del operador';
+      errorCopy.msgApellidoPat = 'Tiene que ingresar el apellido paterno del usuario';
       valid = false;
     }
 
     if (apellidoMat) {
       errorCopy.msgApellidoMat = '';
     } else {
-      errorCopy.msgApellidoMat = 'Tiene que ingresar el apellido materno del operador';
+      errorCopy.msgApellidoMat = 'Tiene que ingresar el apellido materno del usuario';
       valid = false;
     }
 
     if (documento) {
       errorCopy.msgDocumento = '';
     } else {
-      errorCopy.msgDocumento = 'Tiene que ingresar el numero de documento del operador';
+      errorCopy.msgDocumento = 'Tiene que ingresar el numero de documento del usuario';
       valid = false;
     }
 
@@ -115,11 +108,11 @@ const OperadorNuevoComponent = () => {
               <div className="float-end">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Operadores</a></li>
+                  <li className="breadcrumb-item"><a href="#">Usuarios</a></li>
                   <li className="breadcrumb-item active">Nuevo Operador</li>
                 </ol>
               </div>
-              <h4 className="page-title">Registrar operador</h4>
+              <h4 className="page-title">Registrar usuario</h4>
             </div>
           </div>
         </div>
@@ -128,8 +121,8 @@ const OperadorNuevoComponent = () => {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos del Operador</h4>
-                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
+                <h4 className="card-title">Datos del Usuario</h4>
+                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
                 <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
@@ -178,30 +171,8 @@ const OperadorNuevoComponent = () => {
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
                   </div>
                 </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Telefono:</label>
-                  <div className="col-sm-9">
-                    <input type="number"
-                      placeholder="Telefono"
-                      value={telefono}
-                      className="form-control-depo"
-                      onChange={(e) => { setTelefono(e.target.value) }}>
-                    </input>
-                  </div>
-                </div>
-
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
-                  <div className="col-sm-9">
-                    <input type="Text"
-                      placeholder="Direccion"
-                      value={direccion}
-                      className="form-control-depo"
-                      onChange={(e) => { setDireccion(e.target.value) }}>
-                    </input>
-                  </div>
-                </div>
-                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveOperador}>Guardar</button>
+               
+                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveUsuario}>Guardar</button>
                 &nbsp;&nbsp;
                 <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
               </div>
@@ -213,4 +184,4 @@ const OperadorNuevoComponent = () => {
   )
 }
 
-export default OperadorNuevoComponent
+export default UsuarioNuevoComponent

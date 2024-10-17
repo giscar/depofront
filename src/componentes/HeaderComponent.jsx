@@ -38,6 +38,10 @@ const HeaderComponent = () => {
     navigator("/servicioReportOperaciones")
   }
 
+  const accederUsuarios = () => {
+    navigator("/usuarios")
+  }
+
   const cerrarSession = () => {
     sessionStorage.getItem('user');
     navigator("/")
@@ -54,7 +58,29 @@ const HeaderComponent = () => {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <a className="nav-link active" aria-current="page">Almacenes</a>
+              <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Accesos
+                </a>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederUsuarios()}>Usuarios</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioNuevo()}>Nuevo Servicio</a></li>
+                  {initialLogin.rol === "adm" &&
+                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
+                  }
+                  <li><hr className="dropdown-divider" /></li>
+                  {initialLogin.rol === "adm" &&
+                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>
+                  }
+                  {initialLogin.rol === "adm" &&
+                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>
+                  }
+                  {initialLogin.rol === "adm" &&
+                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederClientes()}>Clientes</a></li>
+                  }
+                  {initialLogin.rol === "adm" &&
+                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederReporteOperaciones()}>Estadisticas</a></li>
+                  }
+                </ul>
               </li>
               <li className="nav-item">
                 <a className="nav-link">Balanza</a>

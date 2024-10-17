@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { montacargaEdit, montacargaForId, montacargaInactiva, montacargasActivo } from '../../service/FacturaService';
+import { montacargaForId, montacargaInactiva, montacargasActivo } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
@@ -134,7 +134,12 @@ const MontacargaComponent = () => {
                   <td className='td-th-size-depo'>{montacarga.anhoFabricacion}</td>
                   <td className='td-th-size-depo'>{montacarga.ubicacion}</td>
                   <td className='td-th-size-depo'>{montacarga.estado}</td>
-                  <td className='td-th-size-depo'>{montacarga.revisionOperatividad}</td>
+                  {montacarga.revisionOperatividad &&
+                          <td className='td-th-size-depo'>{(new Date(montacarga.revisionOperatividad)).toLocaleString().substring(0, 10)}</td>
+                  }
+                  {!montacarga.revisionOperatividad &&
+                          <td className='td-th-size-depo'></td>
+                  }
                   <td>
                     <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(montacarga.id)}>
                       <i className="bi bi-pencil-fill"></i>

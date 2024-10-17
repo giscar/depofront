@@ -2,6 +2,7 @@ import { nuevoCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function NuevoClienteComponent() {
 
@@ -9,6 +10,8 @@ function NuevoClienteComponent() {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [email, setEmail] = useState('')
+
+  const navigator = useNavigate();
 
   const [errors, setErrors] = useState({
     msgRuc: '',
@@ -79,8 +82,10 @@ function NuevoClienteComponent() {
       })
       limpiar()
       notify()
+      setTimeout(() => {
+        navigator("/clientes");
+      }, 1000);
     }
-
   }
 
   return (
@@ -154,7 +159,8 @@ function NuevoClienteComponent() {
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise ">Correo Electronico:</label>
                   <div className="col-sm-9">
-                    <input type="Text"
+                    <input type="email"
+                      pattern=".+@example\.com"
                       placeholder="Correo electronico"
                       value={email}
                       className="w-50 form-control-depo"
@@ -162,7 +168,6 @@ function NuevoClienteComponent() {
                     </input>
                   </div>
                 </div>
-
 
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveCliente}>Guardar</button>
                 &nbsp;&nbsp;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = "http://165.227.252.245:8080/";
-//const url = "http://localhost:8080/";
+//const url = "http://165.227.252.245:8080/";
+const url = "http://localhost:8080/";
 
 const REST_API_BASE_URL_FACTURA = `${url}factura`
 
@@ -12,6 +12,8 @@ const REST_API_BASE_URL_MONTACARGA = `${url}montacarga`
 const REST_API_BASE_URL_OPERADOR = `${url}operador`
 
 const REST_API_BASE_URL_SERVICIO = `${url}servicio`
+
+const REST_API_BASE_URL_USUARIO = `${url}usuario`
 
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 
@@ -92,3 +94,15 @@ export const uploadFile = (file, id, type, size) => axios.post(REST_API_BASE_URL
 export const inactiveFile = (id) => axios.get(REST_API_BASE_URL_SERVICIO+"/uploadInactive?id="+id);
 
 export const deleteFile = (id) => axios.delete(REST_API_BASE_URL_SERVICIO+"/imagen/eliminar?id="+id);
+
+export const usuarioSave = (usuario) => axios.post(REST_API_BASE_URL_USUARIO, usuario);
+
+export const usuarioEdit = (usuario) => axios.put(REST_API_BASE_URL_USUARIO, usuario);
+
+export const usuarioForId = (id) => axios.get(REST_API_BASE_URL_USUARIO+"?id="+id);
+
+export const usuarioForDocumento = (documento) => axios.get(REST_API_BASE_URL_USUARIO+"/documento?documento="+documento);
+
+export const usuarioForAll = () => axios.get(REST_API_BASE_URL_USUARIO+"/all");
+
+export const usuarioActivo = () => axios.get(REST_API_BASE_URL_USUARIO+"/estado");

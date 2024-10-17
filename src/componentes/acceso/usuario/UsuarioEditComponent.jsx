@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import HeaderComponent from '../HeaderComponent';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { operadorSave } from '../../service/FacturaService';
-import { useNavigate } from 'react-router-dom';
+import HeaderComponent from '../../HeaderComponent';
+import { usuarioEdit, usuarioForId } from '../../../service/FacturaService';
 
-const OperadorNuevoComponent = () => {
+const UsuarioEditComponent = () => {
 
   const [nombre, setNombre] = useState('')
   const [apellidoPat, setApellidPat] = useState('')
@@ -12,9 +12,7 @@ const OperadorNuevoComponent = () => {
   const [documento, setDocumento] = useState('')
   const [telefono, setTelefono] = useState('')
   const [direccion, setDireccion] = useState('')
-
-  const navigator = useNavigate();
-
+  const [operador, setOperador] = useState([])
   const [errors, setErrors] = useState({
     msgNombre: '',
     msgApellidoPat: '',
@@ -22,48 +20,7 @@ const OperadorNuevoComponent = () => {
     msgDocumento: '',
   })
 
-  const notify = () => toast.info('Se han registrado los cambios correctamente', {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-  });
-
-  const saveOperador = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      const data = {}
-      data.nombre = nombre.toUpperCase();
-      data.apellidoPat = apellidoPat.toUpperCase();
-      data.apellidoMat = apellidoMat.toUpperCase();
-      data.documento = documento;
-      data.telefono = telefono;
-      data.direccion = direccion.toUpperCase();
-      data.estado = "1";
-      data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
-      operadorSave(data).catch(error => {
-        console.error(error)
-      })
-      limpiar()
-      notify()
-      setTimeout(() => {
-        navigator("/operadores");
-      }, 1000);
-    }
-  }
-
-  const limpiar = () => {
-    setNombre('');
-    setApellidPat('');
-    setApellidMat('');
-    setTelefono('');
-    setDireccion('');
-    setDocumento('');
-  }
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   const validateForm = () => {
     debugger
@@ -94,7 +51,7 @@ const OperadorNuevoComponent = () => {
     if (documento) {
       errorCopy.msgDocumento = '';
     } else {
-      errorCopy.msgDocumento = 'Tiene que ingresar el numero de documento del operador';
+      errorCopy.msgDocumento = 'Tiene que ingresar el apellido numero de documento del operador';
       valid = false;
     }
 
@@ -103,7 +60,64 @@ const OperadorNuevoComponent = () => {
     return valid;
   }
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  const navigator = useNavigate();
+
+  const notify = () => toast.info('Se han registrado los cambios correctamente', {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+  });
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      usuarioForId(id).then((response) => {
+        setOperador(response.data);
+        setTimeout(() => {
+          cargarOperador(response.data)
+        }, 1000);
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+  }, [id])
+
+  const cargarOperador = (data) => {
+    setNombre(data.nombre);
+    setApellidPat(data.apellidoPat);
+    setApellidMat(data.apellidoMat);
+    setTelefono(data.telefono);
+    setDireccion(data.direccion);
+    setDocumento(data.documento);
+  }
+
+  const editOperador = (operador) => {
+    if (validateForm()) {
+      const data = {}
+      data.id = id;
+      data.estado = "1"
+      data.nombre = nombre.toUpperCase();
+      data.documento = documento;
+      data.telefono = telefono;
+      data.direccion = direccion.toUpperCase();
+      data.apellidoPat = apellidoPat.toUpperCase();
+      data.apellidoMat = apellidoMat.toUpperCase();
+      data.indInactivo = "0";
+      data.usuarioRegistro = initialLogin.usuario;
+      usuarioEdit(data).catch(error => {
+        console.error(error)
+      })
+      notify()
+      setTimeout(() => {
+        navigator("/operadores");
+      }, 1000);
+    }
+  }
 
   return (
     <>
@@ -116,16 +130,16 @@ const OperadorNuevoComponent = () => {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                   <li className="breadcrumb-item"><a href="#">Operadores</a></li>
-                  <li className="breadcrumb-item active">Nuevo Operador</li>
+                  <li className="breadcrumb-item active">Editar Operador</li>
                 </ol>
               </div>
-              <h4 className="page-title">Registrar operador</h4>
+              <h4 className="page-title">Editar operador</h4>
             </div>
           </div>
         </div>
         <br />
         <div className="row">
-          <div className="col-lg-12">
+          <div className="col-lg-12 ">
             <div className="card">
               <div className="card-header">
                 <h4 className="card-title">Datos del Operador</h4>
@@ -133,57 +147,67 @@ const OperadorNuevoComponent = () => {
                 <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Documento:</label>
+
+              <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Documento:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Documento"
                       value={documento}
-                      maxLength={8}
-                      className={`form-control-depo ${errors.msgDocumento ? ' is-invalid' : ''}`}
+                      className="bg-secondary bg-opacity-10 form-control-depo"
+                      readOnly
+                      autoComplete='false'
                       onChange={(e) => { setDocumento(e.target.value) }} />
                     {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
                       value={nombre}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
                       onChange={(e) => { setNombre(e.target.value) }} />
                     {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido paterno"
                       value={apellidoPat}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidPat(e.target.value) }} />
                     {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido materno"
                       value={apellidoMat}
+                      autoComplete='off'
                       className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
                   </div>
                 </div>
+
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Telefono:</label>
+                  <label className="col-sm-3 col-form-label-zise">Telefono:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Telefono"
                       value={telefono}
+                      autoComplete='off'
                       className="form-control-depo"
                       onChange={(e) => { setTelefono(e.target.value) }}>
                     </input>
@@ -191,19 +215,18 @@ const OperadorNuevoComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise ">Direccion:</label>
+                  <label className="col-sm-3 col-form-label-zise">Direccion:</label>
                   <div className="col-sm-9">
                     <input type="Text"
                       placeholder="Direccion"
                       value={direccion}
+                      autoComplete='off'
                       className="form-control-depo"
                       onChange={(e) => { setDireccion(e.target.value) }}>
                     </input>
                   </div>
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveOperador}>Guardar</button>
-                &nbsp;&nbsp;
-                <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editOperador}>Editar</button>
               </div>
             </div>
           </div>
@@ -212,5 +235,4 @@ const OperadorNuevoComponent = () => {
     </>
   )
 }
-
-export default OperadorNuevoComponent
+export default UsuarioEditComponent
