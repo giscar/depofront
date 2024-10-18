@@ -24,6 +24,12 @@ import FacturaRegistroComponent from './componentes/factura/FacturaRegistroCompo
 import UsuarioComponent from './componentes/acceso/usuario/UsuarioComponent'
 import UsuarioNuevoComponent from './componentes/acceso/usuario/UsuarioNuevoComponent'
 import UsuarioEditComponent from './componentes/acceso/usuario/UsuarioEditComponent'
+import PerfilComponent from './componentes/acceso/perfil/PerfilComponent'
+import PerfilNuevoComponent from './componentes/acceso/perfil/PerfilNuevoComponent'
+import PerfilEditComponent from './componentes/acceso/perfil/PerfilEditComponent'
+import RolNuevoComponent from './componentes/acceso/rol/RolNuevoComponent'
+import RolEditComponent from './componentes/acceso/rol/RolEditComponent'
+import RolComponent from './componentes/acceso/rol/RolComponent'
 
 function App() {
 
@@ -54,6 +60,12 @@ function App() {
             <Route path='/usuarios' element={<UsuarioComponent />}></Route>
             <Route path='/usuarioNuevo' element={<UsuarioNuevoComponent />}></Route>
             <Route path='/usuarioEdit/:id' element={<UsuarioEditComponent />}></Route>
+            <Route path='/perfiles' element={<PerfilComponent />}></Route>
+            <Route path='/perfilNuevo' element={<PerfilNuevoComponent />}></Route>
+            <Route path='/perfilEdit/:id' element={<PerfilEditComponent />}></Route>
+            <Route path='/roles' element={<RolComponent />}></Route>
+            <Route path='/rolNuevo' element={<RolNuevoComponent />}></Route>
+            <Route path='/rolEdit/:id' element={<RolEditComponent />}></Route>
 
           </Routes>
           <ToastContainer />

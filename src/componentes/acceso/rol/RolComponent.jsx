@@ -4,7 +4,7 @@ import Swal from 'sweetalert2'
 import HeaderComponent from '../../HeaderComponent';
 import { usuarioActivo, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
 
-const UsuarioComponent = () => {
+const RolComponent = () => {
 
   const [usuario, setUsuario] = useState([]);
   const [usuarios, setUsuarios] = useState([])
@@ -149,4 +149,4 @@ const UsuarioComponent = () => {
   )
 }
 
-export default UsuarioComponent
+export default RolComponent

@@ -42,6 +42,14 @@ const HeaderComponent = () => {
     navigator("/usuarios")
   }
 
+  const accederPerfiles = () => {
+    navigator("/perfiles")
+  }
+
+  const accederRoles = () => {
+    navigator("/roles")
+  }
+
   const cerrarSession = () => {
     sessionStorage.getItem('user');
     navigator("/")
@@ -63,23 +71,9 @@ const HeaderComponent = () => {
                 </a>
                 <ul className="dropdown-menu">
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederUsuarios()}>Usuarios</a></li>
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioNuevo()}>Nuevo Servicio</a></li>
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
-                  }
-                  <li><hr className="dropdown-divider" /></li>
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederClientes()}>Clientes</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederReporteOperaciones()}>Estadisticas</a></li>
-                  }
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederPerfiles()}>Perfiles</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederRoles()}>Roles</a></li>
+                  
                 </ul>
               </li>
               <li className="nav-item">

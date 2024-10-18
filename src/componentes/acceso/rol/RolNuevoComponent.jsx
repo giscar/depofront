@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import HeaderComponent from '../../HeaderComponent';
 import { usuarioEdit, usuarioForId, usuarioSave } from '../../../service/FacturaService';
 
-const UsuarioNuevoComponent = () => {
+const RolNuevoComponent = () => {
 
   const [nombre, setNombre] = useState('')
   const [apellidoPat, setApellidPat] = useState('')
@@ -199,4 +199,4 @@ const UsuarioNuevoComponent = () => {
   )
 }
 
-export default UsuarioNuevoComponent
+export default RolNuevoComponent
