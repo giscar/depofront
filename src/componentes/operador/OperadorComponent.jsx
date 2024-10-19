@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { operadorActivo, operadorEdit, operadorForId } from '../../service/FacturaService';
+import { operadorActivo, operadorEdit, operadorForId, operadorInactiva } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2'
@@ -58,7 +58,7 @@ const OperadorComponent = () => {
   const inactivaOperador = (id) => {
     operadorForId(id).then((response) => {
       response.data.estado = 0;
-      operadorEdit(response.data).catch(error => {
+      operadorInactiva(response.data).catch(error => {
         console.error(error)
       })
       notify();

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioActivo, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
+import { usuarioActivo, usuarioForId, usuarioInactiva } from '../../../service/FacturaService';
 
 const UsuarioComponent = () => {
 
@@ -29,14 +30,6 @@ const UsuarioComponent = () => {
 
   const irUsuarioEdit = (id) => {
     navigator(`/usuarioEdit/${id}`)
-  }
-
-  const buscarUsuario = () => {
-    usuarioActivo().then((response) => {
-      setUsuarios(response.data);
-    }).catch(error => {
-      console.error(error)
-    })
   }
 
   useEffect(() => {
@@ -68,19 +61,19 @@ const UsuarioComponent = () => {
   const inactivaUsuario = (id) => {
     usuarioForId(id).then((response) => {
       response.data.estado = 0;
-      usuarioEdit(response.data).catch(error => {
+      usuarioInactiva(response.data).catch(error => {
         console.error(error)
       })
       notify();
       setTimeout(() => {
-        buscarOperador()
+        buscarUsuario()
       }, 1000);
     }).catch(error => {
       console.error(error)
     })
   }
 
-  const buscarOperador = () => {
+  const buscarUsuario = () => {
     usuarioActivo().then((response) => {
       setUsuarios(response.data);
     }).catch(error => {
@@ -103,7 +96,7 @@ const UsuarioComponent = () => {
                   <li className="breadcrumb-item active">listado</li>
                 </ol>
               </div>
-              <h4 className="page-title">Listado de Usurios del Sistema</h4>
+              <h4 className="page-title">Listado de Usuarios del Sistema</h4>
             </div>
           </div>
         </div>

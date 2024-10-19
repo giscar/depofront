@@ -2,20 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioEdit, usuarioForId } from '../../../service/FacturaService';
+import { rolEdit, rolForId, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
 
 const RolEditComponent = () => {
 
-  const [nombre, setNombre] = useState('')
-  const [apellidoPat, setApellidPat] = useState('')
-  const [apellidoMat, setApellidMat] = useState('')
-  const [documento, setDocumento] = useState('')
-  const [usuario, setUsuario] = useState([])
+  const [codigo, setCodigo] = useState('')
+  const [descripcion, setDescripcion] = useState('')
+  const [rol, setRol] = useState([])
+
   const [errors, setErrors] = useState({
-    msgNombre: '',
-    msgApellidoPat: '',
-    msgApellidoMat: '',
-    msgDocumento: '',
+    msgCodigo: '',
+    msgDescripcion: '',
   })
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -24,31 +21,17 @@ const RolEditComponent = () => {
     let valid = true;
     const errorCopy = { ...errors }
 
-    if (nombre) {
-      errorCopy.msgNombre = '';
+    if (codigo) {
+      errorCopy.msgCodigo = '';
     } else {
-      errorCopy.msgNombre = 'Tiene que ingresar el nombre del usuario';
+      errorCopy.msgCodigo = 'Tiene que ingresar el codigo del Rol';
       valid = false;
     }
 
-    if (apellidoPat) {
-      errorCopy.msgApellidoPat = '';
+    if (descripcion) {
+      errorCopy.msgDescripcion = '';
     } else {
-      errorCopy.msgApellidoPat = 'Tiene que ingresar el apellido paterno del usuario';
-      valid = false;
-    }
-
-    if (apellidoMat) {
-      errorCopy.msgApellidoMat = '';
-    } else {
-      errorCopy.msgApellidoMat = 'Tiene que ingresar el apellido materno del usuario';
-      valid = false;
-    }
-
-    if (documento) {
-      errorCopy.msgDocumento = '';
-    } else {
-      errorCopy.msgDocumento = 'Tiene que ingresar el apellido numero de documento del usuario';
+      errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del rol';
       valid = false;
     }
 
@@ -73,10 +56,10 @@ const RolEditComponent = () => {
 
   useEffect(() => {
     if (id) {
-      usuarioForId(id).then((response) => {
-        setUsuario(response.data);
+      rolForId(id).then((response) => {
+        setRol(response.data);
         setTimeout(() => {
-          cargarUsuario(response.data)
+          cargarRol(response.data)
         }, 1000);
       }).catch(error => {
         console.log(error);
@@ -84,32 +67,28 @@ const RolEditComponent = () => {
     }
   }, [id])
 
-  const cargarUsuario = (data) => {
-    setNombre(data.nombre);
-    setApellidPat(data.apellidoPat);
-    setApellidMat(data.apellidoMat);
-    setDocumento(data.documento);
+  const cargarRol = (data) => {
+    setCodigo(data.codigo);
+    setDescripcion(data.descripcion);
   }
 
-  const editUsuario = (operador) => {
+  const editRol = (operador) => {
     if (validateForm()) {
       const data = {}
       data.id = id;
       data.estado = "1"
-      data.nombre = nombre.toUpperCase();
-      data.documento = documento;
-      data.apellidoPat = apellidoPat.toUpperCase();
-      data.apellidoMat = apellidoMat.toUpperCase();
+      data.codigo = codigo.toUpperCase();
+      data.descripcion = descripcion.toUpperCase();
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
-      usuarioEdit(data).catch(error => {
+      rolEdit(data).catch(error => {
         console.error(error)
       })
       notify()
       setTimeout(() => {
-        navigator("/usuarios");
+        navigator("/roles");
       }, 1000);
-    }
+    }   
   }
 
   return (
@@ -122,11 +101,11 @@ const RolEditComponent = () => {
               <div className="float-end">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Usuarios</a></li>
-                  <li className="breadcrumb-item active">Editar Usuario</li>
+                  <li className="breadcrumb-item"><a href="#">Roles</a></li>
+                  <li className="breadcrumb-item active">Editar Rol</li>
                 </ol>
               </div>
-              <h4 className="page-title">Editar usuario</h4>
+              <h4 className="page-title">Editar rol</h4>
             </div>
           </div>
         </div>
@@ -135,7 +114,7 @@ const RolEditComponent = () => {
           <div className="col-lg-12 ">
             <div className="card">
               <div className="card-header">
-                <h4 className="card-title">Datos del Usuario</h4>
+                <h4 className="card-title">Datos del Rol</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
                 <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
@@ -144,14 +123,14 @@ const RolEditComponent = () => {
               <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Documento:</label>
                   <div className="col-sm-9">
-                    <input type="number"
-                      placeholder="Documento"
-                      value={documento}
+                    <input type="text"
+                      placeholder="Codigo del rol"
+                      value={codigo}
                       className="bg-secondary bg-opacity-10 form-control-depo"
                       readOnly
                       autoComplete='false'
-                      onChange={(e) => { setDocumento(e.target.value) }} />
-                    {errors.msgDocumento && <div className='invalid-feedback'>{errors.msgDocumento}</div>}
+                      onChange={(e) => { setCodigo(e.target.value) }} />
+                    {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
                   </div>
                 </div>
 
@@ -159,41 +138,15 @@ const RolEditComponent = () => {
                   <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
-                      placeholder="Nombre del operador"
-                      value={nombre}
+                      placeholder="Descripcion del rol"
+                      value={descripcion}
                       autoComplete='off'
-                      className={`form-control-depo ${errors.msgNombre ? 'is-invalid' : ''}`}
-                      onChange={(e) => { setNombre(e.target.value) }} />
-                    {errors.msgNombre && <div className='invalid-feedback'>{errors.msgNombre}</div>}
+                      className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
+                      onChange={(e) => { setDescripcion(e.target.value) }} />
+                    {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
                   </div>
                 </div>
-
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
-                  <div className="col-sm-9">
-                    <input type="text"
-                      placeholder="Apellido paterno"
-                      value={apellidoPat}
-                      autoComplete='off'
-                      className={`form-control-depo ${errors.msgApellidoPat ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setApellidPat(e.target.value) }} />
-                    {errors.msgApellidoPat && <div className='invalid-feedback'>{errors.msgApellidoPat}</div>}
-                  </div>
-                </div>
-
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
-                  <div className="col-sm-9">
-                    <input type="text"
-                      placeholder="Apellido materno"
-                      value={apellidoMat}
-                      autoComplete='off'
-                      className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setApellidMat(e.target.value) }} />
-                    {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
-                  </div>
-                </div>
-                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editUsuario}>Editar</button>
+                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editRol}>Editar</button>
               </div>
             </div>
           </div>

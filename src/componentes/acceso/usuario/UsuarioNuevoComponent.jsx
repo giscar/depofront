@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioEdit, usuarioForId, usuarioSave } from '../../../service/FacturaService';
+import { usuarioSave } from '../../../service/FacturaService';
 
 const UsuarioNuevoComponent = () => {
 
@@ -94,21 +94,6 @@ const UsuarioNuevoComponent = () => {
     setErrors(errorCopy);
 
     return valid;
-  }
-
-  const inactivaUsuario = (id) => {
-    usuarioForId(id).then((response) => {
-      response.data.estado = 0;
-      usuarioEdit(response.data).catch(error => {
-        console.error(error)
-      })
-      notify();
-      setTimeout(() => {
-        buscarUsuario
-      }, 1000);
-    }).catch(error => {
-      console.error(error)
-    })
   }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));

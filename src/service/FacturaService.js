@@ -15,6 +15,10 @@ const REST_API_BASE_URL_SERVICIO = `${url}servicio`
 
 const REST_API_BASE_URL_USUARIO = `${url}usuario`
 
+const REST_API_BASE_URL_PERFIL = `${url}perfil`
+
+const REST_API_BASE_URL_ROL = `${url}rol`
+
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 
 export const nuevaFactura = (factura) => axios.post(REST_API_BASE_URL_FACTURA, factura);
@@ -61,6 +65,8 @@ export const operadorForAll = () => axios.get(REST_API_BASE_URL_OPERADOR+"/all")
 
 export const operadorActivo = () => axios.get(REST_API_BASE_URL_OPERADOR+"/estado");
 
+export const operadorInactiva = (operador) => axios.put(REST_API_BASE_URL_OPERADOR+"/inactiva", operador);
+
 export const servicioSave = (servicio) => axios.post(REST_API_BASE_URL_SERVICIO, servicio);
 
 export const servicioEdit = (servicio) => axios.put(REST_API_BASE_URL_SERVICIO, servicio);
@@ -106,3 +112,33 @@ export const usuarioForDocumento = (documento) => axios.get(REST_API_BASE_URL_US
 export const usuarioForAll = () => axios.get(REST_API_BASE_URL_USUARIO+"/all");
 
 export const usuarioActivo = () => axios.get(REST_API_BASE_URL_USUARIO+"/estado");
+
+export const usuarioInactiva = (usuario) => axios.put(REST_API_BASE_URL_USUARIO+"/inactiva", usuario);
+
+export const perfilSave = (perfil) => axios.post(REST_API_BASE_URL_PERFIL, perfil);
+
+export const perfilEdit = (perfil) => axios.put(REST_API_BASE_URL_PERFIL, perfil);
+
+export const perfilForId = (id) => axios.get(REST_API_BASE_URL_PERFIL+"?id="+id);
+
+export const perfilForDocumento = (codigo) => axios.get(REST_API_BASE_URL_PERFIL+"/codigo?codigo="+codigo);
+
+export const perfilForAll = () => axios.get(REST_API_BASE_URL_PERFIL+"/all");
+
+export const perfilActivo = () => axios.get(REST_API_BASE_URL_PERFIL+"/estado");
+
+export const perfilInactiva = (perfil) => axios.put(REST_API_BASE_URL_PERFIL+"/inactiva", perfil);
+
+export const rolSave = (rol) => axios.post(REST_API_BASE_URL_ROL, rol);
+
+export const rolEdit = (rol) => axios.put(REST_API_BASE_URL_ROL, rol);
+
+export const rolForId = (id) => axios.get(REST_API_BASE_URL_ROL+"?id="+id);
+
+export const rolForDocumento = (codigo) => axios.get(REST_API_BASE_URL_ROL+"/codigo?codigo="+codigo);
+
+export const rolForAll = () => axios.get(REST_API_BASE_URL_ROL+"/all");
+
+export const rolActivo = () => axios.get(REST_API_BASE_URL_ROL+"/estado");
+
+export const rolInactiva = (rol) => axios.put(REST_API_BASE_URL_ROL+"/inactiva", rol);
