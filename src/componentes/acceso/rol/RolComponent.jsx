@@ -81,7 +81,6 @@ const RolComponent = () => {
     })
   }
   
-  
   return (
     <>
     {initialLogin.usuario && <HeaderComponent />}
@@ -112,7 +111,7 @@ const RolComponent = () => {
             <tr>
               <th className='td-th-size-depo'>Codigo</th>
               <th className='td-th-size-depo'>Descripcion</th>
-              <th className='td-th-size-depo'>Fecha de fechaRegistro</th>
+              <th className='td-th-size-depo'>Fecha de registro</th>
               <th className='td-th-size-depo text-center'>Acciones</th>
             </tr>
           </thead>
@@ -122,15 +121,15 @@ const RolComponent = () => {
                 <tr key={rol.id}>
                   <td className='td-th-size-depo'>{rol.codigo}</td>
                   <td className='td-th-size-depo'>{rol.descripcion}</td>
-                  <td className='td-th-size-depo'>{rol.fechaRegistro}</td>
+                  <td className='td-th-size-depo'>{(new Date(rol.fechaRegistro)).toLocaleString()}</td>
                   <td className='text-center'>
-                        <a className='p-4 icon-link-depo' onClick={() => irRolEdit(rol.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
-                        <a className='icon-link-depo' onClick={() => handleRol(rol.id)}>
-                          <i className="bi bi-x-circle-fill"></i>
-                        </a>
-                      </td>
+                    <a className='p-4 icon-link-depo' onClick={() => irRolEdit(rol.id)}>
+                      <i className="bi bi-pencil-fill"></i>
+                    </a>
+                    <a className='icon-link-depo' onClick={() => handleRol(rol.id)}>
+                      <i className="bi bi-x-circle-fill"></i>
+                    </a>
+                  </td>
                 </tr>
               )
             }

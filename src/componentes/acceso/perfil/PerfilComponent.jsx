@@ -80,11 +80,11 @@ const PerfilComponent = () => {
       console.error(error)
     })
   }
-  
-  
+
+
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -107,35 +107,35 @@ const PerfilComponent = () => {
         </div>
         <br />
         <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-            <tr>
-              <th className='td-th-size-depo'>Codigo</th>
-              <th className='td-th-size-depo'>Descripcion</th>
-              <th className='td-th-size-depo'>Fecha Registro</th>
-              <th className='td-th-size-depo text-center'>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              perfiles.map(perfil => 
-                <tr key={perfil.id}>
-                  <td className='td-th-size-depo'>{perfil.codigo}</td>
-                  <td className='td-th-size-depo'>{perfil.descripcion}</td>
-                  <td className='td-th-size-depo'>{perfil.fechaRegistro}</td>
-                  <td className='text-center'>
-                        <a className='p-4 icon-link-depo' onClick={() => irPerfilEdit(perfil.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
-                        <a className='icon-link-depo' onClick={() => handlePerfil(perfil.id)}>
-                          <i className="bi bi-x-circle-fill"></i>
-                        </a>
-                      </td>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
+          <table className="table mb-0">
+            <thead className="thead-light">
+              <tr>
+                <th className='td-th-size-depo'>Codigo</th>
+                <th className='td-th-size-depo'>Descripcion</th>
+                <th className='td-th-size-depo'>Fecha de registro</th>
+                <th className='td-th-size-depo text-center'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                perfiles.map(perfil =>
+                  <tr key={perfil.id}>
+                    <td className='td-th-size-depo'>{perfil.codigo}</td>
+                    <td className='td-th-size-depo'>{perfil.descripcion}</td>
+                    <td className='td-th-size-depo'>{(new Date(perfil.fechaRegistro)).toLocaleString()}</td>
+                    <td className='text-center'>
+                      <a className='p-4 icon-link-depo' onClick={() => irPerfilEdit(perfil.id)}>
+                        <i className="bi bi-pencil-fill"></i>
+                      </a>
+                      <a className='icon-link-depo' onClick={() => handlePerfil(perfil.id)}>
+                        <i className="bi bi-x-circle-fill"></i>
+                      </a>
+                    </td>
+                  </tr>
+                )
+              }
+            </tbody>
+          </table>
         </div>
       </div>
     </>

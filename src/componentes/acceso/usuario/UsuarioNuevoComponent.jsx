@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioSave } from '../../../service/FacturaService';
+import { perfilActivo, usuarioSave } from '../../../service/FacturaService';
 
 const UsuarioNuevoComponent = () => {
 
@@ -10,6 +10,8 @@ const UsuarioNuevoComponent = () => {
   const [apellidoPat, setApellidPat] = useState('')
   const [apellidoMat, setApellidMat] = useState('')
   const [documento, setDocumento] = useState('')
+  const [perfiles, setPerfiles] = useState([])
+  const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([])
 
   const navigator = useNavigate();
 
@@ -28,7 +30,15 @@ const UsuarioNuevoComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
+
+  useEffect(() => {
+    perfilActivo().then((response) => {
+      setPerfiles(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, [])
 
   const saveUsuario = (e) => {
     e.preventDefault();
@@ -38,6 +48,7 @@ const UsuarioNuevoComponent = () => {
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.documento = documento;
+      data.perfiles = perfilesSeleccionados;
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
@@ -97,6 +108,15 @@ const UsuarioNuevoComponent = () => {
   }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  const handleChange = (event) => {
+    const {value, checked} = event.target;
+    if(checked){
+      setPerfilesSeleccionados([...perfilesSeleccionados, value])
+    }else{
+      setPerfilesSeleccionados(perfilesSeleccionados.filter(p => p !== value))
+    }
+  }
 
   return (
     <>
@@ -169,6 +189,22 @@ const UsuarioNuevoComponent = () => {
                       className={`form-control-depo ${errors.msgApellidoMat ? ' is-invalid' : ''}`}
                       onChange={(e) => { setApellidMat(e.target.value) }} />
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Roles:</label>
+                  <div className="col-sm-9">
+                  {
+                  perfiles.map(perfil =>
+                    <div key={perfil.id} className="form-check">
+                      <input className="form-check-input" type="checkbox" value={perfil.id} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
+                      <label className="form-check-label" >
+                        {perfil.codigo}
+                      </label>
+                    </div>
+                    )
+                  }
                   </div>
                 </div>
                

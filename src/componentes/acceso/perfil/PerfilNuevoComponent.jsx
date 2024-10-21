@@ -1,20 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import HeaderComponent from '../../HeaderComponent';
-import { perfilSave } from '../../../service/FacturaService';
+import { perfilSave, rolActivo } from '../../../service/FacturaService';
 
 const PerfilNuevoComponent = () => {
 
   const [codigo, setCodigo] = useState('')
   const [descripcion, setDescripcion] = useState('')
-  
-  const navigator = useNavigate();
+  const [roles, setRoles] = useState([])
+  const [rolesSeleccionados, setRolesSeleccionados] = useState([])
 
   const [errors, setErrors] = useState({
     msgCodigo: '',
     msgDescripcion: '',
+    msgRoles: '',
   })
+
+  const navigator = useNavigate();
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -26,6 +29,23 @@ const PerfilNuevoComponent = () => {
     theme: "colored",
   });
 
+  useEffect(() => {
+      rolActivo().then((response) => {
+        setRoles(response.data);
+      }).catch(error => {
+        console.log(error);
+      })
+  }, [])
+
+  const handleChange = (event) => {
+    const {value, checked} = event.target;
+    if(checked){
+      setRolesSeleccionados([...rolesSeleccionados, value])
+    }else{
+      setRolesSeleccionados(rolesSeleccionados.filter(p => p !== value))
+    }
+  }
+
   const savePerfil = (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -35,6 +55,7 @@ const PerfilNuevoComponent = () => {
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
+      data.roles = rolesSeleccionados;
       perfilSave(data).catch(error => {
         console.error(error)
       })
@@ -52,6 +73,7 @@ const PerfilNuevoComponent = () => {
   }
 
   const validateForm = () => {
+    debugger
     let valid = true;
     const errorCopy = { ...errors }
 
@@ -69,10 +91,19 @@ const PerfilNuevoComponent = () => {
       valid = false;
     }
 
+    if (rolesSeleccionados.length > 0) {
+      errorCopy.msgRoles = '';
+    } else {
+      errorCopy.msgRoles = 'Tiene que ingresar por lo menos un rol';
+      valid = false;
+    }
+
     setErrors(errorCopy);
 
     return valid;
   }
+
+  console.log()
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -114,6 +145,7 @@ const PerfilNuevoComponent = () => {
                       className={`form-control-depo ${errors.msgCodigo ? ' is-invalid' : ''}`}
                       onChange={(e) => { setCodigo(e.target.value) }} />
                     {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
+                    
                   </div>
                 </div>
                 <div className="mb-3 row">
@@ -127,6 +159,22 @@ const PerfilNuevoComponent = () => {
                     {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
                   </div>
                 </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Roles:</label>
+                  <div className="col-sm-9">
+                  {
+                  roles.map(rol =>
+                    <div key={rol.id} className="form-check">
+                      <input className="form-check-input" type="checkbox" value={rol.id} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
+                      <label className="form-check-label" >
+                        {rol.codigo}
+                      </label>
+                    </div>
+                    )
+                  }
+                  {errors.msgRoles && <div style={{"color":"red"}} className='feedback'>{errors.msgRoles}</div>}
+                  </div>
+                </div>                
                 
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={savePerfil}>Guardar</button>
                 &nbsp;&nbsp;

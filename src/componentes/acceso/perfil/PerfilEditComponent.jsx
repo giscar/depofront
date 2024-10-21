@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../../HeaderComponent';
-import { perfilEdit, perfilForId, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
+import { perfilEdit, perfilForId, rolActivo} from '../../../service/FacturaService';
 
 const PerfilEditComponent = () => {
 
   const [codigo, setCodigo] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [perfil, setPerfil] = useState([])
+  const [roles, setRoles] = useState([])
+  const [rolesSeleccionados, setRolesSeleccionados] = useState([])
+
   const [errors, setErrors] = useState({
     msgCodigo: '',
     msgDescripcion: ''
@@ -57,14 +60,34 @@ const PerfilEditComponent = () => {
     if (id) {
       perfilForId(id).then((response) => {
         setPerfil(response.data);
-        setTimeout(() => {
-          cargarPerfil(response.data)
-        }, 1000);
+        cargarPerfil(response.data)
+        cargarRoles(response.data.roles)
       }).catch(error => {
         console.log(error);
       })
     }
   }, [id])
+
+  const cargarRoles = (rolesEdit) => {
+    setRolesSeleccionados(rolesEdit) 
+    rolActivo().then((response) => {
+      response.data.map(data =>{
+        console.log(data)
+        console.log(rolesEdit);
+        rolesEdit.map(p => {
+          console.log(p)
+          if(data.id == p){
+            data.check = true;
+          }
+        })
+        setRoles(response.data);
+      })
+      
+
+    }).catch(error => {
+      console.log(error);
+    })
+  }
 
   const cargarPerfil = (data) => {
     setCodigo(data.codigo);
@@ -79,6 +102,7 @@ const PerfilEditComponent = () => {
       data.codigo = codigo.toUpperCase();
       data.descripcion = descripcion.toUpperCase();
       data.indInactivo = "0";
+      data.roles = rolesSeleccionados;
       data.usuarioRegistro = initialLogin.usuario;
       perfilEdit(data).catch(error => {
         console.error(error)
@@ -88,6 +112,23 @@ const PerfilEditComponent = () => {
         navigator("/perfiles");
       }, 1000);
     }
+  }
+
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    const {value, checked} = event.target;
+    if(checked){
+      setRolesSeleccionados([...rolesSeleccionados, value])
+    }else{
+      setRolesSeleccionados(rolesSeleccionados.filter(p => p !== value))
+    }
+    perfil.roles.map(p => {
+      roles.map(q => {
+        if(q.id == value){
+          q.check = checked;
+        }
+      })
+    })
   }
 
   return (
@@ -136,13 +177,29 @@ const PerfilEditComponent = () => {
                 <div className="mb-3 row">
                   <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Descripcion:</label>
                   <div className="col-sm-9">
-                    <input type="text"
+                    <textarea type="text"
                       placeholder="Descripcion del perfil"
                       value={descripcion}
                       autoComplete='off'
                       className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
-                      onChange={(e) => { setDescripcion(e.target.value) }} />
+                      onChange={(e) => { setDescripcion(e.target.value) }} ></textarea>
                     {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
+                  </div>
+                </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Roles:</label>
+                  <div className="col-sm-9">
+                  {
+                  roles.map(rol =>
+                    <div key={rol.id} className="form-check">
+                      <input className="form-check-input" type="checkbox" checked={rol.check} value={rol.id} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
+                      <label className="form-check-label" >
+                        {rol.codigo}
+                      </label>
+                    </div>
+                    )
+                  }
                   </div>
                 </div>
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editPerfil}>Editar</button>

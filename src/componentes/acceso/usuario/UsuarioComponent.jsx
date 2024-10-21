@@ -80,11 +80,10 @@ const UsuarioComponent = () => {
       console.error(error)
     })
   }
-  
-  
+
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -107,35 +106,35 @@ const UsuarioComponent = () => {
         </div>
         <br />
         <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-            <tr>
-              <th className='td-th-size-depo'>Codigo/Documento</th>
-              <th className='td-th-size-depo'>Nombre completo</th>
-              <th className='td-th-size-depo'>Fecha Registro</th>
-              <th className='td-th-size-depo text-center'>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              usuarios.map(usuario => 
-                <tr key={usuario.id}>
-                  <td className='td-th-size-depo'>{usuario.documento}</td>
-                  <td className='td-th-size-depo'>{usuario.nombre+" "+usuario.apellidoPat+" "+usuario.apellidoMat}</td>
-                  <td className='td-th-size-depo'>{usuario.fechaRegistro}</td>
-                  <td className='text-center'>
-                        <a className='p-4 icon-link-depo' onClick={() => irUsuarioEdit(usuario.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
-                        <a className='icon-link-depo' onClick={() => handleUsuario(usuario.id)}>
-                          <i className="bi bi-x-circle-fill"></i>
-                        </a>
-                      </td>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
+          <table className="table mb-0">
+            <thead className="thead-light">
+              <tr>
+                <th className='td-th-size-depo'>Codigo/Documento</th>
+                <th className='td-th-size-depo'>Nombre completo</th>
+                <th className='td-th-size-depo'>Fecha de registro</th>
+                <th className='td-th-size-depo text-center'>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                usuarios.map(usuario =>
+                  <tr key={usuario.id}>
+                    <td className='td-th-size-depo'>{usuario.documento}</td>
+                    <td className='td-th-size-depo'>{usuario.nombre + " " + usuario.apellidoPat + " " + usuario.apellidoMat}</td>
+                    <td className='td-th-size-depo'>{usuario.fechaRegistro}</td>
+                    <td className='text-center'>
+                      <a className='p-4 icon-link-depo' onClick={() => irUsuarioEdit(usuario.id)}>
+                        <i className="bi bi-pencil-fill"></i>
+                      </a>
+                      <a className='icon-link-depo' onClick={() => handleUsuario(usuario.id)}>
+                        <i className="bi bi-x-circle-fill"></i>
+                      </a>
+                    </td>
+                  </tr>
+                )
+              }
+            </tbody>
+          </table>
         </div>
       </div>
     </>
