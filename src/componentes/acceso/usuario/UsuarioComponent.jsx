@@ -121,7 +121,7 @@ const UsuarioComponent = () => {
                   <tr key={usuario.id}>
                     <td className='td-th-size-depo'>{usuario.documento}</td>
                     <td className='td-th-size-depo'>{usuario.nombre + " " + usuario.apellidoPat + " " + usuario.apellidoMat}</td>
-                    <td className='td-th-size-depo'>{usuario.fechaRegistro}</td>
+                    <td className='td-th-size-depo'>{(new Date(usuario.fechaRegistro)).toLocaleString()}</td>
                     <td className='text-center'>
                       <a className='p-4 icon-link-depo' onClick={() => irUsuarioEdit(usuario.id)}>
                         <i className="bi bi-pencil-fill"></i>

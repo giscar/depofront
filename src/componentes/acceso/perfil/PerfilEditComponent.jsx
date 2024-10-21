@@ -14,7 +14,8 @@ const PerfilEditComponent = () => {
 
   const [errors, setErrors] = useState({
     msgCodigo: '',
-    msgDescripcion: ''
+    msgDescripcion: '',
+    msgRoles: '',
   })
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -34,6 +35,13 @@ const PerfilEditComponent = () => {
       errorCopy.msgDescripcion = '';
     } else {
       errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del perfil';
+      valid = false;
+    }
+
+    if (rolesSeleccionados.length > 0) {
+      errorCopy.msgRoles = '';
+    } else {
+      errorCopy.msgRoles = 'Tiene que ingresar por lo menos un rol';
       valid = false;
     }
 
@@ -72,18 +80,13 @@ const PerfilEditComponent = () => {
     setRolesSeleccionados(rolesEdit) 
     rolActivo().then((response) => {
       response.data.map(data =>{
-        console.log(data)
-        console.log(rolesEdit);
         rolesEdit.map(p => {
-          console.log(p)
           if(data.id == p){
             data.check = true;
           }
         })
         setRoles(response.data);
       })
-      
-
     }).catch(error => {
       console.log(error);
     })
@@ -200,6 +203,7 @@ const PerfilEditComponent = () => {
                     </div>
                     )
                   }
+                  {errors.msgRoles && <div style={{"color":"red"}} className='feedback'>{errors.msgRoles}</div>}
                   </div>
                 </div>
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editPerfil}>Editar</button>

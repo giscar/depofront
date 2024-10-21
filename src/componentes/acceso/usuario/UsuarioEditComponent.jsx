@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioEdit, usuarioForId } from '../../../service/FacturaService';
+import { perfilActivo, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
 
 const UsuarioEditComponent = () => {
 
@@ -11,11 +11,15 @@ const UsuarioEditComponent = () => {
   const [apellidoMat, setApellidMat] = useState('')
   const [documento, setDocumento] = useState('')
   const [usuario, setUsuario] = useState([])
+  const [perfil, setPerfil] = useState([])
+  const [perfiles, setPerfiles] = useState([])
+  const [perfilesSeleccionados, setPerfilesSeleccionados] = useState([])
   const [errors, setErrors] = useState({
     msgNombre: '',
     msgApellidoPat: '',
     msgApellidoMat: '',
     msgDocumento: '',
+    msgPerfiles: '',
   })
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -52,6 +56,13 @@ const UsuarioEditComponent = () => {
       valid = false;
     }
 
+    if (perfilesSeleccionados.length > 0) {
+      errorCopy.msgPerfiles = '';
+    } else {
+      errorCopy.msgPerfiles = 'Tiene que ingresar por lo menos un perfil';
+      valid = false;
+    }
+
     setErrors(errorCopy);
 
     return valid;
@@ -75,6 +86,7 @@ const UsuarioEditComponent = () => {
     if (id) {
       usuarioForId(id).then((response) => {
         setUsuario(response.data);
+        cargarPerfiles(response.data.perfiles)
         setTimeout(() => {
           cargarUsuario(response.data)
         }, 1000);
@@ -84,6 +96,22 @@ const UsuarioEditComponent = () => {
     }
   }, [id])
 
+  const cargarPerfiles = (perfilEdit) => {
+    setPerfilesSeleccionados(perfilEdit)
+    perfilActivo().then((response) => {
+      response.data.map(data => {
+        perfilEdit.map(p => {
+          if (data.id == p) {
+            data.check = true;
+          }
+        })
+        setPerfiles(response.data);
+      })
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
   const cargarUsuario = (data) => {
     setNombre(data.nombre);
     setApellidPat(data.apellidoPat);
@@ -91,7 +119,7 @@ const UsuarioEditComponent = () => {
     setDocumento(data.documento);
   }
 
-  const editUsuario = (operador) => {
+  const editUsuario = () => {
     if (validateForm()) {
       const data = {}
       data.id = id;
@@ -101,6 +129,7 @@ const UsuarioEditComponent = () => {
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.indInactivo = "0";
+      data.perfiles = perfilesSeleccionados;
       data.usuarioRegistro = initialLogin.usuario;
       usuarioEdit(data).catch(error => {
         console.error(error)
@@ -112,9 +141,26 @@ const UsuarioEditComponent = () => {
     }
   }
 
+  const handleChange = (event) => {
+    console.log(event.target.value)
+    const { value, checked } = event.target;
+    if (checked) {
+      setPerfilesSeleccionados([...perfilesSeleccionados, value])
+    } else {
+      setPerfilesSeleccionados(perfilesSeleccionados.filter(p => p !== value))
+    }
+    usuario.perfiles.map(p => {
+      perfiles.map(q => {
+        if (q.id == value) {
+          q.check = checked;
+        }
+      })
+    })
+  }
+
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+      {initialLogin.usuario && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -137,12 +183,12 @@ const UsuarioEditComponent = () => {
               <div className="card-header">
                 <h4 className="card-title">Datos del Usuario</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
-                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
+                <p className="text-muted mb-0"><span style={{ color: 'red' }}>(*)</span> :Datos obligatorias que se debe ingresar</p>
               </div>
               <div className="card-body">
 
-              <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Documento:</label>
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Documento:</label>
                   <div className="col-sm-9">
                     <input type="number"
                       placeholder="Documento"
@@ -156,7 +202,7 @@ const UsuarioEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Nombres:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Nombre del operador"
@@ -169,7 +215,7 @@ const UsuarioEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Paterno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Apellido Paterno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido paterno"
@@ -182,7 +228,7 @@ const UsuarioEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Apellido Materno:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Apellido Materno:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Apellido materno"
@@ -193,6 +239,24 @@ const UsuarioEditComponent = () => {
                     {errors.msgApellidoMat && <div className='invalid-feedback'>{errors.msgApellidoMat}</div>}
                   </div>
                 </div>
+
+                <div className="mb-3 row">
+                  <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Perfiles:</label>
+                  <div className="col-sm-9">
+                    {
+                      perfiles.map(perfil =>
+                        <div key={perfil.id} className="form-check">
+                          <input className="form-check-input" type="checkbox" checked={perfil.check} value={perfil.id} onChange={handleChange} style={{ backgroundColor: 'orange' }} />
+                          <label className="form-check-label" >
+                            {perfil.codigo}
+                          </label>
+                        </div>
+                      )
+                    }
+                    {errors.msgPerfiles && <div style={{ "color": "red" }} className='feedback'>{errors.msgPerfiles}</div>}
+                  </div>
+                </div>
+
                 <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editUsuario}>Editar</button>
               </div>
             </div>
