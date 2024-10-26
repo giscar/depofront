@@ -20,6 +20,7 @@ const UsuarioNuevoComponent = () => {
     msgApellidoPat: '',
     msgApellidoMat: '',
     msgDocumento: '',
+    msgPerfiles: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -99,6 +100,13 @@ const UsuarioNuevoComponent = () => {
       errorCopy.msgDocumento = '';
     } else {
       errorCopy.msgDocumento = 'Tiene que ingresar el numero de documento del usuario';
+      valid = false;
+    }
+
+    if (perfilesSeleccionados.length > 0) {
+      errorCopy.msgPerfiles = '';
+    } else {
+      errorCopy.msgPerfiles = 'Tiene que ingresar por lo menos un perfil';
       valid = false;
     }
 
@@ -205,6 +213,7 @@ const UsuarioNuevoComponent = () => {
                     </div>
                     )
                   }
+                  {errors.msgPerfiles && <div style={{ "color": "red" }} className='feedback'>{errors.msgPerfiles}</div>}
                   </div>
                 </div>
                

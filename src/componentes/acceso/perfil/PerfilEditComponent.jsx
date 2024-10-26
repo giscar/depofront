@@ -77,11 +77,12 @@ const PerfilEditComponent = () => {
   }, [id])
 
   const cargarRoles = (rolesEdit) => {
+    debugger
     setRolesSeleccionados(rolesEdit) 
     rolActivo().then((response) => {
       response.data.map(data =>{
         rolesEdit.map(p => {
-          if(data.id == p){
+          if(data.id == p.id){
             data.check = true;
           }
         })
@@ -99,14 +100,16 @@ const PerfilEditComponent = () => {
 
   const editPerfil = () => {
     if (validateForm()) {
+      debugger
       const data = {}
       data.id = id;
-      data.estado = "1"
       data.codigo = codigo.toUpperCase();
       data.descripcion = descripcion.toUpperCase();
+      data.estado = "1";
       data.indInactivo = "0";
-      data.roles = rolesSeleccionados;
       data.usuarioRegistro = initialLogin.usuario;
+      data.roles = rolesSeleccionados;
+      
       perfilEdit(data).catch(error => {
         console.error(error)
       })
@@ -118,13 +121,17 @@ const PerfilEditComponent = () => {
   }
 
   const handleChange = (event) => {
+    debugger
     console.log(event.target.value)
     const {value, checked} = event.target;
     if(checked){
-      setRolesSeleccionados([...rolesSeleccionados, value])
+        let rol = {}
+        rol.id = value;
+      setRolesSeleccionados([...rolesSeleccionados, rol])
     }else{
-      setRolesSeleccionados(rolesSeleccionados.filter(p => p !== value))
+      setRolesSeleccionados(rolesSeleccionados.filter(p => p.id !== value))
     }
+    console.log(rolesSeleccionados)
     perfil.roles.map(p => {
       roles.map(q => {
         if(q.id == value){

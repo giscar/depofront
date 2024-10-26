@@ -49,13 +49,19 @@ const PerfilNuevoComponent = () => {
   const savePerfil = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      debugger
       const data = {}
       data.codigo = codigo.toUpperCase();
       data.descripcion = descripcion.toUpperCase();
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
-      data.roles = rolesSeleccionados;
+      data.roles = [];
+      rolesSeleccionados.map(p => {
+        let rol = {}
+        rol.id = p;
+        data.roles.push(rol)
+      })
       perfilSave(data).catch(error => {
         console.error(error)
       })
@@ -73,7 +79,6 @@ const PerfilNuevoComponent = () => {
   }
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
 
@@ -145,7 +150,6 @@ const PerfilNuevoComponent = () => {
                       className={`form-control-depo ${errors.msgCodigo ? ' is-invalid' : ''}`}
                       onChange={(e) => { setCodigo(e.target.value) }} />
                     {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
-                    
                   </div>
                 </div>
                 <div className="mb-3 row">

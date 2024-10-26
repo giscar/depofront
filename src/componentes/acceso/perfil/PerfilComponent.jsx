@@ -113,6 +113,7 @@ const PerfilComponent = () => {
                 <th className='td-th-size-depo'>Codigo</th>
                 <th className='td-th-size-depo'>Descripcion</th>
                 <th className='td-th-size-depo'>Fecha de registro</th>
+                <th className='td-th-size-depo text-center'>Roles</th>
                 <th className='td-th-size-depo text-center'>Acciones</th>
               </tr>
             </thead>
@@ -123,6 +124,12 @@ const PerfilComponent = () => {
                     <td className='td-th-size-depo'>{perfil.codigo}</td>
                     <td className='td-th-size-depo'>{perfil.descripcion}</td>
                     <td className='td-th-size-depo'>{(new Date(perfil.fechaRegistro)).toLocaleString()}</td>
+                    <td className='td-th-size-depo text-start'>
+                      <ul>
+                      {perfil.roles.map(p => <li>{p.codigo}</li>)}
+                      </ul>
+                    </td>
+
                     <td className='text-center'>
                       <a className='p-4 icon-link-depo' onClick={() => irPerfilEdit(perfil.id)}>
                         <i className="bi bi-pencil-fill"></i>
