@@ -7,7 +7,6 @@ import { usuarioActivo, usuarioForId, usuarioInactiva } from '../../../service/F
 
 const UsuarioComponent = () => {
 
-  const [usuario, setUsuario] = useState([]);
   const [usuarios, setUsuarios] = useState([])
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -34,7 +33,7 @@ const UsuarioComponent = () => {
 
   useEffect(() => {
     buscarUsuario();
-  }, [usuario])
+  }, [])
 
   const handleUsuario = (id) => {
     Swal.fire({
@@ -75,6 +74,7 @@ const UsuarioComponent = () => {
 
   const buscarUsuario = () => {
     usuarioActivo().then((response) => {
+      debugger
       setUsuarios(response.data);
     }).catch(error => {
       console.error(error)
@@ -112,6 +112,7 @@ const UsuarioComponent = () => {
                 <th className='td-th-size-depo'>Codigo/Documento</th>
                 <th className='td-th-size-depo'>Nombre completo</th>
                 <th className='td-th-size-depo'>Fecha de registro</th>
+                <th className='td-th-size-depo text-center'>Perfiles</th>
                 <th className='td-th-size-depo text-center'>Acciones</th>
               </tr>
             </thead>
@@ -122,6 +123,11 @@ const UsuarioComponent = () => {
                     <td className='td-th-size-depo'>{usuario.documento}</td>
                     <td className='td-th-size-depo'>{usuario.nombre + " " + usuario.apellidoPat + " " + usuario.apellidoMat}</td>
                     <td className='td-th-size-depo'>{(new Date(usuario.fechaRegistro)).toLocaleString()}</td>
+                    <td className='td-th-size-depo text-start'>
+                      <ul>
+                      {usuario.perfiles.map(p => <li>{p.codigo}</li>)}
+                      </ul>
+                    </td>
                     <td className='text-center'>
                       <a className='p-4 icon-link-depo' onClick={() => irUsuarioEdit(usuario.id)}>
                         <i className="bi bi-pencil-fill"></i>

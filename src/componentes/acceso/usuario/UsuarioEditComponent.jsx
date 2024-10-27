@@ -86,10 +86,8 @@ const UsuarioEditComponent = () => {
     if (id) {
       usuarioForId(id).then((response) => {
         setUsuario(response.data);
-        cargarPerfiles(response.data.perfiles)
-        setTimeout(() => {
-          cargarUsuario(response.data)
-        }, 1000);
+        cargarUsuario(response.data);
+        cargarPerfiles(response.data.perfiles);
       }).catch(error => {
         console.log(error);
       })
@@ -101,7 +99,7 @@ const UsuarioEditComponent = () => {
     perfilActivo().then((response) => {
       response.data.map(data => {
         perfilEdit.map(p => {
-          if (data.id == p) {
+          if (data.id == p.id) {
             data.check = true;
           }
         })
@@ -121,6 +119,7 @@ const UsuarioEditComponent = () => {
 
   const editUsuario = () => {
     if (validateForm()) {
+      debugger
       const data = {}
       data.id = id;
       data.estado = "1"
@@ -142,12 +141,15 @@ const UsuarioEditComponent = () => {
   }
 
   const handleChange = (event) => {
+    debugger
     console.log(event.target.value)
     const { value, checked } = event.target;
     if (checked) {
-      setPerfilesSeleccionados([...perfilesSeleccionados, value])
+      let perfil = {}
+      perfil.id = value;
+      setPerfilesSeleccionados([...perfilesSeleccionados, perfil])
     } else {
-      setPerfilesSeleccionados(perfilesSeleccionados.filter(p => p !== value))
+      setPerfilesSeleccionados(perfilesSeleccionados.filter(p => p.id !== value))
     }
     usuario.perfiles.map(p => {
       perfiles.map(q => {

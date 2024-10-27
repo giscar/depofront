@@ -49,7 +49,12 @@ const UsuarioNuevoComponent = () => {
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.documento = documento;
-      data.perfiles = perfilesSeleccionados;
+      data.perfiles = [];
+      perfilesSeleccionados.map(p => {
+        let perfil = {}
+        perfil.id = p;
+        data.perfiles.push(perfil)
+      })
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;

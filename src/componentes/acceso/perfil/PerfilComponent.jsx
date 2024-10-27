@@ -7,7 +7,6 @@ import { perfilActivo, perfilForId, perfilInactiva, usuarioActivo, usuarioEdit, 
 
 const PerfilComponent = () => {
 
-  const [perfil, setPerfil] = useState([]);
   const [perfiles, setPerfiles] = useState([])
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));

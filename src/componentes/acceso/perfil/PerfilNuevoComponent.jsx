@@ -108,8 +108,6 @@ const PerfilNuevoComponent = () => {
     return valid;
   }
 
-  console.log()
-
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (

@@ -121,7 +121,6 @@ const PerfilEditComponent = () => {
   }
 
   const handleChange = (event) => {
-    debugger
     console.log(event.target.value)
     const {value, checked} = event.target;
     if(checked){
@@ -131,7 +130,6 @@ const PerfilEditComponent = () => {
     }else{
       setRolesSeleccionados(rolesSeleccionados.filter(p => p.id !== value))
     }
-    console.log(rolesSeleccionados)
     perfil.roles.map(p => {
       roles.map(q => {
         if(q.id == value){
