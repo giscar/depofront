@@ -109,6 +109,8 @@ export const usuarioForId = (id) => axios.get(REST_API_BASE_URL_USUARIO+"?id="+i
 
 export const usuarioForDocumento = (documento) => axios.get(REST_API_BASE_URL_USUARIO+"/documento?documento="+documento);
 
+export const usuarioForRoles = (documento, passwd) => axios.get(REST_API_BASE_URL_USUARIO+"/roles?documento="+documento+"&passwd="+passwd);
+
 export const usuarioForAll = () => axios.get(REST_API_BASE_URL_USUARIO+"/all");
 
 export const usuarioActivo = () => axios.get(REST_API_BASE_URL_USUARIO+"/estado");

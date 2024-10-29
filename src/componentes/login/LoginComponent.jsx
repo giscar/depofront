@@ -1,19 +1,30 @@
 import React, { useState } from "react";
 import "./LoginComponent.css";
 import { useNavigate } from "react-router-dom";
-import { operadorForDocumento } from "../../service/FacturaService";
+import { operadorForDocumento, usuarioForRoles } from "../../service/FacturaService";
 
 const LoginComponent = ({setUser}) => {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
+    const [usuario, setUsuario] = useState([]);
 
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
     sessionStorage.setItem('user', {}) 
 
+
+    
+
     const handleSubmit = (event) => {
         event.preventDefault();
+        usuarioForRoles(inputUsername, inputPassword).then((response) => {
+            debugger
+            setUsuario(response.data)
+            console.log(response.data)
+          }).catch(error => {
+            console.log(error);
+          })
         setLoading(true);
         if (inputUsername !== "admin" || inputPassword !== "admin") {
             setShow(true);

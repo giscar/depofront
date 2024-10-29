@@ -58,18 +58,26 @@ const PerfilNuevoComponent = () => {
       data.usuarioRegistro = initialLogin.usuario;
       data.roles = [];
       rolesSeleccionados.map(p => {
-        let rol = {}
-        rol.id = p;
-        data.roles.push(rol)
+        roles.map(q => {
+          if(q.id == p){
+            data.roles.push(q)
+          }
+        })
+        //let rol = {}
+        //rol.id = p;
+        
       })
-      perfilSave(data).catch(error => {
-        console.error(error)
-      })
-      limpiar()
-      notify()
       setTimeout(() => {
-        navigator("/perfiles");
+        perfilSave(data).catch(error => {
+          console.error(error)
+        })
+        limpiar()
+        notify()
+        setTimeout(() => {
+          navigator("/perfiles");
+        }, 1000);
       }, 1000);
+      
     }
   }
 
