@@ -63,9 +63,6 @@ const PerfilNuevoComponent = () => {
             data.roles.push(q)
           }
         })
-        //let rol = {}
-        //rol.id = p;
-        
       })
       setTimeout(() => {
         perfilSave(data).catch(error => {

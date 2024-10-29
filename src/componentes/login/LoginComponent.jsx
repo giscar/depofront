@@ -17,16 +17,21 @@ const LoginComponent = ({setUser}) => {
     
 
     const handleSubmit = (event) => {
+        debugger
         event.preventDefault();
         usuarioForRoles(inputUsername, inputPassword).then((response) => {
-            debugger
-            setUsuario(response.data)
-            console.log(response.data)
+            if(response.data){
+                setUsuario(response.data)
+                console.log(response.data)
+                sessionStorage.setItem('user', JSON.stringify(response.data)) 
+                console.log(sessionStorage.getItem('user'))
+                acceder()
+            }
           }).catch(error => {
             console.log(error);
           })
-        setLoading(true);
-        if (inputUsername !== "admin" || inputPassword !== "admin") {
+        //setLoading(true);
+        /*if (inputUsername !== "admin" || inputPassword !== "admin") {
             setShow(true);
         }
         if (inputUsername === "46931245" && inputPassword === "46931245") {
@@ -76,16 +81,13 @@ const LoginComponent = ({setUser}) => {
             
         }
 
-        setLoading(false);
+        setLoading(false);*/
     };
 
     const navigator = useNavigate();
 
-    const acceder = (rol) => {
-        if(rol == "adm")
-            navigator("/servicios")
-        if(rol == "ope")
-            navigator("/servicioOperador")
+    const acceder = () => {
+        navigator("/inicio")
     }
 
     return (

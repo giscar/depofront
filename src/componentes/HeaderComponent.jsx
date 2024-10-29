@@ -51,7 +51,7 @@ const HeaderComponent = () => {
   }
 
   const cerrarSession = () => {
-    sessionStorage.getItem('user');
+    sessionStorage.removeItem('user');
     navigator("/")
   }
 

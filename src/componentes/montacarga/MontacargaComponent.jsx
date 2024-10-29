@@ -7,6 +7,8 @@ import Swal from 'sweetalert2'
 
 const MontacargaComponent = () => {
 
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
   const navigator = useNavigate();
 
   const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
@@ -78,9 +80,6 @@ const MontacargaComponent = () => {
   useEffect(() => {
     buscarMontacarga();
   }, [montacarga])
-
-
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
   return (
     <>

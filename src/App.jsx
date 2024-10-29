@@ -30,6 +30,7 @@ import PerfilEditComponent from './componentes/acceso/perfil/PerfilEditComponent
 import RolNuevoComponent from './componentes/acceso/rol/RolNuevoComponent'
 import RolEditComponent from './componentes/acceso/rol/RolEditComponent'
 import RolComponent from './componentes/acceso/rol/RolComponent'
+import InicioComponent from './componentes/login/InicioComponent'
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route path='/' element={<LoginComponent/>}></Route>
+            <Route path='/inicio' element={<InicioComponent />}></Route>
             <Route path='/facturas' element={<FacturaComponent />}></Route>
             <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/facturaRegistro/:ids' element={<FacturaRegistroComponent />}></Route>
