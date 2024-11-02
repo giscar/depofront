@@ -93,7 +93,7 @@ const RolEditComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+    {initialLogin.documento && <HeaderComponent />}
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
