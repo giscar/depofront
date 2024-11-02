@@ -181,7 +181,6 @@ const UsuarioComponent = () => {
           </div>
         </div>
       }
-
     </>
   )
 }

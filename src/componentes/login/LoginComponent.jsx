@@ -3,85 +3,26 @@ import "./LoginComponent.css";
 import { useNavigate } from "react-router-dom";
 import { operadorForDocumento, usuarioForRoles } from "../../service/FacturaService";
 
-const LoginComponent = ({setUser}) => {
+const LoginComponent = ({ setUser }) => {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
     const [usuario, setUsuario] = useState([]);
 
-    const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-    sessionStorage.setItem('user', {}) 
-
-
-    
+    sessionStorage.setItem('user', {})
 
     const handleSubmit = (event) => {
-        debugger
         event.preventDefault();
         usuarioForRoles(inputUsername, inputPassword).then((response) => {
-            if(response.data){
+            if (response.data) {
                 setUsuario(response.data)
                 console.log(response.data)
-                sessionStorage.setItem('user', JSON.stringify(response.data)) 
+                sessionStorage.setItem('user', JSON.stringify(response.data))
                 console.log(sessionStorage.getItem('user'))
                 acceder()
             }
-          }).catch(error => {
+        }).catch(error => {
             console.log(error);
-          })
-        //setLoading(true);
-        /*if (inputUsername !== "admin" || inputPassword !== "admin") {
-            setShow(true);
-        }
-        if (inputUsername === "46931245" && inputPassword === "46931245") {
-            const acceso = {}
-            acceso.usuario = inputUsername;
-            acceso.pass = inputPassword;
-            acceso.nombre = "Perez Arellano Geraldine"
-            acceso.rol = "adm"
-            sessionStorage.setItem('user', JSON.stringify(acceso))  
-            acceder(acceso.rol);
-        }
-
-        if (inputUsername === "75880169" && inputPassword === "75880169") {
-            const acceso = {}
-            acceso.usuario = inputUsername;
-            acceso.pass = inputPassword;
-            acceso.nombre = "Salazar Guerrero Christopher"
-            acceso.rol = "adm"
-            sessionStorage.setItem('user', JSON.stringify(acceso))  
-            acceder(acceso.rol);
-        }
-
-        if (inputUsername === "47276371" && inputPassword === "47276371") {
-            const acceso = {}
-            acceso.usuario = inputUsername;
-            acceso.pass = inputPassword;
-            acceso.nombre = "Salvador Pastor Andre"
-            acceso.rol = "adm"
-            sessionStorage.setItem('user', JSON.stringify(acceso))  
-            acceder(acceso.rol);
-        }
-
-        if (inputUsername === "46923787" && inputPassword === "46923787") {
-            debugger
-            const acceso = {}
-            acceso.usuario = inputUsername;
-            acceso.pass = inputPassword;
-            acceso.nombre = "Allauca Ayala Cesar"
-            acceso.rol = "ope"
-            operadorForDocumento(acceso.usuario).then((response) => {
-                acceso.id = response.data.id;
-                sessionStorage.setItem('user', JSON.stringify(acceso)) 
-                acceder(acceso.rol); 
-            }).catch(error => {
-                console.log(error);
-            })
-            
-        }
-
-        setLoading(false);*/
+        })
     };
 
     const navigator = useNavigate();
@@ -112,23 +53,23 @@ const LoginComponent = ({setUser}) => {
                                             <form className="my-4" action="index.html">
                                                 <div className="form-group mb-2">
                                                     <label className="col-form-label-zise" for="username">Usuario</label>
-                                                    <input type="text" 
-                                                        className="form-control-depo" 
-                                                        id="username" 
-                                                        name="username" 
-                                                        placeholder="Ingresar usuario" 
-                                                        onChange={(e) => { setInputUsername(e.target.value) }}/>
+                                                    <input type="text"
+                                                        className="form-control-depo"
+                                                        id="username"
+                                                        name="username"
+                                                        placeholder="Ingresar usuario"
+                                                        onChange={(e) => { setInputUsername(e.target.value) }} />
                                                 </div>
 
                                                 <div className="form-group">
                                                     <label className="col-form-label-zise" for="userpassword">Password</label>
-                                                    <input 
-                                                        type="password" 
-                                                        className="form-control-depo" 
-                                                        name="password" 
-                                                        id="userpassword" 
-                                                        placeholder="Ingresar contraseña" 
-                                                        onChange={(e) => { setInputPassword(e.target.value) }}/>
+                                                    <input
+                                                        type="password"
+                                                        className="form-control-depo"
+                                                        name="password"
+                                                        id="userpassword"
+                                                        placeholder="Ingresar contraseña"
+                                                        onChange={(e) => { setInputPassword(e.target.value) }} />
                                                 </div>
 
                                                 <div className="form-group row mt-3">
