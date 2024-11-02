@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import HeaderComponent from '../../HeaderComponent';
-import { rolSave, usuarioEdit, usuarioForId, usuarioSave } from '../../../service/FacturaService';
+import { rolSave } from '../../../service/FacturaService';
 
 const RolNuevoComponent = () => {
 
@@ -74,68 +74,104 @@ const RolNuevoComponent = () => {
     return valid;
   }
 
+  const access = "R001"
+  let ingress = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
+
   return (
     <>
-    {initialLogin.documento && <HeaderComponent />}
-      <div className='container-fluid'>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Roles</a></li>
-                  <li className="breadcrumb-item active">Nuevo rol</li>
-                </ol>
-              </div>
-              <h4 className="page-title">Registrar rol</h4>
-            </div>
-          </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Datos del Rol</h4>
-                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
-                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
-              </div>
-              <div className="card-body">
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Codigo:</label>
-                  <div className="col-sm-9">
-                    <input type="text"
-                      placeholder="Codigo"
-                      value={codigo}
-                      maxLength={8}
-                      className={`form-control-depo ${errors.msgCodigo ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setCodigo(e.target.value) }} />
-                    {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
-                  </div>
+      {initialLogin.documento && <HeaderComponent />}
+      {ingress &&
+        <div className='container-fluid'>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Roles</a></li>
+                    <li className="breadcrumb-item active">Nuevo rol</li>
+                  </ol>
                 </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Codigo:</label>
-                  <div className="col-sm-9">
-                    <textarea type="text"
-                      placeholder="Descripcion del Rol"
-                      value={descripcion}
-                      className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
-                      onChange={(e) => { setDescripcion(e.target.value) }} ></textarea>
-                    {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
-                  </div>
-                </div>
-                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveRol}>Guardar</button>
-                &nbsp;&nbsp;
-                <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                <h4 className="page-title">Registrar rol</h4>
               </div>
             </div>
           </div>
+          <br />
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Datos del Rol</h4>
+                  <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
+                  <p className="text-muted mb-0"><span style={{ color: 'red' }}>(*)</span> :Datos obligatorias que se debe ingresar</p>
+                </div>
+                <div className="card-body">
+                  <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Codigo:</label>
+                    <div className="col-sm-9">
+                      <input type="text"
+                        placeholder="Codigo"
+                        value={codigo}
+                        maxLength={8}
+                        className={`form-control-depo ${errors.msgCodigo ? ' is-invalid' : ''}`}
+                        onChange={(e) => { setCodigo(e.target.value) }} />
+                      {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Codigo:</label>
+                    <div className="col-sm-9">
+                      <textarea type="text"
+                        placeholder="Descripcion del Rol"
+                        value={descripcion}
+                        className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
+                        onChange={(e) => { setDescripcion(e.target.value) }} ></textarea>
+                      {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
+                    </div>
+                  </div>
+                  <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveRol}>Guardar</button>
+                  &nbsp;&nbsp;
+                  <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Roles</a></li>
+                    <li className="breadcrumb-item active">Nuevo rol</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Nuevo rol</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

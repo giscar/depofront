@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../../HeaderComponent';
-import { perfilEdit, perfilForId, rolActivo} from '../../../service/FacturaService';
+import { perfilEdit, perfilForId, rolActivo } from '../../../service/FacturaService';
 
 const PerfilEditComponent = () => {
 
@@ -18,7 +18,17 @@ const PerfilEditComponent = () => {
     msgRoles: '',
   })
 
+  const access = "R001"
+  let ingress = false;
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
 
   const validateForm = () => {
     let valid = true;
@@ -78,11 +88,11 @@ const PerfilEditComponent = () => {
 
   const cargarRoles = (rolesEdit) => {
     debugger
-    setRolesSeleccionados(rolesEdit) 
+    setRolesSeleccionados(rolesEdit)
     rolActivo().then((response) => {
-      response.data.map(data =>{
+      response.data.map(data => {
         rolesEdit.map(p => {
-          if(data.id == p.id){
+          if (data.id == p.id) {
             data.check = true;
           }
         })
@@ -109,7 +119,7 @@ const PerfilEditComponent = () => {
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.usuario;
       data.roles = rolesSeleccionados;
-      
+
       perfilEdit(data).catch(error => {
         console.error(error)
       })
@@ -122,17 +132,17 @@ const PerfilEditComponent = () => {
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    const {value, checked} = event.target;
-    if(checked){
-        let rol = {}
-        rol.id = value;
+    const { value, checked } = event.target;
+    if (checked) {
+      let rol = {}
+      rol.id = value;
       setRolesSeleccionados([...rolesSeleccionados, rol])
-    }else{
+    } else {
       setRolesSeleccionados(rolesSeleccionados.filter(p => p.id !== value))
     }
     perfil.roles.map(p => {
       roles.map(q => {
-        if(q.id == value){
+        if (q.id == value) {
           q.check = checked;
         }
       })
@@ -141,82 +151,109 @@ const PerfilEditComponent = () => {
 
   return (
     <>
-    {initialLogin.documento && <HeaderComponent />}
-      <div className='container-fluid'>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Perfiles</a></li>
-                  <li className="breadcrumb-item active">Editar Perfil</li>
-                </ol>
+      {initialLogin.documento && <HeaderComponent />}
+      {ingress &&
+        <div className='container-fluid'>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Perfiles</a></li>
+                    <li className="breadcrumb-item active">Editar Perfil</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Editar perfil</h4>
               </div>
-              <h4 className="page-title">Editar perfil</h4>
             </div>
           </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-lg-12 ">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Datos del Perfil</h4>
-                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
-                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
-              </div>
-              <div className="card-body">
-
-              <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Codigo:</label>
-                  <div className="col-sm-9">
-                    <input type="text"
-                      placeholder="Perfil"
-                      value={codigo}
-                      className="bg-secondary bg-opacity-10 form-control-depo"
-                      readOnly
-                      autoComplete='false'
-                      onChange={(e) => { setCodigo(e.target.value) }} />
-                    {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
-                  </div>
+          <br />
+          <div className="row">
+            <div className="col-lg-12 ">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Datos del Perfil</h4>
+                  <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de accesos.</p>
+                  <p className="text-muted mb-0"><span style={{ color: 'red' }}>(*)</span> :Datos obligatorias que se debe ingresar</p>
                 </div>
+                <div className="card-body">
 
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Descripcion:</label>
-                  <div className="col-sm-9">
-                    <textarea type="text"
-                      placeholder="Descripcion del perfil"
-                      value={descripcion}
-                      autoComplete='off'
-                      className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
-                      onChange={(e) => { setDescripcion(e.target.value) }} ></textarea>
-                    {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
-                  </div>
-                </div>
-
-                <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise "><span style={{color : 'red'}}>(*)</span>Roles:</label>
-                  <div className="col-sm-9">
-                  {
-                  roles.map(rol =>
-                    <div key={rol.id} className="form-check">
-                      <input className="form-check-input" type="checkbox" checked={rol.check} value={rol.id} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
-                      <label className="form-check-label" >
-                        {rol.codigo}
-                      </label>
+                  <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Codigo:</label>
+                    <div className="col-sm-9">
+                      <input type="text"
+                        placeholder="Perfil"
+                        value={codigo}
+                        className="bg-secondary bg-opacity-10 form-control-depo"
+                        readOnly
+                        autoComplete='false'
+                        onChange={(e) => { setCodigo(e.target.value) }} />
+                      {errors.msgCodigo && <div className='invalid-feedback'>{errors.msgCodigo}</div>}
                     </div>
-                    )
-                  }
-                  {errors.msgRoles && <div style={{"color":"red"}} className='feedback'>{errors.msgRoles}</div>}
                   </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Descripcion:</label>
+                    <div className="col-sm-9">
+                      <textarea type="text"
+                        placeholder="Descripcion del perfil"
+                        value={descripcion}
+                        autoComplete='off'
+                        className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
+                        onChange={(e) => { setDescripcion(e.target.value) }} ></textarea>
+                      {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Roles:</label>
+                    <div className="col-sm-9">
+                      {
+                        roles.map(rol =>
+                          <div key={rol.id} className="form-check">
+                            <input className="form-check-input" type="checkbox" checked={rol.check} value={rol.id} onChange={handleChange} style={{ backgroundColor: 'orange' }} />
+                            <label className="form-check-label" >
+                              {rol.codigo}
+                            </label>
+                          </div>
+                        )
+                      }
+                      {errors.msgRoles && <div style={{ "color": "red" }} className='feedback'>{errors.msgRoles}</div>}
+                    </div>
+                  </div>
+                  <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editPerfil}>Editar</button>
                 </div>
-                <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={editPerfil}>Editar</button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Perfiles</a></li>
+                    <li className="breadcrumb-item active">Editar Perfil</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Editar Perfil</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

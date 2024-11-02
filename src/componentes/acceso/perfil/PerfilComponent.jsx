@@ -3,13 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../../HeaderComponent';
-import { perfilActivo, perfilForId, perfilInactiva, usuarioActivo, usuarioEdit, usuarioForId } from '../../../service/FacturaService';
+import { perfilActivo, perfilForId, perfilInactiva } from '../../../service/FacturaService';
 
 const PerfilComponent = () => {
 
   const [perfiles, setPerfiles] = useState([])
 
+  const access = "R001"
+  let ingress = false;
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
 
   const navigator = useNavigate();
 
@@ -80,70 +90,96 @@ const PerfilComponent = () => {
     })
   }
 
-
   return (
     <>
       {initialLogin.documento && <HeaderComponent />}
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Perfil</a></li>
-                  <li className="breadcrumb-item active">listado</li>
-                </ol>
+      {ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Perfil</a></li>
+                    <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Perfiles del Sistema</h4>
               </div>
-              <h4 className="page-title">Listado de Perfiles del Sistema</h4>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irPerefilNuevo()}>Nuevo Perfil</button>
+            </div>
+          </div>
+          <br />
+          <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+                <tr>
+                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>Descripcion</th>
+                  <th className='td-th-size-depo'>Fecha de registro</th>
+                  <th className='td-th-size-depo text-center'>Roles</th>
+                  <th className='td-th-size-depo text-center'>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  perfiles.map(perfil =>
+                    <tr key={perfil.id}>
+                      <td className='td-th-size-depo'>{perfil.codigo}</td>
+                      <td className='td-th-size-depo'>{perfil.descripcion}</td>
+                      <td className='td-th-size-depo'>{(new Date(perfil.fechaRegistro)).toLocaleString()}</td>
+                      <td className='td-th-size-depo text-start'>
+                        <ul>
+                          {perfil.roles.map(p => <li>{p.codigo}</li>)}
+                        </ul>
+                      </td>
+
+                      <td className='text-center'>
+                        <a className='p-4 icon-link-depo' onClick={() => irPerfilEdit(perfil.id)}>
+                          <i className="bi bi-pencil-fill"></i>
+                        </a>
+                        <a className='icon-link-depo' onClick={() => handlePerfil(perfil.id)}>
+                          <i className="bi bi-x-circle-fill"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Perfil</a></li>
+                    <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de perfiles</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
             </div>
           </div>
         </div>
-        <div className='row'>
-          <div className='float-end pb-3 pt-4'>
-            <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irPerefilNuevo()}>Nuevo Perfil</button>
-          </div>
-        </div>
-        <br />
-        <div className="table-responsive">
-          <table className="table mb-0">
-            <thead className="thead-light">
-              <tr>
-                <th className='td-th-size-depo'>Codigo</th>
-                <th className='td-th-size-depo'>Descripcion</th>
-                <th className='td-th-size-depo'>Fecha de registro</th>
-                <th className='td-th-size-depo text-center'>Roles</th>
-                <th className='td-th-size-depo text-center'>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                perfiles.map(perfil =>
-                  <tr key={perfil.id}>
-                    <td className='td-th-size-depo'>{perfil.codigo}</td>
-                    <td className='td-th-size-depo'>{perfil.descripcion}</td>
-                    <td className='td-th-size-depo'>{(new Date(perfil.fechaRegistro)).toLocaleString()}</td>
-                    <td className='td-th-size-depo text-start'>
-                      <ul>
-                      {perfil.roles.map(p => <li>{p.codigo}</li>)}
-                      </ul>
-                    </td>
-
-                    <td className='text-center'>
-                      <a className='p-4 icon-link-depo' onClick={() => irPerfilEdit(perfil.id)}>
-                        <i className="bi bi-pencil-fill"></i>
-                      </a>
-                      <a className='icon-link-depo' onClick={() => handlePerfil(perfil.id)}>
-                        <i className="bi bi-x-circle-fill"></i>
-                      </a>
-                    </td>
-                  </tr>
-                )
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
+      }
     </>
   )
 }
