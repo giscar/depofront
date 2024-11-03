@@ -120,7 +120,7 @@ const UsuarioNuevoComponent = () => {
     return valid;
   }
 
-  const access = "R001"
+  const access = "R003"
   let ingress = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));

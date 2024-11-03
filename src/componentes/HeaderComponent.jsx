@@ -84,25 +84,14 @@ const HeaderComponent = () => {
                 <ul className="dropdown-menu">
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicio()}>Busqueda Servicio</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioNuevo()}>Nuevo Servicio</a></li>
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
-                  }
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
                   <li><hr className="dropdown-divider" /></li>
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederClientes()}>Clientes</a></li>
-                  }
-                  {initialLogin.rol === "adm" &&
-                    <li><a className="dropdown-item icon-link-depo" onClick={() => accederReporteOperaciones()}>Estadisticas</a></li>
-                  }
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederClientes()}>Clientes</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederReporteOperaciones()}>Estadisticas</a></li>
                 </ul>
               </li>
-              
             </ul>
             <div className='text-end'>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">

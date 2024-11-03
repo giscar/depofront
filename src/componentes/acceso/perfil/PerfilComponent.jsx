@@ -9,7 +9,7 @@ const PerfilComponent = () => {
 
   const [perfiles, setPerfiles] = useState([])
 
-  const access = "R001"
+  const access = "R002"
   let ingress = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));

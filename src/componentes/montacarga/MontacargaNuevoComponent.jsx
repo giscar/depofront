@@ -29,7 +29,17 @@ const MontacargaNuevoComponent = () => {
     msgEstado: '',
   })
 
+  const access = "R004"
+  let ingress = false;
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -142,7 +152,8 @@ const MontacargaNuevoComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+    {initialLogin.documento && <HeaderComponent />}
+    {ingress &&
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -154,7 +165,7 @@ const MontacargaNuevoComponent = () => {
                   <li className="breadcrumb-item active">Nueva montacarga</li>
                 </ol>
               </div>
-              <h4 className="page-title">Registrar Montacarga</h4>
+              <h4 className="page-title">Nueva Montacarga</h4>
             </div>
           </div>
         </div>
@@ -165,7 +176,7 @@ const MontacargaNuevoComponent = () => {
               <div className="card-header">
                 <h4 className="card-title">Datos de la Montacarga</h4>
                 <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
-                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> :Datos obligatorias que se debe ingresar</p>
+                <p className="text-muted mb-0"><span style={{color : 'red'}}>(*)</span> Datos obligatorias que se debe ingresar</p>
               </div>
 
               <div className="card-body">
@@ -300,6 +311,31 @@ const MontacargaNuevoComponent = () => {
           </div>
         </div>
       </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
+                    <li className="breadcrumb-item active">Nueva montacarga</li>                  </ol>
+                </div>
+                <h4 className="page-title">Nueva montacarga</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

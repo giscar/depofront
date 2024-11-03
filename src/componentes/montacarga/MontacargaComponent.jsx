@@ -7,7 +7,17 @@ import Swal from 'sweetalert2'
 
 const MontacargaComponent = () => {
 
+  const access = "R004"
+  let ingress = false;
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
 
   const navigator = useNavigate();
 
@@ -83,7 +93,8 @@ const MontacargaComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+    {initialLogin.documento && <HeaderComponent />}
+    {ingress &&
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -154,6 +165,32 @@ const MontacargaComponent = () => {
         </table>
         </div>
       </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
+                  <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Montacargas</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { operadorActivo, operadorEdit, operadorForId, operadorInactiva } from '../../service/FacturaService';
+import { operadorActivo, operadorForId, operadorInactiva } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2'
@@ -10,7 +10,17 @@ const OperadorComponent = () => {
 
   const navigator = useNavigate();
 
+  const access = "R005"
+  let ingress = false;
+
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
 
   const notify = () => toast.info('Se ha eliminado el operador correctamente', {
     position: "top-right",
@@ -86,7 +96,8 @@ const OperadorComponent = () => {
 
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+    {initialLogin.documento && <HeaderComponent />}
+    {ingress &&
       <div className="container-fluid">
         <div className="row">
           <div className="col-sm-12">
@@ -148,6 +159,32 @@ const OperadorComponent = () => {
           </div>
         }
       </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Operadores</a></li>
+                  <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Operadores</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }
