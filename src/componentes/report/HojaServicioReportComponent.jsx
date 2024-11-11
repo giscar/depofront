@@ -158,7 +158,6 @@ const HojaServicioReportComponent = ({ id }) => {
     let horaFinServicio1 = new Date(data.horaFinServicio);
     let horaRetornoLocal1 = new Date(data.horaRetornoLocal);
     let fechaConclusion1 = new Date(data.fechaConclusion);
-    console.log(horaSalidaLocal1.toLocaleString())
     setCodServicio(data.codServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")

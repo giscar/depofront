@@ -121,6 +121,12 @@ const ServicioEditComponent = () => {
       errorCopy.msgTotalHoras = 'Tiene que ingresar el total de horas del servicio';
       valid = false;
     }
+    if (totalHoras > 0) {
+      errorCopy.msgTotalHoras = '';
+    } else {
+      errorCopy.msgTotalHoras = 'Revise las fechas y horas ingresadas en el servicio';
+      valid = false;
+    }
 
     if (montoServicio) {
       errorCopy.msgMontoServicio = '';
@@ -195,7 +201,7 @@ const ServicioEditComponent = () => {
     data.tipoPago = tipoPago;
     data.moneda = moneda;
     servicioEdit(data).then(response => {
-      console.error(response)
+      //console.error(response.data)
     }).catch(error => {
       console.error(error)
     });
@@ -239,7 +245,6 @@ const ServicioEditComponent = () => {
       data.fechaConclusion = today.toLocaleDateString();
       setEstadoRegistro("Concluido")
       servicioEdit(data).then((response) => {
-        console.log(response)
         setTimeout(() => {
           if (id) {
             servicioForId(id).then((response) => {
@@ -353,7 +358,7 @@ const ServicioEditComponent = () => {
   }
 
   const handleInactiveFile = (idImagen) => {
-    console.log(idImagen);
+    //console.log(idImagen);
     inactiveFile(idImagen).then(() => {
       if (id) {
         servicioForId(id).then((response) => {

@@ -5,7 +5,7 @@ import { buscarServicioByDatosEstadoConcluido, buscarServiciosConcluidos } from 
 import HeaderComponent from '../HeaderComponent';
 
 const FacturaComponent = () => {
-  
+
   const navigator = useNavigate();
 
   const [servicios, setServicios] = useState([])
@@ -13,8 +13,49 @@ const FacturaComponent = () => {
   const [codServicio, setCodServicio] = useState('')
   const [serviciosSeleccionados, setServiciosSeleccionados] = useState([])
 
+  const access = "R008"
+  let ingressADM = false;
+
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingressADM = true;
+    });
+  })
+
+  const notify = () => toast.error('Ha seleccionado mas de una empresa para facturar', {
+    position: "top-right",
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+  });
+
   const registrarFactura = () => {
-    navigator(`/facturaRegistro/${serviciosSeleccionados}`)
+    let rucTemp = ""
+    let validaRUC = true
+    servicios.map(p => {
+      serviciosSeleccionados.map(q => {
+        if(p.codServicio == q){
+          if(rucTemp == ""){
+            rucTemp = p.ruc;
+          }else{
+            if(rucTemp !== p.ruc){
+              validaRUC = false;
+            }
+          }
+        }
+      })
+    })
+    if(validaRUC)
+      navigator(`/facturaRegistro/${serviciosSeleccionados}`)
+    else{
+      notify()
+    }
   }
 
   const findService = () => {
@@ -30,10 +71,10 @@ const FacturaComponent = () => {
 
   useEffect(() => {
     buscarServiciosConcluidos().then((response) => {
-    setServicios(response.data);
-  }).catch(error => {
-    console.log(error);
-  })
+      setServicios(response.data);
+    }).catch(error => {
+      console.log(error);
+    })
   }, [])
 
   const limpiar = () => {
@@ -44,130 +85,155 @@ const FacturaComponent = () => {
 
   const handleChange = (event) => {
     console.log(event.target.value)
-    const {value, checked} = event.target;
-    if(checked){
+    const { value, checked } = event.target;
+    if (checked) {
       setServiciosSeleccionados([...serviciosSeleccionados, value])
-    }else{
+    } else {
       setServiciosSeleccionados(serviciosSeleccionados.filter(p => p !== value))
     }
   }
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Servicios</a></li>
-                  <li className="breadcrumb-item active">Busqueda</li>
-                </ol>
-              </div>
-              <h4 className="page-title">Busqueda de servicio a facturar</h4>
-            </div>
-          </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-lg-12">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Busqueda de servicios concluidos</h4>
-                <p className="text-muted mb-0">Debe ser ingresado por el/la administrador(a) del modulo de servicios.</p>
-              </div>
-              <div className="card-body">
-                <div className='row'>
-                  <div className="col-lg-4">
-                    <label className='col-form-label-zise'>Codigo del servicio:</label>
-                    <input type="number"
-                      id="inputCodServicio"
-                      placeholder="Codigo del servicio"
-                      value={codServicio}
-                      className="form-control-depo"
-                      onChange={(e) => { setCodServicio(e.target.value) }}>
-                    </input>
-                  </div>
-                  <div className="col-lg-4">
-                    <label className='col-form-label-zise'>Numero de RUC:</label>
-                    <input type="number"
-                      id="inputRuc"
-                      placeholder="Ingrese el numero de RUC"
-                      value={ruc}
-                      className="form-control-depo"
-                      onChange={(e) => { setRuc(e.target.value) }}>
-                    </input>
-                  </div>
+      {initialLogin.documento && <HeaderComponent />}
+      {ingressADM &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Factura</a></li>
+                    <li className="breadcrumb-item active">Busqueda</li>
+                  </ol>
                 </div>
-                <div className='mt-4 float-rigth'>
-                  <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
-                  &nbsp;&nbsp;
-                  <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
-                </div>
+                <h4 className="page-title">Busqueda de servicio a facturar</h4>
               </div>
             </div>
           </div>
-        </div>
-        <div>
+          <br />
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Busqueda de servicios concluidos</h4>
+                  <p className="text-muted mb-0">Debe ser ingresado por el/la administrador(a) del modulo de servicios.</p>
+                </div>
+                <div className="card-body">
+                  <div className='row'>
+                    <div className="col-lg-4">
+                      <label className='col-form-label-zise'>Codigo del servicio:</label>
+                      <input type="number"
+                        id="inputCodServicio"
+                        placeholder="Codigo del servicio"
+                        value={codServicio}
+                        className="form-control-depo"
+                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                      </input>
+                    </div>
+                    <div className="col-lg-4">
+                      <label className='col-form-label-zise'>Numero de RUC:</label>
+                      <input type="number"
+                        id="inputRuc"
+                        placeholder="Ingrese el numero de RUC"
+                        value={ruc}
+                        className="form-control-depo"
+                        onChange={(e) => { setRuc(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+                  <div className='mt-4 float-rigth'>
+                    <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
+                    &nbsp;&nbsp;
+                    <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
             <button type='button' className='btn btn-primary' onClick={registrarFactura}>Registrar Factura</button>
-        </div>
-        <br />
-        {servicios.length > 0 &&
-          <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-                <tr>
-                  <th className='td-th-size-depo'>Codigo</th>
-                  <th className='td-th-size-depo'>RUC</th>
-                  <th className='td-th-size-depo'>Razon Social</th>
-                  <th className='td-th-size-depo'>Tipo</th>
-                  <th className='td-th-size-depo'>Salida local</th>
-                  <th className='td-th-size-depo'>Inicio servicio</th>
-                  <th className='td-th-size-depo'>Fin servicio</th>
-                  <th className='td-th-size-depo'>Retorno local</th>
-                  <th className='td-th-size-depo'>Operador</th>
-                  <th className='td-th-size-depo'>Montacarga</th>
-                  <th className='td-th-size-depo'>Estado</th>
-                  <th className='td-th-size-depo'>Accion</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  servicios.map(servicio =>
-                    <tr key={servicio.id}>
-                      <td className='td-th-size-depo'>{servicio.codServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.ruc}</td>
-                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
-                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                      <td className='td-th-size-depo'>{(new Date(servicio.horaSalidaLocal)).toLocaleString()}</td>
-                      <td className='td-th-size-depo'>{(new Date(servicio.horaInicioServicio)).toLocaleString()}</td>
-                      <td className='td-th-size-depo'>{(new Date(servicio.horaFinServicio)).toLocaleString()}</td>
-                      <td className='td-th-size-depo'>{(new Date(servicio.horaRetornoLocal)).toLocaleString()}</td>
-                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre+' '+servicio.operador[0]?.apellidoPat+' '+servicio.operador[0]?.apellidoMat}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo+' '+servicio.montacarga[0]?.marca}</td>
-                      <td className='td-th-size-depo'>
-                        {servicio.estadoRegistro === "Concluido" &&
-                          <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
-                        }
-                        {servicio.estadoRegistro !== "Concluido" &&
-                          <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
-                        }
-                      </td>
-                      <td className='text-center'>
-                        <input className="form-check-input" type="checkbox" value={servicio.codServicio} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
-                      </td>
-                    </tr>
-                  )
-                }
-              </tbody>
-            </table>
           </div>
-        }
-      </div>
+          <br />
+          {servicios.length > 0 &&
+            <div className="table-responsive">
+              <table className="table mb-0">
+                <thead className="thead-light">
+                  <tr>
+                    <th className='td-th-size-depo'>Codigo</th>
+                    <th className='td-th-size-depo'>RUC</th>
+                    <th className='td-th-size-depo'>Razon Social</th>
+                    <th className='td-th-size-depo'>Tipo</th>
+                    <th className='td-th-size-depo'>Salida local</th>
+                    <th className='td-th-size-depo'>Inicio servicio</th>
+                    <th className='td-th-size-depo'>Fin servicio</th>
+                    <th className='td-th-size-depo'>Retorno local</th>
+                    <th className='td-th-size-depo'>Operador</th>
+                    <th className='td-th-size-depo'>Montacarga</th>
+                    <th className='td-th-size-depo'>Estado</th>
+                    <th className='td-th-size-depo'>Accion</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    servicios.map(servicio =>
+                      <tr key={servicio.id}>
+                        <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                        <td className='td-th-size-depo'>{servicio.ruc}</td>
+                        <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
+                        <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
+                        <td className='td-th-size-depo'>{(new Date(servicio.horaSalidaLocal)).toLocaleString()}</td>
+                        <td className='td-th-size-depo'>{(new Date(servicio.horaInicioServicio)).toLocaleString()}</td>
+                        <td className='td-th-size-depo'>{(new Date(servicio.horaFinServicio)).toLocaleString()}</td>
+                        <td className='td-th-size-depo'>{(new Date(servicio.horaRetornoLocal)).toLocaleString()}</td>
+                        <td className='td-th-size-depo'>{servicio.operador[0]?.nombre + ' ' + servicio.operador[0]?.apellidoPat + ' ' + servicio.operador[0]?.apellidoMat}</td>
+                        <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo + ' ' + servicio.montacarga[0]?.marca}</td>
+                        <td className='td-th-size-depo'>
+                          {servicio.estadoRegistro === "Concluido" &&
+                            <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
+                          }
+                          {servicio.estadoRegistro !== "Concluido" &&
+                            <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
+                          }
+                        </td>
+                        <td className='text-center'>
+                          <input className="form-check-input" type="checkbox" value={servicio.codServicio} onChange={handleChange} style={{ backgroundColor: 'orange' }} />
+                        </td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+        </div>
+      }
+      {!ingressADM &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Factura</a></li>
+                    <li className="breadcrumb-item active">Busqueda</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Operadores</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div class="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

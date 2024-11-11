@@ -14,7 +14,6 @@ const LoginComponent = () => {
         usuarioForRoles(inputUsername, inputPassword).then((response) => {
             if (response.data) {
                 sessionStorage.setItem('user', JSON.stringify(response.data))
-                console.log(sessionStorage.getItem('user'))
                 acceder()
             }
         }).catch(error => {

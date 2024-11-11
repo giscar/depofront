@@ -87,7 +87,6 @@ const PerfilEditComponent = () => {
   }, [id])
 
   const cargarRoles = (rolesEdit) => {
-    debugger
     setRolesSeleccionados(rolesEdit)
     rolActivo().then((response) => {
       response.data.map(data => {
