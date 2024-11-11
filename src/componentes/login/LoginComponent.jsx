@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import "./LoginComponent.css";
 import { useNavigate } from "react-router-dom";
-import { operadorForDocumento, usuarioForRoles } from "../../service/FacturaService";
+import { usuarioForRoles } from "../../service/FacturaService";
 
-const LoginComponent = ({ setUser }) => {
+const LoginComponent = () => {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
-    const [usuario, setUsuario] = useState([]);
 
     sessionStorage.setItem('user', {})
 
@@ -14,8 +13,6 @@ const LoginComponent = ({ setUser }) => {
         event.preventDefault();
         usuarioForRoles(inputUsername, inputPassword).then((response) => {
             if (response.data) {
-                setUsuario(response.data)
-                console.log(response.data)
                 sessionStorage.setItem('user', JSON.stringify(response.data))
                 console.log(sessionStorage.getItem('user'))
                 acceder()

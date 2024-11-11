@@ -138,6 +138,7 @@ const UsuarioEditComponent = () => {
       data.indInactivo = "0";
       data.perfiles = perfilesSeleccionados;
       data.usuarioRegistro = initialLogin.usuario;
+      data.passwd = documento;
       usuarioEdit(data).catch(error => {
         console.error(error)
       })

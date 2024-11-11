@@ -132,7 +132,7 @@ const RolEditComponent = () => {
               <div className="card-body">
 
               <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Documento:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Codigo:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Codigo del rol"
@@ -146,7 +146,7 @@ const RolEditComponent = () => {
                 </div>
 
                 <div className="mb-3 row">
-                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Nombres:</label>
+                  <label className="col-sm-3 col-form-label-zise"><span style={{color : 'red'}}>(*)</span>Descripcion:</label>
                   <div className="col-sm-9">
                     <input type="text"
                       placeholder="Descripcion del rol"

@@ -15,10 +15,11 @@ const HeaderComponent = () => {
     navigator("/servicioNuevo")
   }
 
-  const accederServicio = () => {
-    if(initialLogin.rol === "adm")
+  const accederServicioAdm = () => {
       navigator("/servicios")
-    if(initialLogin.rol === "ope")
+  }
+
+  const accederServicioOpe = () => {
       navigator("/servicioOperador")
   }
 
@@ -59,7 +60,7 @@ const HeaderComponent = () => {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary-depo">
         <div className="container-fluid">
-          <a className="navbar-brand" onClick={() => accederServicio()}>
+          <a className="navbar-brand">
             <img src="/Logo.png" height="60" alt="logo" className="auth-logo" />
           </a>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -82,8 +83,8 @@ const HeaderComponent = () => {
                   Operaciones
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicio()}>Busqueda Servicio</a></li>
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioNuevo()}>Nuevo Servicio</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioAdm()}>Busqueda Servicio Admin</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioOpe()}>Busqueda Servicio Operador</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>

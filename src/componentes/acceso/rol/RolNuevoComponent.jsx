@@ -128,7 +128,7 @@ const RolNuevoComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Codigo:</label>
+                    <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>Descripcion:</label>
                     <div className="col-sm-9">
                       <textarea type="text"
                         placeholder="Descripcion del Rol"

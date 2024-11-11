@@ -92,8 +92,6 @@ const ServicioViewComponent = () => {
   }, [cliente])
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-  console.log(initialLogin)
-  console.log(initialLogin.usuario)
 
   return (
     <>
