@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const url = "http://165.227.252.245:8080/";
-const url = "http://localhost:8080/";
+const url = "http://159.203.99.78:8080/";
+//const url = "http://localhost:8080/";
 
 const REST_API_BASE_URL_FACTURA = `${url}factura`
 
@@ -70,6 +70,8 @@ export const operadorInactiva = (operador) => axios.put(REST_API_BASE_URL_OPERAD
 export const servicioSave = (servicio) => axios.post(REST_API_BASE_URL_SERVICIO, servicio);
 
 export const servicioEdit = (servicio) => axios.put(REST_API_BASE_URL_SERVICIO, servicio);
+
+export const servicioFacturado = (servicio) => axios.put(REST_API_BASE_URL_SERVICIO+"/facturado", servicio);
 
 export const servicioForId = (id) => axios.get(REST_API_BASE_URL_SERVICIO+"?id="+id);
 

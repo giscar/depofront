@@ -58,13 +58,14 @@ const HeaderComponent = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary-depo">
-        <div className="container-fluid">
-          <a className="navbar-brand">
-            <img src="/Logo.png" height="60" alt="logo" className="auth-logo" />
-          </a>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+      <nav class="navbar navbar-expand-lg navbar bg-light">
+
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
             <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Accesos
@@ -110,7 +111,7 @@ const HeaderComponent = () => {
               </ul>
             </div>
           </div>
-        </div>
+      
       </nav>
 
 
