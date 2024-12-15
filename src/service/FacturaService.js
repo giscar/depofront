@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const url = "http://159.203.99.78:8080/";
-//const url = "http://localhost:8080/";
+//const url = "http://159.203.99.78:8080/";
+const url = "http://localhost:8080/";
 
 const REST_API_BASE_URL_FACTURA = `${url}factura`
 

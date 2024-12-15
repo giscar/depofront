@@ -16,11 +16,11 @@ const HeaderComponent = () => {
   }
 
   const accederServicioAdm = () => {
-      navigator("/servicios")
+    navigator("/servicios")
   }
 
   const accederServicioOpe = () => {
-      navigator("/servicioOperador")
+    navigator("/servicioOperador")
   }
 
   const accederClientes = () => {
@@ -58,27 +58,33 @@ const HeaderComponent = () => {
 
   return (
     <>
-      <nav class="navbar navbar-expand-lg navbar bg-light">
 
-  <a class="navbar-brand" href="#">Navbar</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-            <li className="nav-item dropdown">
+      <nav className="navbar navbar-expand-lg bg-body-tertiary-depo">
+        <div className="container-fluid">
+          <a className="navbar-brand">
+            <img src="/Logo.png" height="60" alt="logo" className="auth-logo" />
+          </a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul className="navbar-nav">
+
+              <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Accesos
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederUsuarios()}>Usuarios</a></li>
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederPerfiles()}>Perfiles</a></li>
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederRoles()}>Roles</a></li>
+                  <li><a className="dropdown-item" onClick={() => accederUsuarios()}>Usuarios</a></li>
+                  <li><a className="dropdown-item" onClick={() => accederPerfiles()}>Perfiles</a></li>
+                  <li><a className="dropdown-item" onClick={() => accederRoles()}>Roles</a></li>
                 </ul>
               </li>
+
               <li className="nav-item">
                 <a className="nav-link">Balanza</a>
               </li>
+
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Operaciones
@@ -95,28 +101,17 @@ const HeaderComponent = () => {
                 </ul>
               </li>
             </ul>
-            <div className='text-end'>
-              <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                <li className="nav-item">
-                  <a className="nav-link" aria-current="page">
-                    <b>{initialLogin.rol == "adm" ? 'Administrativo' : 'Operario'}</b>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link"><span className='text-white'><b>{initialLogin.nombre}</b></span></a>
-                </li>
-                <li className="nav-item">
-                  <a className='nav-link text-danger' onClick={() => cerrarSession()}><b>Cerrar</b></a>
-                </li>
-              </ul>
-            </div>
           </div>
-      
+
+        </div>
+        <div>
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <a className='nav-link text-danger' onClick={() => cerrarSession()}><b>Cerrar</b></a>
+            </li>
+          </ul>
+        </div>
       </nav>
-
-
-
-
     </>
   )
 }

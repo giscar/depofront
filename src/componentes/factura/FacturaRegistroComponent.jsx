@@ -76,9 +76,9 @@ const FacturaRegistroComponent = () => {
         let secCompleta = "";
         codFactura = response.data + 1;
         setCodigoFactura(codFactura);
-        secCompleta = codFactura.toString().padStart(7, '0');
+        secCompleta = codFactura.toString().padStart(8, '0');
 
-        serieFactura = "B006";
+        serieFactura = "F006";
         setSerie(serieFactura);
         nroDoc = serieFactura + "-" + secCompleta;
         setNroDocumento(nroDoc)
@@ -120,7 +120,6 @@ const FacturaRegistroComponent = () => {
   });
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
