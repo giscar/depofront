@@ -148,7 +148,7 @@ const MontacargaEditComponennt = () => {
       data.tonelaje = tonelaje.toUpperCase();
       data.marca = marca.toUpperCase();
       data.modelo = modelo.toUpperCase();
-      data.serie = serie.toUpperCase();
+      data.serie = serie?.toUpperCase();
       data.anhoFabricacion = anhoFabricacion;
       data.color = color.toUpperCase();
       data.ubicacion = ubicacion.toUpperCase();

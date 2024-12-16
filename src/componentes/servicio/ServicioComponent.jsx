@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { buscarServicioByDatosAggregate, buscarServiciosPendientes } from '../../service/FacturaService';
+import { buscarServicioByDatosAggregate, buscarServicioByIdOperador, buscarServiciosPendientes, operadorForDocumento } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 
 const ServicioComponent = () => {
 
   const access = "R007"
+  const accessOpe = "R009"
   let ingress = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -16,6 +17,11 @@ const ServicioComponent = () => {
       if (r.codigo == access)
         ingress = true;
     });
+
+    p.roles.map(r => {
+      if (r.codigo == accessOpe)
+        ingress = true;
+    });
   })
 
   const navigator = useNavigate();
@@ -23,6 +29,7 @@ const ServicioComponent = () => {
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [esOperador, setEsOperdor] = useState(false)
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -48,12 +55,28 @@ const ServicioComponent = () => {
   }
 
   useEffect(() => {
-    buscarServiciosPendientes().then((response) => {
-      setServicios(response.data);
-    }).catch(error => {
-      console.log(error);
+    debugger
+    operadorForDocumento(initialLogin.documento).then(p => {
+      if(p?.data){
+        buscarServicioByIdOperador(p.data.documento).then((response) => {
+          console.log(p.data.nombre)
+          setEsOperdor(true);
+          setServicios(response.data);
+        }).catch(error => {
+          console.log(error);
+        })
+      }else{
+        buscarServiciosPendientes().then((response) => {
+          setEsOperdor(false);
+          setServicios(response.data);
+        }).catch(error => {
+          console.log(error);
+        })
+      }
     })
+    
   }, [])
+  
 
   const limpiar = () => {
     setRuc('');
@@ -112,7 +135,7 @@ const ServicioComponent = () => {
                     </div>
                   </div>
                   <div className='mt-4 float-rigth'>
-                    <button type="button" className="btn-depo btn-primary-depo" onClick={findService}>Buscar</button>
+                    <button type="button" className={`btn-depo btn-primary-depo${esOperador ? ' invisible' : ''}`}  onClick={findService}>Buscar</button>
                     &nbsp;&nbsp;
                     <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
                   </div>

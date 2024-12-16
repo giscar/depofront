@@ -11,6 +11,7 @@ import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 const ServicioEditComponent = () => {
 
   const access = "R007"
+  const accessOpe = "R009"
   let ingressADM = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
@@ -18,6 +19,11 @@ const ServicioEditComponent = () => {
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
       if (r.codigo == access)
+      ingressADM = true;
+    });
+
+    p.roles.map(r => {
+      if (r.codigo == accessOpe)
       ingressADM = true;
     });
   })

@@ -87,7 +87,7 @@ export const buscarServicioByDatosEstadoConcluido = (ruc, codServicio) => axios.
 
 export const busquedaEstadisticaAgregate = (ruc, codServicio, idOperador, idMontacarga, estadoRegistro, tipoServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaEstadistica?codServicio="+codServicio+"&ruc="+ruc+"&idOperador="+idOperador+"&idMontacarga="+idMontacarga+"&estadoRegistro="+estadoRegistro+"&tipoServicio="+tipoServicio);
 
-export const buscarServicioByIdOperador = (idOperador) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaIdOperadorAggregate?idOperador="+idOperador);
+export const buscarServicioByIdOperador = (documento) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaIdOperadorAggregate?documento="+documento);
 
 export const buscarServiciosPendientes = () => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaServiciosPendientes");
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 import HeaderComponent from '../../HeaderComponent';
-import { usuarioActivo, usuarioForId, usuarioInactiva } from '../../../service/FacturaService';
+import { operadorForDocumento, usuarioActivo, usuarioForId, usuarioInactiva } from '../../../service/FacturaService';
 
 const UsuarioComponent = () => {
 
@@ -75,9 +75,7 @@ const UsuarioComponent = () => {
         console.error(error)
       })
       notify();
-      setTimeout(() => {
         buscarUsuario()
-      }, 1000);
     }).catch(error => {
       console.error(error)
     })
@@ -136,7 +134,7 @@ const UsuarioComponent = () => {
                       <td className='td-th-size-depo'>{(new Date(usuario.fechaRegistro)).toLocaleString()}</td>
                       <td className='td-th-size-depo text-start'>
                         <ul>
-                          {usuario.perfiles.map(p => <li>{p.codigo}</li>)}
+                          {usuario.perfiles.map(p => <li key={p.id}>{p.codigo}</li>)}
                         </ul>
                       </td>
                       <td className='text-center'>
