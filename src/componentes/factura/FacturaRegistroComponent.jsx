@@ -537,13 +537,13 @@ const FacturaRegistroComponent = () => {
                     <li className="breadcrumb-item active">Nuevo Factura</li>
                   </ol>
                 </div>
-                <h4 className="page-title">Listado de Operadores</h4>
+                <h4 className="page-title">Listado de Facturas</h4>
               </div>
             </div>
           </div>
           <div className='row'>
             <div className='float-end pb-3 pt-4'>
-              <div class="alert alert-danger border-0" role="alert">
+              <div className="alert alert-danger border-0" role="alert">
                 <strong>Alerta!</strong> No tiene acceso para este modulo.
               </div>
             </div>

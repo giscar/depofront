@@ -220,7 +220,7 @@ const PerfilNuevoComponent = () => {
           </div>
           <div className='row'>
             <div className='float-end pb-3 pt-4'>
-              <div class="alert alert-danger border-0" role="alert">
+              <div className="alert alert-danger border-0" role="alert">
                 <strong>Alerta!</strong> No tiene acceso para este modulo.
               </div>
             </div>

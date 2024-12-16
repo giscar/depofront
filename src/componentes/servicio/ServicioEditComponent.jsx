@@ -647,7 +647,7 @@ const ServicioEditComponent = () => {
                       <label className="col-sm-4 col-form-label-zise" >Moneda:</label>
                       <div className="col-sm-8">
                         <select value={moneda}
-                          className={`form-select${errors.msgMoneda ? ' is-invalid' : ''}`}
+                          className={`form-select-depo${errors.msgMoneda ? ' is-invalid' : ''}`}
                           onChange={(e) => { setMoneda(e.target.value) }}>
                           <option value="">Seleccione</option>
                           <option value="PEN">PEN</option>
@@ -797,13 +797,13 @@ const ServicioEditComponent = () => {
                     <li className="breadcrumb-item active">Editar Servicio</li>
                   </ol>
                 </div>
-                <h4 className="page-title">Listado de Operadores</h4>
+                <h4 className="page-title">Editar servicio</h4>
               </div>
             </div>
           </div>
           <div className='row'>
             <div className='float-end pb-3 pt-4'>
-              <div class="alert alert-danger border-0" role="alert">
+              <div className="alert alert-danger border-0" role="alert">
                 <strong>Alerta!</strong> No tiene acceso para este modulo.
               </div>
             </div>
