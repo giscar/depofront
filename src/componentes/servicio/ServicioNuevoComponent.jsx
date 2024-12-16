@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoServicio, montacargasActivo, operadorActivo, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoServicio, buscarServicioByIdOperador, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 
 const ServicioNuevoComponent = () => {
@@ -27,6 +27,8 @@ const ServicioNuevoComponent = () => {
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
+  const [esOperador, setEsOperdor] = useState(false)
+  const [operador, setOperador] = useState([])
 
   const navigator = useNavigate();
 
@@ -161,9 +163,14 @@ const ServicioNuevoComponent = () => {
   useEffect(() => {
     operadorActivo().then((response) => {
       setOperadores(response.data);
-      /*if(initialLogin.id){
-        setOperadorId(initialLogin.id);
-      }*/
+    }).catch(error => {
+      console.log(error);
+    });
+    operadorForDocumento(initialLogin.documento).then((response) => {
+      if(response?.data){
+        setEsOperdor(true);
+        setOperador(response.data)
+      }
     }).catch(error => {
       console.log(error);
     })
@@ -295,17 +302,19 @@ const ServicioNuevoComponent = () => {
                   </div>
                 </div>
                 <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Operador:</label>
+                  <label className="col-sm-4 col-form-label-zise">Operador:</label>
                   <div className="col-sm-8">
                     <select value={operadorId}
                       className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setOperadorId(e.target.value) }}
-                      disabled={`${ingressADM? '' : 'disabled'}`}>
+                      onChange={(e) => { setOperadorId(e.target.value) }}>
                       <option value="">Seleccione</option>
-                      {
-                        operadores.map(operador =>
+                      {esOperador &&
                           <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
-                        )
+                      }
+                      {!esOperador &&
+                          operadores.map(oper =>
+                            <option key={oper.id} value={oper.id}>{oper.nombre + " " + oper.apellidoPat + " " + oper.apellidoMat}</option>
+                          )
                       }
                     </select>
                     {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}

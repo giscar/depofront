@@ -55,7 +55,6 @@ const ServicioComponent = () => {
   }
 
   useEffect(() => {
-    debugger
     operadorForDocumento(initialLogin.documento).then(p => {
       if(p?.data){
         buscarServicioByIdOperador(p.data.documento).then((response) => {
@@ -74,7 +73,6 @@ const ServicioComponent = () => {
         })
       }
     })
-    
   }, [])
   
 
@@ -113,7 +111,7 @@ const ServicioComponent = () => {
                 </div>
                 <div className="card-body">
                   <div className='row'>
-                    <div className="col-lg-12">
+                    <div className="col-lg-6">
                       <label className='col-form-label-zise'>Codigo del servicio:</label>
                       <input type="number"
                         id="inputCodServicio"
@@ -135,9 +133,9 @@ const ServicioComponent = () => {
                     </div>
                   </div>
                   <div className='mt-4 float-rigth'>
-                    <button type="button" className={`btn-depo btn-primary-depo${esOperador ? ' invisible' : ''}`}  onClick={findService}>Buscar</button>
-                    &nbsp;&nbsp;
                     <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+                    &nbsp;&nbsp;
+                    <button type="button" className={`btn-depo btn-primary-depo${esOperador ? ' invisible' : ''}`}  onClick={findService}>Buscar</button>
                   </div>
                 </div>
               </div>

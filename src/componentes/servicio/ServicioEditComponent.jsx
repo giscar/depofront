@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
+import { inactiveFile, montacargasActivo, operadorActivo, operadorForDocumento, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SignatureCanvas from 'react-signature-canvas'
@@ -66,6 +66,8 @@ const ServicioEditComponent = () => {
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
   const [moneda, setMoneda] = useState('')
+  const [esOperador, setEsOperdor] = useState(false)
+  const [operador, setOperador] = useState([])
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -295,6 +297,14 @@ const ServicioEditComponent = () => {
       setOperadores(response.data);
     }).catch(error => {
       console.log(error);
+    });
+    operadorForDocumento(initialLogin.documento).then((response) => {
+      if(response?.data){
+        setEsOperdor(true);
+        setOperador(response.data)
+      }
+    }).catch(error => {
+      console.log(error);
     })
   }, [])
 
@@ -364,7 +374,6 @@ const ServicioEditComponent = () => {
   }
 
   const handleInactiveFile = (idImagen) => {
-    //console.log(idImagen);
     inactiveFile(idImagen).then(() => {
       if (id) {
         servicioForId(id).then((response) => {
@@ -489,14 +498,16 @@ const ServicioEditComponent = () => {
                     <div className="col-sm-8">
                       <select value={operadorId}
                         className={`form-select-depo ${ingressADM? '' : 'bg-secondary bg-opacity-10 '}`}
-                        disabled={ingressADM? '' : 'disabled'}
                         onChange={(e) => { setOperadorId(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        {
-                          operadores.map(operador =>
-                            <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
+                        {esOperador &&
+                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
+                      }
+                      {!esOperador &&
+                          operadores.map(oper =>
+                            <option key={oper.id} value={oper.id}>{oper.nombre + " " + oper.apellidoPat + " " + oper.apellidoMat}</option>
                           )
-                        }
+                      }
                       </select>
                     </div>
                   </div>
