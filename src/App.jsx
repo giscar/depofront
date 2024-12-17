@@ -31,6 +31,7 @@ import RolNuevoComponent from './componentes/acceso/rol/RolNuevoComponent'
 import RolEditComponent from './componentes/acceso/rol/RolEditComponent'
 import RolComponent from './componentes/acceso/rol/RolComponent'
 import InicioComponent from './componentes/login/InicioComponent'
+import FacturaListaComponent from './componentes/factura/FacturaListaComponent'
 
 function App() {
 
@@ -40,8 +41,8 @@ function App() {
           <Routes>
             <Route path='/' element={<LoginComponent/>}></Route>
             <Route path='/inicio' element={<InicioComponent />}></Route>
-            <Route path='/facturas' element={<FacturaComponent />}></Route>
-            <Route path='/addNuevaFactura' element={<FacturaComponent />}></Route>
+            <Route path='/facturas' element={<FacturaListaComponent />}></Route>
+            <Route path='/NuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/facturaRegistro/:ids' element={<FacturaRegistroComponent />}></Route>
             <Route path='/editFactura/:id' element={<FacturaComponent />}></Route>
             <Route path='/clientes' element={<ClienteComponent />}></Route>

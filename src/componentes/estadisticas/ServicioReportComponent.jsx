@@ -236,7 +236,10 @@ const ServicioReportComponent = () => {
                         {servicio.estadoRegistro === "Concluido" &&
                           <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
                         }
-                        {servicio.estadoRegistro !== "Concluido" &&
+                        {servicio.estadoRegistro === "Facturado" &&
+                          <span className="badge badge-boxed  badge-outline-primary">{servicio.estadoRegistro}</span>
+                        }
+                        {servicio.estadoRegistro === "Proceso" &&
                           <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
                         }
                       </td>
@@ -246,7 +249,12 @@ const ServicioReportComponent = () => {
                             <i className="bi bi-search"></i>
                           </a>
                         }
-                        {servicio.estadoRegistro !== "Concluido" &&
+                        {servicio.estadoRegistro === "Facturado" &&
+                          <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
+                            <i className="bi bi-search"></i>
+                          </a>
+                        }
+                        {servicio.estadoRegistro === "Proceso" &&
                           <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
                             <i className="bi bi-pencil-fill"></i>
                           </a>

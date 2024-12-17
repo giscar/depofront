@@ -91,7 +91,7 @@ const HeaderComponent = () => {
                 </a>
                 <ul className="dropdown-menu">
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederServicioAdm()}>Busqueda Servicio</a></li>
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Facturar Servicio</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederFacturas()}>Busqueda Factura</a></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederMontacargas()}>Montacargas</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>

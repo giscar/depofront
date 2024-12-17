@@ -29,6 +29,8 @@ export const facturaForId = (facturaId) => axios.get(REST_API_BASE_URL_FACTURA+"
 
 export const buscarCodigoFactura = () => axios.get(REST_API_BASE_URL_FACTURA+"/maxCodFactura"); 
 
+export const buscarFactura = () => axios.get(REST_API_BASE_URL_FACTURA+"/busquedaFactura"); 
+
 export const clienteForRuc = (clienteRuc) => axios.get(REST_API_BASE_URL_CLIENTE+"/"+clienteRuc);
 
 export const clienteForDescripcion = (clienteDescripcion) => axios.get(REST_API_BASE_URL_CLIENTE+"/descrip?descripcion="+clienteDescripcion);

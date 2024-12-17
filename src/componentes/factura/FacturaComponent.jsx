@@ -27,7 +27,17 @@ const FacturaComponent = () => {
 
   const notify = () => toast.error('Ha seleccionado mas de una empresa para facturar', {
     position: "top-right",
-    autoClose: 4000,
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+  });
+
+  const validaServicio = () => toast.error('No ha seleccionado un servicio para facturar', {
+    position: "top-right",
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -38,6 +48,13 @@ const FacturaComponent = () => {
   const registrarFactura = () => {
     let rucTemp = ""
     let validaRUC = true
+    debugger
+    console.log(serviciosSeleccionados)
+    if(serviciosSeleccionados.length == 0){
+      validaRUC = false;
+      validaServicio()
+      return
+    }
     servicios.map(p => {
       serviciosSeleccionados.map(q => {
         if(p.codServicio == q){
@@ -165,10 +182,9 @@ const FacturaComponent = () => {
                     <th className='td-th-size-depo'>RUC</th>
                     <th className='td-th-size-depo'>Razon Social</th>
                     <th className='td-th-size-depo'>Tipo</th>
-                    <th className='td-th-size-depo'>Salida local</th>
-                    <th className='td-th-size-depo'>Inicio servicio</th>
-                    <th className='td-th-size-depo'>Fin servicio</th>
-                    <th className='td-th-size-depo'>Retorno local</th>
+                    <th className='td-th-size-depo'>Monto</th>
+                    <th className='td-th-size-depo'>Moneda</th>
+                    <th className='td-th-size-depo'>Horas</th>
                     <th className='td-th-size-depo'>Operador</th>
                     <th className='td-th-size-depo'>Montacarga</th>
                     <th className='td-th-size-depo'>Estado</th>
@@ -179,14 +195,13 @@ const FacturaComponent = () => {
                   {
                     servicios.map(servicio =>
                       <tr key={servicio.id}>
-                        <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                        <td className='td-th-size-depo'>{servicio.codServicio.toString().padStart(6, '0')}</td>
                         <td className='td-th-size-depo'>{servicio.ruc}</td>
                         <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                         <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                        <td className='td-th-size-depo'>{(new Date(servicio.horaSalidaLocal)).toLocaleString()}</td>
-                        <td className='td-th-size-depo'>{(new Date(servicio.horaInicioServicio)).toLocaleString()}</td>
-                        <td className='td-th-size-depo'>{(new Date(servicio.horaFinServicio)).toLocaleString()}</td>
-                        <td className='td-th-size-depo'>{(new Date(servicio.horaRetornoLocal)).toLocaleString()}</td>
+                        <td className='td-th-size-depo'>{servicio.montoServicio}</td>
+                        <td className='td-th-size-depo'>{servicio.moneda}</td>
+                        <td className='td-th-size-depo'>{servicio.totalHoras}</td>
                         <td className='td-th-size-depo'>{servicio.operador[0]?.nombre + ' ' + servicio.operador[0]?.apellidoPat + ' ' + servicio.operador[0]?.apellidoMat}</td>
                         <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo + ' ' + servicio.montacarga[0]?.marca}</td>
                         <td className='td-th-size-depo'>

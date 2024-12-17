@@ -85,7 +85,6 @@ const FacturaRegistroComponent = () => {
       }
 
     })
-    console.log(tipoDocumento)
   }, [tipoDocumento])
 
   const cargarEmisor = () => {
@@ -106,7 +105,10 @@ const FacturaRegistroComponent = () => {
     msgRazonSocialCliente: '',
     msgDireccionCliente: '',
     msgTipoDocumento: '',
-    msgMontacargaId: '',
+    msgFechaEmision: '',
+    msgMontoFacturado: '',
+    msgMoneda: '',
+    msgTipoPago: '',
   })
 
   const notify = () => toast.info('Se ha realizado la facturacion correctamente', {
@@ -120,6 +122,7 @@ const FacturaRegistroComponent = () => {
   });
 
   const validateForm = () => {
+    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -177,6 +180,34 @@ const FacturaRegistroComponent = () => {
       errorCopy.msgNroDocumento = '';
     } else {
       errorCopy.msgNroDocumento = 'Tiene que ingresar el numero del documento';
+      valid = false;
+    }
+
+    if (fechaEmision) {
+      errorCopy.msgFechaEmision = '';
+    } else {
+      errorCopy.msgFechaEmision = 'Tiene que ingresar la fecha de emision de la factura';
+      valid = false;
+    }
+
+    if (monto) {
+      errorCopy.msgMontoFacturado = '';
+    } else {
+      errorCopy.msgMontoFacturado = 'Tiene que ingresar el monto de la factura';
+      valid = false;
+    }
+
+    if (moneda) {
+      errorCopy.msgMoneda = '';
+    } else {
+      errorCopy.msgMoneda = 'Tiene que ingresar la moneda de la factura';
+      valid = false;
+    }
+
+    if (tipoPago) {
+      errorCopy.msgTipoPago = '';
+    } else {
+      errorCopy.msgTipoPago = 'Tiene que ingresar el tipo de pago';
       valid = false;
     }
 
@@ -366,7 +397,7 @@ const FacturaRegistroComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Tipo de Documento:</label>
                     <div className="col-sm-8">
                       <select value={tipoDocumento}
-                        className={`form-select${errors.msgTipoDocumento ? ' is-invalid' : ''}`}
+                        className={`form-select-depo${errors.msgTipoDocumento ? ' is-invalid' : ''}`}
                         onChange={(e) => { setTipoDocumento(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="Factura">Factura</option>
@@ -393,10 +424,11 @@ const FacturaRegistroComponent = () => {
                     <div className="col-sm-8">
                       <input type="date"
                         value={fechaEmision}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgFechaEmision ? 'is-invalid' : ''}`}
                         defaultValue={fechaEmision}
                         onChange={(e) => { setFechaEmision(e.target.value) }}>
                       </input>
+                      {errors.msgFechaEmision && <div className='invalid-feedback'>{errors.msgFechaEmision}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -407,33 +439,36 @@ const FacturaRegistroComponent = () => {
                         placeholder='Costo del servicio'
                         value={monto}
                         onChange={(e) => { setMonto(e.target.value) }}
-                        className='form-control-depo'
+                        className={`form-control-depo ${errors.msgMontoFacturado ? 'is-invalid' : ''}`}
                         autoComplete='off'>
                       </input>
+                      {errors.msgMontoFacturado && <div className='invalid-feedback'>{errors.msgMontoFacturado}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise" >Moneda:</label>
+                    <label className="col-sm-4 col-form-label-zise">Moneda:</label>
                     <div className="col-sm-8">
                       <select value={moneda}
-                        className='form-select-depo'
+                        className={`form-select-depo${errors.msgMoneda ? ' is-invalid' : ''}`}
                         onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="PEN">PEN</option>
                         <option value="USD">USD</option>
                       </select>
+                      {errors.msgMoneda && <div className='invalid-feedback'>{errors.msgMoneda}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de Pago:</label>
                     <div className="col-sm-8">
                       <select value={tipoPago}
-                        className='form-select-depo'
+                        className={`form-select-depo${errors.msgTipoPago ? ' is-invalid' : ''}`}
                         onChange={(e) => { setTipoPago(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="Credito">Credito</option>
                         <option value="Contado">Contado</option>
                       </select>
+                      {errors.msgTipoPago && <div className='invalid-feedback'>{errors.msgTipoPago}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
