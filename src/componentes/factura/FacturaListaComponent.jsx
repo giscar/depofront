@@ -30,7 +30,7 @@ const FacturaListaComponent = () => {
   }
 
   const verFactura = (id) => {
-    navigator(`/ServicioView/${id}`)
+    navigator(`/facturaView/${id}`)
   }
 
   const findFactura = () => {
@@ -115,19 +115,32 @@ const FacturaListaComponent = () => {
               <table className="table mb-0">
                 <thead className="thead-light">
                   <tr>
+                    <th className='td-th-size-depo'>Tipo documento</th>
                     <th className='td-th-size-depo'>Numero</th>
                     <th className='td-th-size-depo'>RUC</th>
                     <th className='td-th-size-depo'>Razon Social</th>
+                    <th className='td-th-size-depo'>Monto</th>
+                    <th className='td-th-size-depo'>Moneda</th>
+                    <th className='td-th-size-depo'>Fecha de emision</th>
+                    <th className='td-th-size-depo'>Accion</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
                     facturas.map(fact =>
                       <tr key={fact.id}>
+                        <td className='td-th-size-depo'>{fact.tipoDocumento}</td>
                         <td className='td-th-size-depo'>{fact.nroDocumento}</td>
                         <td className='td-th-size-depo'>{fact.rucCliente}</td>
                         <td className='td-th-size-depo'>{fact.razonSocialCliente}</td>
-                        
+                        <td className='td-th-size-depo'>{fact.monto}</td>
+                        <td className='td-th-size-depo'>{fact.moneda}</td>
+                        <td className='td-th-size-depo'>{fact.fechaEmision}</td>
+                        <td className='text-center'>
+                            <a className='icon-link-depo' onClick={() => verFactura(fact.id)}>
+                              <i className="bi bi-search"></i>
+                            </a>
+                        </td>
                       </tr>
                     )
                   }

@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoFactura, buscarCodigoServicio, buscarServiciosConcluidosForFacturar, montacargasActivo, nuevaFactura, operadorActivo, servicioFacturado, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoFactura, buscarServiciosConcluidosForFacturar, facturaForId, montacargasActivo, nuevaFactura, operadorActivo, servicioFacturado, servicioSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const FacturaRegistroComponent = () => {
+const FacturaViewComponent = () => {
 
-  const [codServicio, setCodServicio] = useState('')
-  const [operadorId, setOperadorId] = useState('')
-  const [montacargaId, setMontacargaId] = useState('')
-  const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
-  const [horaInicioServicio, setHoraInicioServicio] = useState('')
-  const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
-  const [horaFinServicio, setHoraFinServicio] = useState('')
-  const [totalHoras, setTotalHoras] = useState('')
+
+  const [factura, setFactura] = useState({})
   const [monto, setMonto] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
@@ -32,7 +26,6 @@ const FacturaRegistroComponent = () => {
   const [direccionCliente, setDireccionCliente] = useState('')
   const [nroDocumento, setNroDocumento] = useState('')
   const [codigoFactura, setCodigoFactura] = useState('')
-  const [serie, setSerie] = useState('')
   const [tipoDocumento, setTipoDocumento] = useState('')
 
   const access = "R008"
@@ -47,53 +40,32 @@ const FacturaRegistroComponent = () => {
     });
   })
 
-  const navigator = useNavigate();
-
-  const { ids } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    cargarEmisor();
-    buscarServiciosConcluidosForFacturar(ids).then((response) => {
-      setServicios(response.data);
-      let montoFacturado = 0;
-      response.data.map((item) => {
-        montoFacturado = montoFacturado + item.montoServicio;
-        setMonto(montoFacturado)
-        setMoneda(item.moneda)
-        setRucCliente(item.cliente[0].ruc);
-        setRazonSocialCliente(item.cliente[0].razonSocial);
-        setDireccionCliente(item.cliente[0].direccion);
-      })
+    facturaForId(id).then((response) => {
+      debugger
+      setFactura(response.data)
+      console.log(response.data)
+      cargarFactura()
     })
   }, [])
 
-  useEffect(() => {
-    buscarCodigoFactura().then((response) => {
-      if (tipoDocumento == "Factura") {
-        let nroDoc = "";
-        let codFactura = 0;
-        let serieFactura = "";
-        let secCompleta = "";
-        codFactura = response.data + 1;
-        setCodigoFactura(codFactura);
-        secCompleta = codFactura.toString().padStart(8, '0');
-
-        serieFactura = "F006";
-        setSerie(serieFactura);
-        nroDoc = serieFactura + "-" + secCompleta;
-        setNroDocumento(nroDoc)
-      }
-
-    })
-  }, [tipoDocumento])
-
-  const cargarEmisor = () => {
+  const cargarFactura = () => {
+    setNroDocumento(factura.nroDocumento);
+    setTipoDocumento(factura.tipoDocumento);
+    setFechaEmision(factura.fechaEmision);
+    setMonto(factura.monto);
+    setMoneda(factura.moneda);
+    setTipoPago(factura.tipoPago);
+    setObservaciones(factura.observaciones);
     setRazonSocial("Depositos y Ventas S.A.");
     setRuc("20100014476");
     setDireccion("jr. victor a. belaunde 901 carmen de la legua");
-    let curr = new Date();
-    curr.setDate(curr.getDate());
-    setFechaEmision(curr.toISOString().substring(0, 10));
+    setRucCliente(factura.rucCliente);
+    setRazonSocialCliente(factura.razonSocialCliente);
+    setDireccionCliente(factura.direccionCliente)
+    setServicios(factura.servicios)
   }
 
   const [errors, setErrors] = useState({
@@ -121,155 +93,7 @@ const FacturaRegistroComponent = () => {
     theme: "colored",
   });
 
-  const validateForm = () => {
-    debugger
-    let valid = true;
-    const errorCopy = { ...errors }
-    const regex = /^[0-9]*$/;
-
-    if (ruc) {
-      errorCopy.msgRuc = '';
-    } else {
-      errorCopy.msgRuc = 'Tiene que ingresar el numero de RUC el emisor';
-      valid = false;
-    }
-
-    if (razonSocial) {
-      errorCopy.msgRazonSocial = '';
-    } else {
-      errorCopy.msgRazonSocial = 'Tiene que ingresar la razon social del emisor';
-      valid = false;
-    }
-
-    if (direccion) {
-      errorCopy.msgDireccion = '';
-    } else {
-      errorCopy.msgDireccion = 'Tiene que ingresar la direccion del emisor';
-      valid = false;
-    }
-
-    if (rucCliente) {
-      errorCopy.msgRucCliente = '';
-    } else {
-      errorCopy.msgRucCliente = 'Tiene que ingresar el numero de RUC del cliente';
-      valid = false;
-    }
-
-    if (razonSocialCliente) {
-      errorCopy.msgRazonSocialCliente = '';
-    } else {
-      errorCopy.msgRazonSocialCliente = 'Tiene que ingresar la razon social del cliente';
-      valid = false;
-    }
-
-    if (direccionCliente) {
-      errorCopy.msgDireccionCliente = '';
-    } else {
-      errorCopy.msgDireccionCliente = 'Tiene que ingresar la direccion del cliente';
-      valid = false;
-    }
-
-    if (tipoDocumento) {
-      errorCopy.msgTipoDocumento = '';
-    } else {
-      errorCopy.msgTipoDocumento = 'Tiene que ingresar el tipo de documento';
-      valid = false;
-    }
-
-    if (nroDocumento) {
-      errorCopy.msgNroDocumento = '';
-    } else {
-      errorCopy.msgNroDocumento = 'Tiene que ingresar el numero del documento';
-      valid = false;
-    }
-
-    if (fechaEmision) {
-      errorCopy.msgFechaEmision = '';
-    } else {
-      errorCopy.msgFechaEmision = 'Tiene que ingresar la fecha de emision de la factura';
-      valid = false;
-    }
-
-    if (monto) {
-      errorCopy.msgMontoFacturado = '';
-    } else {
-      errorCopy.msgMontoFacturado = 'Tiene que ingresar el monto de la factura';
-      valid = false;
-    }
-
-    if (moneda) {
-      errorCopy.msgMoneda = '';
-    } else {
-      errorCopy.msgMoneda = 'Tiene que ingresar la moneda de la factura';
-      valid = false;
-    }
-
-    if (tipoPago) {
-      errorCopy.msgTipoPago = '';
-    } else {
-      errorCopy.msgTipoPago = 'Tiene que ingresar el tipo de pago';
-      valid = false;
-    }
-
-    setErrors(errorCopy);
-    return valid;
-  }
-
-  const handleSubmit = (e) => {
-    debugger
-    e.preventDefault();
-    if (validateForm()) {
-      const data = {}
-      data.nroDocumento = nroDocumento;
-      data.ruc = ruc;
-      data.razonSocial = razonSocial?.toUpperCase();
-      data.direccion = direccion?.toUpperCase();
-      data.rucCliente = rucCliente;
-      data.razonSocialCliente = razonSocialCliente?.toUpperCase();
-      data.direccionCliente = direccionCliente?.toUpperCase();
-      data.fechaEmision = fechaEmision;
-      data.tipoDocumento = tipoDocumento;
-      data.tipoPago = tipoPago;
-      data.moneda = moneda;
-      data.monto = monto;
-      data.codigoFactura = codigoFactura;
-      data.serie = serie;
-      data.servicios = servicios
-      nuevaFactura(data).then((response) => {
-        console.log(response.data)
-      }).then(() => {
-        servicios.map(p => {
-          servicioFacturado(p);
-        });
-      }).
-      catch(error => {
-        console.error(error)
-      });
-      limpiar()
-      notify()
-      navigator("/servicios");
-    }
-  }
-
-  const limpiar = () => {
-    setRuc('')
-    setRazonSocial('')
-    setDireccion('')
-    setOperadorId('')
-    setMontacargaId('')
-    setCodServicio('')
-    setHoraSalidaLocal('')
-    setHoraInicioServicio('')
-    setHoraFinServicio('')
-    setHoraRetornoLocal('')
-    setTotalHoras('')
-    setMonto('')
-    setTipoServicio('')
-    setSolicitante('')
-    setMoneda('')
-    setObservaciones('');
-    setTipoPago('')
-  };
+  
 
   return (
     <>
@@ -499,7 +323,7 @@ const FacturaRegistroComponent = () => {
                     </div>
                   </div>
                   <div>
-                    <button className='btn btn-primary' onClick={handleSubmit}>Registrar factura</button>
+                    <button className='btn btn-primary'>Registrar factura</button>
                   </div>
                 </div>
               </div>
@@ -584,4 +408,4 @@ const FacturaRegistroComponent = () => {
     </>
   )
 }
-export default FacturaRegistroComponent
+export default FacturaViewComponent
