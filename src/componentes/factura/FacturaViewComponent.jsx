@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoFactura, buscarServiciosConcluidosForFacturar, facturaForId, montacargasActivo, nuevaFactura, operadorActivo, servicioFacturado, servicioSave } from '../../service/FacturaService';
-import { useNavigate, useParams } from 'react-router-dom';
+import { facturaForId } from '../../service/FacturaService';
+import { useParams } from 'react-router-dom';
 
 const FacturaViewComponent = () => {
 
-
   const [factura, setFactura] = useState({})
   const [monto, setMonto] = useState('')
-  const [tipoServicio, setTipoServicio] = useState('')
-  const [solicitante, setSolicitante] = useState('')
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
-  const [emisor, setEmisor] = useState({})
-  const [receptor, setReceptor] = useState('')
   const [fechaEmision, setFechaEmision] = useState('')
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
@@ -25,7 +19,6 @@ const FacturaViewComponent = () => {
   const [razonSocialCliente, setRazonSocialCliente] = useState('')
   const [direccionCliente, setDireccionCliente] = useState('')
   const [nroDocumento, setNroDocumento] = useState('')
-  const [codigoFactura, setCodigoFactura] = useState('')
   const [tipoDocumento, setTipoDocumento] = useState('')
 
   const access = "R008"
@@ -44,56 +37,27 @@ const FacturaViewComponent = () => {
 
   useEffect(() => {
     facturaForId(id).then((response) => {
-      debugger
       setFactura(response.data)
-      console.log(response.data)
-      cargarFactura()
+      cargarFactura(response)
     })
   }, [])
 
-  const cargarFactura = () => {
-    setNroDocumento(factura.nroDocumento);
-    setTipoDocumento(factura.tipoDocumento);
-    setFechaEmision(factura.fechaEmision);
-    setMonto(factura.monto);
-    setMoneda(factura.moneda);
-    setTipoPago(factura.tipoPago);
-    setObservaciones(factura.observaciones);
-    setRazonSocial("Depositos y Ventas S.A.");
-    setRuc("20100014476");
-    setDireccion("jr. victor a. belaunde 901 carmen de la legua");
-    setRucCliente(factura.rucCliente);
-    setRazonSocialCliente(factura.razonSocialCliente);
-    setDireccionCliente(factura.direccionCliente)
-    setServicios(factura.servicios)
+  const cargarFactura = (response) => {
+    setNroDocumento(response.data.nroDocumento);
+    setTipoDocumento(response.data.tipoDocumento);
+    setFechaEmision(response.data.fechaEmision);
+    setMonto(response.data.monto);
+    setMoneda(response.data.moneda);
+    setTipoPago(response.data.tipoPago);
+    setObservaciones(response.data.observaciones);
+    setRazonSocial(response.data.razonSocial);
+    setRuc(response.data.ruc);
+    setDireccion(response.data.direccion);
+    setRucCliente(response.data.rucCliente);
+    setRazonSocialCliente(response.data.razonSocialCliente);
+    setDireccionCliente(response.data.direccionCliente)
+    setServicios(response.data.servicios)
   }
-
-  const [errors, setErrors] = useState({
-    msgNroDocumento: '',
-    msgRuc: '',
-    msgRazonSocial: '',
-    msgDireccion: '',
-    msgRucCliente: '',
-    msgRazonSocialCliente: '',
-    msgDireccionCliente: '',
-    msgTipoDocumento: '',
-    msgFechaEmision: '',
-    msgMontoFacturado: '',
-    msgMoneda: '',
-    msgTipoPago: '',
-  })
-
-  const notify = () => toast.info('Se ha realizado la facturacion correctamente', {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-  });
-
-  
 
   return (
     <>
@@ -129,11 +93,10 @@ const FacturaViewComponent = () => {
                       <input type="number"
                         placeholder="Ingrese el numero de RUC"
                         value={ruc}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         onChange={(e) => { setRuc(e.target.value) }}
                         disabled>
                       </input>
-                      {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -142,11 +105,10 @@ const FacturaViewComponent = () => {
                       <input type="text"
                         placeholder='Razon Social'
                         value={razonSocial}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRazonSocial ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         disabled
                         onChange={(e) => { setRazonSocial(e.target.value) }}>
                       </input>
-                      {errors.msgRazonSocial && <div className='invalid-feedback'>{errors.msgRazonSocial}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -155,11 +117,10 @@ const FacturaViewComponent = () => {
                       <input type="text"
                         placeholder='Razon Social'
                         value={direccion}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgDireccion ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         disabled
                         onChange={(e) => { setDireccion(e.target.value) }}>
                       </input>
-                      {errors.msgDireccion && <div className='invalid-feedback'>{errors.msgDireccion}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -167,13 +128,12 @@ const FacturaViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="number"
                         placeholder="Ingrese el numero de RUC"
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRucCliente ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         value={rucCliente}
                         onChange={(e) => { setRucCliente(e.target.value) }}
                         disabled
                       >
                       </input>
-                      {errors.msgRucCliente && <div className='invalid-feedback'>{errors.msgRucCliente}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -182,11 +142,10 @@ const FacturaViewComponent = () => {
                       <input type="text"
                         value={razonSocialCliente}
                         placeholder='Razon Social'
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRazonSocialCliente ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         onChange={(e) => { setRazonSocialCliente(e.target.value) }}
                         disabled>
                       </input>
-                      {errors.msgRazonSocialCliente && <div className='invalid-feedback'>{errors.msgRazonSocialCliente}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -195,11 +154,10 @@ const FacturaViewComponent = () => {
                       <input type="text"
                         value={direccionCliente}
                         placeholder='Direccion'
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgDireccionCliente ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         onChange={(e) => { setDireccionCliente(e.target.value) }}
                         disabled>
                       </input>
-                      {errors.msgDireccionCliente && <div className='invalid-feedback'>{errors.msgDireccionCliente}</div>}
                     </div>
                   </div>
                 </div>
@@ -217,13 +175,12 @@ const FacturaViewComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Tipo de Documento:</label>
                     <div className="col-sm-8">
                       <select value={tipoDocumento}
-                        className={`form-select-depo${errors.msgTipoDocumento ? ' is-invalid' : ''}`}
+                        className={`form-select-depo`}
                         onChange={(e) => { setTipoDocumento(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="Factura">Factura</option>
                         <option value="Boleta">Boleta</option>
                       </select>
-                      {errors.msgTipoDocumento && <div className='invalid-feedback'>{errors.msgTipoDocumento}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -232,11 +189,10 @@ const FacturaViewComponent = () => {
                       <input type="text"
                         placeholder="Codigo del servicio"
                         value={nroDocumento}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNroDocumento ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
                         readOnly
                         onChange={(e) => { setNroDocumento(e.target.value) }}>
                       </input>
-                      {errors.msgNroDocumento && <div className='invalid-feedback'>{errors.msgNroDocumento}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -244,11 +200,10 @@ const FacturaViewComponent = () => {
                     <div className="col-sm-8">
                       <input type="date"
                         value={fechaEmision}
-                        className={`form-control-depo ${errors.msgFechaEmision ? 'is-invalid' : ''}`}
+                        className={`form-control-depo`}
                         defaultValue={fechaEmision}
                         onChange={(e) => { setFechaEmision(e.target.value) }}>
                       </input>
-                      {errors.msgFechaEmision && <div className='invalid-feedback'>{errors.msgFechaEmision}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -259,36 +214,33 @@ const FacturaViewComponent = () => {
                         placeholder='Costo del servicio'
                         value={monto}
                         onChange={(e) => { setMonto(e.target.value) }}
-                        className={`form-control-depo ${errors.msgMontoFacturado ? 'is-invalid' : ''}`}
+                        className={`form-control-depo`}
                         autoComplete='off'>
                       </input>
-                      {errors.msgMontoFacturado && <div className='invalid-feedback'>{errors.msgMontoFacturado}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Moneda:</label>
                     <div className="col-sm-8">
                       <select value={moneda}
-                        className={`form-select-depo${errors.msgMoneda ? ' is-invalid' : ''}`}
+                        className={`form-select-depo`}
                         onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="PEN">PEN</option>
                         <option value="USD">USD</option>
                       </select>
-                      {errors.msgMoneda && <div className='invalid-feedback'>{errors.msgMoneda}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de Pago:</label>
                     <div className="col-sm-8">
                       <select value={tipoPago}
-                        className={`form-select-depo${errors.msgTipoPago ? ' is-invalid' : ''}`}
+                        className={`form-select-depo`}
                         onChange={(e) => { setTipoPago(e.target.value) }}>
                         <option value="">Seleccione</option>
                         <option value="Credito">Credito</option>
                         <option value="Contado">Contado</option>
                       </select>
-                      {errors.msgTipoPago && <div className='invalid-feedback'>{errors.msgTipoPago}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -356,7 +308,7 @@ const FacturaViewComponent = () => {
                         </thead>
                         <tbody>
                           {
-                            servicios.map(servicio =>
+                            factura.servicios?.map(servicio =>
                               <tr key={servicio.id}>
                                 <td className='td-th-size-depo'>{servicio.codServicio}</td>
                                 <td className='td-th-size-depo'>{servicio.ruc}</td>
