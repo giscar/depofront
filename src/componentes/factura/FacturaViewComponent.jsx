@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import HeaderComponent from '../HeaderComponent';
 import { facturaForId } from '../../service/FacturaService';
 import { useParams } from 'react-router-dom';
+import HojaFacturaReportComponent from '../report/HojaFacturaReportComponent';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const FacturaViewComponent = () => {
 
@@ -226,8 +228,8 @@ const FacturaViewComponent = () => {
                         className={`form-select-depo`}
                         onChange={(e) => { setMoneda(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="PEN">PEN</option>
-                        <option value="USD">USD</option>
+                        <option value="PEN">Soles</option>
+                        <option value="USD">Dolares</option>
                       </select>
                     </div>
                   </div>
@@ -275,7 +277,15 @@ const FacturaViewComponent = () => {
                     </div>
                   </div>
                   <div>
-                    <button className='btn btn-primary'>Registrar factura</button>
+                  <PDFDownloadLink document={<HojaFacturaReportComponent id={id} />} fileName="factura.pdf">
+                        {({ loading, url, error, blob }) =>
+                          loading ? (
+                            <button className="btn-depo btn-primary-depo">Loading Document ...</button>
+                          ) : (
+                            <button className="btn-depo btn-primary-depo">Descargar</button>
+                          )
+                        }
+                      </PDFDownloadLink>
                   </div>
                 </div>
               </div>

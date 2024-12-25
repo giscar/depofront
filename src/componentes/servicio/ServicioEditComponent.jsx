@@ -650,8 +650,8 @@ const ServicioEditComponent = () => {
                           className={`form-select-depo${errors.msgMoneda ? ' is-invalid' : ''}`}
                           onChange={(e) => { setMoneda(e.target.value) }}>
                           <option value="">Seleccione</option>
-                          <option value="PEN">PEN</option>
-                          <option value="USD">USD</option>
+                          <option value="PEN">Soles</option>
+                          <option value="USD">Dolares</option>
                         </select>
                         {errors.msgMoneda && <div className='invalid-feedback'>{errors.msgMoneda}</div>}
                       </div>

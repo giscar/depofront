@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { buscarFactura, buscarServicioByDatosAggregate, buscarServicioByIdOperador, buscarServiciosPendientes, operadorForDocumento } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
+import HojaFacturaReportComponent from '../report/HojaFacturaReportComponent';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 
 const FacturaListaComponent = () => {
 
@@ -141,6 +143,10 @@ const FacturaListaComponent = () => {
                               <i className="bi bi-search"></i>
                             </a>
                         </td>
+                        <td className='text-center'>
+                        
+                        </td>
+                        
                       </tr>
                     )
                   }
