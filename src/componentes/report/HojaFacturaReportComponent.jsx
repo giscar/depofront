@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
   },
+  subtitle1: {
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+    marginTop: "5px"
+  },
   section: {
     display: "flex",
     flexDirection: "row",
@@ -72,6 +78,15 @@ const styles = StyleSheet.create({
     marginTop: '5px',
     padding: '8px',
   },
+  rowTable: {
+    flexDirection: 'row',
+  },
+  rowBold: {
+    flexDirection: 'row',
+    border: '5px solid black',
+    marginTop: '5px',
+    padding: '8px',
+  },
   row2: {
     flexDirection: 'row',
     borderBottom: '1px solid #ccc',
@@ -97,19 +112,35 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
-
+  cellTable1: {
+    width: '12%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cellTable: {
+    fontSize: 11,
+    textAlign: "justify",
+    lineHeight: 1.1,
+    margin: 0,
+    border: '1px solid #ccc',
+  },
+  cellBold: {
+    width: '50%',
+    textAlign: 'left',
+    color: '#222',
+    border: '1px solid #ccc',
+    fontSize: 11,
+  },
   cell1: {
     width: '100%',
     textAlign: 'left',
     color: '#222'
   },
-
   cell2: {
     width: '25%',
     textAlign: 'left',
     color: '#222'
   },
-
   textFirma: {
     paddingTop: 25,
   },
@@ -119,6 +150,8 @@ const styles = StyleSheet.create({
 const HojaFacturaReportComponent = ({ id }) => {
 
   const [factura, setFactura] = useState({})
+
+  let index = 0;
 
   useEffect(() => {
     if (id) {
@@ -133,14 +166,6 @@ const HojaFacturaReportComponent = ({ id }) => {
     }
   }, [])
 
-  
-
-  const cargarFactura = (data) => {
-    setCodServicio(data.codServicio)
-
-
-  }
-
   return (
     <Document>
       <Page size={"A4"} style={styles.page}>
@@ -149,8 +174,10 @@ const HojaFacturaReportComponent = ({ id }) => {
             <View style={styles.cell}>
               <Image src={Logo} style={styles.logo} />
             </View>
-            <View style={styles.cell}>
-              <Text style={styles.title}>EQUIPOS DE TRANSPORTE Y SERVICIOS MECANICOS</Text>
+            <View style={styles.cellBold}>
+              <Text style={styles.subtitle1}>R.U.C. {factura.ruc}</Text>
+              <Text style={styles.subtitle1}>FACTURA ELECTRONICA</Text>
+              <Text style={styles.subtitle1}>{factura.nroDocumento}</Text>
             </View>
           </View>
           <View style={styles.row}>
@@ -161,22 +188,93 @@ const HojaFacturaReportComponent = ({ id }) => {
           </View>
 
           <View style={styles.row}>
-            <View style={styles.cell}>
+            <View style={styles.cell1}>
               <Text style={styles.parragraph}>Nombre/Razón Social: {factura.razonSocialCliente}</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}>RUC: {factura.rucCliente}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}></Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}></Text>
+            <View style={styles.cell1}>
+              <Text style={styles.parragraph}>Direccion: {factura.direccionCliente}</Text>
             </View>
           </View>
+
+          <View style={styles.row}>
+          <View style={styles.cell}>
+              <Text style={styles.parragraph}>RUC: {factura.rucCliente}</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.parragraph}>Feha de emision: {factura.fechaEmision}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+          <View style={styles.cell}>
+              <Text style={styles.parragraph}>Moneda: {factura.moneda}</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.parragraph}>Forma de pago: {factura.tipoPago}</Text>
+            </View>
+          </View>
+
+          <View style={styles.rowTable}>
+          <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Item</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Codigo</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Descripcion</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Und</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Cantidad</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Valor unitario</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Descuento (Afecto a IGV)</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Valor venta</Text>
+            </View>
+          </View>
+
+          {
+           
+                            factura.servicios?.map((servicio, item) =>
+                              
+                              <View style={styles.rowTable}>
+          <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>{item + 1}</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>{servicio.numeroServicio}</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>Montacarga 20tn</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>ZZ</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>500</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>8.00</Text>
+            </View>
+            <View style={styles.cellTable1}>
+              <Text style={styles.cellTable}>9.44</Text>
+            </View>
+          </View>
+                            
+                              
+                            )
+                          }
 
           <View style={styles.row}>
             <View style={styles.cell1}>

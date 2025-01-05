@@ -48,6 +48,7 @@ const ServicioEditComponent = () => {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
@@ -189,6 +190,7 @@ const ServicioEditComponent = () => {
     let data = {}
     data.id = id;
     data.codServicio = codServicio;
+    data.numeroServicio = numeroServicio;
     data.ruc = ruc;
     data.razonSocial = razonSocial;
     data.direccion = direccion;
@@ -231,6 +233,7 @@ const ServicioEditComponent = () => {
       let data = {}
       data.id = id;
       data.codServicio = codServicio;
+      data.numeroServicio = numeroServicio;
       data.ruc = ruc;
       data.razonSocial = razonSocial;
       data.direccion = direccion;
@@ -272,6 +275,7 @@ const ServicioEditComponent = () => {
 
   const cargarServicio = (data) => {
     setCodServicio(data.codServicio)
+    setNumeroServicio(data.numeroServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
@@ -444,13 +448,13 @@ const ServicioEditComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
                     <div className="col-sm-8">
-                      <input type="number"
+                      <input type="text"
                         id="inputCodServicio"
                         placeholder="Codigo del servicio"
-                        value={codServicio}
+                        value={numeroServicio}
                         className="bg-secondary bg-opacity-10 form-control-depo"
                         readOnly
-                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
                     </div>
                   </div>

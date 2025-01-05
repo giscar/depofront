@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { inactiveFile, montacargasActivo, operadorActivo, servicioEdit, servicioForId, uploadFile } from '../../service/FacturaService';
+import { montacargasActivo, operadorActivo, servicioForId } from '../../service/FacturaService';
 import HojaServicioReportComponent from '../report/HojaServicioReportComponent';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import HeaderComponent from '../HeaderComponent';
 
 const ServicioViewComponent = () => {
+
+  const access = "R007"
+  const accessOpe = "R009"
+  let ingressADM = false;
+
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+      ingressADM = true;
+    });
+
+    p.roles.map(r => {
+      if (r.codigo == accessOpe)
+      ingressADM = true;
+    });
+  })
 
   const [servicio, setServicio] = useState([])
   const { id } = useParams();
@@ -18,6 +35,7 @@ const ServicioViewComponent = () => {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
@@ -29,15 +47,14 @@ const ServicioViewComponent = () => {
   const [file, setFile] = useState('')
   const [image, setImage] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
-  const [documento, setDocumento] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
-  const [sign, setSign] = useState('')
   const [url, setUrl] = useState('')
-  const [fechaConclusion, setFechaConclusion] = useState('')
+
 
   const cargarServicio = (data) => {
     setCodServicio(data.codServicio)
+    setNumeroServicio(data.numeroServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
@@ -91,11 +108,10 @@ const ServicioViewComponent = () => {
     setDireccion(cliente.direccion)
   }, [cliente])
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
-
   return (
     <>
-    {initialLogin.usuario && <HeaderComponent />}
+    {initialLogin.documento && <HeaderComponent />}
+    {ingressADM &&
       <div className='container-fluid'>
         <div className="row">
           <div className="col-sm-12">
@@ -104,10 +120,10 @@ const ServicioViewComponent = () => {
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                   <li className="breadcrumb-item"><a href="#">Servicios</a></li>
-                  <li className="breadcrumb-item active">Editar Servicio</li>
+                  <li className="breadcrumb-item active">Ver Servicio</li>
                 </ol>
               </div>
-              <h4 className="page-title">Editar servicio</h4>
+              <h4 className="page-title">Ver servicio</h4>
             </div>
           </div>
         </div>
@@ -123,13 +139,13 @@ const ServicioViewComponent = () => {
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise text-end">Codigo del servicio:</label>
                   <div className="col-sm-8">
-                    <input type="number"
+                    <input type="text"
                       id="inputCodServicio"
                       placeholder="Codigo del servicio"
-                      value={codServicio}
+                      value={numeroServicio}
                       className="bg-secondary bg-opacity-10 form-control-depo"
                       readOnly
-                      onChange={(e) => { setCodServicio(e.target.value) }}>
+                      onChange={(e) => { setNumeroServicio(e.target.value) }}>
                     </input>
                   </div>
                 </div>
@@ -391,6 +407,32 @@ const ServicioViewComponent = () => {
           </div>
         </div>
       </div>
+      }
+      {!ingressADM &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Servicios</a></li>
+                    <li className="breadcrumb-item active">Ver Servicio</li>
+                  </ol>
+                </div>
+                <h4 className="page-title"></h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div className="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     </>
   )
 }

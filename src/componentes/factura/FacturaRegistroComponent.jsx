@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoFactura, buscarCodigoServicio, buscarServiciosConcluidosForFacturar, montacargasActivo, nuevaFactura, operadorActivo, servicioFacturado, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoFactura, buscarServiciosConcluidosForFacturar, nuevaFactura, servicioFacturado } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const FacturaRegistroComponent = () => {
 
-  const [codServicio, setCodServicio] = useState('')
-  const [operadorId, setOperadorId] = useState('')
-  const [montacargaId, setMontacargaId] = useState('')
-  const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
-  const [horaInicioServicio, setHoraInicioServicio] = useState('')
-  const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
-  const [horaFinServicio, setHoraFinServicio] = useState('')
-  const [totalHoras, setTotalHoras] = useState('')
   const [monto, setMonto] = useState('')
-  const [tipoServicio, setTipoServicio] = useState('')
-  const [solicitante, setSolicitante] = useState('')
+
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
-  const [emisor, setEmisor] = useState({})
-  const [receptor, setReceptor] = useState('')
   const [fechaEmision, setFechaEmision] = useState('')
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
@@ -122,7 +111,6 @@ const FacturaRegistroComponent = () => {
   });
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -216,7 +204,6 @@ const FacturaRegistroComponent = () => {
   }
 
   const handleSubmit = (e) => {
-    debugger
     e.preventDefault();
     if (validateForm()) {
       const data = {}
@@ -245,31 +232,11 @@ const FacturaRegistroComponent = () => {
       catch(error => {
         console.error(error)
       });
-      limpiar()
+      //limpiar()
       notify()
       navigator("/servicios");
     }
   }
-
-  const limpiar = () => {
-    setRuc('')
-    setRazonSocial('')
-    setDireccion('')
-    setOperadorId('')
-    setMontacargaId('')
-    setCodServicio('')
-    setHoraSalidaLocal('')
-    setHoraInicioServicio('')
-    setHoraFinServicio('')
-    setHoraRetornoLocal('')
-    setTotalHoras('')
-    setMonto('')
-    setTipoServicio('')
-    setSolicitante('')
-    setMoneda('')
-    setObservaciones('');
-    setTipoPago('')
-  };
 
   return (
     <>
@@ -406,7 +373,7 @@ const FacturaRegistroComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
                     <div className="col-sm-8">
                       <input type="text"
-                        placeholder="Codigo del servicio"
+                        placeholder="Numero de factura"
                         value={nroDocumento}
                         className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNroDocumento ? 'is-invalid' : ''}`}
                         readOnly
@@ -534,7 +501,7 @@ const FacturaRegistroComponent = () => {
                           {
                             servicios.map(servicio =>
                               <tr key={servicio.id}>
-                                <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                                <td className='td-th-size-depo'>{servicio.numeroServicio}</td>
                                 <td className='td-th-size-depo'>{servicio.ruc}</td>
                                 <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                                 <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
@@ -542,7 +509,7 @@ const FacturaRegistroComponent = () => {
                                 <td className='td-th-size-depo'>{servicio.montacarga[0]?.modelo + '-' + servicio.montacarga[0]?.codigo}</td>
                                 <td className='td-th-size-depo'>{servicio.totalHoras}</td>
                                 <td className='td-th-size-depo'>{servicio.montoServicio}</td>
-                                <td className='td-th-size-depo'>{servicio.moneda}</td>
+                                <td className='td-th-size-depo'>{servicio.moneda == "PEN"? "Soles" : "Dolares"}</td>
                               </tr>
                             )
                           }

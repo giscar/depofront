@@ -122,6 +122,7 @@ const HojaServicioReportComponent = ({ id }) => {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
@@ -159,6 +160,7 @@ const HojaServicioReportComponent = ({ id }) => {
     let horaRetornoLocal1 = new Date(data.horaRetornoLocal);
     let fechaConclusion1 = new Date(data.fechaConclusion);
     setCodServicio(data.codServicio)
+    setNumeroServicio(data.numeroServicio)
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
@@ -207,7 +209,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Hoja de Servicio de Montacarga</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.parragraph}>Nº {codServicio}</Text>
+              <Text style={styles.parragraph}>Nº {numeroServicio}</Text>
             </View>
           </View>
 

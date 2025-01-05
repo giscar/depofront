@@ -73,10 +73,10 @@ const FacturaViewComponent = () => {
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                     <li className="breadcrumb-item"><a href="#">Factura</a></li>
-                    <li className="breadcrumb-item active">Nuevo Factura</li>
+                    <li className="breadcrumb-item active">Ver Factura</li>
                   </ol>
                 </div>
-                <h4 className="page-title">Registrar Factura</h4>
+                <h4 className="page-title">Ver Factura</h4>
               </div>
             </div>
           </div>
@@ -189,7 +189,7 @@ const FacturaViewComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Nro de documento:</label>
                     <div className="col-sm-8">
                       <input type="text"
-                        placeholder="Codigo del servicio"
+                        placeholder="Numero de factura"
                         value={nroDocumento}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
                         readOnly
@@ -320,7 +320,7 @@ const FacturaViewComponent = () => {
                           {
                             factura.servicios?.map(servicio =>
                               <tr key={servicio.id}>
-                                <td className='td-th-size-depo'>{servicio.codServicio}</td>
+                                <td className='td-th-size-depo'>{servicio.numeroServicio}</td>
                                 <td className='td-th-size-depo'>{servicio.ruc}</td>
                                 <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                                 <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
@@ -328,7 +328,7 @@ const FacturaViewComponent = () => {
                                 <td className='td-th-size-depo'>{servicio.montacarga[0]?.modelo + '-' + servicio.montacarga[0]?.codigo}</td>
                                 <td className='td-th-size-depo'>{servicio.totalHoras}</td>
                                 <td className='td-th-size-depo'>{servicio.montoServicio}</td>
-                                <td className='td-th-size-depo'>{servicio.moneda}</td>
+                                <td className='td-th-size-depo'>{servicio.moneda == "PEN"? "Soles" : "Dolares"}</td>
                               </tr>
                             )
                           }

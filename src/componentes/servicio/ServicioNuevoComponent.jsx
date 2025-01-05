@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoServicio, buscarServicioByIdOperador, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoServicio, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 
 const ServicioNuevoComponent = () => {
@@ -14,6 +14,7 @@ const ServicioNuevoComponent = () => {
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
+  const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
@@ -123,6 +124,7 @@ const ServicioNuevoComponent = () => {
     if (validateForm()) {
       const data = {}
       data.codServicio = codServicio;
+      data.numeroServicio = numeroServicio;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
@@ -191,6 +193,7 @@ const ServicioNuevoComponent = () => {
   const handleCodServicio = () => {
     buscarCodigoServicio().then((response) => {
       setCodServicio(response.data + 1)
+      setNumeroServicio("OPE"+(response.data + 1).toString().padStart(8, '0'));
     }).catch(error => {
       console.log(error);
     })
@@ -210,6 +213,7 @@ const ServicioNuevoComponent = () => {
     setOperadorId('')
     setMontacargaId('')
     setCodServicio('')
+    setNumeroServicio('')
     setHoraSalidaLocal('')
     setHoraInicioServicio('')
     setHoraFinServicio('')
@@ -254,12 +258,12 @@ const ServicioNuevoComponent = () => {
                 <div className="mb-3 row">
                   <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
                   <div className="col-sm-8">
-                    <input type="number"
+                    <input type="text"
                       placeholder="Codigo del servicio"
-                      value={codServicio}
+                      value={numeroServicio}
                       className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
                       readOnly
-                      onChange={(e) => { setCodServicio(e.target.value) }}>
+                      onChange={(e) => { setNumeroServicio(e.target.value) }}>
                     </input>
                   </div>
                 </div>
