@@ -9,6 +9,28 @@ import {
 import Logo from "../../assets/Logo.png"
 import { useEffect, useState } from "react";
 import { facturaForId } from "../../service/FacturaService";
+import { ToWords } from 'to-words';
+
+const toWords = new ToWords({
+  localeCode: 'es-ES',
+  converterOptions: {
+    currency: true,
+    ignoreDecimal: false,
+    ignoreZeroCurrency: false,
+    doNotAddOnly: false,
+    currencyOptions: {
+
+      symbol: 'S/.',
+      fractionalUnit: {
+        name: 'Paisa',
+        plural: 'Paise',
+        symbol: '',
+      },
+    },
+  },
+});
+
+console.log(toWords.convert(123.10))
 
 
 const styles = StyleSheet.create({
@@ -50,6 +72,12 @@ const styles = StyleSheet.create({
   parragraph: {
     fontSize: 11,
     textAlign: "justify",
+    lineHeight: 1.1,
+    margin: 0,
+  },
+  parragraphrigth: {
+    fontSize: 11,
+    textAlign: "right",
     lineHeight: 1.1,
     margin: 0,
   },
@@ -112,17 +140,44 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
+  cell60: {
+    width: '60%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cell20: {
+    width: '20%',
+    textAlign: 'left',
+    color: '#222'
+  },
   cellTable1: {
     width: '12%',
     textAlign: 'left',
     color: '#222'
   },
+  cellTableItem: {
+    width: '5%',
+    textAlign: 'center',
+    color: '#222'
+  },
+  cellTableCodigo: {
+    width: '15%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cellTableDescripcion: {
+    width: '20%',
+    textAlign: 'left',
+    color: '#222'
+  },
   cellTable: {
-    fontSize: 11,
+    fontSize: 10,
     textAlign: "justify",
+    height: '30px',
     lineHeight: 1.1,
     margin: 0,
     border: '1px solid #ccc',
+    padding: '2px'
   },
   cellBold: {
     width: '50%',
@@ -150,8 +205,11 @@ const styles = StyleSheet.create({
 const HojaFacturaReportComponent = ({ id }) => {
 
   const [factura, setFactura] = useState({})
-
-  let index = 0;
+  const [enteroString, setEnteroString] = useState('')
+  const [decimalString, setDecimalString] = useState('')
+  const [monedaString, setMonedaString] = useState('')
+  const [simboloMoneda, setSimboloMoneda] = useState('')
+  const [monto, setMonto] = useState('')
 
   useEffect(() => {
     if (id) {
@@ -159,6 +217,12 @@ const HojaFacturaReportComponent = ({ id }) => {
         setTimeout(() => {
           setFactura(response.data)
           console.log(response.data)
+          let arr = parseFloat(response.data.monto * 1.18).toFixed(2).toString().split(".");
+          setMonto(response.data.monto)
+          setEnteroString(toWords.convert(arr[0]))
+          setDecimalString(arr[1] + "/100")
+          setMonedaString(response.data.moneda == "PEN" ? "Soles" : "Dolares")
+          setSimboloMoneda(response.data.moneda == "PEN" ? "S/." : "$")
         }, 1000);
       }).catch(error => {
         console.log(error);
@@ -200,7 +264,7 @@ const HojaFacturaReportComponent = ({ id }) => {
           </View>
 
           <View style={styles.row}>
-          <View style={styles.cell}>
+            <View style={styles.cell}>
               <Text style={styles.parragraph}>RUC: {factura.rucCliente}</Text>
             </View>
             <View style={styles.cell}>
@@ -209,8 +273,8 @@ const HojaFacturaReportComponent = ({ id }) => {
           </View>
 
           <View style={styles.row}>
-          <View style={styles.cell}>
-              <Text style={styles.parragraph}>Moneda: {factura.moneda}</Text>
+            <View style={styles.cell}>
+              <Text style={styles.parragraph}>Moneda: {monedaString}</Text>
             </View>
             <View style={styles.cell}>
               <Text style={styles.parragraph}>Forma de pago: {factura.tipoPago}</Text>
@@ -218,13 +282,13 @@ const HojaFacturaReportComponent = ({ id }) => {
           </View>
 
           <View style={styles.rowTable}>
-          <View style={styles.cellTable1}>
+            <View style={styles.cellTableItem}>
               <Text style={styles.cellTable}>Item</Text>
             </View>
-            <View style={styles.cellTable1}>
+            <View style={styles.cellTableCodigo}>
               <Text style={styles.cellTable}>Codigo</Text>
             </View>
-            <View style={styles.cellTable1}>
+            <View style={styles.cellTableDescripcion}>
               <Text style={styles.cellTable}>Descripcion</Text>
             </View>
             <View style={styles.cellTable1}>
@@ -245,91 +309,127 @@ const HojaFacturaReportComponent = ({ id }) => {
           </View>
 
           {
-           
-                            factura.servicios?.map((servicio, item) =>
-                              
-                              <View style={styles.rowTable}>
-          <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>{item + 1}</Text>
+
+            factura.servicios?.map((servicio, item) =>
+
+              <View style={styles.rowTable} key={item}>
+                <View style={styles.cellTableItem}>
+                  <Text style={styles.cellTable}>{item + 1}</Text>
+                </View>
+                <View style={styles.cellTableCodigo}>
+                  <Text style={styles.cellTable}>{servicio.numeroServicio}</Text>
+                </View>
+                <View style={styles.cellTableDescripcion}>
+                  <Text style={styles.cellTable}>Servicio de alquiler de montacarga {servicio.montacarga[0].codigo}</Text>
+                </View>
+                <View style={styles.cellTable1}>
+                  <Text style={styles.cellTable}>ZZ</Text>
+                </View>
+                <View style={styles.cellTable1}>
+                  <Text style={styles.cellTable}>1.00</Text>
+                </View>
+                <View style={styles.cellTable1}>
+                  <Text style={styles.cellTable}>{parseFloat(servicio.montoServicio).toFixed(2)}</Text>
+                </View>
+                <View style={styles.cellTable1}>
+                  <Text style={styles.cellTable}>0.00</Text>
+                </View>
+                <View style={styles.cellTable1}>
+                  <Text style={styles.cellTable}>{parseFloat(servicio.montoServicio*1.18).toFixed(2)}</Text>
+                </View>
+              </View>
+
+
+            )
+          }
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}>SON: {enteroString + " " + decimalString + " " + monedaString}</Text>
             </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>{servicio.numeroServicio}</Text>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>Op. Gravada:</Text>
             </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>Montacarga 20tn</Text>
-            </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>ZZ</Text>
-            </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>500</Text>
-            </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>8.00</Text>
-            </View>
-            <View style={styles.cellTable1}>
-              <Text style={styles.cellTable}>9.44</Text>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+parseFloat(monto).toFixed(2)}</Text>
             </View>
           </View>
-                            
-                              
-                            )
-                          }
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}></Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>I.G.V:</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+parseFloat(monto*0.18).toFixed(2)}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}></Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>Op. Inafecta:</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+0.00}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}></Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>Op. Exonerada:</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+0.00}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}></Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>Op. Exportacion:</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+0.00}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.cell60}>
+              <Text style={styles.parragraph}></Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraph}>Importe total:</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.parragraphrigth}>{simboloMoneda+" "+parseFloat(monto*1.18).toFixed(2)}</Text>
+            </View>
+          </View>
+
+
+
 
           <View style={styles.row}>
             <View style={styles.cell1}>
-              <Text style={styles.parragraph}>Cliente: wwwwww</Text>
+              <Text style={styles.parragraph}></Text>
             </View>
-
           </View>
 
           <View style={styles.row}>
             <View style={styles.cell1}>
-              <Text style={styles.parragraph}>Direccion: wwwww</Text>
-            </View>
-
-          </View>
-
-          <View style={styles.row}>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}>Ruc: wwwwww</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}>Solicitante: wwwwwww</Text>
+              <Text style={styles.parragraph}>Observaciones de SUNAT: El comprobante numero {factura.nroDocumento}, ha sido aceptada</Text>
             </View>
           </View>
-
-          <View style={styles.row}>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}>Montacarga: wwwwwww</Text>
-            </View>
-            <View style={styles.cell}>
-              <Text style={styles.parragraph}>Operador: wwwwwwww</Text>
-            </View>
-          </View>
-
-          <View style={styles.row}>
-            <View style={styles.cell2}>
-              <Text style={styles.parragraph}>wwww</Text>
-            </View>
-            <View style={styles.cell2}>
-              <Text style={styles.parragraph}>Hora Inicio Servicio</Text>
-            </View>
-            <View style={styles.cell2}>
-              <Text style={styles.parragraph}>COSTO DEL SERVICIO:</Text>
-            </View>
-            <View style={styles.cell2}>
-              <Text>wwwwwww</Text>
-            </View>
-          </View>
-
         </View>
-        <Text style={styles.parragraph}>
-          Observaciones: eeeee
-        </Text>
-        <Text style={styles.parragraph}>
-          Nota: Las horas de servicio se computaran desde que sale el montacarga de nuestro local hasta que reingrese al mismo, y asi se comunica que los fraccionarios de minutos de conputraran como 1 hora, ni la empresa ni el operador se hace responsable por daños causados por la maquina durante el servicio, si ellos se originan en casos fortuitos o en maniobras exigidas por el comitente.
-        </Text>
       </Page>
     </Document>
   );

@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "html-react-table": "^1.0.3",
+    "numero-a-letras": "^1.0.6",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
@@ -26,6 +27,7 @@
     "react-sweetalert2": "^0.6.0",
     "react-toastify": "^10.0.5",
     "sweetalert2": "^11.12.2",
+    "to-words": "^4.2.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ import { facturaForId } from '../../service/FacturaService';
 import { useParams } from 'react-router-dom';
 import HojaFacturaReportComponent from '../report/HojaFacturaReportComponent';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { ToWords } from 'to-words';
 
 const FacturaViewComponent = () => {
 
@@ -36,6 +37,27 @@ const FacturaViewComponent = () => {
   })
 
   const { id } = useParams();
+
+  const toWords = new ToWords({
+    localeCode: 'es-ES',
+    converterOptions: {
+      currency: true,
+      ignoreDecimal: false,
+      ignoreZeroCurrency: false,
+      doNotAddOnly: false,
+      currencyOptions: {
+
+        symbol: 'S/.',
+        fractionalUnit: {
+          name: 'Paisa',
+          plural: 'Paise',
+          symbol: '',
+        },
+      },
+    },
+  });
+
+  console.log(toWords.convert(123.10))
 
   useEffect(() => {
     facturaForId(id).then((response) => {

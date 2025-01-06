@@ -36,6 +36,7 @@ import FacturaViewComponent from './componentes/factura/FacturaViewComponent'
 
 function App() {
 
+
   return (
     <>
       <BrowserRouter>
