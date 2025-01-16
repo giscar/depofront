@@ -11,8 +11,8 @@ const HeaderComponent = () => {
     navigator("/facturas")
   }
 
-  const accederServicioNuevo = () => {
-    navigator("/servicioNuevo")
+  const accederAlmaceSimple = () => {
+    navigator("/mercaderia")
   }
 
   const accederServicioAdm = () => {
@@ -97,6 +97,15 @@ const HeaderComponent = () => {
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederOperadores()}>Operadores</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederClientes()}>Clientes</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederReporteOperaciones()}>Estadisticas</a></li>
+                </ul>
+              </li>
+
+              <li className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Almacenes
+                </a>
+                <ul className="dropdown-menu">
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederAlmaceSimple()}>Almacen Simple</a></li>
                 </ul>
               </li>
             </ul>

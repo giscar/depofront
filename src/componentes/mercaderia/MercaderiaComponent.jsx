@@ -1,0 +1,198 @@
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { montacargaForId, montacargaInactiva, montacargasActivo } from '../../service/FacturaService';
+import HeaderComponent from '../HeaderComponent';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2'
+
+const MercaderiaComponent = () => {
+
+  const access = "R010"
+  let ingress = false;
+
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  initialLogin.perfiles.map(p => {
+    p.roles.map(r => {
+      if (r.codigo == access)
+        ingress = true;
+    });
+  })
+
+  const navigator = useNavigate();
+
+  const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
+    position: "top-right",
+    autoClose: 1000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+  });
+
+  const [montacarga, setMontacarga] = useState([]);
+  const [montacargas, setMontacargas] = useState([])
+
+  const handleMontacarga = (id) => {
+    Swal.fire({
+      title: "Desea eliminar la montacarga?",
+      text: "Esta accion no tiene reversion!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, eliminar la montacarga!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        inactivaMontacarga(id)
+        Swal.fire({
+          title: "Montacarga Eliminado!",
+          text: "La accion se ejecuto correctamente.",
+          icon: "success"
+        });
+      }
+    });
+  }
+
+  const inactivaMontacarga = (id) => {
+    montacargaForId(id).then((response) => {
+      response.data.estadoRegistro = 0;
+      montacargaInactiva(response.data).catch(error => {
+        console.error(error)
+      })
+      notify();
+      setTimeout(() => {
+        buscarMontacarga()
+      }, 1000);
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  const irMercaderiaNuevo = () => {
+    navigator("/mercaderiaNuevo")
+  }
+
+  const irMontacargaEdit = (id) => {
+    navigator(`/montacargaEdit/${id}`)
+  }
+
+  const buscarMontacarga = () => {
+    montacargasActivo().then((response) => {
+      setMontacargas(response.data);
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  useEffect(() => {
+    buscarMontacarga();
+  }, [montacarga])
+
+  return (
+    <>
+    {initialLogin.documento && <HeaderComponent />}
+    {ingress &&
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-sm-12">
+            <div className="page-title-box">
+              <div className="float-end">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Almacen</a></li>
+                  <li className="breadcrumb-item active">Mercaderias</li>
+                </ol>
+              </div>
+              <h4 className="page-title">Mercaderias con saldo</h4>
+            </div>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='float-end pb-3 pt-4'>
+            <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irMercaderiaNuevo()}>Nuevo Ingreso</button>
+          </div>
+        </div>
+        <br />
+        <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+            <tr>
+              <th className='td-th-size-depo'>Codigo</th>
+              <th className='td-th-size-depo'>Marca</th>
+              <th className='td-th-size-depo'>Tonelaje</th>
+              <th className='td-th-size-depo'>Serie</th>
+              <th className='td-th-size-depo'>Modelo</th>
+              <th className='td-th-size-depo'>Año</th>
+              <th className='td-th-size-depo'>Ubicacion</th>
+              <th className='td-th-size-depo'>Estado</th>
+              <th className='td-th-size-depo'>Revision</th>
+              <th className='td-th-size-depo'>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              montacargas.map(montacarga =>
+                <tr key={montacarga.id}>
+                  <td className='td-th-size-depo'>{montacarga.codigo}</td>
+                  <td className='td-th-size-depo'>{montacarga.marca}</td>
+                  <td className='td-th-size-depo'>{montacarga.tonelaje}</td>
+                  <td className='td-th-size-depo'>{montacarga.serie}</td>
+                  <td className='td-th-size-depo'>{montacarga.modelo}</td>
+                  <td className='td-th-size-depo'>{montacarga.anhoFabricacion}</td>
+                  <td className='td-th-size-depo'>{montacarga.ubicacion}</td>
+                  <td className='td-th-size-depo'>{montacarga.estado}</td>
+                  {montacarga.revisionOperatividad &&
+                          <td className='td-th-size-depo'>{(new Date(montacarga.revisionOperatividad)).toLocaleString().substring(0, 10)}</td>
+                  }
+                  {!montacarga.revisionOperatividad &&
+                          <td className='td-th-size-depo'></td>
+                  }
+                  <td>
+                    <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(montacarga.id)}>
+                      <i className="bi bi-pencil-fill"></i>
+                    </a>
+                    <a className='icon-link-depo' onClick={() => handleMontacarga(montacarga.id)}>
+                      <i className="bi bi-x-circle-fill"></i>
+                    </a>
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
+        </div>
+      </div>
+      }
+      {!ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                  <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
+                  <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Montacargas</h4>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <div className="alert alert-danger border-0" role="alert">
+                <strong>Alerta!</strong> No tiene acceso para este modulo.
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </>
+  )
+}
+
+export default MercaderiaComponent

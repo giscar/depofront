@@ -33,6 +33,8 @@ import RolComponent from './componentes/acceso/rol/RolComponent'
 import InicioComponent from './componentes/login/InicioComponent'
 import FacturaListaComponent from './componentes/factura/FacturaListaComponent'
 import FacturaViewComponent from './componentes/factura/FacturaViewComponent'
+import MercaderiaComponent from './componentes/mercaderia/MercaderiaComponent'
+import MercaderiaNuevoComponent from './componentes/mercaderia/MontacargaNuevoComponent'
 
 function App() {
 
@@ -72,6 +74,8 @@ function App() {
             <Route path='/rolNuevo' element={<RolNuevoComponent />}></Route>
             <Route path='/rolEdit/:id' element={<RolEditComponent />}></Route>
             <Route path='/facturaView/:id' element={<FacturaViewComponent />}></Route>
+            <Route path='/mercaderia' element={<MercaderiaComponent />}></Route>
+            <Route path='/mercaderiaNuevo' element={<MercaderiaNuevoComponent />}></Route>
             
 
           </Routes>
