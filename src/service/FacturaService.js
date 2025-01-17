@@ -21,6 +21,10 @@ const REST_API_BASE_URL_ROL = `${url}rol`
 
 const REST_API_BASE_URL_MERCADERIA = `${url}mercaderia`
 
+const REST_API_BASE_URL_CATALOGO = `${url}catalogo`
+
+export const catalogoByTipo = (tipo) => axios.get(REST_API_BASE_URL_CATALOGO+"/"+tipo);
+
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
 
 export const nuevaFactura = (factura) => axios.post(REST_API_BASE_URL_FACTURA, factura);
@@ -158,3 +162,5 @@ export const mercaderiaEdit = (mercaderia) => axios.put(REST_API_BASE_URL_MERCAD
 export const mercaderiaById = (mercaderiaId) => axios.get(REST_API_BASE_URL_MERCADERIA+"?id="+mercaderiaId);
 
 export const mercaderiaForAll = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/all");
+
+export const buscarCodigoMercaderia = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/maxCodServicio"); 

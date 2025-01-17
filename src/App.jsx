@@ -33,8 +33,8 @@ import RolComponent from './componentes/acceso/rol/RolComponent'
 import InicioComponent from './componentes/login/InicioComponent'
 import FacturaListaComponent from './componentes/factura/FacturaListaComponent'
 import FacturaViewComponent from './componentes/factura/FacturaViewComponent'
+import MercaderiaNuevoComponent from './componentes/mercaderia/MercaderiaNuevoComponent'
 import MercaderiaComponent from './componentes/mercaderia/MercaderiaComponent'
-import MercaderiaNuevoComponent from './componentes/mercaderia/MontacargaNuevoComponent'
 
 function App() {
 
