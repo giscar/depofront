@@ -138,7 +138,7 @@ const MontacargaNuevoComponent = () => {
       data.revisionOperatividad = revisionOperatividad.toUpperCase();
       data.estadoRegistro = 1;
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       montacargaSave(data).catch(error => {
         console.error(error)
       })

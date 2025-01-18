@@ -35,6 +35,7 @@ import FacturaListaComponent from './componentes/factura/FacturaListaComponent'
 import FacturaViewComponent from './componentes/factura/FacturaViewComponent'
 import MercaderiaNuevoComponent from './componentes/mercaderia/MercaderiaNuevoComponent'
 import MercaderiaComponent from './componentes/mercaderia/MercaderiaComponent'
+import MercaderiaEditComponent from './componentes/mercaderia/MercaderiaEditComponent'
 
 function App() {
 
@@ -76,6 +77,7 @@ function App() {
             <Route path='/facturaView/:id' element={<FacturaViewComponent />}></Route>
             <Route path='/mercaderia' element={<MercaderiaComponent />}></Route>
             <Route path='/mercaderiaNuevo' element={<MercaderiaNuevoComponent />}></Route>
+            <Route path='/mercaderiaEdit/:id' element={<MercaderiaEditComponent />}></Route>
             
 
           </Routes>

@@ -90,7 +90,7 @@ const RolEditComponent = () => {
       data.codigo = codigo.toUpperCase();
       data.descripcion = descripcion.toUpperCase();
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       rolEdit(data).catch(error => {
         console.error(error)
       })

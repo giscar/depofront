@@ -90,7 +90,7 @@ function EditaClienteComponent() {
       data.direccion = direccion.toUpperCase();
       data.email = email.toUpperCase();
       data.estado = "1";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       editaCliente(data).catch(error => {
         console.error(error)
       })

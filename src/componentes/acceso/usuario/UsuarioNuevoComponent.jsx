@@ -57,7 +57,7 @@ const UsuarioNuevoComponent = () => {
       })
       data.estado = "1";
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       usuarioSave(data).catch(error => {
         console.error(error)
       })

@@ -2,28 +2,19 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoMercaderia, catalogoByTipo, montacargasActivo, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoIngreso, ingresoSave, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 
 const MercaderiaNuevoComponent = () => {
 
   const [cliente, setCliente] = useState([])
-  const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
   const [numeroServicio, setNumeroServicio] = useState('')
-  const [dua, setDua] = useState('')
-  const [productoCodigo, setProductoCodigo] = useState('')
+  const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
-  const [unidadMedida, setUnidadMedida] = useState('')
-  const [cantidad, setCantidad] = useState('')
-  const [moneda, setMoneda] = useState('')
-  const [observaciones, setObservaciones] = useState('')
-  
-
-  
 
   const navigator = useNavigate();
 
@@ -46,10 +37,9 @@ const MercaderiaNuevoComponent = () => {
   const [errors, setErrors] = useState({
     msgCodServicio: '',
     msgRuc: '',
-    msgDua: '',
+    msgCodigoDua: '',
     msgCodigoProducto: '',
     msgDescripcion: '',
-    msgUnidadMedida: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -84,31 +74,10 @@ const MercaderiaNuevoComponent = () => {
       valid = false;
     }
 
-    if (dua) {
-      errorCopy.msgDua = '';
+    if (codigoDua) {
+      errorCopy.msgCodigoDua = '';
     } else {
-      errorCopy.msgDua = 'Tiene que ingresar el numero de DUA';
-      valid = false;
-    }
-
-    if (productoCodigo) {
-      errorCopy.msgCodigoProducto = '';
-    } else {
-      errorCopy.msgCodigoProducto = 'Tiene que ingresar el codigo del producto';
-      valid = false;
-    }
-
-    if (descripcion) {
-      errorCopy.msgDescripcion = '';
-    } else {
-      errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del producto';
-      valid = false;
-    }
-
-    if (unidadMedida) {
-      errorCopy.msgUnidadMedida = '';
-    } else {
-      errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
+      errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
       valid = false;
     }
 
@@ -119,34 +88,25 @@ const MercaderiaNuevoComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      debugger
       const data = {}
       data.codServicio = codServicio;
       data.numeroServicio = numeroServicio;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
-      data.dua = dua;
-      data.productoCodigo = productoCodigo;
+      data.codigoDua = codigoDua;
       data.descripcion = descripcion;
-      data.unidadMedida = unidadMedida;
-      data.cantidad = cantidad;
       data.estado = "1";
       data.estadoRegistro = "Proceso";
-      data.moneda = moneda;
-      data.observaciones = observaciones;
+      data.usuarioRegistro = initialLogin.documento;
       
-      servicioSave(data).then((response) => {
-        if(response.data.id){
-          editServicio(response.data.id);
-        }
+      ingresoSave(data).then((response) => {
+        console.log("response")
       }).catch(error => {
         console.error(error)
       });
-      limpiar()
       notify()
-      setTimeout(() => {
-        handleCodServicio()
-      }, 1000);
     }
   }
 
@@ -156,21 +116,14 @@ const MercaderiaNuevoComponent = () => {
 
   useEffect(() => {
     handleCodServicio();
-    handleUnidadMedida();
   }, [])
 
   const handleCodServicio = () => {
-    buscarCodigoMercaderia().then((response) => {
+    buscarCodigoIngreso().then((response) => {
       setCodServicio(response.data + 1)
-      setNumeroServicio("ALM"+(response.data + 1).toString().padStart(8, '0'));
+      setNumeroServicio("ALM" + (response.data + 1).toString().padStart(8, '0'));
     }).catch(error => {
       console.log(error);
-    })
-  }
-
-  const handleUnidadMedida = () => {
-    catalogoByTipo("1").then((response) => {
-      setCatalogoUnidadMedida(response.data)
     })
   }
 
@@ -187,200 +140,132 @@ const MercaderiaNuevoComponent = () => {
     setCliente([])
     setCodServicio('')
     setNumeroServicio('')
-    setDua('')
-    setProductoCodigo('')
+    setCodigoDua('')
     setDescripcion('')
-    setUnidadMedida('')
-    setCantidad('')
-    setMoneda('')
-    setObservaciones('');
-    
   };
 
   return (
     <>
       {initialLogin.documento && <HeaderComponent />}
       {ingressADM &&
-      <div className='container-fluid'>
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Almacen</a></li>
-                  <li className="breadcrumb-item active">Nuevo Ingreso</li>
-                </ol>
+        <div className='container-fluid'>
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Almacen</a></li>
+                    <li className="breadcrumb-item active">Nuevo Ingreso</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Registrar Ingreso</h4>
               </div>
-              <h4 className="page-title">Registrar Ingreso</h4>
             </div>
           </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className="col-lg-6">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Datos Iniciales del Ingreso</h4>
-                <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de almacenes.</p>
-              </div>
-              <div className="card-body">
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
-                  <div className="col-sm-8">
-                    <input type="text"
-                      placeholder="Codigo del servicio"
-                      value={numeroServicio}
-                      className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
-                      readOnly
-                      onChange={(e) => { setNumeroServicio(e.target.value) }}>
-                    </input>
-                  </div>
+          <br />
+          <div className="row">
+            <div className="col-lg-6">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Datos Iniciales del Ingreso</h4>
+                  <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de almacenes.</p>
                 </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
-                  <div className="col-sm-8">
-                    <input type="number"
-                      placeholder="Ingrese el numero de RUC"
-                      value={ruc}
-                      className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
-                      onClick={handleShow}
-                      onChange={(e) => { setRuc(e.target.value) }}
-                      readOnly>
-                    </input>
-                    {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                <div className="card-body">
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del servicio"
+                        value={numeroServicio}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                        readOnly
+                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                      </input>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Razon Social:</label>
-                  <div className="col-sm-8">
-                    <input type="text"
-                      placeholder='Razon Social'
-                      value={razonSocial}
-                      className='bg-secondary bg-opacity-10 form-control-depo'
-                      disabled
-                      onChange={(e) => { setRazonSocial(e.target.value) }}>
-                    </input>
-                  </div>
-                </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Dirección:</label>
-                  <div className="col-sm-8">
-                    <input type='text'
-                      placeholder='Dirección'
-                      value={direccion}
-                      className='bg-secondary bg-opacity-10 form-control-depo'
-                      disabled
-                      onChange={(e) => { setDireccion(e.target.value) }}>
-                    </input>
-                  </div>
-                </div>
 
-                <div className="mb-3 row">
+                  <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder='Numero de DUA'
-                        value={dua}
-                        onChange={(e) => { setDua(e.target.value) }}
-                        className={`form-control-depo ${errors.msgDua ? 'is-invalid' : ''}`}
+                        value={codigoDua}
+                        onChange={(e) => { setCodigoDua(e.target.value) }}
+                        className={`form-control-depo ${errors.msgCodigoDua ? 'is-invalid' : ''}`}
                         autoComplete='off'>
                       </input>
-                      {errors.msgDua && <div className='invalid-feedback'>{errors.msgDua}</div>}
-                    </div>
-                  </div>
-                <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6">
-            <div className="card">
-              <div className="card-header">
-                <h4 className="card-title">Datos de la ejecución del servicio</h4>
-                <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
-                </p>
-              </div>
-              <div className="card-body">
-                <div className="general-label">
-
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del producto:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        placeholder='Costo del servicio'
-                        value={productoCodigo}
-                        onChange={(e) => { setProductoCodigo(e.target.value) }}
-                        className={`form-control-depo ${errors.msgCodigoProducto ? 'is-invalid' : ''}`}
-                        autoComplete='off'>
-                      </input>
-                      {errors.msgCodigoProducto && <div className='invalid-feedback'>{errors.msgCodigoProducto}</div>}
+                      {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
                     </div>
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Descripcion del producto:</label>
+                    <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
+                        placeholder="Ingrese el numero de RUC"
+                        value={ruc}
+                        className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
+                        onClick={handleShow}
+                        onChange={(e) => { setRuc(e.target.value) }}
+                        readOnly>
+                      </input>
+                      {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Razon Social:</label>
                     <div className="col-sm-8">
                       <input type="text"
-                        placeholder='Descripcion del producto'
+                        placeholder='Razon Social'
+                        value={razonSocial}
+                        className='bg-secondary bg-opacity-10 form-control-depo'
+                        disabled
+                        onChange={(e) => { setRazonSocial(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Dirección:</label>
+                    <div className="col-sm-8">
+                      <input type='text'
+                        placeholder='Dirección'
+                        value={direccion}
+                        className='bg-secondary bg-opacity-10 form-control-depo'
+                        disabled
+                        onChange={(e) => { setDireccion(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Descripcion:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Descripcion'
                         value={descripcion}
                         onChange={(e) => { setDescripcion(e.target.value) }}
-                        className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
+                        className="form-control-depo"
                         autoComplete='off'>
                       </input>
-                      {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
                     </div>
                   </div>
-                  
-                  <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise" >Unidad de medida:</label>
-                  <div className="col-sm-8">
-                    <select value={unidadMedida}
-                      className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''}`}
-                      onChange={(e) => { setUnidadMedida(e.target.value) }}>
-                      <option value="">Seleccione</option>
-                      {
-                        catalogoUnidadMedida.map(um =>
-                          <option key={um.id} value={um.codigo}>{um.descripcion}</option>
-                        )
-                      }
-                    </select>
-                    {errors.msgUnidadMedida && <div className='invalid-feedback'>{errors.msgUnidadMedida}</div>}
-                  </div>
+
+                  <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                 </div>
+              </div>
+            </div>
+            <div className="col-lg-6">
+              <div className="card">
+                <div className="card-header">
 
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Cantidad:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        placeholder='Cantidad de productos'
-                        value={cantidad}
-                        onChange={(e) => { setCantidad(e.target.value) }}
-                        className='form-control-depo'
-                        autoComplete='off'>
-                      </input>
-                    </div>
-                  </div>
-
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        name="observaciones"
-                        placeholder='Observaciones del servicio'
-                        value={observaciones}
-                        onChange={(e) => { setObservaciones(e.target.value) }}
-                        className='form-control-depo'
-                        autoComplete='off'>
-                      </input>
-                    </div>
-                  </div>
-                  
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       }
       {!ingressADM &&
         <div className="container-fluid">

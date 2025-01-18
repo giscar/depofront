@@ -21,6 +21,8 @@ const REST_API_BASE_URL_ROL = `${url}rol`
 
 const REST_API_BASE_URL_MERCADERIA = `${url}mercaderia`
 
+const REST_API_BASE_URL_INGRESO = `${url}ingreso`
+
 const REST_API_BASE_URL_CATALOGO = `${url}catalogo`
 
 export const catalogoByTipo = (tipo) => axios.get(REST_API_BASE_URL_CATALOGO+"/"+tipo);
@@ -164,3 +166,13 @@ export const mercaderiaById = (mercaderiaId) => axios.get(REST_API_BASE_URL_MERC
 export const mercaderiaForAll = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/all");
 
 export const buscarCodigoMercaderia = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/maxCodServicio"); 
+
+export const ingresoSave = (ingreso) => axios.post(REST_API_BASE_URL_INGRESO, ingreso);
+
+export const ingresoEdit = (ingreso) => axios.put(REST_API_BASE_URL_INGRESO, ingreso);
+
+export const ingresoById = (ingresoId) => axios.get(REST_API_BASE_URL_INGRESO+"?id="+ingresoId);
+
+export const ingresoAll = () => axios.get(REST_API_BASE_URL_INGRESO+"/all");
+
+export const buscarCodigoIngreso = () => axios.get(REST_API_BASE_URL_INGRESO+"/maxCodServicio"); 

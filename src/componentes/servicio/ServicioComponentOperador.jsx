@@ -55,7 +55,7 @@ const ServicioComponentOperador = () => {
   }
 
   useEffect(() => {
-    const documento = initialLogin.usuario;
+    const documento = initialLogin.documento;
   buscarServicioByIdOperador(documento).then((response) => {
     setServicios(response.data);
   }).catch(error => {

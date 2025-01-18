@@ -137,7 +137,7 @@ const UsuarioEditComponent = () => {
       data.apellidoMat = apellidoMat.toUpperCase();
       data.indInactivo = "0";
       data.perfiles = perfilesSeleccionados;
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       data.passwd = documento;
       usuarioEdit(data).catch(error => {
         console.error(error)

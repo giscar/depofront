@@ -117,7 +117,7 @@ const OperadorEditComponent = () => {
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       operadorEdit(data).catch(error => {
         console.error(error)
       })

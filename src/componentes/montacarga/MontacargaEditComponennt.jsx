@@ -143,7 +143,7 @@ const MontacargaEditComponennt = () => {
       const data = {}
       data.id = id;
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       data.codigo = codigo.toUpperCase();
       data.tonelaje = tonelaje.toUpperCase();
       data.marca = marca.toUpperCase();
@@ -154,7 +154,7 @@ const MontacargaEditComponennt = () => {
       data.ubicacion = ubicacion.toUpperCase();
       data.estado = estado.toUpperCase();
       data.revisionOperatividad = revisionOperatividad.toUpperCase();
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       montacargaEdit(data).catch(error => {
         console.error(error)
       })

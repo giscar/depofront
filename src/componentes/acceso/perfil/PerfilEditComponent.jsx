@@ -116,7 +116,7 @@ const PerfilEditComponent = () => {
       data.descripcion = descripcion.toUpperCase();
       data.estado = "1";
       data.indInactivo = "0";
-      data.usuarioRegistro = initialLogin.usuario;
+      data.usuarioRegistro = initialLogin.documento;
       data.roles = rolesSeleccionados;
 
       perfilEdit(data).catch(error => {
