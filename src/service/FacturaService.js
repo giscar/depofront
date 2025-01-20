@@ -171,7 +171,7 @@ export const ingresoSave = (ingreso) => axios.post(REST_API_BASE_URL_INGRESO, in
 
 export const ingresoEdit = (ingreso) => axios.put(REST_API_BASE_URL_INGRESO, ingreso);
 
-export const ingresoById = (ingresoId) => axios.get(REST_API_BASE_URL_INGRESO+"?id="+ingresoId);
+export const ingresoById = (id) => axios.get(REST_API_BASE_URL_INGRESO+"?id="+id);
 
 export const ingresoAll = () => axios.get(REST_API_BASE_URL_INGRESO+"/all");
 

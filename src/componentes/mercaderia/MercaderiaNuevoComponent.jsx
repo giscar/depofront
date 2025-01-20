@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const MercaderiaNuevoComponent = () => {
 
-  const [cliente, setCliente] = useState([])
+  const [cliente, setCliente] = useState('')
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
@@ -30,8 +30,8 @@ const MercaderiaNuevoComponent = () => {
     });
   })
 
-  const editServicio = (id) => {
-    navigator(`/servicioEdit/${id}`)
+  const editMercaderia = (id) => {
+    navigator(`/mercaderiaEdit/${id}`)
   }
 
   const [errors, setErrors] = useState({
@@ -102,7 +102,7 @@ const MercaderiaNuevoComponent = () => {
       data.usuarioRegistro = initialLogin.documento;
       
       ingresoSave(data).then((response) => {
-        console.log("response")
+        editMercaderia(response.data.id)
       }).catch(error => {
         console.error(error)
       });
