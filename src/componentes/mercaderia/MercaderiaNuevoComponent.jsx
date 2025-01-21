@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoIngreso, ingresoSave, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoIngreso, ingresoSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 
 const MercaderiaNuevoComponent = () => {

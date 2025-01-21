@@ -167,6 +167,8 @@ export const mercaderiaForAll = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/a
 
 export const buscarCodigoMercaderia = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/maxCodServicio"); 
 
+export const mercaderiaByIngreso = (id) => axios.get(REST_API_BASE_URL_MERCADERIA+"/findByIngreso?ingresoId="+id);
+
 export const ingresoSave = (ingreso) => axios.post(REST_API_BASE_URL_INGRESO, ingreso);
 
 export const ingresoEdit = (ingreso) => axios.put(REST_API_BASE_URL_INGRESO, ingreso);

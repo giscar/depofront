@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoIngreso, catalogoByTipo, ingresoById, mercaderiaSave, servicioSave } from '../../service/FacturaService';
+import { catalogoByTipo, ingresoById, mercaderiaByIngreso, mercaderiaSave, servicioSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const MercaderiaEditComponent = () => {
@@ -18,6 +18,7 @@ const MercaderiaEditComponent = () => {
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
+  const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
   const [productoCodigo, setProductoCodigo] = useState('')
   const [descripcionProducto, setDescripcionProducto] = useState('')
@@ -43,12 +44,21 @@ const MercaderiaEditComponent = () => {
   useEffect(() => {
     if (id) {
       ingresoById(id).then((response) => {
-        cargarIngreso(response.data)
+        cargarIngreso(response.data);
+        debugger
+        cargarMercaderia(id)
       }).catch(error => {
         console.log(error);
       })
     }
   }, [id])
+
+  const cargarMercaderia = (idIngreso) =>{
+    debugger
+    mercaderiaByIngreso(idIngreso).then(response => {
+      setMercaderias(response.data)
+    });
+  }
 
   const cargarIngreso = (data) => {
     setNumeroServicio(data.numeroServicio)
@@ -58,10 +68,6 @@ const MercaderiaEditComponent = () => {
     setRazonSocial(data.razonSocial)
     setDireccion(data.direccion)
     setDescripcion(data.descripcion)
-  }
-
-  const editServicio = (id) => {
-    navigator(`/servicioEdit/${id}`)
   }
 
   const [errors, setErrors] = useState({
@@ -139,15 +145,15 @@ const MercaderiaEditComponent = () => {
 
   const agregarMercaderia = (e) => {
     e.preventDefault();
-debugger
     const data = {}
-    data.codigoDua = codigoDua;
+    data.idIngreso = id;
     data.productoCodigo = productoCodigo;
     data.descripcionProducto = descripcionProducto;
     data.unidadMedida = unidadMedida;
     data.cantidad = cantidad;
     mercaderiaSave(data).then(response =>{
-      console.log(response)
+      debugger
+      cargarMercaderia(id)
     }).catch(error => {
       console.log(error);
     })
@@ -426,6 +432,57 @@ debugger
               </div>
             </div>
           </div>
+
+          <div className='row'>
+            <div className="col-lg-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Datos de la factura</h4>
+                  <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                  </p>
+                </div>
+                <div className="card-body">
+                  <div className="table-responsive">
+                    <div className="table-responsive">
+                      <table className="table mb-0">
+                        <thead className="thead-light">
+                          <tr>
+                            <th className='td-th-size-depo'>Codigo</th>
+                            <th className='td-th-size-depo'>RUC</th>
+                            <th className='td-th-size-depo'>Razon Social</th>
+                            <th className='td-th-size-depo'>Tipo</th>
+                            <th className='td-th-size-depo'>Operador</th>
+                            <th className='td-th-size-depo'>Montacarga</th>
+                            <th className='td-th-size-depo'>Horas trabajadas</th>
+                            <th className='td-th-size-depo'>Monto del servicio</th>
+                            <th className='td-th-size-depo'>Moneda</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            mercaderias.map(mercaderia =>
+                              <tr key={mercaderia.id}>
+                                <td className='td-th-size-depo'>{mercaderia.id}</td>
+                                <td className='td-th-size-depo'>{servicio.ruc}</td>
+                                <td className='td-th-size-depo'>{servicio.productoCodigo}</td>
+                                <td className='td-th-size-depo'>{servicio.unidadMedida}</td>
+                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                              </tr>
+                            )
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       }
       {!ingressADM &&
