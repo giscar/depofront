@@ -132,7 +132,7 @@ const MontacargaNuevoComponent = () => {
       data.serie = serie.toUpperCase();
       data.modelo = modelo.toUpperCase();
       data.anhoFabricacion = anhoFabricacion;
-      data.color = color.toUpperCase();
+      data.color = color?.toUpperCase();
       data.ubicacion = ubicacion.toUpperCase();
       data.estado = estado.toUpperCase();
       data.revisionOperatividad = revisionOperatividad.toUpperCase();

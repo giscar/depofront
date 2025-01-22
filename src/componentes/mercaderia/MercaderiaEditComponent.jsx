@@ -20,11 +20,15 @@ const MercaderiaEditComponent = () => {
 
   const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
+  const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
   const [productoCodigo, setProductoCodigo] = useState('')
   const [descripcionProducto, setDescripcionProducto] = useState('')
   const [unidadMedida, setUnidadMedida] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [moneda, setMoneda] = useState('')
+  const [fechaIngreso, setFechaIngreso] = useState('')
+  const [codigoAlmacen, setCodigoAlmacen] = useState('')
+  
   const [observaciones, setObservaciones] = useState('')
 
   const navigator = useNavigate();
@@ -45,7 +49,6 @@ const MercaderiaEditComponent = () => {
     if (id) {
       ingresoById(id).then((response) => {
         cargarIngreso(response.data);
-        debugger
         cargarMercaderia(id)
       }).catch(error => {
         console.log(error);
@@ -54,8 +57,8 @@ const MercaderiaEditComponent = () => {
   }, [id])
 
   const cargarMercaderia = (idIngreso) =>{
-    debugger
     mercaderiaByIngreso(idIngreso).then(response => {
+      debugger
       setMercaderias(response.data)
     });
   }
@@ -77,6 +80,8 @@ const MercaderiaEditComponent = () => {
     msgCodigoProducto: '',
     msgDescripcion: '',
     msgUnidadMedida: '',
+    msgFechaIngreso: '',
+    msgCodigoAlmacen: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -132,10 +137,34 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
+    setErrors(errorCopy);
+    return valid;
+  }
+
+
+  const validateMercaderia = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+    const regex = /^[0-9]*$/;
+
     if (unidadMedida) {
       errorCopy.msgUnidadMedida = '';
     } else {
       errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
+      valid = false;
+    }
+
+    if (fechaIngreso) {
+      errorCopy.msgFechaIngreso = '';
+    } else {
+      errorCopy.msgFechaIngreso = 'Tiene que ingresar la fecha de ingreso de la mercaderia';
+      valid = false;
+    }
+
+    if (codigoAlmacen) {
+      errorCopy.msgCodigoAlmacen = '';
+    } else {
+      errorCopy.msgCodigoAlmacen = 'Tiene que ingresar el almacen de destino';
       valid = false;
     }
 
@@ -145,14 +174,17 @@ const MercaderiaEditComponent = () => {
 
   const agregarMercaderia = (e) => {
     e.preventDefault();
+    validateMercaderia();
     const data = {}
     data.idIngreso = id;
     data.productoCodigo = productoCodigo;
     data.descripcionProducto = descripcionProducto;
     data.unidadMedida = unidadMedida;
     data.cantidad = cantidad;
+    data.fechaIngreso = fechaIngreso;
+    data.codigoAlmacen = codigoAlmacen;
     mercaderiaSave(data).then(response =>{
-      debugger
+      console.log(response)
       cargarMercaderia(id)
     }).catch(error => {
       console.log(error);
@@ -199,11 +231,18 @@ const MercaderiaEditComponent = () => {
 
   useEffect(() => {
     handleUnidadMedida();
+    handleAlmacen();
   }, [])
 
   const handleUnidadMedida = () => {
     catalogoByTipo("1").then((response) => {
       setCatalogoUnidadMedida(response.data)
+    })
+  }
+
+  const handleAlmacen = () => {
+    catalogoByTipo("2").then((response) => {
+      setCatalogoAlmacen(response.data)
     })
   }
 
@@ -411,6 +450,36 @@ const MercaderiaEditComponent = () => {
                       </div>
                     </div>
 
+
+                    <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Fecha de Ingreso:</label>
+                      <div className="col-sm-8">
+                        <input type="date"
+                          value={fechaIngreso}
+                          className={`form-control-depo ${errors.msgFechaIngreso ? 'is-invalid' : ''}`}
+                          onChange={(e) => { setFechaIngreso(e.target.value) }}>
+                        </input>
+                        {errors.msgFechaIngreso && <div className='invalid-feedback'>{errors.msgFechaIngreso}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise" >Almacen:</label>
+                      <div className="col-sm-8">
+                        <select value={codigoAlmacen}
+                          className={`form-select-depo${errors.msgCodigoAlmacen ? ' is-invalid' : ''}`}
+                          onChange={(e) => { setCodigoAlmacen(e.target.value) }}>
+                          <option value="">Seleccione</option>
+                          {
+                            catalogoAlmacen.map(al =>
+                              <option key={al.id} value={al.codigo}>{al.descripcion}</option>
+                            )
+                          }
+                        </select>
+                        {errors.msgCodigoAlmacen && <div className='invalid-feedback'>{errors.msgCodigoAlmacen}</div>}
+                      </div>
+                    </div>
+
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                       <div className="col-sm-8">
@@ -448,29 +517,25 @@ const MercaderiaEditComponent = () => {
                         <thead className="thead-light">
                           <tr>
                             <th className='td-th-size-depo'>Codigo</th>
-                            <th className='td-th-size-depo'>RUC</th>
-                            <th className='td-th-size-depo'>Razon Social</th>
-                            <th className='td-th-size-depo'>Tipo</th>
-                            <th className='td-th-size-depo'>Operador</th>
-                            <th className='td-th-size-depo'>Montacarga</th>
-                            <th className='td-th-size-depo'>Horas trabajadas</th>
-                            <th className='td-th-size-depo'>Monto del servicio</th>
-                            <th className='td-th-size-depo'>Moneda</th>
+                            <th className='td-th-size-depo'>Descripcion</th>
+                            <th className='td-th-size-depo'>Unidad medida</th>
+                            <th className='td-th-size-depo'>cantidad</th>
+                            <th className='td-th-size-depo'>Fecha de ingreso</th>
+                            <th className='td-th-size-depo'>Almacen</th>
+                            <th className='td-th-size-depo'>Acciones</th>
                           </tr>
                         </thead>
                         <tbody>
                           {
                             mercaderias.map(mercaderia =>
                               <tr key={mercaderia.id}>
-                                <td className='td-th-size-depo'>{mercaderia.id}</td>
-                                <td className='td-th-size-depo'>{servicio.ruc}</td>
-                                <td className='td-th-size-depo'>{servicio.productoCodigo}</td>
-                                <td className='td-th-size-depo'>{servicio.unidadMedida}</td>
-                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
-                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
-                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
-                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
-                                <td className='td-th-size-depo'>{servicio.cantidad}</td>
+                                <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
+                                <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
+                                <td className='td-th-size-depo'>{mercaderia.catalogo.descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
+                                <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
+                                <td className='td-th-size-depo'>{mercaderia.codigoAlmacen}</td>
+                                <td className='td-th-size-depo'></td>
                               </tr>
                             )
                           }

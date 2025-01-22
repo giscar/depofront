@@ -150,7 +150,7 @@ const MontacargaEditComponennt = () => {
       data.modelo = modelo.toUpperCase();
       data.serie = serie?.toUpperCase();
       data.anhoFabricacion = anhoFabricacion;
-      data.color = color.toUpperCase();
+      data.color = color?.toUpperCase();
       data.ubicacion = ubicacion.toUpperCase();
       data.estado = estado.toUpperCase();
       data.revisionOperatividad = revisionOperatividad.toUpperCase();
