@@ -186,6 +186,7 @@ const MercaderiaEditComponent = () => {
     mercaderiaSave(data).then(response =>{
       console.log(response)
       cargarMercaderia(id)
+      limpiarMercaderia()
     }).catch(error => {
       console.log(error);
     })
@@ -253,21 +254,31 @@ const MercaderiaEditComponent = () => {
   }, [cliente])
 
   const limpiar = () => {
-    setRuc('')
-    setRazonSocial('')
-    setDireccion('')
-    setCliente([])
+
     setCodServicio('')
     setNumeroServicio('')
     setDua('')
     setProductoCodigo('')
     setDescripcion('')
-    setUnidadMedida('')
-    setCantidad('')
+    
     setMoneda('')
     setObservaciones('');
 
   };
+
+  const limpiarMercaderia = () =>{
+    setUnidadMedida('')
+    setCantidad('')
+    setRuc('')
+    setRazonSocial('')
+    setDireccion('')
+    setCliente([])
+    setCantidad('')
+    setFechaIngreso('')
+    setCodigoAlmacen('')
+    setProductoCodigo('')
+    setDescripcionProducto('')
+  }
 
   return (
     <>
@@ -440,7 +451,7 @@ const MercaderiaEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Cantidad:</label>
                       <div className="col-sm-8">
-                        <input type="text"
+                        <input type="number"
                           placeholder='Cantidad de productos'
                           value={cantidad}
                           onChange={(e) => { setCantidad(e.target.value) }}
@@ -531,10 +542,10 @@ const MercaderiaEditComponent = () => {
                               <tr key={mercaderia.id}>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                                <td className='td-th-size-depo'>{mercaderia.catalogo.descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
                                 <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                                <td className='td-th-size-depo'>{mercaderia.codigoAlmacen}</td>
+                                <td className='td-th-size-depo'>{mercaderia.almacen[0].descripcion}</td>
                                 <td className='td-th-size-depo'></td>
                               </tr>
                             )
