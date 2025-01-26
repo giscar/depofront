@@ -172,10 +172,10 @@ const ServicioComponent = () => {
                         <td className='td-th-size-depo'>{servicio.ruc}</td>
                         <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                         <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                        <td className='td-th-size-depo'>{servicio.horaSalidaLocal.replace("T", " ")}</td>
-                        <td className='td-th-size-depo'>{servicio.horaInicioServicio.replace("T", " ")}</td>
-                        <td className='td-th-size-depo'>{servicio.horaFinServicio.replace("T", " ")}</td>
-                        <td className='td-th-size-depo'>{servicio.horaRetornoLocal.replace("T", " ")}</td>
+                        <td className='td-th-size-depo'>{servicio.horaSalidaLocal? (new Date(servicio.horaSalidaLocal)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaInicioServicio? (new Date(servicio.horaInicioServicio)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaFinServicio? (new Date(servicio.horaFinServicio)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaRetornoLocal? (new Date(servicio.horaRetornoLocal)).toLocaleString() : ""}</td>
                         <td className='td-th-size-depo'>{servicio.operador[0]?.nombre + ' ' + servicio.operador[0]?.apellidoPat}</td>
                         <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
                         <td className='td-th-size-depo'>

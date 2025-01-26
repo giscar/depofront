@@ -15,6 +15,7 @@ const MercaderiaNuevoComponent = () => {
   const [numeroServicio, setNumeroServicio] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
+  const [tipoMercaderia, setTipoMercaderia] = useState('')
 
   const navigator = useNavigate();
 
@@ -40,6 +41,7 @@ const MercaderiaNuevoComponent = () => {
     msgCodigoDua: '',
     msgCodigoProducto: '',
     msgDescripcion: '',
+    msgTipoServicio: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -64,6 +66,13 @@ const MercaderiaNuevoComponent = () => {
       }
     } else {
       errorCopy.msgCodServicio = 'Tiene que ingresar el numero de servicio';
+      valid = false;
+    }
+
+    if (tipoMercaderia) {
+      errorCopy.msgTipoMercaderia = '';
+    } else {
+      errorCopy.msgTipoMercaderia = 'Tiene que ingresar el tipo de mercaderia simple o nacionalizada';
       valid = false;
     }
 
@@ -186,6 +195,20 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise" >Tipo de mercaderia:</label>
+                    <div className="col-sm-8">
+                      <select value={tipoMercaderia}
+                        className={`form-select-depo${errors.msgTipoMercaderia ? ' is-invalid' : ''}`}
+                        onChange={(e) => { setTipoMercaderia(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Externo">Simple</option>
+                        <option value="Interno">Nacionalizada</option>
+                      </select>
+                      {errors.msgTipoMercaderia && <div className='invalid-feedback'>{errors.msgTipoMercaderia}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
                     <div className="col-sm-8">
                       <input type="text"
@@ -258,11 +281,7 @@ const MercaderiaNuevoComponent = () => {
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="card">
-                <div className="card-header">
 
-                </div>
-              </div>
             </div>
           </div>
         </div>

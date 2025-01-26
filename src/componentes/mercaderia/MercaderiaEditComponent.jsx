@@ -28,7 +28,8 @@ const MercaderiaEditComponent = () => {
   const [moneda, setMoneda] = useState('')
   const [fechaIngreso, setFechaIngreso] = useState('')
   const [codigoAlmacen, setCodigoAlmacen] = useState('')
-  
+  const [tipoMercaderia, setTipoMercaderia] = useState('')
+
   const [observaciones, setObservaciones] = useState('')
 
   const navigator = useNavigate();
@@ -56,7 +57,7 @@ const MercaderiaEditComponent = () => {
     }
   }, [id])
 
-  const cargarMercaderia = (idIngreso) =>{
+  const cargarMercaderia = (idIngreso) => {
     mercaderiaByIngreso(idIngreso).then(response => {
       debugger
       setMercaderias(response.data)
@@ -82,6 +83,7 @@ const MercaderiaEditComponent = () => {
     msgUnidadMedida: '',
     msgFechaIngreso: '',
     msgCodigoAlmacen: '',
+    msgTipoMercaderia: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -106,6 +108,13 @@ const MercaderiaEditComponent = () => {
       }
     } else {
       errorCopy.msgCodServicio = 'Tiene que ingresar el numero de servicio';
+      valid = false;
+    }
+
+    if (tipoMercaderia) {
+      errorCopy.msgTipoMercaderia = '';
+    } else {
+      errorCopy.msgTipoMercaderia = 'Tiene que ingresar el tipo de mercaderia simple o nacionalizada';
       valid = false;
     }
 
@@ -183,7 +192,7 @@ const MercaderiaEditComponent = () => {
     data.cantidad = cantidad;
     data.fechaIngreso = fechaIngreso;
     data.codigoAlmacen = codigoAlmacen;
-    mercaderiaSave(data).then(response =>{
+    mercaderiaSave(data).then(response => {
       console.log(response)
       cargarMercaderia(id)
       limpiarMercaderia()
@@ -260,13 +269,13 @@ const MercaderiaEditComponent = () => {
     setDua('')
     setProductoCodigo('')
     setDescripcion('')
-    
+
     setMoneda('')
     setObservaciones('');
 
   };
 
-  const limpiarMercaderia = () =>{
+  const limpiarMercaderia = () => {
     setUnidadMedida('')
     setCantidad('')
     setRuc('')
@@ -318,6 +327,20 @@ const MercaderiaEditComponent = () => {
                         readOnly
                         onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise" >Tipo de mercaderia:</label>
+                    <div className="col-sm-8">
+                      <select value={tipoMercaderia}
+                        className={`form-select-depo${errors.msgTipoMercaderia ? ' is-invalid' : ''}`}
+                        onChange={(e) => { setTipoMercaderia(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Externo">Simple</option>
+                        <option value="Interno">Nacionalizada</option>
+                      </select>
+                      {errors.msgTipoMercaderia && <div className='invalid-feedback'>{errors.msgTipoMercaderia}</div>}
                     </div>
                   </div>
 
@@ -388,7 +411,6 @@ const MercaderiaEditComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                 </div>
               </div>
@@ -461,7 +483,6 @@ const MercaderiaEditComponent = () => {
                       </div>
                     </div>
 
-
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Fecha de Ingreso:</label>
                       <div className="col-sm-8">
@@ -504,9 +525,7 @@ const MercaderiaEditComponent = () => {
                         </input>
                       </div>
                     </div>
-
                     <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
-
                   </div>
                 </div>
               </div>
@@ -558,7 +577,6 @@ const MercaderiaEditComponent = () => {
               </div>
             </div>
           </div>
-          
         </div>
       }
       {!ingressADM &&
