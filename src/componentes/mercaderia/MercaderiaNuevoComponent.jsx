@@ -11,11 +11,12 @@ const MercaderiaNuevoComponent = () => {
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
-  const [codServicio, setCodServicio] = useState('')
-  const [numeroServicio, setNumeroServicio] = useState('')
+  const [codIngreso, setCodIngreso] = useState('')
+  const [numeroIngreso, setNumeroIngreso] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [tipoMercaderia, setTipoMercaderia] = useState('')
+  const [pedidoDeposito, setPedidoDeposito] = useState('')
 
   const navigator = useNavigate();
 
@@ -36,12 +37,13 @@ const MercaderiaNuevoComponent = () => {
   }
 
   const [errors, setErrors] = useState({
-    msgCodServicio: '',
+    msgCodIngreso: '',
     msgRuc: '',
     msgCodigoDua: '',
     msgCodigoProducto: '',
     msgDescripcion: '',
     msgTipoServicio: '',
+    msgPedidoDeposito: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -58,14 +60,18 @@ const MercaderiaNuevoComponent = () => {
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
-    if (codServicio) {
-      errorCopy.msgCodServicio = '';
-      if (!regex.test(codServicio)) {
-        errorCopy.msgCodServicio = 'El codigo del servicio debe ser un numero';
+
+    errorCopy.msgPedidoDeposito = '';
+    errorCopy.msgCodigoDua = '';
+
+    if (codIngreso) {
+      errorCopy.msgCodIngreso = '';
+      if (!regex.test(codIngreso)) {
+        errorCopy.msgCodIngreso = 'El codigo del servicio debe ser un numero';
         valid = false;
       }
     } else {
-      errorCopy.msgCodServicio = 'Tiene que ingresar el numero de servicio';
+      errorCopy.msgCodIngreso = 'Tiene que ingresar el numero de servicio';
       valid = false;
     }
 
@@ -76,17 +82,26 @@ const MercaderiaNuevoComponent = () => {
       valid = false;
     }
 
+    if (tipoMercaderia == "Nacionalizada") {
+      if (pedidoDeposito) {
+        errorCopy.msgPedidoDeposito = '';
+      } else {
+        errorCopy.msgPedidoDeposito = 'Tiene que numero de Pedido de Deposito';
+        valid = false;
+      }
+
+      if (codigoDua) {
+        errorCopy.msgCodigoDua = '';
+      } else {
+        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
+        valid = false;
+      }
+    }
+
     if (ruc) {
       errorCopy.msgRuc = '';
     } else {
       errorCopy.msgRuc = 'Tiene que ingresar el numero de RUC';
-      valid = false;
-    }
-
-    if (codigoDua) {
-      errorCopy.msgCodigoDua = '';
-    } else {
-      errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
       valid = false;
     }
 
@@ -97,10 +112,9 @@ const MercaderiaNuevoComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      debugger
       const data = {}
-      data.codServicio = codServicio;
-      data.numeroServicio = numeroServicio;
+      data.codIngreso = codIngreso;
+      data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
@@ -109,7 +123,8 @@ const MercaderiaNuevoComponent = () => {
       data.estado = "1";
       data.estadoRegistro = "Proceso";
       data.usuarioRegistro = initialLogin.documento;
-      
+      data.tipoMercaderia = tipoMercaderia;
+      data.pedidoDeposito = pedidoDeposito;
       ingresoSave(data).then((response) => {
         editMercaderia(response.data.id)
       }).catch(error => {
@@ -124,13 +139,19 @@ const MercaderiaNuevoComponent = () => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
-    handleCodServicio();
+    handleCodIngreso();
   }, [])
 
-  const handleCodServicio = () => {
+  useEffect(() => {
+    setCodigoDua("")
+    setPedidoDeposito("")
+    //validateForm()
+  }, [tipoMercaderia])
+
+  const handleCodIngreso = () => {
     buscarCodigoIngreso().then((response) => {
-      setCodServicio(response.data + 1)
-      setNumeroServicio("ALM" + (response.data + 1).toString().padStart(8, '0'));
+      setCodIngreso(response.data + 1)
+      setNumeroIngreso("ALM" + (response.data + 1).toString().padStart(8, '0'));
     }).catch(error => {
       console.log(error);
     })
@@ -147,8 +168,8 @@ const MercaderiaNuevoComponent = () => {
     setRazonSocial('')
     setDireccion('')
     setCliente([])
-    setCodServicio('')
-    setNumeroServicio('')
+    setCodIngreso('')
+    setNumeroIngreso('')
     setCodigoDua('')
     setDescripcion('')
   };
@@ -182,15 +203,16 @@ const MercaderiaNuevoComponent = () => {
                 </div>
                 <div className="card-body">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Numero de ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del servicio"
-                        value={numeroServicio}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                        value={numeroIngreso}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroIngreso ? 'is-invalid' : ''}`}
                         readOnly
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                        onChange={(e) => { setNumeroIngreso(e.target.value) }}>
                       </input>
+                      {errors.msgNumeroIngreso && <div className='invalid-feedback'>{errors.msgNumeroIngreso}</div>}
                     </div>
                   </div>
 
@@ -201,10 +223,25 @@ const MercaderiaNuevoComponent = () => {
                         className={`form-select-depo${errors.msgTipoMercaderia ? ' is-invalid' : ''}`}
                         onChange={(e) => { setTipoMercaderia(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Externo">Simple</option>
-                        <option value="Interno">Nacionalizada</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Nacionalizada">Nacionalizada</option>
                       </select>
                       {errors.msgTipoMercaderia && <div className='invalid-feedback'>{errors.msgTipoMercaderia}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Pedido de deposito:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Numero de Pedido de Deposito'
+                        value={pedidoDeposito}
+                        onChange={(e) => { setPedidoDeposito(e.target.value) }}
+                        className={` form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''}`}
+                        disabled={tipoMercaderia == "Simple" ? true : false}
+                        autoComplete='off'>
+                      </input>
+                      {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
                     </div>
                   </div>
 
@@ -215,7 +252,8 @@ const MercaderiaNuevoComponent = () => {
                         placeholder='Numero de DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
-                        className={`form-control-depo ${errors.msgCodigoDua ? 'is-invalid' : ''}`}
+                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''}`}
+                        disabled={tipoMercaderia == "Simple" ? true : false}
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}

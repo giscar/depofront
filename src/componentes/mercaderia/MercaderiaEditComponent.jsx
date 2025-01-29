@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { catalogoByTipo, ingresoById, mercaderiaByIngreso, mercaderiaSave, servicioSave } from '../../service/FacturaService';
+import { catalogoByTipo, ingresoById, ingresoEdit, mercaderiaByIngreso, mercaderiaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const MercaderiaEditComponent = () => {
@@ -13,8 +13,8 @@ const MercaderiaEditComponent = () => {
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
-  const [codServicio, setCodServicio] = useState('')
-  const [numeroServicio, setNumeroServicio] = useState('')
+  const [codIngreso, setCodIngreso] = useState('')
+  const [numeroIngreso, setNumeroIngreso] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
@@ -25,11 +25,11 @@ const MercaderiaEditComponent = () => {
   const [descripcionProducto, setDescripcionProducto] = useState('')
   const [unidadMedida, setUnidadMedida] = useState('')
   const [cantidad, setCantidad] = useState('')
-  const [moneda, setMoneda] = useState('')
   const [fechaIngreso, setFechaIngreso] = useState('')
   const [codigoAlmacen, setCodigoAlmacen] = useState('')
   const [tipoMercaderia, setTipoMercaderia] = useState('')
-
+  const [pedidoDeposito, setPedidoDeposito] = useState('')
+  const [serie, setSerie] = useState('')
   const [observaciones, setObservaciones] = useState('')
 
   const navigator = useNavigate();
@@ -57,25 +57,32 @@ const MercaderiaEditComponent = () => {
     }
   }, [id])
 
+  useEffect(() => {
+    setCodigoDua("")
+    setPedidoDeposito("")
+    validateForm()
+  }, [tipoMercaderia])
+
   const cargarMercaderia = (idIngreso) => {
     mercaderiaByIngreso(idIngreso).then(response => {
-      debugger
       setMercaderias(response.data)
     });
   }
 
   const cargarIngreso = (data) => {
-    setNumeroServicio(data.numeroServicio)
-    setCodServicio(data.codServicio)
+    setNumeroIngreso(data.numeroIngreso)
+    setCodIngreso(data.codIngreso)
     setCodigoDua(data.codigoDua)
     setRuc(data.ruc)
     setRazonSocial(data.razonSocial)
     setDireccion(data.direccion)
     setDescripcion(data.descripcion)
+    setPedidoDeposito(data.pedidoDeposito)
+    setTipoMercaderia(data.tipoMercaderia)
   }
 
   const [errors, setErrors] = useState({
-    msgCodServicio: '',
+    msgCodIngreso: '',
     msgRuc: '',
     msgDua: '',
     msgCodigoProducto: '',
@@ -84,6 +91,9 @@ const MercaderiaEditComponent = () => {
     msgFechaIngreso: '',
     msgCodigoAlmacen: '',
     msgTipoMercaderia: '',
+    msgPedidoDeposito: '',
+    msgCantidad: '',
+    msgSerie: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -100,14 +110,18 @@ const MercaderiaEditComponent = () => {
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
-    if (codServicio) {
-      errorCopy.msgCodServicio = '';
-      if (!regex.test(codServicio)) {
-        errorCopy.msgCodServicio = 'El codigo del servicio debe ser un numero';
+
+    errorCopy.msgPedidoDeposito = '';
+    errorCopy.msgCodigoDua = '';
+
+    if (codIngreso) {
+      errorCopy.msgCodIngreso = '';
+      if (!regex.test(codIngreso)) {
+        errorCopy.msgCodIngreso = 'El codigo de ingreso debe ser un numero';
         valid = false;
       }
     } else {
-      errorCopy.msgCodServicio = 'Tiene que ingresar el numero de servicio';
+      errorCopy.msgCodIngreso = 'Tiene que ingresar el numero de ingreso';
       valid = false;
     }
 
@@ -118,31 +132,26 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
+    if (tipoMercaderia == "Nacionalizada") {
+      if (pedidoDeposito) {
+        errorCopy.msgPedidoDeposito = '';
+      } else {
+        errorCopy.msgPedidoDeposito = 'Tiene que numero de Pedido de Deposito';
+        valid = false;
+      }
+
+      if (codigoDua) {
+        errorCopy.msgCodigoDua = '';
+      } else {
+        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
+        valid = false;
+      }
+    }
+
     if (ruc) {
       errorCopy.msgRuc = '';
     } else {
       errorCopy.msgRuc = 'Tiene que ingresar el numero de RUC';
-      valid = false;
-    }
-
-    if (dua) {
-      errorCopy.msgDua = '';
-    } else {
-      errorCopy.msgDua = 'Tiene que ingresar el numero de DUA';
-      valid = false;
-    }
-
-    if (productoCodigo) {
-      errorCopy.msgCodigoProducto = '';
-    } else {
-      errorCopy.msgCodigoProducto = 'Tiene que ingresar el codigo del producto';
-      valid = false;
-    }
-
-    if (descripcion) {
-      errorCopy.msgDescripcion = '';
-    } else {
-      errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del producto';
       valid = false;
     }
 
@@ -156,10 +165,38 @@ const MercaderiaEditComponent = () => {
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
 
+    if (productoCodigo) {
+      errorCopy.msgCodigoProducto = '';
+    } else {
+      errorCopy.msgCodigoProducto = 'Tiene que ingresar el codigo del producto';
+      valid = false;
+    }
+
+    if (serie) {
+      errorCopy.msgSerie = '';
+    } else {
+      errorCopy.msgSerie = 'Tiene que ingresar el numero de serie o correlativo de la mercaderia';
+      valid = false;
+    }
+
+    if (descripcion) {
+      errorCopy.msgDescripcion = '';
+    } else {
+      errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del producto';
+      valid = false;
+    }
+
     if (unidadMedida) {
       errorCopy.msgUnidadMedida = '';
     } else {
       errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
+      valid = false;
+    }
+
+    if (cantidad) {
+      errorCopy.msgCantidad = '';
+    } else {
+      errorCopy.msgCantidad = 'Tiene que ingresar la cantidad de la mercancia';
       valid = false;
     }
 
@@ -192,6 +229,8 @@ const MercaderiaEditComponent = () => {
     data.cantidad = cantidad;
     data.fechaIngreso = fechaIngreso;
     data.codigoAlmacen = codigoAlmacen;
+    data.observaciones = observaciones;
+    data.serie = serie;
     mercaderiaSave(data).then(response => {
       console.log(response)
       cargarMercaderia(id)
@@ -205,33 +244,22 @@ const MercaderiaEditComponent = () => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
-      data.codServicio = codServicio;
-      data.numeroServicio = numeroServicio;
+      data.codIngreso = codIngreso;
+      data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
       data.codigoDua = codigoDua;
-      data.productoCodigo = productoCodigo;
       data.descripcion = descripcion;
-      data.unidadMedida = unidadMedida;
-      data.cantidad = cantidad;
       data.estado = "1";
       data.estadoRegistro = "Proceso";
-      data.moneda = moneda;
-      data.observaciones = observaciones;
-
-      servicioSave(data).then((response) => {
-        if (response.data.id) {
-          editServicio(response.data.id);
-        }
+      data.usuarioRegistro = initialLogin.documento;
+      data.id = id;
+      ingresoEdit(data).then((response) => {
       }).catch(error => {
         console.error(error)
       });
-      limpiar()
       notify()
-      setTimeout(() => {
-        handleCodServicio()
-      }, 1000);
     }
   }
 
@@ -263,16 +291,12 @@ const MercaderiaEditComponent = () => {
   }, [cliente])
 
   const limpiar = () => {
-
-    setCodServicio('')
-    setNumeroServicio('')
-    setDua('')
+    setCodIngreso('')
+    setNumeroIngreso('')
+    setCodigoDua('')
     setProductoCodigo('')
     setDescripcion('')
-
-    setMoneda('')
     setObservaciones('');
-
   };
 
   const limpiarMercaderia = () => {
@@ -282,11 +306,11 @@ const MercaderiaEditComponent = () => {
     setRazonSocial('')
     setDireccion('')
     setCliente([])
-    setCantidad('')
     setFechaIngreso('')
     setCodigoAlmacen('')
     setProductoCodigo('')
     setDescripcionProducto('')
+    setObservaciones('')
   }
 
   return (
@@ -318,14 +342,14 @@ const MercaderiaEditComponent = () => {
                 </div>
                 <div className="card-body">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Codigo del ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
-                        placeholder="Codigo del servicio"
-                        value={numeroServicio}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                        placeholder="Codigo del Ingreso"
+                        value={numeroIngreso}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroIngreso ? 'is-invalid' : ''}`}
                         readOnly
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                        onChange={(e) => { setNumeroIngreso(e.target.value) }}>
                       </input>
                     </div>
                   </div>
@@ -337,21 +361,52 @@ const MercaderiaEditComponent = () => {
                         className={`form-select-depo${errors.msgTipoMercaderia ? ' is-invalid' : ''}`}
                         onChange={(e) => { setTipoMercaderia(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Externo">Simple</option>
-                        <option value="Interno">Nacionalizada</option>
+                        <option value="Simple">Simple</option>
+                        <option value="Nacionalizada">Nacionalizada</option>
                       </select>
                       {errors.msgTipoMercaderia && <div className='invalid-feedback'>{errors.msgTipoMercaderia}</div>}
                     </div>
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
+                    <label className="col-sm-4 col-form-label-zise">Serie:</label>
                     <div className="col-sm-8">
                       <input type="text"
+                        placeholder='Numero de serie o correlativo'
+                        value={serie}
+                        onChange={(e) => { setSerie(e.target.value) }}
+                        className={`form-control-depo ${errors.msgSerie ? 'is-invalid' : ''}`}
+                        disabled={tipoMercaderia == "Simple" ? true : false}
+                        autoComplete='off'>
+                      </input>
+                      {errors.msgSerie && <div className='invalid-feedback'>{errors.msgSerie}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Pedido de deposito:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
+                        placeholder='Numero de Pedido de Deposito'
+                        value={pedidoDeposito}
+                        onChange={(e) => { setPedidoDeposito(e.target.value) }}
+                        className={` form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''}`}
+                        disabled={tipoMercaderia == "Simple" ? true : false}
+                        autoComplete='off'>
+                      </input>
+                      {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
                         placeholder='Numero de DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
-                        className={`form-control-depo ${errors.msgCodigoDua ? 'is-invalid' : ''}`}
+                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''}`}
+                        disabled={tipoMercaderia == "Simple" ? true : false}
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
@@ -477,9 +532,10 @@ const MercaderiaEditComponent = () => {
                           placeholder='Cantidad de productos'
                           value={cantidad}
                           onChange={(e) => { setCantidad(e.target.value) }}
-                          className='form-control-depo'
+                          className={`form-control-depo ${errors.msgCantidad ? 'is-invalid' : ''}`}
                           autoComplete='off'>
                         </input>
+                        {errors.msgCantidad && <div className='invalid-feedback'>{errors.msgCantidad}</div>}
                       </div>
                     </div>
 
