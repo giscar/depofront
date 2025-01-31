@@ -44,6 +44,7 @@ const MercaderiaNuevoComponent = () => {
     msgDescripcion: '',
     msgTipoServicio: '',
     msgPedidoDeposito: '',
+    msgSerie: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -113,6 +114,7 @@ const MercaderiaNuevoComponent = () => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
+      debugger
       data.codIngreso = codIngreso;
       data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
@@ -230,10 +232,11 @@ const MercaderiaNuevoComponent = () => {
                     </div>
                   </div>
 
+
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Pedido de deposito:</label>
                     <div className="col-sm-8">
-                      <input type="text"
+                      <input type="number"
                         placeholder='Numero de Pedido de Deposito'
                         value={pedidoDeposito}
                         onChange={(e) => { setPedidoDeposito(e.target.value) }}
@@ -248,7 +251,7 @@ const MercaderiaNuevoComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
                     <div className="col-sm-8">
-                      <input type="text"
+                      <input type="number"
                         placeholder='Numero de DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}

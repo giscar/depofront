@@ -17,6 +17,7 @@ const MercaderiaEditComponent = () => {
   const [numeroIngreso, setNumeroIngreso] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
+  const [ingreso, setIngreso] = useState('')
 
   const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
@@ -57,12 +58,6 @@ const MercaderiaEditComponent = () => {
     }
   }, [id])
 
-  useEffect(() => {
-    setCodigoDua("")
-    setPedidoDeposito("")
-    validateForm()
-  }, [tipoMercaderia])
-
   const cargarMercaderia = (idIngreso) => {
     mercaderiaByIngreso(idIngreso).then(response => {
       setMercaderias(response.data)
@@ -74,12 +69,25 @@ const MercaderiaEditComponent = () => {
     setCodIngreso(data.codIngreso)
     setCodigoDua(data.codigoDua)
     setRuc(data.ruc)
+    setPedidoDeposito(data.pedidoDeposito)
     setRazonSocial(data.razonSocial)
     setDireccion(data.direccion)
     setDescripcion(data.descripcion)
     setPedidoDeposito(data.pedidoDeposito)
     setTipoMercaderia(data.tipoMercaderia)
+    setTimeout(() => {
+      setIngreso(data)
+    }, 1000);
   }
+
+  useEffect(() => {
+      if (ingreso) {
+        setCodigoDua("")
+        setPedidoDeposito("")
+        validateForm()
+      }
+    
+  }, [tipoMercaderia])
 
   const [errors, setErrors] = useState({
     msgCodIngreso: '',
@@ -94,6 +102,7 @@ const MercaderiaEditComponent = () => {
     msgPedidoDeposito: '',
     msgCantidad: '',
     msgSerie: '',
+    msgDescripcionProducto: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -179,10 +188,10 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
-    if (descripcion) {
-      errorCopy.msgDescripcion = '';
+    if (descripcionProducto) {
+      errorCopy.msgDescripcionProducto = '';
     } else {
-      errorCopy.msgDescripcion = 'Tiene que ingresar la descripcion del producto';
+      errorCopy.msgDescripcionProducto = 'Tiene que ingresar la descripcion del producto';
       valid = false;
     }
 
@@ -219,25 +228,27 @@ const MercaderiaEditComponent = () => {
   }
 
   const agregarMercaderia = (e) => {
+    debugger
     e.preventDefault();
-    validateMercaderia();
-    const data = {}
-    data.idIngreso = id;
-    data.productoCodigo = productoCodigo;
-    data.descripcionProducto = descripcionProducto;
-    data.unidadMedida = unidadMedida;
-    data.cantidad = cantidad;
-    data.fechaIngreso = fechaIngreso;
-    data.codigoAlmacen = codigoAlmacen;
-    data.observaciones = observaciones;
-    data.serie = serie;
-    mercaderiaSave(data).then(response => {
-      console.log(response)
-      cargarMercaderia(id)
+    if (validateMercaderia()) {
+      const data = {}
+      data.idIngreso = id;
+      data.productoCodigo = productoCodigo;
+      data.descripcionProducto = descripcionProducto;
+      data.unidadMedida = unidadMedida;
+      data.cantidad = cantidad;
+      data.fechaIngreso = fechaIngreso;
+      data.codigoAlmacen = codigoAlmacen;
+      data.observaciones = observaciones;
+      data.serie = serie;
+      mercaderiaSave(data).then(response => {
+        console.log(response)
+        cargarMercaderia(id)
+      }).catch(error => {
+        console.log(error);
+      })
       limpiarMercaderia()
-    }).catch(error => {
-      console.log(error);
-    })
+    }
   }
 
   const handleSubmit = (e) => {
@@ -250,7 +261,9 @@ const MercaderiaEditComponent = () => {
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
       data.codigoDua = codigoDua;
+      data.pedidoDeposito = pedidoDeposito;
       data.descripcion = descripcion;
+      data.tipoMercaderia = tipoMercaderia;
       data.estado = "1";
       data.estadoRegistro = "Proceso";
       data.usuarioRegistro = initialLogin.documento;
@@ -311,6 +324,7 @@ const MercaderiaEditComponent = () => {
     setProductoCodigo('')
     setDescripcionProducto('')
     setObservaciones('')
+    setSerie('')
   }
 
   return (
@@ -365,21 +379,6 @@ const MercaderiaEditComponent = () => {
                         <option value="Nacionalizada">Nacionalizada</option>
                       </select>
                       {errors.msgTipoMercaderia && <div className='invalid-feedback'>{errors.msgTipoMercaderia}</div>}
-                    </div>
-                  </div>
-
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Serie:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        placeholder='Numero de serie o correlativo'
-                        value={serie}
-                        onChange={(e) => { setSerie(e.target.value) }}
-                        className={`form-control-depo ${errors.msgSerie ? 'is-invalid' : ''}`}
-                        disabled={tipoMercaderia == "Simple" ? true : false}
-                        autoComplete='off'>
-                      </input>
-                      {errors.msgSerie && <div className='invalid-feedback'>{errors.msgSerie}</div>}
                     </div>
                   </div>
 
@@ -473,8 +472,8 @@ const MercaderiaEditComponent = () => {
             <div className="col-lg-6">
               <div className="card">
                 <div className="card-header">
-                  <h4 className="card-title">Datos de la ejecución del servicio</h4>
-                  <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                  <h4 className="card-title">Datos de la mercaderia a ejecutar</h4>
+                  <p className="text-muted mb-0">Esta información debe ser ingresada por que hace los registros de despachos de mercaderia.
                   </p>
                 </div>
                 <div className="card-body">
@@ -484,7 +483,7 @@ const MercaderiaEditComponent = () => {
                       <label className="col-sm-4 col-form-label-zise">Codigo del producto:</label>
                       <div className="col-sm-8">
                         <input type="text"
-                          placeholder='Costo del servicio'
+                          placeholder='Codigo del producto'
                           value={productoCodigo}
                           onChange={(e) => { setProductoCodigo(e.target.value) }}
                           className={`form-control-depo ${errors.msgCodigoProducto ? 'is-invalid' : ''}`}
@@ -495,16 +494,31 @@ const MercaderiaEditComponent = () => {
                     </div>
 
                     <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Serie:</label>
+                      <div className="col-sm-8">
+                        <input type="text"
+                          placeholder='Numero de serie o correlativo'
+                          value={serie}
+                          onChange={(e) => { setSerie(e.target.value) }}
+                          className={`form-control-depo ${errors.msgSerie ? 'is-invalid' : ''}`}
+                          disabled={tipoMercaderia == "Simple" ? true : false}
+                          autoComplete='off'>
+                        </input>
+                        {errors.msgSerie && <div className='invalid-feedback'>{errors.msgSerie}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Descripcion del producto:</label>
                       <div className="col-sm-8">
                         <input type="text"
                           placeholder='Descripcion del producto'
                           value={descripcionProducto}
                           onChange={(e) => { setDescripcionProducto(e.target.value) }}
-                          className={`form-control-depo ${errors.msgDescripcion ? 'is-invalid' : ''}`}
+                          className={`form-control-depo ${errors.msgDescripcionProducto ? 'is-invalid' : ''}`}
                           autoComplete='off'>
                         </input>
-                        {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
+                        {errors.msgDescripcionProducto && <div className='invalid-feedback'>{errors.msgDescripcionProducto}</div>}
                       </div>
                     </div>
 
@@ -602,6 +616,7 @@ const MercaderiaEditComponent = () => {
                       <table className="table mb-0">
                         <thead className="thead-light">
                           <tr>
+                            <th className='td-th-size-depo'>Serie</th>
                             <th className='td-th-size-depo'>Codigo</th>
                             <th className='td-th-size-depo'>Descripcion</th>
                             <th className='td-th-size-depo'>Unidad medida</th>
@@ -615,6 +630,7 @@ const MercaderiaEditComponent = () => {
                           {
                             mercaderias.map(mercaderia =>
                               <tr key={mercaderia.id}>
+                                <td className='td-th-size-depo'>{mercaderia.serie}</td>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
                                 <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>

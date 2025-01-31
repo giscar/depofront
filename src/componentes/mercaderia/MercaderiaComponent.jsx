@@ -21,6 +21,10 @@ const MercaderiaComponent = () => {
 
   const navigator = useNavigate();
 
+  const irMercaderiaNuevo = () => {
+    navigator(`/mercaderiaNuevo`)
+  }
+
   const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
     position: "top-right",
     autoClose: 1000,
