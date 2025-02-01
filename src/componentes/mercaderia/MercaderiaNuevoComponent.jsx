@@ -65,14 +65,10 @@ const MercaderiaNuevoComponent = () => {
     errorCopy.msgPedidoDeposito = '';
     errorCopy.msgCodigoDua = '';
 
-    if (codIngreso) {
-      errorCopy.msgCodIngreso = '';
-      if (!regex.test(codIngreso)) {
-        errorCopy.msgCodIngreso = 'El codigo del servicio debe ser un numero';
-        valid = false;
-      }
+    if (numeroIngreso) {
+      errorCopy.msgNumeroIngreso = '';
     } else {
-      errorCopy.msgCodIngreso = 'Tiene que ingresar el numero de servicio';
+      errorCopy.msgNumeroIngreso = 'El numero de ingreso aun no ha sido generado por el sistema';
       valid = false;
     }
 
@@ -114,14 +110,13 @@ const MercaderiaNuevoComponent = () => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
-      debugger
       data.codIngreso = codIngreso;
       data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
       data.codigoDua = codigoDua;
-      data.descripcion = descripcion;
+      data.descripcion = descripcion?.toUpperCase();
       data.estado = "1";
       data.estadoRegistro = "Proceso";
       data.usuarioRegistro = initialLogin.documento;

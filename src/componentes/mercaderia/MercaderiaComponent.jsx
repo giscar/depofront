@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { ingresoAll, montacargaForId, montacargaInactiva, montacargasActivo } from '../../service/FacturaService';
+import { catalogoByTipo, ingresoAll, ingresoEdit } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
@@ -11,6 +11,20 @@ const MercaderiaComponent = () => {
   let ingress = false;
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+
+  const [numeroIngreso, setNumeroIngreso] = useState('')
+  const [codigoDua, setCodigoDua] = useState('')
+  const [pedidoDeposito, setPedidoDeposito] = useState('')
+  const [tipoMercaderia, setTipoMercaderia] = useState('')
+  const [ruc, setRuc] = useState('')
+  const [descripcionProducto, setDescripcionProducto] = useState('')
+  const [unidadMedida, setUnidadMedida] = useState('')
+  const [codigoAlmacen, setCodigoAlmacen] = useState('')
+
+
+  const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
+  const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
+
 
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
@@ -23,6 +37,27 @@ const MercaderiaComponent = () => {
 
   const irMercaderiaNuevo = () => {
     navigator(`/mercaderiaNuevo`)
+  }
+
+  useEffect(() => {
+    handleUnidadMedida();
+    handleAlmacen();
+  }, [])
+
+  const handleUnidadMedida = () => {
+    catalogoByTipo("1").then((response) => {
+      setCatalogoUnidadMedida(response.data)
+    })
+  }
+
+  const handleAlmacen = () => {
+    catalogoByTipo("2").then((response) => {
+      setCatalogoAlmacen(response.data)
+    })
+  }
+
+  const editarIngreso = (id) => {
+    navigator(`/mercaderiaEdit/${id}`)
   }
 
   const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
@@ -96,6 +131,99 @@ const MercaderiaComponent = () => {
             </div>
           </div>
           <br />
+          <div className='row'>
+            <div className="col-lg-3">
+              <label className='col-form-label-zise'>Codigo del ingreso:</label>
+              <input type="number"
+                placeholder="Codigo del servicio"
+                value={numeroIngreso}
+                className="form-control-depo"
+                onChange={(e) => { setNumeroIngreso(e.target.value) }}>
+              </input>
+            </div>
+
+            <div className="col-lg-3">
+              <label className='col-form-label-zise'>Pedido de deposito:</label>
+              <input type="number"
+                placeholder="Codigo del servicio"
+                value={pedidoDeposito}
+                className="form-control-depo"
+                onChange={(e) => { setPedidoDeposito(e.target.value) }}>
+              </input>
+            </div>
+
+            <div className="col-lg-3">
+              <label className='col-form-label-zise'>DUA / DAM:</label>
+              <input type="number"
+                placeholder="Codigo del servicio"
+                value={codigoDua}
+                className="form-control-depo"
+                onChange={(e) => { setCodigoDua(e.target.value) }}>
+              </input>
+            </div>
+
+            <div className="col-lg-3">
+              <label className="col-form-label-zise" >Tipo mercaderia:</label>
+              <select value={tipoMercaderia}
+                className={`form-select-depo`}
+                onChange={(e) => { setTipoMercaderia(e.target.value) }}>
+                <option value="">Seleccione</option>
+                <option value="Simple">Simple</option>
+                <option value="Nacionalizada">Nacionalizada</option>
+              </select>
+            </div>
+
+            <div className="col-lg-3">
+              <label className="col-form-label-zise" >Unidad de medida:</label>
+              <select value={unidadMedida}
+                className={`form-select-depo`}
+                onChange={(e) => { setUnidadMedida(e.target.value) }}>
+                <option value="">Seleccione</option>
+                {
+                  catalogoUnidadMedida.map(um =>
+                    <option key={um.id} value={um.codigo}>{um.descripcion}</option>
+                  )
+                }
+              </select>
+            </div>
+
+            <div className="col-lg-3">
+              <label className="col-form-label-zise" >Almacen:</label>
+              <select value={codigoAlmacen}
+                className={`form-select-depo`}
+                onChange={(e) => { setCodigoAlmacen(e.target.value) }}>
+                <option value="">Seleccione</option>
+                {
+                  catalogoAlmacen.map(al =>
+                    <option key={al.id} value={al.codigo}>{al.descripcion}</option>
+                  )
+                }
+              </select>
+            </div>
+
+            <div className="col-lg-3">
+              <label className='col-form-label-zise'>Numero de RUC:</label>
+              <input type="number"
+                id="inputRuc"
+                placeholder="Ingrese el numero de RUC"
+                value={ruc}
+                className="form-control-depo"
+                onChange={(e) => { setRuc(e.target.value) }}>
+              </input>
+            </div>
+
+            <div className="col-lg-3">
+              <label className='col-form-label-zise'>Descripcion de la mercaderia:</label>
+              <input type="text"
+                placeholder="Descripcion de la mercaderia"
+                value={descripcionProducto}
+                className="form-control-depo"
+                onChange={(e) => { setCodigoDua(e.target.value) }}>
+              </input>
+            </div>
+
+
+          </div>
           <div className="table-responsive">
             <table className="table mb-0">
               <thead className="thead-light">
@@ -106,7 +234,7 @@ const MercaderiaComponent = () => {
                   <th className='td-th-size-depo'>DUA/DAM</th>
                   <th className='td-th-size-depo'>Cliente</th>
                   <th className='td-th-size-depo'>Razon Social</th>
-                  <th className='td-th-size-depo'>Fecha de ingreso</th>
+                  <th className='td-th-size-depo'>Fecha de registro</th>
                   <th className='td-th-size-depo'>Estado</th>
                   <th className='td-th-size-depo'>Acciones</th>
                 </tr>
@@ -121,9 +249,13 @@ const MercaderiaComponent = () => {
                       <td className='td-th-size-depo'>{item.codigoDua}</td>
                       <td className='td-th-size-depo'>{item.ruc}</td>
                       <td className='td-th-size-depo'>{item.razonSocial}</td>
-                      <td className='td-th-size-depo'>{item.fechaIngreso}</td>
+                      <td className='td-th-size-depo'>{item.fechaRegistro? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
                       <td className='td-th-size-depo'>{item.estadoRegistro}</td>
-                      <td className='td-th-size-depo'></td>
+                      <td className='td-th-size-depo'>
+                      <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
+                                    <i className="bi bi-pencil-fill"></i>
+                                  </a>
+                      </td>
                     </tr>
                   )
                 }

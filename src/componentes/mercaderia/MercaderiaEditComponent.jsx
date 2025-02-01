@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { catalogoByTipo, ingresoById, ingresoEdit, mercaderiaByIngreso, mercaderiaSave } from '../../service/FacturaService';
+import { catalogoByTipo, ingresoById, ingresoEdit, mercaderiaById, mercaderiaByIngreso, mercaderiaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const MercaderiaEditComponent = () => {
@@ -51,14 +51,14 @@ const MercaderiaEditComponent = () => {
     if (id) {
       ingresoById(id).then((response) => {
         cargarIngreso(response.data);
-        cargarMercaderia(id)
+        cargarMercaderias(id)
       }).catch(error => {
         console.log(error);
       })
     }
   }, [id])
 
-  const cargarMercaderia = (idIngreso) => {
+  const cargarMercaderias = (idIngreso) => {
     mercaderiaByIngreso(idIngreso).then(response => {
       setMercaderias(response.data)
     });
@@ -234,7 +234,7 @@ const MercaderiaEditComponent = () => {
       const data = {}
       data.idIngreso = id;
       data.productoCodigo = productoCodigo;
-      data.descripcionProducto = descripcionProducto;
+      data.descripcionProducto = descripcionProducto?.toUpperCase();
       data.unidadMedida = unidadMedida;
       data.cantidad = cantidad;
       data.fechaIngreso = fechaIngreso;
@@ -243,7 +243,7 @@ const MercaderiaEditComponent = () => {
       data.serie = serie;
       mercaderiaSave(data).then(response => {
         console.log(response)
-        cargarMercaderia(id)
+        cargarMercaderias(id)
       }).catch(error => {
         console.log(error);
       })
@@ -262,7 +262,7 @@ const MercaderiaEditComponent = () => {
       data.direccion = direccion?.toUpperCase();
       data.codigoDua = codigoDua;
       data.pedidoDeposito = pedidoDeposito;
-      data.descripcion = descripcion;
+      data.descripcion = descripcion?.toUpperCase();
       data.tipoMercaderia = tipoMercaderia;
       data.estado = "1";
       data.estadoRegistro = "Proceso";
@@ -325,6 +325,19 @@ const MercaderiaEditComponent = () => {
     setDescripcionProducto('')
     setObservaciones('')
     setSerie('')
+  }
+
+  const registrarSalida = (idMercaderia) => {
+    console.log(idMercaderia)
+    mercaderiaById(idMercaderia).then(response =>{
+      cargarMercaderia(response.data)
+    }).catch(error => {
+      console.error(error)
+    });
+  }
+
+  const cargarMercaderia = (data) => {
+    setCantidad(data.cantidad)
   }
 
   return (
@@ -606,8 +619,8 @@ const MercaderiaEditComponent = () => {
             <div className="col-lg-12">
               <div className="card">
                 <div className="card-header">
-                  <h4 className="card-title">Datos de la factura</h4>
-                  <p className="text-muted mb-0">Esta información debe ser ingresada por el operador que realiza el servicio.
+                  <h4 className="card-title">Datos de las mercaderias ingresadas</h4>
+                  <p className="text-muted mb-0">Esta información corresponde a las mercaderias que se encuentran en los almacenes.
                   </p>
                 </div>
                 <div className="card-body">
@@ -637,7 +650,11 @@ const MercaderiaEditComponent = () => {
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
                                 <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
                                 <td className='td-th-size-depo'>{mercaderia.almacen[0].descripcion}</td>
-                                <td className='td-th-size-depo'></td>
+                                <td className='td-th-size-depo'>
+                                  <a className='icon-link-depo' onClick={() => registrarSalida(mercaderia.id)}>
+                                    <i className="bi bi-pencil-fill"></i>
+                                  </a>
+                                </td>
                               </tr>
                             )
                           }
