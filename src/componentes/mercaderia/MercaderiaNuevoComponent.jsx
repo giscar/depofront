@@ -311,7 +311,6 @@ const MercaderiaNuevoComponent = () => {
                       </input>
                     </div>
                   </div>
-
                   <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                 </div>
               </div>

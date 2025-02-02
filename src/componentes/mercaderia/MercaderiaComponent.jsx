@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { catalogoByTipo, ingresoAll, ingresoEdit } from '../../service/FacturaService';
+import { catalogoByTipo, ingresoAll, ingresoEdit, ingresoPorFiltros } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
+import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 
 const MercaderiaComponent = () => {
 
@@ -12,7 +13,6 @@ const MercaderiaComponent = () => {
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
-  const [numeroIngreso, setNumeroIngreso] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
   const [pedidoDeposito, setPedidoDeposito] = useState('')
   const [tipoMercaderia, setTipoMercaderia] = useState('')
@@ -24,6 +24,11 @@ const MercaderiaComponent = () => {
 
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
   const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
+
+  const [cliente, setCliente] = useState('')
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
 
   initialLogin.perfiles.map(p => {
@@ -95,11 +100,23 @@ const MercaderiaComponent = () => {
   }
 
   const buscarIngresos = () => {
-    ingresoAll().then((response) => {
+    ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia).then((response) => {
       setIngresos(response.data);
     }).catch(error => {
       console.error(error)
     })
+  }
+
+  useEffect(() => {
+    setRuc(cliente?.ruc)
+  }, [cliente])
+
+  const limpiar = () => {
+    setPedidoDeposito('')
+    setCodigoDua('')
+    setRuc('')
+    setTipoMercaderia('')
+    setIngresos([])
   }
 
   useEffect(() => {
@@ -133,12 +150,15 @@ const MercaderiaComponent = () => {
           <br />
           <div className='row'>
             <div className="col-lg-3">
-              <label className='col-form-label-zise'>Codigo del ingreso:</label>
+              <label className='col-form-label-zise'>Numero de RUC:</label>
               <input type="number"
-                placeholder="Codigo del servicio"
-                value={numeroIngreso}
-                className="form-control-depo"
-                onChange={(e) => { setNumeroIngreso(e.target.value) }}>
+                id="inputRuc"
+                placeholder="Ingrese el numero de RUC"
+                value={ruc}
+                className={`form-control-depo`}
+                onClick={handleShow}
+                onChange={(e) => { setRuc(e.target.value) }}
+                readOnly >
               </input>
             </div>
 
@@ -202,17 +222,6 @@ const MercaderiaComponent = () => {
             </div>
 
             <div className="col-lg-3">
-              <label className='col-form-label-zise'>Numero de RUC:</label>
-              <input type="number"
-                id="inputRuc"
-                placeholder="Ingrese el numero de RUC"
-                value={ruc}
-                className="form-control-depo"
-                onChange={(e) => { setRuc(e.target.value) }}>
-              </input>
-            </div>
-
-            <div className="col-lg-3">
               <label className='col-form-label-zise'>Descripcion de la mercaderia:</label>
               <input type="text"
                 placeholder="Descripcion de la mercaderia"
@@ -221,8 +230,13 @@ const MercaderiaComponent = () => {
                 onChange={(e) => { setCodigoDua(e.target.value) }}>
               </input>
             </div>
-
-
+          </div>
+          <div>
+            <br />
+            <button type="button" className="btn-depo btn-primary-depo" onClick={buscarIngresos}>Buscar</button>
+            &nbsp;
+            <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
+            <br /><br />
           </div>
           <div className="table-responsive">
             <table className="table mb-0">
@@ -249,12 +263,12 @@ const MercaderiaComponent = () => {
                       <td className='td-th-size-depo'>{item.codigoDua}</td>
                       <td className='td-th-size-depo'>{item.ruc}</td>
                       <td className='td-th-size-depo'>{item.razonSocial}</td>
-                      <td className='td-th-size-depo'>{item.fechaRegistro? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
+                      <td className='td-th-size-depo'>{item.fechaRegistro ? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
                       <td className='td-th-size-depo'>{item.estadoRegistro}</td>
                       <td className='td-th-size-depo'>
-                      <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
-                                    <i className="bi bi-pencil-fill"></i>
-                                  </a>
+                        <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
+                          <i className="bi bi-pencil-fill"></i>
+                        </a>
                       </td>
                     </tr>
                   )
@@ -289,6 +303,7 @@ const MercaderiaComponent = () => {
           </div>
         </div>
       }
+      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }

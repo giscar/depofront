@@ -177,4 +177,6 @@ export const ingresoById = (id) => axios.get(REST_API_BASE_URL_INGRESO+"?id="+id
 
 export const ingresoAll = () => axios.get(REST_API_BASE_URL_INGRESO+"/all");
 
+export const ingresoPorFiltros = (pedidoDeposito, codigoDua, ruc, tipoMercaderia) => axios.get(REST_API_BASE_URL_INGRESO+"/busquedaPorFiltros?pedidoDeposito="+pedidoDeposito+"&codigoDua="+codigoDua+"&ruc="+ruc+"&tipoMercaderia="+tipoMercaderia);
+
 export const buscarCodigoIngreso = () => axios.get(REST_API_BASE_URL_INGRESO+"/maxCodServicio"); 
