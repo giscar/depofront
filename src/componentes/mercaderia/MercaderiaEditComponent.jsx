@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { catalogoByTipo, ingresoById, ingresoEdit, mercaderiaById, mercaderiaByIngreso, mercaderiaSave } from '../../service/FacturaService';
+import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const MercaderiaEditComponent = () => {
@@ -19,6 +19,9 @@ const MercaderiaEditComponent = () => {
   const [descripcion, setDescripcion] = useState('')
   const [ingreso, setIngreso] = useState('')
 
+  const [numeroMercaderia, setNumeroMercaderia] = useState('')
+  const [codMercaderia, setCodMercaderia] = useState('')  
+  const [mercaderia, setMercaderia] = useState('')
   const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
   const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
@@ -33,6 +36,12 @@ const MercaderiaEditComponent = () => {
   const [serie, setSerie] = useState('')
   const [observaciones, setObservaciones] = useState('')
 
+  const [indSalida, setIndSalida] = useState(false)
+  const [cantidadSalida, setCantidadSalida] = useState('')
+  const [descripcionSalida, setDescripcionSalida] = useState('')
+  const [fechaSalida, setFechaSalida] = useState('')
+  
+  
   const navigator = useNavigate();
 
   const access = "R010"
@@ -46,6 +55,19 @@ const MercaderiaEditComponent = () => {
         ingressADM = true;
     });
   })
+
+  const handleCodMercaderia = () => {
+    buscarCodigoMercaderia().then((response) => {
+      setCodMercaderia(response.data + 1)
+      setNumeroMercaderia("MER" + (response.data + 1).toString().padStart(6, '0'));
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
+  useEffect(() => {
+    handleCodMercaderia();
+  }, [])
 
   useEffect(() => {
     if (id) {
@@ -103,6 +125,10 @@ const MercaderiaEditComponent = () => {
     msgCantidad: '',
     msgSerie: '',
     msgDescripcionProducto: '',
+    msgNumeroMercaderia: '',
+    msgCantidadSalida: '',
+    msgFechaSalida: '',
+    msgDescripcionSalida: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -181,6 +207,13 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
+    if (numeroMercaderia) {
+      errorCopy.msgNumeroMercaderia = '';
+    } else {
+      errorCopy.msgNumeroMercaderia = 'No se ha generado el numero del producto';
+      valid = false;
+    }
+
     if (serie) {
       errorCopy.msgSerie = '';
     } else {
@@ -228,7 +261,6 @@ const MercaderiaEditComponent = () => {
   }
 
   const agregarMercaderia = (e) => {
-    debugger
     e.preventDefault();
     if (validateMercaderia()) {
       const data = {}
@@ -241,6 +273,8 @@ const MercaderiaEditComponent = () => {
       data.codigoAlmacen = codigoAlmacen;
       data.observaciones = observaciones;
       data.serie = serie;
+      data.numeroMercaderia = numeroMercaderia;
+      data.codMercaderia = codMercaderia;
       mercaderiaSave(data).then(response => {
         console.log(response)
         cargarMercaderias(id)
@@ -275,6 +309,11 @@ const MercaderiaEditComponent = () => {
       notify()
     }
   }
+
+  const irMercaderia = (id) => {
+    navigator(`/mercaderiaEdit/${id}`)
+  }
+
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -327,17 +366,106 @@ const MercaderiaEditComponent = () => {
     setSerie('')
   }
 
-  const registrarSalida = (idMercaderia) => {
+  const seleccionarSalida = (idMercaderia) => {
     console.log(idMercaderia)
+    setIndSalida(true)
     mercaderiaById(idMercaderia).then(response =>{
       cargarMercaderia(response.data)
+      setMercaderia(response.data)
     }).catch(error => {
       console.error(error)
     });
   }
 
+  const registrarSalida = (e) => {
+    e.preventDefault();
+    if (validateSalida()) {
+      const data = {}
+      data.idMercaderia = mercaderia.id;
+      data.numeroMercaderia = mercaderia.numeroMercaderia;
+      data.cantidadSalida = cantidadSalida;
+      data.saldoRestante = (parseInt(mercaderia.cantidad - parseInt(cantidadSalida)))
+      data.descripcionSalida = descripcionSalida;
+      data.fechaSalida = fechaSalida;
+      data.usuarioRegistro = initialLogin.documento;
+      salidaSave(data).then(response => {
+        limpiarSalida()
+        irMercaderia(id) 
+        notify()
+      }).catch(error => {
+        console.error(error)
+      });
+    }
+  }
+
+  const limpiarSalida = () => {
+    setIndSalida(false);
+    setNumeroMercaderia('')
+    setCodMercaderia('')
+    setMercaderia('')
+    setPedidoDeposito('')
+    setCodigoAlmacen('')
+    setCodigoDua('')
+    setSerie('')
+    setDescripcionProducto('')
+    setUnidadMedida('')
+    setCantidad('')
+    setFechaIngreso('')
+    setCodigoAlmacen('')
+    setObservaciones('')
+    setCantidadSalida('')
+    setFechaSalida('')
+    setDescripcionSalida('')
+    setProductoCodigo('')
+
+  }
+
+  const validateSalida = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+    const regex = /^[0-9]*$/;
+
+    if (cantidadSalida) {
+      errorCopy.msgCantidadSalida = '';
+      if (parseInt(cantidadSalida) > parseInt(cantidad) ) {
+        errorCopy.msgCantidadSalida = 'La cantidad de mercaderia que sale no puede ser mayor a la que se encuentra en el almacen';
+        valid = false;
+      } else {
+        errorCopy.msgCantidadSalida = '';
+      }
+    } else {
+      errorCopy.msgCantidadSalida = 'Tiene que ingresar la cantidad de salida de mercaderia';
+      valid = false;
+    }
+
+    if (fechaSalida) {
+      errorCopy.msgFechaSalida = '';
+    } else {
+      errorCopy.msgFechaSalida = 'Tiene que ingresar la fecha de salida de la mercaderia';
+      valid = false;
+    }
+
+    if (descripcionSalida) {
+      errorCopy.msgDescripcionSalida = '';
+    } else {
+      errorCopy.msgDescripcionSalida = 'Tiene que ingresar la descripcion de la mercaderia que esta saliendo';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+    return valid;
+  }
+
   const cargarMercaderia = (data) => {
     setCantidad(data.cantidad)
+    setProductoCodigo(data.productoCodigo)
+    setSerie(data.serie)
+    setDescripcionProducto(data.descripcionProducto)
+    setUnidadMedida(data.unidadMedida)
+    setCodigoAlmacen(data.codigoAlmacen)
+    setFechaIngreso(data.fechaIngreso.substring(0, 10))
+    setObservaciones(data.observaciones)
+    setMercaderia(data)
   }
 
   return (
@@ -385,8 +513,9 @@ const MercaderiaEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise" >Tipo de mercaderia:</label>
                     <div className="col-sm-8">
                       <select value={tipoMercaderia}
-                        className={`form-select-depo${errors.msgTipoMercaderia ? ' is-invalid' : ''}`}
-                        onChange={(e) => { setTipoMercaderia(e.target.value) }}>
+                        className={`form-select-depo ${ errors.msgTipoMercaderia ? ' is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        onChange={(e) => { setTipoMercaderia(e.target.value) }}
+                        disabled={indSalida}>
                         <option value="">Seleccione</option>
                         <option value="Simple">Simple</option>
                         <option value="Nacionalizada">Nacionalizada</option>
@@ -402,8 +531,9 @@ const MercaderiaEditComponent = () => {
                         placeholder='Numero de Pedido de Deposito'
                         value={pedidoDeposito}
                         onChange={(e) => { setPedidoDeposito(e.target.value) }}
-                        className={` form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''}`}
+                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         disabled={tipoMercaderia == "Simple" ? true : false}
+                        readOnly={indSalida}
                         autoComplete='off'>
                       </input>
                       {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
@@ -417,8 +547,9 @@ const MercaderiaEditComponent = () => {
                         placeholder='Numero de DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
-                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''}`}
+                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         disabled={tipoMercaderia == "Simple" ? true : false}
+                        readOnly={indSalida}
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
@@ -431,10 +562,11 @@ const MercaderiaEditComponent = () => {
                       <input type="number"
                         placeholder="Ingrese el numero de RUC"
                         value={ruc}
-                        className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''}`}
+                        className={`form-control-depo ${errors.msgRuc ? 'is-invalid' : ''} ${errors.msgCodigoDua ? ' is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         onClick={handleShow}
                         onChange={(e) => { setRuc(e.target.value) }}
-                        readOnly>
+                        readOnly
+                        disabled={indSalida } >
                       </input>
                       {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
                     </div>
@@ -473,8 +605,9 @@ const MercaderiaEditComponent = () => {
                         placeholder='Descripcion'
                         value={descripcion}
                         onChange={(e) => { setDescripcion(e.target.value) }}
-                        className="form-control-depo"
-                        autoComplete='off'>
+                        className={`form-control-depo ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        autoComplete='off'
+                        disabled = {indSalida}>
                       </input>
                     </div>
                   </div>
@@ -492,6 +625,20 @@ const MercaderiaEditComponent = () => {
                 <div className="card-body">
                   <div className="general-label">
 
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Numero de mercaderia:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Numero de mercaderia"
+                        value={numeroMercaderia}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroMercaderia ? 'is-invalid' : ''}`}
+                        readOnly
+                        onChange={(e) => { setNumeroIngreso(e.target.value) }}>
+                      </input>
+                      {errors.msgNumeroMercaderia && <div className='invalid-feedback'>{errors.msgNumeroMercaderia}</div>}
+                    </div>
+                  </div>
+
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Codigo del producto:</label>
                       <div className="col-sm-8">
@@ -499,8 +646,9 @@ const MercaderiaEditComponent = () => {
                           placeholder='Codigo del producto'
                           value={productoCodigo}
                           onChange={(e) => { setProductoCodigo(e.target.value) }}
-                          className={`form-control-depo ${errors.msgCodigoProducto ? 'is-invalid' : ''}`}
-                          autoComplete='off'>
+                          className={`form-control-depo ${errors.msgCodigoProducto ? 'is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          autoComplete='off'
+                          disabled={indSalida}>
                         </input>
                         {errors.msgCodigoProducto && <div className='invalid-feedback'>{errors.msgCodigoProducto}</div>}
                       </div>
@@ -513,9 +661,9 @@ const MercaderiaEditComponent = () => {
                           placeholder='Numero de serie o correlativo'
                           value={serie}
                           onChange={(e) => { setSerie(e.target.value) }}
-                          className={`form-control-depo ${errors.msgSerie ? 'is-invalid' : ''}`}
-                          disabled={tipoMercaderia == "Simple" ? true : false}
-                          autoComplete='off'>
+                          className={`form-control-depo ${errors.msgSerie ? 'is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          autoComplete='off'
+                          disabled = {indSalida}>
                         </input>
                         {errors.msgSerie && <div className='invalid-feedback'>{errors.msgSerie}</div>}
                       </div>
@@ -528,8 +676,9 @@ const MercaderiaEditComponent = () => {
                           placeholder='Descripcion del producto'
                           value={descripcionProducto}
                           onChange={(e) => { setDescripcionProducto(e.target.value) }}
-                          className={`form-control-depo ${errors.msgDescripcionProducto ? 'is-invalid' : ''}`}
-                          autoComplete='off'>
+                          className={`form-control-depo ${errors.msgDescripcionProducto ? 'is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          autoComplete='off'
+                          disabled = {indSalida}>
                         </input>
                         {errors.msgDescripcionProducto && <div className='invalid-feedback'>{errors.msgDescripcionProducto}</div>}
                       </div>
@@ -539,8 +688,9 @@ const MercaderiaEditComponent = () => {
                       <label className="col-sm-4 col-form-label-zise" >Unidad de medida:</label>
                       <div className="col-sm-8">
                         <select value={unidadMedida}
-                          className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''}`}
-                          onChange={(e) => { setUnidadMedida(e.target.value) }}>
+                          className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          onChange={(e) => { setUnidadMedida(e.target.value) }}
+                          disabled={indSalida}>
                           <option value="">Seleccione</option>
                           {
                             catalogoUnidadMedida.map(um =>
@@ -559,8 +709,9 @@ const MercaderiaEditComponent = () => {
                           placeholder='Cantidad de productos'
                           value={cantidad}
                           onChange={(e) => { setCantidad(e.target.value) }}
-                          className={`form-control-depo ${errors.msgCantidad ? 'is-invalid' : ''}`}
-                          autoComplete='off'>
+                          className={`form-control-depo ${errors.msgCantidad ? 'is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          autoComplete='off'
+                          disabled={indSalida}>
                         </input>
                         {errors.msgCantidad && <div className='invalid-feedback'>{errors.msgCantidad}</div>}
                       </div>
@@ -571,8 +722,9 @@ const MercaderiaEditComponent = () => {
                       <div className="col-sm-8">
                         <input type="date"
                           value={fechaIngreso}
-                          className={`form-control-depo ${errors.msgFechaIngreso ? 'is-invalid' : ''}`}
-                          onChange={(e) => { setFechaIngreso(e.target.value) }}>
+                          className={`form-control-depo ${errors.msgFechaIngreso ? 'is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          onChange={(e) => { setFechaIngreso(e.target.value) }}
+                          disabled={indSalida}>
                         </input>
                         {errors.msgFechaIngreso && <div className='invalid-feedback'>{errors.msgFechaIngreso}</div>}
                       </div>
@@ -582,8 +734,9 @@ const MercaderiaEditComponent = () => {
                       <label className="col-sm-4 col-form-label-zise" >Almacen:</label>
                       <div className="col-sm-8">
                         <select value={codigoAlmacen}
-                          className={`form-select-depo${errors.msgCodigoAlmacen ? ' is-invalid' : ''}`}
-                          onChange={(e) => { setCodigoAlmacen(e.target.value) }}>
+                          className={`form-select-depo${errors.msgCodigoAlmacen ? ' is-invalid' : ''} ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          onChange={(e) => { setCodigoAlmacen(e.target.value) }}
+                          disabled={indSalida}>
                           <option value="">Seleccione</option>
                           {
                             catalogoAlmacen.map(al =>
@@ -600,15 +753,63 @@ const MercaderiaEditComponent = () => {
                       <div className="col-sm-8">
                         <input type="text"
                           name="observaciones"
-                          placeholder='Observaciones del servicio'
+                          placeholder='Observaciones de la mercaderia'
                           value={observaciones}
                           onChange={(e) => { setObservaciones(e.target.value) }}
-                          className='form-control-depo'
-                          autoComplete='off'>
+                          className={`form-control-depo ${ indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                          autoComplete='off'
+                          disabled={indSalida}>
                         </input>
                       </div>
                     </div>
-                    <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                    {!indSalida &&
+                      <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                    }
+                    {indSalida &&
+                    <div>
+                      <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Cantidad de Salida:</label>
+                      <div className="col-sm-8">
+                        <input type="number"
+                          placeholder='Cantidad de productos'
+                          value={cantidadSalida}
+                          onChange={(e) => { setCantidadSalida(e.target.value) }}
+                          className={`form-control ${errors.msgCantidadSalida ? 'is-invalid' : 'is-valid'}`}
+                          autoComplete='off'>
+                        </input>
+                        {errors.msgCantidadSalida && <div className='invalid-feedback'>{errors.msgCantidadSalida}</div>}
+                      </div>
+                    </div>
+                    <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Fecha de Salida:</label>
+                      <div className="col-sm-8">
+                        <input type="date"
+                          value={fechaSalida}
+                          className={`form-control ${errors.msgFechaSalida ? 'is-invalid' : 'is-valid'}`}
+                          onChange={(e) => { setFechaSalida(e.target.value) }}>
+                        </input>
+                        {errors.msgFechaSalida && <div className='invalid-feedback'>{errors.msgFechaSalida}</div>}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Descripcion de la salida:</label>
+                      <div className="col-sm-8">
+                        <input type="text"
+                          placeholder='Descripcion de la salida'
+                          value={descripcionSalida}
+                          onChange={(e) => { setDescripcionSalida(e.target.value) }}
+                          className={`form-control ${errors.msgDescripcionSalida ? 'is-invalid' : 'is-valid'}`}
+                          autoComplete='off'>
+                        </input>
+                        {errors.msgDescripcionSalida && <div className='invalid-feedback'>{errors.msgDescripcionSalida}</div>}
+                      </div>
+                      </div>
+                    </div>
+                      <button type="button" className="btn-depo btn-warning-depo" onClick={registrarSalida}>Salida de mercaderia</button>
+                    </div>
+                      
+                    }
                   </div>
                 </div>
               </div>
@@ -651,7 +852,7 @@ const MercaderiaEditComponent = () => {
                                 <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
                                 <td className='td-th-size-depo'>{mercaderia.almacen[0].descripcion}</td>
                                 <td className='td-th-size-depo'>
-                                  <a className='icon-link-depo' onClick={() => registrarSalida(mercaderia.id)}>
+                                  <a className='icon-link-depo' onClick={() => seleccionarSalida(mercaderia.id)}>
                                     <i className="bi bi-pencil-fill"></i>
                                   </a>
                                 </td>

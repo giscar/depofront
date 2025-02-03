@@ -32,7 +32,7 @@ const MercaderiaNuevoComponent = () => {
     });
   })
 
-  const editMercaderia = (id) => {
+  const irMercaderia = (id) => {
     navigator(`/mercaderiaEdit/${id}`)
   }
 
@@ -123,7 +123,7 @@ const MercaderiaNuevoComponent = () => {
       data.tipoMercaderia = tipoMercaderia;
       data.pedidoDeposito = pedidoDeposito;
       ingresoSave(data).then((response) => {
-        editMercaderia(response.data.id)
+        irMercaderia(response.data.id)
       }).catch(error => {
         console.error(error)
       });
@@ -148,7 +148,7 @@ const MercaderiaNuevoComponent = () => {
   const handleCodIngreso = () => {
     buscarCodigoIngreso().then((response) => {
       setCodIngreso(response.data + 1)
-      setNumeroIngreso("ALM" + (response.data + 1).toString().padStart(8, '0'));
+      setNumeroIngreso("ING" + (response.data + 1).toString().padStart(6, '0'));
     }).catch(error => {
       console.log(error);
     })

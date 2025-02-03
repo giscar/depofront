@@ -17,13 +17,7 @@ const MercaderiaComponent = () => {
   const [pedidoDeposito, setPedidoDeposito] = useState('')
   const [tipoMercaderia, setTipoMercaderia] = useState('')
   const [ruc, setRuc] = useState('')
-  const [descripcionProducto, setDescripcionProducto] = useState('')
-  const [unidadMedida, setUnidadMedida] = useState('')
-  const [codigoAlmacen, setCodigoAlmacen] = useState('')
-
-
-  const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
-  const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
+  const [estadoRegistro, setEstadoRegistro] = useState('')
 
   const [cliente, setCliente] = useState('')
   const [show, setShow] = useState(false);
@@ -42,23 +36,6 @@ const MercaderiaComponent = () => {
 
   const irMercaderiaNuevo = () => {
     navigator(`/mercaderiaNuevo`)
-  }
-
-  useEffect(() => {
-    handleUnidadMedida();
-    handleAlmacen();
-  }, [])
-
-  const handleUnidadMedida = () => {
-    catalogoByTipo("1").then((response) => {
-      setCatalogoUnidadMedida(response.data)
-    })
-  }
-
-  const handleAlmacen = () => {
-    catalogoByTipo("2").then((response) => {
-      setCatalogoAlmacen(response.data)
-    })
   }
 
   const editarIngreso = (id) => {
@@ -100,7 +77,7 @@ const MercaderiaComponent = () => {
   }
 
   const buscarIngresos = () => {
-    ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia).then((response) => {
+    ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia, estadoRegistro).then((response) => {
       setIngresos(response.data);
     }).catch(error => {
       console.error(error)
@@ -116,6 +93,7 @@ const MercaderiaComponent = () => {
     setCodigoDua('')
     setRuc('')
     setTipoMercaderia('')
+    setEstadoRegistro('')
     setIngresos([])
   }
 
@@ -194,42 +172,16 @@ const MercaderiaComponent = () => {
             </div>
 
             <div className="col-lg-3">
-              <label className="col-form-label-zise" >Unidad de medida:</label>
-              <select value={unidadMedida}
+              <label className="col-form-label-zise" >Estado:</label>
+              <select value={estadoRegistro}
                 className={`form-select-depo`}
-                onChange={(e) => { setUnidadMedida(e.target.value) }}>
+                onChange={(e) => { setEstadoRegistro(e.target.value) }}>
                 <option value="">Seleccione</option>
-                {
-                  catalogoUnidadMedida.map(um =>
-                    <option key={um.id} value={um.codigo}>{um.descripcion}</option>
-                  )
-                }
+                <option value="Proceso">Proceso</option>
+                <option value="Saldo Cero">Saldo Cero</option>
               </select>
             </div>
-
-            <div className="col-lg-3">
-              <label className="col-form-label-zise" >Almacen:</label>
-              <select value={codigoAlmacen}
-                className={`form-select-depo`}
-                onChange={(e) => { setCodigoAlmacen(e.target.value) }}>
-                <option value="">Seleccione</option>
-                {
-                  catalogoAlmacen.map(al =>
-                    <option key={al.id} value={al.codigo}>{al.descripcion}</option>
-                  )
-                }
-              </select>
-            </div>
-
-            <div className="col-lg-3">
-              <label className='col-form-label-zise'>Descripcion de la mercaderia:</label>
-              <input type="text"
-                placeholder="Descripcion de la mercaderia"
-                value={descripcionProducto}
-                className="form-control-depo"
-                onChange={(e) => { setCodigoDua(e.target.value) }}>
-              </input>
-            </div>
+            
           </div>
           <div>
             <br />
@@ -264,7 +216,13 @@ const MercaderiaComponent = () => {
                       <td className='td-th-size-depo'>{item.ruc}</td>
                       <td className='td-th-size-depo'>{item.razonSocial}</td>
                       <td className='td-th-size-depo'>{item.fechaRegistro ? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
-                      <td className='td-th-size-depo'>{item.estadoRegistro}</td>
+                      <td className='td-th-size-depo'>
+                      {item.estadoRegistro === "Proceso" &&
+                            <span className="badge badge-boxed  badge-outline-warning">{item.estadoRegistro}</span>
+                          }
+                       {item.estadoRegistro === "Saldo Cero" &&
+                            <span className="badge badge-boxed  badge-outline-success">{item.estadoRegistro}</span>
+                          }   </td>
                       <td className='td-th-size-depo'>
                         <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
                           <i className="bi bi-pencil-fill"></i>

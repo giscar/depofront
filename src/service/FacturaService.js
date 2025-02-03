@@ -25,6 +25,8 @@ const REST_API_BASE_URL_INGRESO = `${url}ingreso`
 
 const REST_API_BASE_URL_CATALOGO = `${url}catalogo`
 
+const REST_API_BASE_URL_SALIDA = `${url}salida`
+
 export const catalogoByTipo = (tipo) => axios.get(REST_API_BASE_URL_CATALOGO+"/"+tipo);
 
 export const listaFacturas = () => axios.get(REST_API_BASE_URL_FACTURA+"/all");
@@ -161,11 +163,11 @@ export const mercaderiaSave = (mercaderia) => axios.post(REST_API_BASE_URL_MERCA
 
 export const mercaderiaEdit = (mercaderia) => axios.put(REST_API_BASE_URL_MERCADERIA, mercaderia);
 
-export const mercaderiaById = (mercaderiaId) => axios.get(REST_API_BASE_URL_MERCADERIA+"?id="+mercaderiaId);
+export const mercaderiaById = (mercaderiaId) => axios.get(REST_API_BASE_URL_MERCADERIA+"/"+mercaderiaId);
 
 export const mercaderiaForAll = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/all");
 
-export const buscarCodigoMercaderia = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/maxCodServicio"); 
+export const buscarCodigoMercaderia = () => axios.get(REST_API_BASE_URL_MERCADERIA+"/maxCodMercaderia"); 
 
 export const mercaderiaByIngreso = (id) => axios.get(REST_API_BASE_URL_MERCADERIA+"/findByIngreso?id="+id);
 
@@ -177,6 +179,11 @@ export const ingresoById = (id) => axios.get(REST_API_BASE_URL_INGRESO+"?id="+id
 
 export const ingresoAll = () => axios.get(REST_API_BASE_URL_INGRESO+"/all");
 
-export const ingresoPorFiltros = (pedidoDeposito, codigoDua, ruc, tipoMercaderia) => axios.get(REST_API_BASE_URL_INGRESO+"/busquedaPorFiltros?pedidoDeposito="+pedidoDeposito+"&codigoDua="+codigoDua+"&ruc="+ruc+"&tipoMercaderia="+tipoMercaderia);
+export const ingresoPorFiltros = (pedidoDeposito, codigoDua, ruc, tipoMercaderia, estadoRegistro) => axios.get(REST_API_BASE_URL_INGRESO+"/busquedaPorFiltros?pedidoDeposito="+pedidoDeposito+"&codigoDua="+codigoDua+"&ruc="+ruc+"&tipoMercaderia="+tipoMercaderia+"&estadoRegistro="+estadoRegistro);
 
 export const buscarCodigoIngreso = () => axios.get(REST_API_BASE_URL_INGRESO+"/maxCodServicio"); 
+
+export const salidaSave = (salida) => axios.post(REST_API_BASE_URL_SALIDA, salida);
+
+export const salidaByNumeroMercaderia = (numeroMercaderia) => axios.get(REST_API_BASE_URL_SALIDA+"/numeroMercaderia?numeroMercaderia="+numeroMercaderia);
+
