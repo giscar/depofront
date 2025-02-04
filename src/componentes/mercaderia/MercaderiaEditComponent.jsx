@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
+import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 
 const MercaderiaEditComponent = () => {
 
@@ -35,6 +36,7 @@ const MercaderiaEditComponent = () => {
   const [pedidoDeposito, setPedidoDeposito] = useState('')
   const [serie, setSerie] = useState('')
   const [observaciones, setObservaciones] = useState('')
+  const [numeroMercaderiaSeleccionada, setNumeroMercaderiaSeleccionada] = useState('')
 
   const [indSalida, setIndSalida] = useState(false)
   const [cantidadSalida, setCantidadSalida] = useState('')
@@ -318,6 +320,13 @@ const MercaderiaEditComponent = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [showSalida, setShowSalida] = useState(false);
+  const handleCloseSalida = () => setShowSalida(false);
+  const handleShowSalida = (numSalida) => {
+    setNumeroMercaderiaSeleccionada(numSalida)
+    setShowSalida(true);
+  }
 
   useEffect(() => {
     handleUnidadMedida();
@@ -855,6 +864,10 @@ const MercaderiaEditComponent = () => {
                                   <a className='icon-link-depo' onClick={() => seleccionarSalida(mercaderia.id)}>
                                     <i className="bi bi-pencil-fill"></i>
                                   </a>
+                                  &nbsp;&nbsp;
+                                  <a className='icon-link-depo' onClick={() => handleShowSalida(mercaderia.numeroMercaderia)}>
+                                    <i className="bi bi-eye-fill"></i>
+                                  </a>
                                 </td>
                               </tr>
                             )
@@ -895,6 +908,7 @@ const MercaderiaEditComponent = () => {
         </div>
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
+      <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} />
     </>
   )
 }
