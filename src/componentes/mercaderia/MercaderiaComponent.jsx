@@ -218,12 +218,16 @@ const MercaderiaComponent = () => {
                       <td className='td-th-size-depo'>{item.razonSocial}</td>
                       <td className='td-th-size-depo'>{item.fechaRegistro ? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
                       <td className='td-th-size-depo'>
+                      {item.estadoRegistro === "Sin mercaderia" &&
+                        <span className="badge badge-boxed  badge-outline-primary">{item.estadoRegistro}</span>
+                      }
                       {item.estadoRegistro === "Proceso" &&
                         <span className="badge badge-boxed  badge-outline-warning">{item.estadoRegistro}</span>
                       }
                       {item.estadoRegistro === "Saldo cero" &&
                         <span className="badge badge-boxed  badge-outline-success">{item.estadoRegistro}</span>
                       }   
+                      
                       </td>
                       <td className='td-th-size-depo'>
                         <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
