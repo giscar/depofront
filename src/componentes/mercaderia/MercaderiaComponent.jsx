@@ -177,8 +177,9 @@ const MercaderiaComponent = () => {
                 className={`form-select-depo`}
                 onChange={(e) => { setEstadoRegistro(e.target.value) }}>
                 <option value="">Seleccione</option>
+                <option value="Sin mercaderia">Sin mercaderia</option>
                 <option value="Proceso">Proceso</option>
-                <option value="Saldo Cero">Saldo Cero</option>
+                <option value="Saldo cero">Saldo cero</option>
               </select>
             </div>
             
@@ -218,11 +219,12 @@ const MercaderiaComponent = () => {
                       <td className='td-th-size-depo'>{item.fechaRegistro ? (new Date(item.fechaRegistro)).toLocaleString() : ""}</td>
                       <td className='td-th-size-depo'>
                       {item.estadoRegistro === "Proceso" &&
-                            <span className="badge badge-boxed  badge-outline-warning">{item.estadoRegistro}</span>
-                          }
-                       {item.estadoRegistro === "Saldo Cero" &&
-                            <span className="badge badge-boxed  badge-outline-success">{item.estadoRegistro}</span>
-                          }   </td>
+                        <span className="badge badge-boxed  badge-outline-warning">{item.estadoRegistro}</span>
+                      }
+                      {item.estadoRegistro === "Saldo cero" &&
+                        <span className="badge badge-boxed  badge-outline-success">{item.estadoRegistro}</span>
+                      }   
+                      </td>
                       <td className='td-th-size-depo'>
                         <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
                           <i className="bi bi-pencil-fill"></i>

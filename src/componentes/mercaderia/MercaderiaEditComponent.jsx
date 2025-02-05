@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
+import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 
@@ -19,6 +19,7 @@ const MercaderiaEditComponent = () => {
   const [codigoDua, setCodigoDua] = useState('')
   const [descripcion, setDescripcion] = useState('')
   const [ingreso, setIngreso] = useState('')
+  const [estadoRegistro, setEstadoRegistro] = useState('')
 
   const [numeroMercaderia, setNumeroMercaderia] = useState('')
   const [codMercaderia, setCodMercaderia] = useState('')  
@@ -99,6 +100,7 @@ const MercaderiaEditComponent = () => {
     setDescripcion(data.descripcion)
     setPedidoDeposito(data.pedidoDeposito)
     setTipoMercaderia(data.tipoMercaderia)
+    setEstadoRegistro(data.estadoRegistro)
     setTimeout(() => {
       setIngreso(data)
     }, 1000);
@@ -271,15 +273,25 @@ const MercaderiaEditComponent = () => {
       data.descripcionProducto = descripcionProducto?.toUpperCase();
       data.unidadMedida = unidadMedida;
       data.cantidad = cantidad;
+      data.cantidadOrignal = cantidad;
       data.fechaIngreso = fechaIngreso;
       data.codigoAlmacen = codigoAlmacen;
       data.observaciones = observaciones;
       data.serie = serie;
       data.numeroMercaderia = numeroMercaderia;
       data.codMercaderia = codMercaderia;
+      data.estadoMercaderia = "Proceso"
       mercaderiaSave(data).then(response => {
         console.log(response)
         cargarMercaderias(id)
+        ingresoById(id).then(response=>{
+          response.data.estadoRegistro = "Proceso"
+          ingresoSave(response.data).then(respon =>{
+            cargarIngreso(respon.data)
+            notify();
+            
+          }).catch(error => console.log(error))
+        })
       }).catch(error => {
         console.log(error);
       })
@@ -291,6 +303,7 @@ const MercaderiaEditComponent = () => {
     e.preventDefault();
     if (validateForm()) {
       const data = {}
+      debugger
       data.codIngreso = codIngreso;
       data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
@@ -301,15 +314,35 @@ const MercaderiaEditComponent = () => {
       data.descripcion = descripcion?.toUpperCase();
       data.tipoMercaderia = tipoMercaderia;
       data.estado = "1";
-      data.estadoRegistro = "Proceso";
+      if(validaNumeroMercaderia() == 0){
+        data.estadoRegistro = "Sin mercaderia";
+      }else{
+        if(validaCantidadMercaderia()){
+          data.estadoRegistro = "Proceso";
+        }else{
+          data.estadoRegistro = "Saldo cero";
+        }
+      }
       data.usuarioRegistro = initialLogin.documento;
       data.id = id;
       ingresoEdit(data).then((response) => {
       }).catch(error => {
         console.error(error)
       });
-      notify()
     }
+    notify()
+  }
+
+  const validaNumeroMercaderia = () =>{
+    return mercaderias.length;
+  }
+
+  const validaCantidadMercaderia = () =>{
+    let cantidadMercaderias = 0;
+    mercaderias.map(item => {
+      cantidadMercaderias = cantidadMercaderias + item.cantidad;
+    })
+    return cantidadMercaderias;
   }
 
   const irMercaderia = (id) => {
@@ -393,11 +426,41 @@ const MercaderiaEditComponent = () => {
       data.idMercaderia = mercaderia.id;
       data.numeroMercaderia = mercaderia.numeroMercaderia;
       data.cantidadSalida = cantidadSalida;
-      data.saldoRestante = (parseInt(mercaderia.cantidad - parseInt(cantidadSalida)))
+      data.saldoRestante = (parseInt(mercaderia.cantidad) - parseInt(cantidadSalida))
       data.descripcionSalida = descripcionSalida;
       data.fechaSalida = fechaSalida;
       data.usuarioRegistro = initialLogin.documento;
       salidaSave(data).then(response => {
+        mercaderiaById(mercaderia.id).then(response => {
+          if((parseInt(mercaderia.cantidad) - parseInt(cantidadSalida)) > 0){
+            response.data.estadoMercaderia = "Proceso" 
+          }
+          if((parseInt(mercaderia.cantidad) - parseInt(cantidadSalida)) == 0){
+            response.data.estadoMercaderia = "Saldo cero" 
+          }
+          response.data.cantidad = (parseInt(mercaderia.cantidad) - parseInt(cantidadSalida));
+          mercaderiaSave(response.data).then(resp =>{
+            mercaderiaByIngreso(id).then(response => {
+              setMercaderias(response.data)
+              let cantidadMercaderias = 0;
+              response.data.map(item => {
+                cantidadMercaderias = cantidadMercaderias + item.cantidad;
+              })
+              ingresoById(id).then(res => {
+                if(cantidadMercaderias > 0){
+                  res.data.estadoRegistro = "Proceso";
+                }
+                if(cantidadMercaderias == 0){
+                  res.data.estadoRegistro = "Saldo cero";
+                }
+                ingresoEdit(res.data).then(r => {
+                  debugger
+                  cargarIngreso(r)
+                }).catch(e => console.log(e))
+              })
+            }); 
+          })
+        })
         limpiarSalida()
         irMercaderia(id) 
         notify()
@@ -412,22 +475,23 @@ const MercaderiaEditComponent = () => {
     setNumeroMercaderia('')
     setCodMercaderia('')
     setMercaderia('')
-    setPedidoDeposito('')
     setCodigoAlmacen('')
-    setCodigoDua('')
     setSerie('')
     setDescripcionProducto('')
     setUnidadMedida('')
     setCantidad('')
     setFechaIngreso('')
-    setCodigoAlmacen('')
     setObservaciones('')
     setCantidadSalida('')
     setFechaSalida('')
     setDescripcionSalida('')
     setProductoCodigo('')
-
   }
+
+  const cancelarSalida = () =>{
+    limpiarSalida();
+    handleCodMercaderia();
+  } 
 
   const validateSalida = () => {
     let valid = true;
@@ -466,6 +530,7 @@ const MercaderiaEditComponent = () => {
   }
 
   const cargarMercaderia = (data) => {
+    setNumeroMercaderia(data.numeroMercaderia)
     setCantidad(data.cantidad)
     setProductoCodigo(data.productoCodigo)
     setSerie(data.serie)
@@ -620,7 +685,17 @@ const MercaderiaEditComponent = () => {
                       </input>
                     </div>
                   </div>
-                  <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Estado registro:</label>
+                    <div className="col-sm-8">
+                      <label className='text-primary'>{estadoRegistro}</label>
+                    </div>
+                  </div>
+                  
+                  {!indSalida &&
+                    <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                  }
                 </div>
               </div>
             </div>
@@ -816,6 +891,8 @@ const MercaderiaEditComponent = () => {
                       </div>
                     </div>
                       <button type="button" className="btn-depo btn-warning-depo" onClick={registrarSalida}>Salida de mercaderia</button>
+                      &nbsp;&nbsp;
+                      <button type="button" className="btn-depo btn-danger-depo" onClick={cancelarSalida}>Cancelar Salida</button>
                     </div>
                       
                     }
@@ -839,13 +916,16 @@ const MercaderiaEditComponent = () => {
                       <table className="table mb-0">
                         <thead className="thead-light">
                           <tr>
+                            <th className='td-th-size-depo'>Numero</th>
                             <th className='td-th-size-depo'>Serie</th>
                             <th className='td-th-size-depo'>Codigo</th>
                             <th className='td-th-size-depo'>Descripcion</th>
                             <th className='td-th-size-depo'>Unidad medida</th>
-                            <th className='td-th-size-depo'>cantidad</th>
+                            <th className='td-th-size-depo'>cantidad inicial</th>
+                            <th className='td-th-size-depo'>cantidad actual</th>
                             <th className='td-th-size-depo'>Fecha de ingreso</th>
                             <th className='td-th-size-depo'>Almacen</th>
+                            <th className='td-th-size-depo'>Estado</th>
                             <th className='td-th-size-depo'>Acciones</th>
                           </tr>
                         </thead>
@@ -853,13 +933,16 @@ const MercaderiaEditComponent = () => {
                           {
                             mercaderias.map(mercaderia =>
                               <tr key={mercaderia.id}>
+                                <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                                 <td className='td-th-size-depo'>{mercaderia.serie}</td>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
                                 <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
                                 <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
                                 <td className='td-th-size-depo'>{mercaderia.almacen[0].descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.estadoMercaderia}</td>
                                 <td className='td-th-size-depo'>
                                   <a className='icon-link-depo' onClick={() => seleccionarSalida(mercaderia.id)}>
                                     <i className="bi bi-pencil-fill"></i>
@@ -908,7 +991,7 @@ const MercaderiaEditComponent = () => {
         </div>
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
-      <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} />
+      <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id}/>
     </>
   )
 }

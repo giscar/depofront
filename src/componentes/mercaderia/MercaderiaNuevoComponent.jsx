@@ -118,7 +118,7 @@ const MercaderiaNuevoComponent = () => {
       data.codigoDua = codigoDua;
       data.descripcion = descripcion?.toUpperCase();
       data.estado = "1";
-      data.estadoRegistro = "Proceso";
+      data.estadoRegistro = "Sin mercaderia";
       data.usuarioRegistro = initialLogin.documento;
       data.tipoMercaderia = tipoMercaderia;
       data.pedidoDeposito = pedidoDeposito;

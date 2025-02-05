@@ -1,25 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { salidaByNumeroMercaderia } from '../../service/FacturaService';
+import { ingresoById, mercaderiaByNumeroMercaderia, salidaByNumeroMercaderia } from '../../service/FacturaService';
 
-const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia }) => {
+const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia, idIngreso }) => {
 
   const [salidas, setSalidas] = useState([])
-
-  console.log(numeroMercaderia)
+  const [mercaderia, setMercaderia] = useState([])
+  const [ingreso, setIngreso] = useState([])
 
   const buscarClienteByDescripcion = () => {
     salidaByNumeroMercaderia(numeroMercaderia).then(response => {
       setSalidas(response.data)
+      mercaderiaByNumeroMercaderia(numeroMercaderia).then(response => {
+        setMercaderia(response.data)
+      })
     }).catch(error => {
       console.log(error)
+    })
+  }
+
+  const buscarIngresoById = () => {
+    ingresoById(idIngreso).then(response => {
+      setIngreso(response.data)
+    }).catch(e => {
+      console.log(e)
     })
   }
 
   useEffect(() => {
     if(show){
       buscarClienteByDescripcion()
+      buscarIngresoById()
     }
   }, [show])
 
@@ -39,22 +51,61 @@ const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia }) => {
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>RUC</Form.Label>
-              <Form.Control
-                type="text"
-                name='ruc'
-                placeholder="Ingrese el ruc"
-                autoComplete='off'
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Cliente</Form.Label>
-              <Form.Control
-                type="text"
-                name='razonSocial'
-                placeholder="Ingrese el nombre del cliente"
-                autoComplete='off'
-              />
+            <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Numero:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={mercaderia.numeroMercaderia}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Codigo Producto:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={mercaderia.productoCodigo}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Descripcion:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={mercaderia.descripcionProducto}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">RUC:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={ingreso.ruc}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">RazonSocial:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={ingreso.razonSocial}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
             </Form.Group>
           </Form>
         </Modal.Body>
