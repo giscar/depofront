@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { catalogoByTipo, ingresoAll, ingresoEdit, ingresoPorFiltros } from '../../service/FacturaService';
+import { ingresoPorFiltros } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
@@ -29,8 +29,24 @@ const MercaderiaComponent = () => {
     p.roles.map(r => {
       if (r.codigo == access)
         ingress = true;
-    });
+    })
   })
+
+  const showLoading = () => {
+    Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: ()=>{
+            Swal.showLoading();
+        }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const navigator = useNavigate();
 
@@ -42,7 +58,7 @@ const MercaderiaComponent = () => {
     navigator(`/mercaderiaEdit/${id}`)
   }
 
-  const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
+  const notify = (msg) => toast.info(msg, {
     position: "top-right",
     autoClose: 1000,
     hideProgressBar: false,
@@ -54,31 +70,17 @@ const MercaderiaComponent = () => {
 
   const [ingresos, setIngresos] = useState([])
 
-  const handleMontacarga = (id) => {
-    Swal.fire({
-      title: "Desea eliminar la montacarga?",
-      text: "Esta accion no tiene reversion!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, eliminar la montacarga!"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        inactivaMontacarga(id)
-        Swal.fire({
-          title: "Montacarga Eliminado!",
-          text: "La accion se ejecuto correctamente.",
-          icon: "success"
-        });
-      }
-    });
-  }
-
   const buscarIngresos = () => {
+    showLoading()
     ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia, estadoRegistro).then((response) => {
       setIngresos(response.data);
+      closeLoading()
+      debugger
+      if(response.data.length == 0){
+        notify("La consulta no ha tenido resultados")
+      }else{
+        notify("Se ha realizado la consulta correctamente")
+      }
     }).catch(error => {
       console.error(error)
     })
@@ -96,10 +98,6 @@ const MercaderiaComponent = () => {
     setEstadoRegistro('')
     setIngresos([])
   }
-
-  useEffect(() => {
-    buscarIngresos()
-  }, [])
 
   return (
     <>
@@ -182,7 +180,6 @@ const MercaderiaComponent = () => {
                 <option value="Saldo cero">Saldo cero</option>
               </select>
             </div>
-            
           </div>
           <div>
             <br />

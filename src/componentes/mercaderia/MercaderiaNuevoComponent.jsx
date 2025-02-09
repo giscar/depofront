@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoIngreso, ingresoSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const MercaderiaNuevoComponent = () => {
 
@@ -22,6 +23,22 @@ const MercaderiaNuevoComponent = () => {
 
   const access = "R010"
   let ingressADM = false;
+
+  const showLoading = () => {
+    Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: ()=>{
+            Swal.showLoading();
+        }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'));
 
@@ -109,6 +126,7 @@ const MercaderiaNuevoComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      showLoading()
       const data = {}
       data.codIngreso = codIngreso;
       data.numeroIngreso = numeroIngreso;
@@ -123,6 +141,7 @@ const MercaderiaNuevoComponent = () => {
       data.tipoMercaderia = tipoMercaderia;
       data.pedidoDeposito = pedidoDeposito;
       ingresoSave(data).then((response) => {
+        closeLoading()
         irMercaderia(response.data.id)
       }).catch(error => {
         console.error(error)
@@ -227,7 +246,6 @@ const MercaderiaNuevoComponent = () => {
                     </div>
                   </div>
 
-
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Pedido de deposito:</label>
                     <div className="col-sm-8">
@@ -244,7 +262,7 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
+                    <label className="col-sm-4 col-form-label-zise">Numero de DAM / DUA:</label>
                     <div className="col-sm-8">
                       <input type="number"
                         placeholder='Numero de DUA'

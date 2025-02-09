@@ -5,6 +5,7 @@ import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
+import Swal from 'sweetalert2'
 
 const MercaderiaEditComponent = () => {
 
@@ -44,25 +45,42 @@ const MercaderiaEditComponent = () => {
   const [descripcionSalida, setDescripcionSalida] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
 
+  const showLoading = () => {
+    Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: ()=>{
+            Swal.showLoading();
+        }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const navigator = useNavigate();
 
   const access = "R010"
   let ingressADM = false;
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'))
 
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
       if (r.codigo == access)
         ingressADM = true;
-    });
+    })
   })
 
   const handleCodMercaderia = () => {
+    showLoading()
     buscarCodigoMercaderia().then((response) => {
       setCodMercaderia(response.data + 1)
       setNumeroMercaderia("MER" + (response.data + 1).toString().padStart(6, '0'));
+      closeLoading()
     }).catch(error => {
       console.log(error);
     })
@@ -74,9 +92,11 @@ const MercaderiaEditComponent = () => {
 
   useEffect(() => {
     if (id) {
+      showLoading()
       ingresoById(id).then((response) => {
         cargarIngreso(response.data);
         cargarMercaderias(id)
+        closeLoading()
       }).catch(error => {
         console.log(error);
       })
@@ -84,8 +104,10 @@ const MercaderiaEditComponent = () => {
   }, [id])
 
   const cargarMercaderias = (idIngreso) => {
+    showLoading()
     mercaderiaByIngreso(idIngreso).then(response => {
       setMercaderias(response.data)
+      closeLoading()
     });
   }
 
@@ -107,12 +129,13 @@ const MercaderiaEditComponent = () => {
   }
 
   useEffect(() => {
-    if (ingreso) {
-      setCodigoDua("")
-      setPedidoDeposito("")
-      validateForm()
+    if(tipoMercaderia){
+      if (ingreso) {
+        setCodigoDua("")
+        setPedidoDeposito("")
+        validateForm()
+      }
     }
-
   }, [tipoMercaderia])
 
   const [errors, setErrors] = useState({
@@ -199,6 +222,27 @@ const MercaderiaEditComponent = () => {
     return valid;
   }
 
+  const limpiarMercaderia = () => {
+    setUnidadMedida('')
+    setCantidad('')
+    setFechaIngreso('')
+    setCodigoAlmacen('')
+    setProductoCodigo('')
+    setDescripcionProducto('')
+    setObservaciones('')
+    setSerie('')
+
+    const errorCopy = { ...errors }
+    errorCopy.msgCodigoProducto = '';
+    errorCopy.msgNumeroMercaderia = '';
+    errorCopy.msgSerie = '';
+    errorCopy.msgDescripcionProducto = '';
+    errorCopy.msgUnidadMedida = '';
+    errorCopy.msgCantidad = '';
+    errorCopy.msgFechaIngreso = '';
+    errorCopy.msgCodigoAlmacen = '';
+    setErrors(errorCopy);
+  }
 
   const validateMercaderia = () => {
     let valid = true;
@@ -268,6 +312,7 @@ const MercaderiaEditComponent = () => {
   const agregarMercaderia = (e) => {
     e.preventDefault();
     if (validateMercaderia()) {
+      showLoading()
       const data = {}
       data.idIngreso = id;
       data.productoCodigo = productoCodigo;
@@ -291,11 +336,10 @@ const MercaderiaEditComponent = () => {
             cargarIngreso(respon.data)
             notify();
             handleCodMercaderia()
+            closeLoading()
           }).catch(error => console.log(error))
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+        }).catch(error => console.log(error))
+      }).catch(error => console.log(error))
       limpiarMercaderia()
     }
   }
@@ -303,8 +347,8 @@ const MercaderiaEditComponent = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      showLoading()
       const data = {}
-      debugger
       data.codIngreso = codIngreso;
       data.numeroIngreso = numeroIngreso;
       data.ruc = ruc;
@@ -327,11 +371,12 @@ const MercaderiaEditComponent = () => {
       data.usuarioRegistro = initialLogin.documento;
       data.id = id;
       ingresoEdit(data).then((response) => {
+        closeLoading()
+        notify()
       }).catch(error => {
         console.error(error)
       });
-    }
-    notify()
+    }   
   }
 
   const validaNumeroMercaderia = () => {
@@ -368,15 +413,19 @@ const MercaderiaEditComponent = () => {
   }, [])
 
   const handleUnidadMedida = () => {
+    showLoading()
     catalogoByTipo("1").then((response) => {
       setCatalogoUnidadMedida(response.data)
+      closeLoading()
     })
   }
 
   const handleAlmacen = () => {
+    showLoading()
     catalogoByTipo("2").then((response) => {
       setCatalogoAlmacen(response.data)
     })
+    closeLoading()
   }
 
   useEffect(() => {
@@ -385,36 +434,13 @@ const MercaderiaEditComponent = () => {
     setDireccion(cliente?.direccion)
   }, [cliente])
 
-  const limpiar = () => {
-    setCodIngreso('')
-    setNumeroIngreso('')
-    setCodigoDua('')
-    setProductoCodigo('')
-    setDescripcion('')
-    setObservaciones('');
-  };
-
-  const limpiarMercaderia = () => {
-    setUnidadMedida('')
-    setCantidad('')
-    setRuc('')
-    setRazonSocial('')
-    setDireccion('')
-    setCliente([])
-    setFechaIngreso('')
-    setCodigoAlmacen('')
-    setProductoCodigo('')
-    setDescripcionProducto('')
-    setObservaciones('')
-    setSerie('')
-  }
-
   const seleccionarSalida = (idMercaderia) => {
-    console.log(idMercaderia)
+    showLoading()
     setIndSalida(true)
     mercaderiaById(idMercaderia).then(response => {
       cargarMercaderia(response.data)
       setMercaderia(response.data)
+      closeLoading()
     }).catch(error => {
       console.error(error)
     });
@@ -422,6 +448,7 @@ const MercaderiaEditComponent = () => {
 
   const registrarSalida = (e) => {
     e.preventDefault();
+    showLoading()
     if (validateSalida()) {
       const data = {}
       data.idMercaderia = mercaderia.id;
@@ -454,16 +481,18 @@ const MercaderiaEditComponent = () => {
                 if (cantidadMercaderias == 0) {
                   res.data.estadoRegistro = "Saldo cero";
                 }
-                ingresoEdit(res.data).then(r => {
-                  cargarIngreso(r)
+                ingresoEdit(res.data).then(response => {
+                  cargarIngreso(response.data)
+                  limpiarSalida()
+                  irMercaderia(id)
+                  handleCodMercaderia()
+                  closeLoading()
+                  notify()
                 }).catch(e => console.log(e))
-              })
-            });
-          })
-        })
-        limpiarSalida()
-        irMercaderia(id)
-        notify()
+              }).catch(e => console.log(e))
+            }).catch(e => console.log(e))
+          }).catch(e => console.log(e))
+        }).catch(e => console.log(e))
       }).catch(error => {
         console.error(error)
       });
@@ -694,7 +723,9 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   {!indSalida &&
-                    <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                    <div>
+                      <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                    </div>
                   }
                 </div>
               </div>
@@ -847,7 +878,11 @@ const MercaderiaEditComponent = () => {
                       </div>
                     </div>
                     {!indSalida &&
-                      <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                      <div>
+                        <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                        &nbsp;&nbsp;
+                        <button type="button" className="btn-depo btn-warning-depo" onClick={limpiarMercaderia}>Limpiar</button>
+                      </div>
                     }
                     {indSalida &&
                       <div>
@@ -894,7 +929,6 @@ const MercaderiaEditComponent = () => {
                         &nbsp;&nbsp;
                         <button type="button" className="btn-depo btn-danger-depo" onClick={cancelarSalida}>Cancelar Salida</button>
                       </div>
-
                     }
                   </div>
                 </div>
@@ -916,8 +950,8 @@ const MercaderiaEditComponent = () => {
                       <table className="table mb-0">
                         <thead className="thead-light">
                           <tr>
-                            <th className='td-th-size-depo'>Numero</th>
                             <th className='td-th-size-depo'>Serie</th>
+                            <th className='td-th-size-depo'>Numero</th>
                             <th className='td-th-size-depo'>Codigo</th>
                             <th className='td-th-size-depo'>Descripcion</th>
                             <th className='td-th-size-depo'>Unidad medida</th>
@@ -933,8 +967,8 @@ const MercaderiaEditComponent = () => {
                           {
                             mercaderias.map(mercaderia =>
                               <tr key={mercaderia.id}>
-                                <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                                 <td className='td-th-size-depo'>{mercaderia.serie}</td>
+                                <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
                                 <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
