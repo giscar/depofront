@@ -19,6 +19,22 @@ const MontacargaComponent = () => {
     });
   })
 
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
+
   const navigator = useNavigate();
 
   const notify = () => toast.info('Se ha eliminado la montacarga correctamente', {
@@ -57,16 +73,17 @@ const MontacargaComponent = () => {
   }
 
   const inactivaMontacarga = (id) => {
+    showLoading()
     montacargaForId(id).then((response) => {
       response.data.estadoRegistro = 0;
       montacargaInactiva(response.data).catch(error => {
         console.error(error)
-      })
-      notify();
-      setTimeout(() => {
         buscarMontacarga()
-      }, 1000);
+        closeLoading()
+        notify();
+      })
     }).catch(error => {
+      closeLoading()
       console.error(error)
     })
   }
@@ -80,10 +97,13 @@ const MontacargaComponent = () => {
   }
 
   const buscarMontacarga = () => {
+    showLoading()
     montacargasActivo().then((response) => {
-      setMontacargas(response.data);
+      setMontacargas(response.data)
+      closeLoading()
     }).catch(error => {
       console.error(error)
+      closeLoading()
     })
   }
 
@@ -93,78 +113,78 @@ const MontacargaComponent = () => {
 
   return (
     <>
-    {initialLogin.documento && <HeaderComponent />}
-    {ingress &&
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
-                  <li className="breadcrumb-item active">listado</li>
-                </ol>
+      {initialLogin.documento && <HeaderComponent />}
+      {ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
+                    <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Montacargas</h4>
               </div>
-              <h4 className="page-title">Listado de Montacargas</h4>
             </div>
           </div>
-        </div>
-        <div className='row'>
-          <div className='float-end pb-3 pt-4'>
-            <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irMontacargaNuevo()}>Nueva Montacarga</button>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irMontacargaNuevo()}>Nueva Montacarga</button>
+            </div>
           </div>
-        </div>
-        <br />
-        <div className="table-responsive">
+          <br />
+          <div className="table-responsive">
             <table className="table mb-0">
               <thead className="thead-light">
-            <tr>
-              <th className='td-th-size-depo'>Codigo</th>
-              <th className='td-th-size-depo'>Marca</th>
-              <th className='td-th-size-depo'>Tonelaje</th>
-              <th className='td-th-size-depo'>Serie</th>
-              <th className='td-th-size-depo'>Modelo</th>
-              <th className='td-th-size-depo'>Año</th>
-              <th className='td-th-size-depo'>Ubicacion</th>
-              <th className='td-th-size-depo'>Estado</th>
-              <th className='td-th-size-depo'>Revision</th>
-              <th className='td-th-size-depo'>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              montacargas.map(montacarga =>
-                <tr key={montacarga.id}>
-                  <td className='td-th-size-depo'>{montacarga.codigo}</td>
-                  <td className='td-th-size-depo'>{montacarga.marca}</td>
-                  <td className='td-th-size-depo'>{montacarga.tonelaje}</td>
-                  <td className='td-th-size-depo'>{montacarga.serie}</td>
-                  <td className='td-th-size-depo'>{montacarga.modelo}</td>
-                  <td className='td-th-size-depo'>{montacarga.anhoFabricacion}</td>
-                  <td className='td-th-size-depo'>{montacarga.ubicacion}</td>
-                  <td className='td-th-size-depo'>{montacarga.estado}</td>
-                  {montacarga.revisionOperatividad &&
-                          <td className='td-th-size-depo'>{(new Date(montacarga.revisionOperatividad)).toLocaleString().substring(0, 10)}</td>
-                  }
-                  {!montacarga.revisionOperatividad &&
-                          <td className='td-th-size-depo'></td>
-                  }
-                  <td>
-                    <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(montacarga.id)}>
-                      <i className="bi bi-pencil-fill"></i>
-                    </a>
-                    <a className='icon-link-depo' onClick={() => handleMontacarga(montacarga.id)}>
-                      <i className="bi bi-x-circle-fill"></i>
-                    </a>
-                  </td>
+                <tr>
+                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>Marca</th>
+                  <th className='td-th-size-depo'>Tonelaje</th>
+                  <th className='td-th-size-depo'>Serie</th>
+                  <th className='td-th-size-depo'>Modelo</th>
+                  <th className='td-th-size-depo'>Año</th>
+                  <th className='td-th-size-depo'>Ubicacion</th>
+                  <th className='td-th-size-depo'>Estado</th>
+                  <th className='td-th-size-depo'>Revision</th>
+                  <th className='td-th-size-depo'>Acciones</th>
                 </tr>
-              )
-            }
-          </tbody>
-        </table>
+              </thead>
+              <tbody>
+                {
+                  montacargas.map(montacarga =>
+                    <tr key={montacarga.id}>
+                      <td className='td-th-size-depo'>{montacarga.codigo}</td>
+                      <td className='td-th-size-depo'>{montacarga.marca}</td>
+                      <td className='td-th-size-depo'>{montacarga.tonelaje}</td>
+                      <td className='td-th-size-depo'>{montacarga.serie}</td>
+                      <td className='td-th-size-depo'>{montacarga.modelo}</td>
+                      <td className='td-th-size-depo'>{montacarga.anhoFabricacion}</td>
+                      <td className='td-th-size-depo'>{montacarga.ubicacion}</td>
+                      <td className='td-th-size-depo'>{montacarga.estado}</td>
+                      {montacarga.revisionOperatividad &&
+                        <td className='td-th-size-depo'>{(new Date(montacarga.revisionOperatividad)).toLocaleString().substring(0, 10).split(",")[0]}</td>
+                      }
+                      {!montacarga.revisionOperatividad &&
+                        <td className='td-th-size-depo'></td>
+                      }
+                      <td>
+                        <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(montacarga.id)}>
+                          <i className="bi bi-pencil-fill"></i>
+                        </a>
+                        <a className='icon-link-depo' onClick={() => handleMontacarga(montacarga.id)}>
+                          <i className="bi bi-x-circle-fill"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
       }
       {!ingress &&
         <div className="container-fluid">
@@ -173,9 +193,9 @@ const MontacargaComponent = () => {
               <div className="page-title-box">
                 <div className="float-end">
                   <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
-                  <li className="breadcrumb-item active">listado</li>
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Montacarga</a></li>
+                    <li className="breadcrumb-item active">listado</li>
                   </ol>
                 </div>
                 <h4 className="page-title">Listado de Montacargas</h4>

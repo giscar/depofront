@@ -11,16 +11,32 @@ const OperadorComponent = () => {
   const navigator = useNavigate();
 
   const access = "R005"
-  let ingress = false;
+  let ingress = false
 
-  const initialLogin = JSON.parse(sessionStorage.getItem('user'));
+  const initialLogin = JSON.parse(sessionStorage.getItem('user'))
 
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
       if (r.codigo == access)
         ingress = true;
-    });
+    })
   })
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const notify = () => toast.info('Se ha eliminado el operador correctamente', {
     position: "top-right",
@@ -66,99 +82,102 @@ const OperadorComponent = () => {
   }
 
   const inactivaOperador = (id) => {
+    showLoading()
     operadorForId(id).then((response) => {
       response.data.estado = 0;
-      operadorInactiva(response.data).catch(error => {
-        console.error(error)
-      })
-      notify();
-      setTimeout(() => {
+      operadorInactiva(response.data).then(response => {
+        notify();
         buscarOperador()
-      }, 1000);
+        closeLoading()
+      }).catch(error => {
+        console.error(error)
+        closeLoading()
+      })
     }).catch(error => {
       console.error(error)
     })
   }
 
   const buscarOperador = () => {
-    console.log("entro buscarOperador")
+    showLoading()
     operadorActivo().then((response) => {
       setOperadores(response.data);
+      closeLoading()
     }).catch(error => {
       console.error(error)
+      closeLoading()
     })
   }
 
   useEffect(() => {
-    console.log("useEffect")
     buscarOperador();
   }, [operador])
 
   return (
     <>
-    {initialLogin.documento && <HeaderComponent />}
-    {ingress &&
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-12">
-            <div className="page-title-box">
-              <div className="float-end">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Operadores</a></li>
-                  <li className="breadcrumb-item active">listado</li>
-                </ol>
+      {initialLogin.documento && <HeaderComponent />}
+      {ingress &&
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="page-title-box">
+                <div className="float-end">
+                  <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Operadores</a></li>
+                    <li className="breadcrumb-item active">listado</li>
+                  </ol>
+                </div>
+                <h4 className="page-title">Listado de Operadores</h4>
               </div>
-              <h4 className="page-title">Listado de Operadores</h4>
             </div>
           </div>
-        </div>
-        <div className='row'>
-          <div className='float-end pb-3 pt-4'>
-            <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irOperadorNuevo()}>Nuevo operador</button>
+          <div className='row'>
+            <div className='float-end pb-3 pt-4'>
+              <button className='ms-2 btn-depo btn-primary-depo' onClick={() => irOperadorNuevo()}>Nuevo operador</button>
+            </div>
           </div>
+          <br />
+          {operadores.length > 0 &&
+            <div className="table-responsive">
+              <table className="table mb-0">
+                <thead className="thead-light">
+                  <tr>
+                    <th className='td-th-size-depo'>Nombres</th>
+                    <th className='td-th-size-depo'>Apellido Paterno</th>
+                    <th className='td-th-size-depo'>Apelllido Materno</th>
+                    <th className='td-th-size-depo'>Documento</th>
+                    <th className='td-th-size-depo'>Direccion</th>
+                    <th className='td-th-size-depo'>Telefono</th>
+                    <th className='td-th-size-depo text-center'>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    operadores.map(operador =>
+                      <tr key={operador.id}>
+                        <td className='td-th-size-depo'>{operador.nombre}</td>
+                        <td className='td-th-size-depo'>{operador.apellidoPat}</td>
+                        <td className='td-th-size-depo'>{operador.apellidoMat}</td>
+                        <td className='td-th-size-depo'>{operador.documento}</td>
+                        <td className='td-th-size-depo'>{operador.direccion}</td>
+                        <td className='td-th-size-depo'>{operador.telefono}</td>
+                        <td className='text-center'>
+                          <a className='p-4 icon-link-depo' onClick={() => irOperadorEdit(operador.id)}>
+                            <i className="bi bi-pencil-fill"></i>
+                          </a>
+                          <a className='icon-link-depo' onClick={() => handleOperador(operador.id)}>
+                            <i className="bi bi-x-circle-fill"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    )
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
         </div>
-        <br />
-        {operadores.length > 0 &&
-          <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-                <tr>
-                  <th className='td-th-size-depo'>Nombres</th>
-                  <th className='td-th-size-depo'>Apellido Paterno</th>
-                  <th className='td-th-size-depo'>Apelllido Materno</th>
-                  <th className='td-th-size-depo'>Documento</th>
-                  <th className='td-th-size-depo'>Direccion</th>
-                  <th className='td-th-size-depo'>Telefono</th>
-                  <th className='td-th-size-depo text-center'>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  operadores.map(operador =>
-                    <tr key={operador.id}>
-                      <td className='td-th-size-depo'>{operador.nombre}</td>
-                      <td className='td-th-size-depo'>{operador.apellidoPat}</td>
-                      <td className='td-th-size-depo'>{operador.apellidoMat}</td>
-                      <td className='td-th-size-depo'>{operador.documento}</td>
-                      <td className='td-th-size-depo'>{operador.direccion}</td>
-                      <td className='td-th-size-depo'>{operador.telefono}</td>
-                      <td className='text-center'>
-                        <a className='p-4 icon-link-depo' onClick={() => irOperadorEdit(operador.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
-                        <a className='icon-link-depo' onClick={() => handleOperador(operador.id)}>
-                          <i className="bi bi-x-circle-fill"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </div>
       }
       {!ingress &&
         <div className="container-fluid">
@@ -167,9 +186,9 @@ const OperadorComponent = () => {
               <div className="page-title-box">
                 <div className="float-end">
                   <ol className="breadcrumb">
-                  <li className="breadcrumb-item"><a href="#">Depovent</a></li>
-                  <li className="breadcrumb-item"><a href="#">Operadores</a></li>
-                  <li className="breadcrumb-item active">listado</li>
+                    <li className="breadcrumb-item"><a href="#">Depovent</a></li>
+                    <li className="breadcrumb-item"><a href="#">Operadores</a></li>
+                    <li className="breadcrumb-item active">listado</li>
                   </ol>
                 </div>
                 <h4 className="page-title">Listado de Operadores</h4>

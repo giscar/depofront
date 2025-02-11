@@ -8413,3 +8413,7 @@ td.td-th-size-depo{
   width: 330;
   height: 150
 }
+
+.dropdown-item {
+  cursor: pointer;
+}

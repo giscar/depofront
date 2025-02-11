@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { montacargaEdit, montacargaForId } from '../../service/FacturaService';
+import Swal from 'sweetalert2'
 
 const MontacargaEditComponennt = () => {
 
@@ -50,19 +51,36 @@ const MontacargaEditComponennt = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
+
+  const showLoading = () => {
+      Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: () => {
+          Swal.showLoading();
+        }
+      })
+    }
+  
+    const closeLoading = () => {
+      Swal.close()
+    }
 
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
+      showLoading()
       montacargaForId(id).then((response) => {
-        setMontacarga(response.data);
-        setTimeout(() => {
-          cargarMontacarga(response.data)
-        }, 1000);
+        setMontacarga(response.data)
+        cargarMontacarga(response.data)
+        closeLoading()
       }).catch(error => {
-        console.log(error);
+        console.log(error)
+        closeLoading()
       })
     }
   }, [id])
@@ -138,30 +156,32 @@ const MontacargaEditComponennt = () => {
     return valid;
   }
 
-  const editMontacarga = (montacarga) => {
+  const editMontacarga = () => {
     if (validateForm()) {
+      showLoading()
       const data = {}
-      data.id = id;
-      data.indInactivo = "0";
+      data.id = id
+      data.indInactivo = "0"
       data.usuarioRegistro = initialLogin.documento;
-      data.codigo = codigo.toUpperCase();
-      data.tonelaje = tonelaje.toUpperCase();
-      data.marca = marca.toUpperCase();
-      data.modelo = modelo.toUpperCase();
-      data.serie = serie?.toUpperCase();
-      data.anhoFabricacion = anhoFabricacion;
-      data.color = color?.toUpperCase();
-      data.ubicacion = ubicacion.toUpperCase();
-      data.estado = estado.toUpperCase();
-      data.revisionOperatividad = revisionOperatividad.toUpperCase();
-      data.usuarioRegistro = initialLogin.documento;
-      montacargaEdit(data).catch(error => {
+      data.codigo = codigo.toUpperCase()
+      data.tonelaje = tonelaje.toUpperCase()
+      data.marca = marca.toUpperCase()
+      data.modelo = modelo.toUpperCase()
+      data.serie = serie?.toUpperCase()
+      data.anhoFabricacion = anhoFabricacion
+      data.color = color?.toUpperCase()
+      data.ubicacion = ubicacion.toUpperCase()
+      data.estado = estado.toUpperCase()
+      data.revisionOperatividad = revisionOperatividad.toUpperCase()
+      data.usuarioRegistro = initialLogin.documento
+      montacargaEdit(data).then(response =>{
+        closeLoading()
+        notify()
+        navigator("/montacargas")
+      }).catch(error => {
         console.error(error)
+        closeLoading()
       })
-      notify()
-      setTimeout(() => {
-        navigator("/montacargas");
-      }, 1000);
     }
   }
 

@@ -2,14 +2,39 @@ import { clienteForRucOrName } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 function ClienteComponent() {
 
-  const navigator = useNavigate();
+  const navigator = useNavigate()
 
   const [clientes, setClientes] = useState([])
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
+
+  const alerta = (msg) =>{
+    Swal.fire({
+      title: "Alerta!",
+      text: msg,
+      icon: "warning"
+    })
+  }
+  
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const accederNuevoCliente = () => {
     navigator("/nuevoCliente")
@@ -21,12 +46,16 @@ function ClienteComponent() {
 
   const buscarClienteByDescripcion = () => {
     if (!ruc && !razonSocial) {
+      alerta("Debe ingresar el RUC o la razon social")
       return
     }
+    showLoading()
     clienteForRucOrName(ruc, razonSocial.toUpperCase()).then((response) => {
-      setClientes(response.data);
+      setClientes(response.data)
+      closeLoading()
     }).catch(error => {
       console.error(error)
+      closeLoading()
     })
   }
 
@@ -167,6 +196,6 @@ function ClienteComponent() {
         </div>
       }
     </>
-  );
+  )
 }
 export default ClienteComponent;

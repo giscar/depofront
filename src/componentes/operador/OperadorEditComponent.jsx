@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import { operadorEdit, operadorForId } from '../../service/FacturaService';
+import Swal from 'sweetalert2'
 
 const OperadorEditComponent = () => {
 
@@ -19,6 +20,22 @@ const OperadorEditComponent = () => {
     msgApellidoMat: '',
     msgDocumento: '',
   })
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const access = "R005"
   let ingress = false;
@@ -85,13 +102,14 @@ const OperadorEditComponent = () => {
 
   useEffect(() => {
     if (id) {
+      showLoading()
       operadorForId(id).then((response) => {
-        setOperador(response.data);
-        setTimeout(() => {
-          cargarOperador(response.data)
-        }, 1000);
+        setOperador(response.data)
+        cargarOperador(response.data)
+        closeLoading()
       }).catch(error => {
         console.log(error);
+        closeLoading()
       })
     }
   }, [id])
@@ -107,6 +125,7 @@ const OperadorEditComponent = () => {
 
   const editOperador = (operador) => {
     if (validateForm()) {
+      showLoading()
       const data = {}
       data.id = id;
       data.estado = "1"
@@ -118,13 +137,14 @@ const OperadorEditComponent = () => {
       data.apellidoMat = apellidoMat.toUpperCase();
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.documento;
-      operadorEdit(data).catch(error => {
-        console.error(error)
-      })
-      notify()
-      setTimeout(() => {
+      operadorEdit(data).then(response => {
+        closeLoading()
+        notify()
         navigator("/operadores");
-      }, 1000);
+      }).catch(error => {
+        console.error(error)
+        closeLoading()
+      })
     }
   }
 

@@ -3,6 +3,7 @@ import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import { operadorSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 const OperadorNuevoComponent = () => {
 
@@ -30,11 +31,28 @@ const OperadorNuevoComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const saveOperador = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      showLoading()
       const data = {}
       data.nombre = nombre.toUpperCase();
       data.apellidoPat = apellidoPat.toUpperCase();
@@ -45,14 +63,15 @@ const OperadorNuevoComponent = () => {
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.documento;
-      operadorSave(data).catch(error => {
-        console.error(error)
-      })
-      limpiar()
-      notify()
-      setTimeout(() => {
+      operadorSave(data).then(response =>{
+        limpiar()
+        closeLoading()
+        notify()
         navigator("/operadores");
-      }, 1000);
+      }).catch(error => {
+        console.error(error)
+        closeLoading()
+      })
     }
   }
 

@@ -58,7 +58,6 @@ const HeaderComponent = () => {
 
   return (
     <>
-
       <nav className="navbar navbar-expand-lg bg-body-tertiary-depo">
         <div className="container-fluid">
           <a className="navbar-brand">
