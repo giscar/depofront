@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
 
 function NuevoClienteComponent() {
 
@@ -12,6 +13,22 @@ function NuevoClienteComponent() {
   const [email, setEmail] = useState('')
 
   const navigator = useNavigate();
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const [errors, setErrors] = useState({
     msgRuc: '',
@@ -80,6 +97,7 @@ function NuevoClienteComponent() {
 
   const saveCliente = (data) => {
     if (validateForm()) {
+      showLoading()
       const data = {}
       data.ruc = ruc;
       data.razonSocial = razonSocial.toUpperCase();
@@ -87,14 +105,15 @@ function NuevoClienteComponent() {
       data.email = email.toUpperCase();
       data.estado = "1";
       data.usuarioRegistro = initialLogin.documento;
-      nuevoCliente(data).catch(error => {
+      nuevoCliente(data).then(response => {
+        limpiar()
+        notify()
+        navigator("/clientes")
+        closeLoading()
+      }).catch(error => {
         console.error(error)
+        closeLoading()
       })
-      limpiar()
-      notify()
-      setTimeout(() => {
-        navigator("/clientes");
-      }, 1000);
     }
   }
 
@@ -179,7 +198,6 @@ function NuevoClienteComponent() {
                       </input>
                     </div>
                   </div>
-
                   <button type="button" className="btn-depo btn-primary-depo pr-5" onClick={saveCliente}>Guardar</button>
                   &nbsp;&nbsp;
                   <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>

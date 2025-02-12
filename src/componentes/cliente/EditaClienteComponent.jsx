@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2'
 
 function EditaClienteComponent() {
   const navigator = useNavigate();
@@ -15,7 +16,23 @@ function EditaClienteComponent() {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
 
   const [cliente, setCliente] = useState([])
   const [ruc, setRuc] = useState('')
@@ -33,13 +50,14 @@ function EditaClienteComponent() {
 
   useEffect(() => {
     if (id) {
+      showLoading()
       clienteForId(id).then((response) => {
-        setCliente(response.data);
-        setTimeout(() => {
-          cargarCliente(response.data)
-        }, 1000);
+        setCliente(response.data)
+        cargarCliente(response.data)
+        closeLoading()
       }).catch(error => {
-        console.log(error);
+        console.log(error)
+        closeLoading()
       })
     }
   }, [id])
@@ -83,6 +101,7 @@ function EditaClienteComponent() {
 
   const editCliente = () => {
     if (validateForm()) {
+      showLoading()
       const data = {}
       data.id = id;
       data.ruc = ruc;
@@ -91,11 +110,14 @@ function EditaClienteComponent() {
       data.email = email.toUpperCase();
       data.estado = "1";
       data.usuarioRegistro = initialLogin.documento;
-      editaCliente(data).catch(error => {
+      editaCliente(data).then(response => {
+        notify()
+        closeLoading()
+        navigator("/clientes")
+      }).catch(error => {
         console.error(error)
+        closeLoading()
       })
-      notify()
-      navigator("/clientes")
     }
   }
 
