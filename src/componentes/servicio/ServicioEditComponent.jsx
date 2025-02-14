@@ -7,6 +7,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import SignatureCanvas from 'react-signature-canvas'
 import HeaderComponent from '../HeaderComponent';
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
+import Swal from 'sweetalert2'
 
 const ServicioEditComponent = () => {
 
@@ -19,14 +20,30 @@ const ServicioEditComponent = () => {
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
       if (r.codigo == access)
-      ingressADM = true;
-    });
+        ingressADM = true;
+    })
 
     p.roles.map(r => {
       if (r.codigo == accessOpe)
-      ingressADM = true;
-    });
+        ingressADM = true;
+    })
   })
+
+  const showLoading = () => {
+      Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: () => {
+          Swal.showLoading();
+        }
+      })
+    }
+  
+    const closeLoading = () => {
+      Swal.close()
+    }
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -187,6 +204,7 @@ const ServicioEditComponent = () => {
   }
 
   const editaServicioOperaciones = () => {
+    showLoading()
     let data = {}
     data.id = id;
     data.codServicio = codServicio;
@@ -211,24 +229,25 @@ const ServicioEditComponent = () => {
     data.tipoPago = tipoPago;
     data.moneda = moneda;
     servicioEdit(data).then(response => {
-      //console.error(response.data)
+      if (id) {
+        servicioForId(id).then((response) => {
+          setServicio(response.data)
+          notify()
+          irServicio(id)
+          closeLoading()
+        }).catch(error => {
+          console.log(error);
+        })
+      }
     }).catch(error => {
       console.error(error)
-    });
-    if (id) {
-      servicioForId(id).then((response) => {
-        setServicio(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
-    }
-    notify()
-    irServicio(id)
+    })
   }
 
   const publicServicio = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      showLoading()
       const today = new Date();
       let data = {}
       data.id = id;
@@ -256,20 +275,19 @@ const ServicioEditComponent = () => {
       data.fechaConclusion = today.toLocaleDateString();
       setEstadoRegistro("Concluido")
       servicioEdit(data).then((response) => {
-        setTimeout(() => {
           if (id) {
             servicioForId(id).then((response) => {
-              setServicio(response.data);
+              setServicio(response.data)
+              notify()
+              irServicio(id)
+              closeLoading()
             }).catch(error => {
-              console.log(error);
+              console.log(error)
             })
           }
-        }, 1000);
       }).catch(error => {
         console.log(error);
       })
-      notify()
-      irServicio(id);
     }
   }
 
@@ -297,36 +315,40 @@ const ServicioEditComponent = () => {
   }
 
   useEffect(() => {
+    showLoading()
     operadorActivo().then((response) => {
-      setOperadores(response.data);
-    }).catch(error => {
-      console.log(error);
-    });
-    operadorForDocumento(initialLogin.documento).then((response) => {
-      if(response?.data){
-        setEsOperdor(true);
-        setOperador(response.data)
-      }
+      setOperadores(response.data)
+      operadorForDocumento(initialLogin.documento).then((response) => {
+        if (response?.data) {
+          setEsOperdor(true);
+          setOperador(response.data)
+        }
+        closeLoading()
+      }).catch(error => {
+        console.log(error);
+      })
     }).catch(error => {
       console.log(error);
     })
   }, [])
 
   useEffect(() => {
+    showLoading()
     montacargasActivo().then((response) => {
-      setMontacargas(response.data);
+      setMontacargas(response.data)
+      closeLoading()
     }).catch(error => {
       console.log(error);
     })
   }, [])
 
   useEffect(() => {
+    showLoading()
     if (id) {
       servicioForId(id).then((response) => {
-        setServicio(response.data);
-        setTimeout(() => {
-          cargarServicio(response.data)
-        }, 1000);
+        setServicio(response.data)
+        cargarServicio(response.data)
+        closeLoading()
       }).catch(error => {
         console.log(error);
       })
@@ -351,8 +373,9 @@ const ServicioEditComponent = () => {
   }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
   const handleUpload = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (validateUpload()) {
+      showLoading()
       const formdata = new FormData()
       formdata.append('file', file)
       formdata.append('id', id)
@@ -361,28 +384,28 @@ const ServicioEditComponent = () => {
       uploadFile(formdata).then(() => {
         if (id) {
           servicioForId(id).then((response) => {
-            setTimeout(() => {
-              setServicio(response.data);
-            }, 1000);
-
+            setServicio(response.data)
+            setFile("")
+            notify()
+            closeLoading()
           }).catch(error => {
             console.log(error);
           })
         }
       }).catch(error => {
-        console.log(error);
-      });
-      setFile("")
-      notify();
+        console.log(error)
+      })
     }
   }
 
   const handleInactiveFile = (idImagen) => {
+    showLoading()
     inactiveFile(idImagen).then(() => {
       if (id) {
         servicioForId(id).then((response) => {
-          setServicio(response.data);
-          notify();
+          setServicio(response.data)
+          notify()
+          closeLoading()
         }).catch(error => {
           console.log(error);
         })
@@ -397,25 +420,20 @@ const ServicioEditComponent = () => {
   }
 
   const handleGenerate = () => {
+    showLoading()
     setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
     const urlSign = sign.getTrimmedCanvas().toDataURL('image/png');
     servicioForId(id).then((response) => {
-      setServicio(response.data);
-      setTimeout(() => {
-        response.data.url = urlSign;
-        servicioEdit(response.data).then(() => {
-          notify();
-        })
-        //cargarServicio(response.data)
-      }, 1000);
+      setServicio(response.data)
+      response.data.url = urlSign;
+      servicioEdit(response.data).then(() => {
+        notify()
+        closeLoading()
+      })
     }).catch(error => {
       console.log(error);
     })
   }
-
-  useEffect(() => {
-
-  }, [url])
 
   return (
     <>
@@ -501,17 +519,17 @@ const ServicioEditComponent = () => {
                     <label className="col-sm-4 col-form-label-zise" >Operador:</label>
                     <div className="col-sm-8">
                       <select value={operadorId}
-                        className={`form-select-depo ${ingressADM? '' : 'bg-secondary bg-opacity-10 '}`}
+                        className={`form-select-depo ${ingressADM ? '' : 'bg-secondary bg-opacity-10 '}`}
                         onChange={(e) => { setOperadorId(e.target.value) }}>
                         <option value="">Seleccione</option>
                         {esOperador &&
                           <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
-                      }
-                      {!esOperador &&
+                        }
+                        {!esOperador &&
                           operadores.map(oper =>
                             <option key={oper.id} value={oper.id}>{oper.nombre + " " + oper.apellidoPat + " " + oper.apellidoMat}</option>
                           )
-                      }
+                        }
                       </select>
                     </div>
                   </div>
@@ -699,7 +717,6 @@ const ServicioEditComponent = () => {
                         {errors.msgSolicitante && <div className='invalid-feedback'>{errors.msgSolicitante}</div>}
                       </div>
                     </div>
-
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Firma del Solicitante:</label>
                       <div className="col-sm-8">
@@ -731,7 +748,6 @@ const ServicioEditComponent = () => {
                 </div>
               </div>
             </div>
-
             <div className="col-lg-12">
               <div className="card">
                 <div className="card-header">

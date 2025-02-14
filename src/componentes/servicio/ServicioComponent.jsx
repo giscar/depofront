@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { buscarServicioByDatosAggregate, buscarServicioByIdOperador, buscarServiciosPendientes, operadorForDocumento } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
+import Swal from 'sweetalert2'
+import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 
 const ServicioComponent = () => {
 
@@ -31,6 +32,35 @@ const ServicioComponent = () => {
   const [codServicio, setCodServicio] = useState('')
   const [esOperador, setEsOperdor] = useState(false)
 
+  const [cliente, setCliente] = useState('')
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const showLoading = () => {
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
+
+  const alerta = (msg) => {
+    Swal.fire({
+      title: "Alerta!",
+      text: msg,
+      icon: "warning"
+    })
+  }
+
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
   }
@@ -45,36 +75,49 @@ const ServicioComponent = () => {
 
   const findService = () => {
     if (!codServicio && !ruc) {
+      alerta("Debe de ingresar el RUC o el codigo del servicio")
       return
     }
+    showLoading()
     buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
-      setServicios(response.data);
+      setServicios(response.data)
+      closeLoading()
     }).catch(error => {
       console.error(error)
+      closeLoading()
     })
   }
 
   useEffect(() => {
+      setRuc(cliente?.ruc)
+    }, [cliente])
+
+  useEffect(() => {
+    showLoading()
     operadorForDocumento(initialLogin.documento).then(p => {
-      if(p?.data){
+      if (p?.data) {
         buscarServicioByIdOperador(p.data.documento).then((response) => {
-          console.log(p.data.nombre)
           setEsOperdor(true);
-          setServicios(response.data);
+          setServicios(response.data)
+          closeLoading()
         }).catch(error => {
-          console.log(error);
+          console.log(error)
+          closeLoading()
         })
-      }else{
+      } else {
         buscarServiciosPendientes().then((response) => {
-          setEsOperdor(false);
-          setServicios(response.data);
+          setEsOperdor(false)
+          setServicios(response.data)
+          closeLoading()
         }).catch(error => {
-          console.log(error);
+          console.log(error)
+          closeLoading()
         })
       }
+      closeLoading()
     })
   }, [])
-  
+
 
   const limpiar = () => {
     setRuc('');
@@ -127,15 +170,17 @@ const ServicioComponent = () => {
                         id="inputRuc"
                         placeholder="Ingrese el numero de RUC"
                         value={ruc}
+                        onClick={handleShow}
                         className="form-control-depo"
-                        onChange={(e) => { setRuc(e.target.value) }}>
+                        onChange={(e) => { setRuc(e.target.value) }}
+                        readOnly>
                       </input>
                     </div>
                   </div>
                   <div className='mt-4 float-rigth'>
                     <button type="button" className="btn-depo btn-warning-depo" onClick={limpiar}>Limpiar</button>
                     &nbsp;&nbsp;
-                    <button type="button" className={`btn-depo btn-primary-depo${esOperador ? ' invisible' : ''}`}  onClick={findService}>Buscar</button>
+                    <button type="button" className={`btn-depo btn-primary-depo${esOperador ? ' invisible' : ''}`} onClick={findService}>Buscar</button>
                   </div>
                 </div>
               </div>
@@ -172,10 +217,10 @@ const ServicioComponent = () => {
                         <td className='td-th-size-depo'>{servicio.ruc}</td>
                         <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
                         <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                        <td className='td-th-size-depo'>{servicio.horaSalidaLocal? (new Date(servicio.horaSalidaLocal)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaInicioServicio? (new Date(servicio.horaInicioServicio)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaFinServicio? (new Date(servicio.horaFinServicio)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaRetornoLocal? (new Date(servicio.horaRetornoLocal)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaSalidaLocal ? (new Date(servicio.horaSalidaLocal)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaInicioServicio ? (new Date(servicio.horaInicioServicio)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaFinServicio ? (new Date(servicio.horaFinServicio)).toLocaleString() : ""}</td>
+                        <td className='td-th-size-depo'>{servicio.horaRetornoLocal ? (new Date(servicio.horaRetornoLocal)).toLocaleString() : ""}</td>
                         <td className='td-th-size-depo'>{servicio.operador[0]?.nombre + ' ' + servicio.operador[0]?.apellidoPat}</td>
                         <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
                         <td className='td-th-size-depo'>
@@ -232,6 +277,7 @@ const ServicioComponent = () => {
           </div>
         </div>
       }
+      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }
