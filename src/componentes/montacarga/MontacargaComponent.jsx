@@ -4,6 +4,7 @@ import { montacargaForId, montacargaInactiva, montacargasActivo } from '../../se
 import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
+import DataTable from 'react-data-table-component';
 
 const MontacargaComponent = () => {
 
@@ -47,6 +48,8 @@ const MontacargaComponent = () => {
     theme: "colored",
   });
 
+
+  const [data, setData] = useState([]);
   const [montacarga, setMontacarga] = useState([]);
   const [montacargas, setMontacargas] = useState([])
 
@@ -76,11 +79,12 @@ const MontacargaComponent = () => {
     showLoading()
     montacargaForId(id).then((response) => {
       response.data.estadoRegistro = 0;
-      montacargaInactiva(response.data).catch(error => {
-        console.error(error)
+      montacargaInactiva(response.data).then(p => {
         buscarMontacarga()
         closeLoading()
-        notify();
+        notify()
+      }).catch(error => {
+        console.error(error)
       })
     }).catch(error => {
       closeLoading()
@@ -98,7 +102,9 @@ const MontacargaComponent = () => {
 
   const buscarMontacarga = () => {
     showLoading()
+    datatableMontacarga()
     montacargasActivo().then((response) => {
+      cargarDatatable(response.data)
       setMontacargas(response.data)
       closeLoading()
     }).catch(error => {
@@ -107,12 +113,80 @@ const MontacargaComponent = () => {
     })
   }
 
+  const cargarDatatable = (data) => {
+    data.map(p => {
+      let revisionOperatividadString = ""
+      if (p.revisionOperatividad) {
+        revisionOperatividadString = (new Date(p.revisionOperatividad)).toLocaleString().substring(0, 10).split(",")[0];
+        p.revisionOperatividadString = revisionOperatividadString
+      }
+    })
+    setData(data)
+  }
+
+  const columns = [
+    {
+      name: 'Codigo',
+      selector: row => row.codigo,
+    },
+    {
+      name: 'Marca',
+      selector: row => row.marca,
+    },
+    {
+      name: 'Tonelaje',
+      selector: row => row.tonelaje,
+    },
+    {
+      name: 'Serie',
+      selector: row => row.serie,
+    },
+    {
+      name: 'Modelo',
+      selector: row => row.modelo,
+    },
+    {
+      name: 'Año de fabricacion',
+      selector: row => row.anhoFabricacion,
+    },
+    {
+      name: 'Ubicacion',
+      selector: row => row.ubicacion,
+    },
+    {
+      name: 'Estado',
+      selector: row => row.estado,
+    },
+    {
+      name: 'Revision',
+      selector: row => row.revisionOperatividadString,
+    },
+    {
+      name: 'Acciones',
+      selector: row => <div>
+        <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(row.id)}>
+          <i className="bi bi-pencil-fill"></i>
+        </a>
+        &nbsp;
+        <a className='icon-link-depo' onClick={() => handleMontacarga(row.id)}>
+          <i className="bi bi-x-circle-fill"></i>
+        </a>
+      </div>,
+    },
+
+  ];
+
+  const datatableMontacarga = () => {
+
+  }
+
   useEffect(() => {
     buscarMontacarga();
   }, [montacarga])
 
   return (
     <>
+
       {initialLogin.documento && <HeaderComponent />}
       {ingress &&
         <div className="container-fluid">
@@ -137,52 +211,11 @@ const MontacargaComponent = () => {
           </div>
           <br />
           <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-                <tr>
-                  <th className='td-th-size-depo'>Codigo</th>
-                  <th className='td-th-size-depo'>Marca</th>
-                  <th className='td-th-size-depo'>Tonelaje</th>
-                  <th className='td-th-size-depo'>Serie</th>
-                  <th className='td-th-size-depo'>Modelo</th>
-                  <th className='td-th-size-depo'>Año</th>
-                  <th className='td-th-size-depo'>Ubicacion</th>
-                  <th className='td-th-size-depo'>Estado</th>
-                  <th className='td-th-size-depo'>Revision</th>
-                  <th className='td-th-size-depo'>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  montacargas.map(montacarga =>
-                    <tr key={montacarga.id}>
-                      <td className='td-th-size-depo'>{montacarga.codigo}</td>
-                      <td className='td-th-size-depo'>{montacarga.marca}</td>
-                      <td className='td-th-size-depo'>{montacarga.tonelaje}</td>
-                      <td className='td-th-size-depo'>{montacarga.serie}</td>
-                      <td className='td-th-size-depo'>{montacarga.modelo}</td>
-                      <td className='td-th-size-depo'>{montacarga.anhoFabricacion}</td>
-                      <td className='td-th-size-depo'>{montacarga.ubicacion}</td>
-                      <td className='td-th-size-depo'>{montacarga.estado}</td>
-                      {montacarga.revisionOperatividad &&
-                        <td className='td-th-size-depo'>{(new Date(montacarga.revisionOperatividad)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                      }
-                      {!montacarga.revisionOperatividad &&
-                        <td className='td-th-size-depo'></td>
-                      }
-                      <td>
-                        <a className='p-4 icon-link-depo' onClick={() => irMontacargaEdit(montacarga.id)}>
-                          <i className="bi bi-pencil-fill"></i>
-                        </a>
-                        <a className='icon-link-depo' onClick={() => handleMontacarga(montacarga.id)}>
-                          <i className="bi bi-x-circle-fill"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  )
-                }
-              </tbody>
-            </table>
+            <DataTable
+              columns={columns}
+              data={data}
+              pagination
+            />
           </div>
         </div>
       }
