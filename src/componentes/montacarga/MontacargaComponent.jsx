@@ -176,17 +176,12 @@ const MontacargaComponent = () => {
 
   ];
 
-  const datatableMontacarga = () => {
-
-  }
-
   useEffect(() => {
     buscarMontacarga();
   }, [montacarga])
 
   return (
     <>
-
       {initialLogin.documento && <HeaderComponent />}
       {ingress &&
         <div className="container-fluid">

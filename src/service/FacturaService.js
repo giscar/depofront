@@ -3,6 +3,8 @@ import axios from "axios";
 //const url = "http://159.203.99.78:8080/";
 const url = "http://localhost:8080/";
 
+const apiPeru = "https://dniruc.apisperu.com/api/v1/ruc/20131312955?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNhcmVsaTMwMTBAZ21haWwuY29tIn0.NrIg6H6iH-awBAti4elyZ048ls9uCaEG6Y-rIwmbGGU"
+
 const REST_API_BASE_URL_FACTURA = `${url}factura`
 
 const REST_API_BASE_URL_CLIENTE = `${url}cliente`
@@ -26,6 +28,8 @@ const REST_API_BASE_URL_INGRESO = `${url}ingreso`
 const REST_API_BASE_URL_CATALOGO = `${url}catalogo`
 
 const REST_API_BASE_URL_SALIDA = `${url}salida`
+
+export const consultaRuc = (ruc) => axios.get("https://dniruc.apisperu.com/api/v1/ruc/"+ruc+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNhcmVsaTMwMTBAZ21haWwuY29tIn0.NrIg6H6iH-awBAti4elyZ048ls9uCaEG6Y-rIwmbGGU");
 
 export const catalogoByTipo = (tipo) => axios.get(REST_API_BASE_URL_CATALOGO+"/"+tipo);
 

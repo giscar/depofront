@@ -4,6 +4,7 @@ import { buscarServicioByDatosAggregate, buscarServicioByIdOperador, buscarServi
 import HeaderComponent from '../HeaderComponent';
 import Swal from 'sweetalert2'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
+import DataTable from 'react-data-table-component';
 
 const ServicioComponent = () => {
 
@@ -31,11 +32,13 @@ const ServicioComponent = () => {
   const [ruc, setRuc] = useState('')
   const [codServicio, setCodServicio] = useState('')
   const [esOperador, setEsOperdor] = useState(false)
+  const [data, setData] = useState([]);
+
 
   const [cliente, setCliente] = useState('')
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   const showLoading = () => {
     Swal.fire({
@@ -81,6 +84,7 @@ const ServicioComponent = () => {
     showLoading()
     buscarServicioByDatosAggregate(ruc, codServicio).then((response) => {
       setServicios(response.data)
+      setData(response.data)
       closeLoading()
     }).catch(error => {
       console.error(error)
@@ -99,6 +103,7 @@ const ServicioComponent = () => {
         buscarServicioByIdOperador(p.data.documento).then((response) => {
           setEsOperdor(true);
           setServicios(response.data)
+          setData(response.data)
           closeLoading()
         }).catch(error => {
           console.log(error)
@@ -108,6 +113,7 @@ const ServicioComponent = () => {
         buscarServiciosPendientes().then((response) => {
           setEsOperdor(false)
           setServicios(response.data)
+          setData(response.data)
           closeLoading()
         }).catch(error => {
           console.log(error)
@@ -118,12 +124,102 @@ const ServicioComponent = () => {
     })
   }, [])
 
-
   const limpiar = () => {
     setRuc('');
     setCodServicio('');
     setServicios([]);
   }
+
+  const columns = [
+    {
+      name: 'Codigo',
+      selector: row => row.codServicio,
+      sortable: true,
+      width: '6%',
+    },
+    {
+      name: 'RUC',
+      selector: row => row.ruc,
+      sortable: true,
+      width: '8%',
+    },
+    {
+      name: 'Razon Social',
+      selector: row => row.cliente[0]?.razonSocial,
+      sortable: true,
+      width: '16%',
+    },
+    {
+      name: 'Salida local',
+      selector: row => row.horaSalidaLocal ? (new Date(row.horaSalidaLocal)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Inicio servicio',
+      selector: row => row.horaInicioServicio ? (new Date(row.horaInicioServicio)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Fin servicio',
+      selector: row => row.horaFinServicio ? (new Date(row.horaFinServicio)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Retorno local',
+      selector: row => row.horaRetornoLocal ? (new Date(row.horaRetornoLocal)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Operador',
+      selector: row => row.operador[0]?.nombre + ' ' + row.operador[0]?.apellidoPat,
+      sortable: true,
+      width: '10%',
+    },
+    {
+      name: 'Montacarga',
+      selector: row => row.montacarga[0]?.codigo,
+      sortable: true,
+      width: '6%',
+    },
+    {
+      name: 'Estado',
+      selector: row => 
+        <>
+      {row.estadoRegistro === "Concluido" &&
+        <span className="badge badge-boxed  badge-outline-success">{row.estadoRegistro}</span>
+      }
+      {row.estadoRegistro == "Proceso" &&
+        <span className="badge badge-boxed  badge-outline-danger">{row.estadoRegistro}</span>
+      }
+      {row.estadoRegistro == "Facturado" &&
+        <span className="badge badge-boxed  badge-outline-primary">{row.estadoRegistro}</span>
+      }
+      </>,
+      sortable: true,
+      width: '7%',
+    },
+    {
+      name: '',
+      selector: row =>  
+        <>
+        {row.estadoRegistro === "Concluido" &&
+        <a className='icon-link-depo' onClick={() => verServicio(row.id)}>
+          <i className="bi bi-search"></i>
+        </a>
+      }
+      {row.estadoRegistro !== "Concluido" &&
+        <a className='icon-link-depo' onClick={() => editServicio(row.id)}>
+          <i className="bi bi-pencil-fill"></i>
+        </a>
+      }
+      </>,
+      width: '3%',
+    }
+  ]
 
   return (
     <>
@@ -190,66 +286,13 @@ const ServicioComponent = () => {
             <button type="button" className="btn-depo btn-primary-depo" onClick={accederServicioNuevo}>Nuevo Servicio</button>
           </div>
           <br />
-          {servicios.length > 0 &&
-            <div className="table-responsive">
-              <table className="table mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th className='td-th-size-depo'>Codigo</th>
-                    <th className='td-th-size-depo'>RUC</th>
-                    <th className='td-th-size-depo'>Razon Social</th>
-                    <th className='td-th-size-depo'>Tipo</th>
-                    <th className='td-th-size-depo'>Salida local</th>
-                    <th className='td-th-size-depo'>Inicio servicio</th>
-                    <th className='td-th-size-depo'>Fin servicio</th>
-                    <th className='td-th-size-depo'>Retorno local</th>
-                    <th className='td-th-size-depo'>Operador</th>
-                    <th className='td-th-size-depo'>Montacarga</th>
-                    <th className='td-th-size-depo'>Estado</th>
-                    <th className='td-th-size-depo'>Accion</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    servicios.map(servicio =>
-                      <tr key={servicio.id}>
-                        <td className='td-th-size-depo'>{servicio.codServicio}</td>
-                        <td className='td-th-size-depo'>{servicio.ruc}</td>
-                        <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
-                        <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                        <td className='td-th-size-depo'>{servicio.horaSalidaLocal ? (new Date(servicio.horaSalidaLocal)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaInicioServicio ? (new Date(servicio.horaInicioServicio)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaFinServicio ? (new Date(servicio.horaFinServicio)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.horaRetornoLocal ? (new Date(servicio.horaRetornoLocal)).toLocaleString() : ""}</td>
-                        <td className='td-th-size-depo'>{servicio.operador[0]?.nombre + ' ' + servicio.operador[0]?.apellidoPat}</td>
-                        <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
-                        <td className='td-th-size-depo'>
-                          {servicio.estadoRegistro === "Concluido" &&
-                            <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
-                          }
-                          {servicio.estadoRegistro !== "Concluido" &&
-                            <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
-                          }
-                        </td>
-                        <td className='text-center'>
-                          {servicio.estadoRegistro === "Concluido" &&
-                            <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
-                              <i className="bi bi-search"></i>
-                            </a>
-                          }
-                          {servicio.estadoRegistro !== "Concluido" &&
-                            <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
-                              <i className="bi bi-pencil-fill"></i>
-                            </a>
-                          }
-                        </td>
-                      </tr>
-                    )
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
+          <div className="table-responsive">
+            <DataTable
+              columns={columns}
+              data={data}
+              pagination
+            />
+          </div>
         </div>
       }
       {!ingress &&

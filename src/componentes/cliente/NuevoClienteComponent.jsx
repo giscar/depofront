@@ -1,4 +1,4 @@
-import { nuevoCliente } from '../../service/FacturaService';
+import { buscarCodigoFactura, consultaRuc, nuevoCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
@@ -29,6 +29,14 @@ function NuevoClienteComponent() {
   const closeLoading = () => {
     Swal.close()
   }
+
+  const alerta = (msg) =>{
+      Swal.fire({
+        title: "Alerta!",
+        text: msg,
+        icon: "warning"
+      })
+    }
 
   const [errors, setErrors] = useState({
     msgRuc: '',
@@ -117,6 +125,21 @@ function NuevoClienteComponent() {
     }
   }
 
+  const buscaCliente = () =>{
+    if(ruc.length !== 11){
+      alerta("El RUC debe tener 11 digitos")
+      setRuc("")
+      return
+    }
+    showLoading()
+    consultaRuc(ruc).then(response => {
+      setRuc(response.data.ruc)
+      setRazonSocial(response.data.razonSocial)
+      setDireccion(response.data.direccion)
+      closeLoading()
+    }).catch(error => console.log(error))
+  }
+
   return (
     <>
       {initialLogin.documento && <HeaderComponent />}
@@ -148,17 +171,20 @@ function NuevoClienteComponent() {
 
                 <div className="card-body">
 
-                  <div className="mb-3 row">
+                  <div className="mb-9 row pb-2">
                     <label className="col-sm-3 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC:</label>
-                    <div className="col-sm-9">
+                    <div className="col-sm-4">
                       <input type="number"
                         placeholder="Ruc del cliente"
                         value={ruc}
                         maxlength="11"
-                        className={`w-50 form-control-depo ${errors.msgRuc ? ' is-invalid' : ''}`}
+                        className={`form-control-depo ${errors.msgRuc ? ' is-invalid' : ''}`}
                         onChange={(e) => { setRuc(e.target.value) }}
                       />
                       {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRuc}</div>}
+                    </div>
+                    <div className='col-sm-3 text-start' >
+                    <button className='btn btn-primary' onClick={buscaCliente}>Buscar</button> 
                     </div>
                   </div>
 
