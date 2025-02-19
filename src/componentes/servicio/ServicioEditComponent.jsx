@@ -68,6 +68,7 @@ const ServicioEditComponent = () => {
   const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
+  const [fechaServicio, setFechaServicio] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
   const [horaInicioServicio, setHoraInicioServicio] = useState('')
   const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
@@ -297,6 +298,7 @@ const ServicioEditComponent = () => {
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
+    setFechaServicio(data.fechaServicio)
     setHoraSalidaLocal(data.horaSalidaLocal)
     setHoraInicioServicio(data.horaInicioServicio)
     setHoraFinServicio(data.horaFinServicio)
@@ -463,19 +465,30 @@ const ServicioEditComponent = () => {
                   <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
                 </div>
                 <div className="card-body">
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        id="inputCodServicio"
-                        placeholder="Codigo del servicio"
-                        value={numeroServicio}
-                        className="bg-secondary bg-opacity-10 form-control-depo"
-                        readOnly
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
-                      </input>
-                    </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise">Nro del servicio:</label>
+                  <div className="col-sm-8">
+                    <input type="text"
+                      placeholder="Codigo del servicio"
+                      value={numeroServicio}
+                      className={`bg-secondary bg-opacity-10 form-control-depo`}
+                      readOnly
+                      onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                    </input>
                   </div>
+                </div>
+                <div className="mb-3 row">
+                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                  <div className="col-sm-8">
+                    <input type="text"
+                      placeholder="Codigo del servicio"
+                      value={codServicio}
+                      className={`bg-secondary bg-opacity-10 form-control-depo`}
+                      readOnly
+                      onChange={(e) => { setCodServicio(e.target.value) }}>
+                    </input>
+                  </div>
+                </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                     <div className="col-sm-8">
@@ -548,6 +561,16 @@ const ServicioEditComponent = () => {
                       </select>
                     </div>
                   </div>
+                  <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
+                      <div className="col-sm-8">
+                        <input type="date"
+                          value={fechaServicio}
+                          className={`form-control-depo`} 
+                          onChange={(e) => { setFechaServicio(e.target.value) }}>
+                        </input>
+                      </div>
+                    </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                     <div className="col-sm-8">

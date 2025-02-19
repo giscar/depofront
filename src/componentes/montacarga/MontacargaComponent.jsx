@@ -102,7 +102,7 @@ const MontacargaComponent = () => {
 
   const buscarMontacarga = () => {
     showLoading()
-    datatableMontacarga()
+    //datatableMontacarga()
     montacargasActivo().then((response) => {
       cargarDatatable(response.data)
       setMontacargas(response.data)

@@ -54,10 +54,11 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
             <Form.Group className="mb-3">
               <Form.Label>RUC</Form.Label>
               <Form.Control
-                type="text"
+                type="number"
                 name='ruc'
                 placeholder="Ingrese el ruc"
                 value={ruc}
+                maxLength={11}
                 onChange={(e) => { setRuc(e.target.value) }}
                 autoComplete='off'
               />

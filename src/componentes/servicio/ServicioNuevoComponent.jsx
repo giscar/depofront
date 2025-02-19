@@ -16,6 +16,7 @@ const ServicioNuevoComponent = () => {
   const [direccion, setDireccion] = useState('')
   const [codServicio, setCodServicio] = useState('')
   const [numeroServicio, setNumeroServicio] = useState('')
+  const [fechaServicio, setFechaServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
@@ -81,10 +82,12 @@ const ServicioNuevoComponent = () => {
 
   const [errors, setErrors] = useState({
     msgCodServicio: '',
+    msgNumeroServicio: '',
     msgRuc: '',
     msgOperadorId: '',
     msgMontacargaId: '',
     msgTipoServicio: '',
+    msgFechaServicio: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -108,7 +111,14 @@ const ServicioNuevoComponent = () => {
         valid = false;
       }
     } else {
-      errorCopy.msgCodServicio = 'Tiene que ingresar el numero de servicio';
+      errorCopy.msgCodServicio = 'El sistema no ha generado el codigo del servicio';
+      valid = false;
+    }
+
+    if (numeroServicio) {
+      errorCopy.msgNumeroServicio = '';
+    } else {
+      errorCopy.msgNumeroServicio = 'El sistema no ha generado el numero del servicio';
       valid = false;
     }
 
@@ -137,6 +147,13 @@ const ServicioNuevoComponent = () => {
       errorCopy.msgTipoServicio = '';
     } else {
       errorCopy.msgTipoServicio = 'Tiene que ingresar el tipo de servicio';
+      valid = false;
+    }
+
+    if (fechaServicio) {
+      errorCopy.msgFechaServicio = '';
+    } else {
+      errorCopy.msgFechaServicio = 'Tiene que ingresar la fecha del servicio';
       valid = false;
     }
 
@@ -287,15 +304,29 @@ const ServicioNuevoComponent = () => {
                 </div>
                 <div className="card-body">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <label className="col-sm-4 col-form-label-zise">Nro del servicio:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del servicio"
                         value={numeroServicio}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroServicio ? 'is-invalid' : ''}`}
                         readOnly
                         onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
+                      {errors.msgNumeroServicio && <div className='invalid-feedback'>{errors.msgNumeroServicio}</div>}
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del servicio"
+                        value={codServicio}
+                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
+                        readOnly
+                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                      </input>
+                      {errors.msgCodServicio && <div className='invalid-feedback'>{errors.msgCodServicio}</div>}
                     </div>
                   </div>
                   <div className="mb-3 row">
@@ -371,6 +402,16 @@ const ServicioNuevoComponent = () => {
                       {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
                     </div>
                   </div>
+                  <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
+                      <div className="col-sm-8">
+                        <input type="date"
+                          value={fechaServicio}
+                          className={`form-control-depo${errors.msgFechaServicio ? ' is-invalid' : ''}`}                          onChange={(e) => { setFechaServicio(e.target.value) }}>
+                        </input>
+                        {errors.msgFechaServicio && <div className='invalid-feedback'>{errors.msgFechaServicio}</div>}
+                      </div>
+                    </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                     <div className="col-sm-8">
