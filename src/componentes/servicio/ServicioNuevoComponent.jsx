@@ -57,28 +57,28 @@ const ServicioNuevoComponent = () => {
   }
 
   const showLoading = () => {
-      Swal.fire({
-        title: 'Cargando',
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        onOpen: () => {
-          Swal.showLoading();
-        }
-      })
-    }
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
 
   const closeLoading = () => {
-      Swal.close()
-    }
-  
-    const alerta = (msg) => {
-      Swal.fire({
-        title: "Alerta!",
-        text: msg,
-        icon: "warning"
-      })
-    }
+    Swal.close()
+  }
+
+  const alerta = (msg) => {
+    Swal.fire({
+      title: "Alerta!",
+      text: msg,
+      icon: "warning"
+    })
+  }
 
   const [errors, setErrors] = useState({
     msgCodServicio: '',
@@ -171,6 +171,7 @@ const ServicioNuevoComponent = () => {
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
+      data.fechaServicio = fechaServicio;
       data.horaSalidaLocal = horaSalidaLocal;
       data.horaInicioServicio = horaInicioServicio;
       data.horaFinServicio = horaFinServicio;
@@ -184,7 +185,7 @@ const ServicioNuevoComponent = () => {
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
       data.moneda = moneda;
-      data.observaciones = observaciones;
+      data.observaciones = observaciones?.toUpperCase();;
       data.tipoPago = tipoPago;
       servicioSave(data).then((response) => {
         if (response.data.id) {
@@ -403,15 +404,15 @@ const ServicioNuevoComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                      <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
-                      <div className="col-sm-8">
-                        <input type="date"
-                          value={fechaServicio}
-                          className={`form-control-depo${errors.msgFechaServicio ? ' is-invalid' : ''}`}                          onChange={(e) => { setFechaServicio(e.target.value) }}>
-                        </input>
-                        {errors.msgFechaServicio && <div className='invalid-feedback'>{errors.msgFechaServicio}</div>}
-                      </div>
+                    <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="date"
+                        value={fechaServicio}
+                        className={`form-control-depo${errors.msgFechaServicio ? ' is-invalid' : ''}`} onChange={(e) => { setFechaServicio(e.target.value) }}>
+                      </input>
+                      {errors.msgFechaServicio && <div className='invalid-feedback'>{errors.msgFechaServicio}</div>}
                     </div>
+                  </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                     <div className="col-sm-8">
@@ -531,14 +532,14 @@ const ServicioNuevoComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                       <div className="col-sm-8">
-                        <input type="text"
+                        <textarea
                           name="observaciones"
                           placeholder='Observaciones del servicio'
                           value={observaciones}
                           onChange={(e) => { setObservaciones(e.target.value) }}
                           className='form-control-depo'
                           autoComplete='off'>
-                        </input>
+                        </textarea>
                       </div>
                     </div>
                     <div className="mb-3 row">

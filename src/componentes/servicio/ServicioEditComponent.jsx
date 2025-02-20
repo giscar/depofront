@@ -30,20 +30,28 @@ const ServicioEditComponent = () => {
   })
 
   const showLoading = () => {
-      Swal.fire({
-        title: 'Cargando',
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        onOpen: () => {
-          Swal.showLoading();
-        }
-      })
-    }
-  
-    const closeLoading = () => {
-      Swal.close()
-    }
+    Swal.fire({
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
+    })
+  }
+
+  const closeLoading = () => {
+    Swal.close()
+  }
+
+  const alerta = (msg) => {
+    Swal.fire({
+      title: "Alerta!",
+      text: msg,
+      icon: "warning"
+    })
+  }
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
     position: "top-right",
@@ -81,7 +89,9 @@ const ServicioEditComponent = () => {
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
   const [sign, setSign] = useState('')
-  const [url, setUrl] = useState('')
+  const [sign2, setSign2] = useState('')
+  const [urlSolicitante, setUrlSolicitante] = useState('')
+  const [urlOperador, setUrlOperador] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
   const [moneda, setMoneda] = useState('')
@@ -120,14 +130,12 @@ const ServicioEditComponent = () => {
       errorCopy.msgHoraSalidaLocal = 'Tiene que ingresar la hora de salida de Depovent';
       valid = false;
     }
-
     if (horaFinServicio) {
       errorCopy.msgHoraFinServicio = '';
     } else {
       errorCopy.msgHoraFinServicio = 'Tiene que ingresar la hora de inicio del servicio';
       valid = false;
     }
-
     if (horaInicioServicio) {
       errorCopy.msgHoraInicioServicio = '';
     } else {
@@ -141,7 +149,6 @@ const ServicioEditComponent = () => {
       errorCopy.msgHoraRetornoLocal = 'Tiene que ingresar la hora de retorno a Depovent';
       valid = false;
     }
-
     if (totalHoras) {
       errorCopy.msgTotalHoras = '';
     } else {
@@ -154,28 +161,12 @@ const ServicioEditComponent = () => {
       errorCopy.msgTotalHoras = 'Revise las fechas y horas ingresadas en el servicio';
       valid = false;
     }
-
-    if (montoServicio) {
-      errorCopy.msgMontoServicio = '';
-    } else {
-      errorCopy.msgMontoServicio = 'Tiene que ingresar el monto total del servicio';
-      valid = false;
-    }
-
-    if (moneda) {
-      errorCopy.msgMoneda = '';
-    } else {
-      errorCopy.msgMoneda = 'Tiene que ingresar la moneda del monto total del servicio';
-      valid = false;
-    }
-
     if (solicitante) {
       errorCopy.msgSolicitante = '';
     } else {
       errorCopy.msgSolicitante = 'Tiene que ingresar el nombre del solicitante';
       valid = false;
     }
-
     if (tipoServicio) {
       errorCopy.msgTipoServicio = '';
     } else {
@@ -213,6 +204,7 @@ const ServicioEditComponent = () => {
     data.ruc = ruc;
     data.razonSocial = razonSocial;
     data.direccion = direccion;
+    data.fechaServicio = fechaServicio;
     data.horaSalidaLocal = horaSalidaLocal;
     data.horaInicioServicio = horaInicioServicio;
     data.horaFinServicio = horaFinServicio;
@@ -225,7 +217,8 @@ const ServicioEditComponent = () => {
     data.estadoRegistro = "Proceso";
     data.tipoServicio = tipoServicio;
     data.solicitante = solicitante.toUpperCase();
-    data.url = url;
+    data.urlSolicitante = urlSolicitante;
+    data.urlOperador = urlOperador;
     data.observaciones = observaciones?.toUpperCase();
     data.tipoPago = tipoPago;
     data.moneda = moneda;
@@ -257,6 +250,7 @@ const ServicioEditComponent = () => {
       data.ruc = ruc;
       data.razonSocial = razonSocial;
       data.direccion = direccion;
+      data.fechaServicio = fechaServicio;
       data.horaSalidaLocal = horaSalidaLocal;
       data.horaInicioServicio = horaInicioServicio;
       data.horaFinServicio = horaFinServicio;
@@ -269,23 +263,24 @@ const ServicioEditComponent = () => {
       data.estadoRegistro = "Concluido";
       data.tipoServicio = tipoServicio;
       data.solicitante = solicitante;
-      data.url = url;
-      data.observaciones = observaciones;
+      data.urlSolicitante = urlSolicitante;
+      data.urlOperador = urlOperador;
+      data.observaciones = observaciones?.toUpperCase();
       data.tipoPago = tipoPago;
       data.moneda = moneda;
       data.fechaConclusion = today.toLocaleDateString();
       setEstadoRegistro("Concluido")
       servicioEdit(data).then((response) => {
-          if (id) {
-            servicioForId(id).then((response) => {
-              setServicio(response.data)
-              notify()
-              irServicio(id)
-              closeLoading()
-            }).catch(error => {
-              console.log(error)
-            })
-          }
+        if (id) {
+          servicioForId(id).then((response) => {
+            setServicio(response.data)
+            notify()
+            irServicio(id)
+            closeLoading()
+          }).catch(error => {
+            console.log(error)
+          })
+        }
       }).catch(error => {
         console.log(error);
       })
@@ -298,7 +293,7 @@ const ServicioEditComponent = () => {
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
-    setFechaServicio(data.fechaServicio)
+    setFechaServicio(data.fechaServicio.substring(0, 10))
     setHoraSalidaLocal(data.horaSalidaLocal)
     setHoraInicioServicio(data.horaInicioServicio)
     setHoraFinServicio(data.horaFinServicio)
@@ -310,8 +305,9 @@ const ServicioEditComponent = () => {
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
-    setUrl(data.url)
-    setObservaciones(data.observaciones)
+    setUrlSolicitante(data.urlSolicitante)
+    setUrlOperador(data.urlOperador)
+    setObservaciones(data.observaciones?.toUpperCase())
     setTipoPago(data.tipoPago)
     setMoneda(data.moneda)
   }
@@ -422,12 +418,42 @@ const ServicioEditComponent = () => {
   }
 
   const handleGenerate = () => {
+    debugger
+    if (sign.isEmpty()) {
+      alerta("Debe de ingresar la firma del solicitante")
+      return
+    }
     showLoading()
-    setUrl(sign.getTrimmedCanvas().toDataURL('image/png'))
+    setUrlSolicitante(sign.getTrimmedCanvas().toDataURL('image/png'))
     const urlSign = sign.getTrimmedCanvas().toDataURL('image/png');
     servicioForId(id).then((response) => {
       setServicio(response.data)
-      response.data.url = urlSign;
+      response.data.urlSolicitante = urlSign;
+      servicioEdit(response.data).then(() => {
+        notify()
+        closeLoading()
+      })
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+
+  const handleClear2 = () => {
+    sign2.clear();
+  }
+
+  const handleGenerate2 = () => {
+    debugger
+    if (sign2.isEmpty()) {
+      alerta("Debe de ingresar la firma del operador")
+      return
+    }
+    showLoading()
+    setUrlOperador(sign2.getTrimmedCanvas().toDataURL('image/png'))
+    const urlSign = sign2.getTrimmedCanvas().toDataURL('image/png');
+    servicioForId(id).then((response) => {
+      setServicio(response.data)
+      response.data.urlOperador = urlSign;
       servicioEdit(response.data).then(() => {
         notify()
         closeLoading()
@@ -465,30 +491,30 @@ const ServicioEditComponent = () => {
                   <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
                 </div>
                 <div className="card-body">
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Nro del servicio:</label>
-                  <div className="col-sm-8">
-                    <input type="text"
-                      placeholder="Codigo del servicio"
-                      value={numeroServicio}
-                      className={`bg-secondary bg-opacity-10 form-control-depo`}
-                      readOnly
-                      onChange={(e) => { setNumeroServicio(e.target.value) }}>
-                    </input>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Nro del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del servicio"
+                        value={numeroServicio}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
+                        readOnly
+                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                      </input>
+                    </div>
                   </div>
-                </div>
-                <div className="mb-3 row">
-                  <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
-                  <div className="col-sm-8">
-                    <input type="text"
-                      placeholder="Codigo del servicio"
-                      value={codServicio}
-                      className={`bg-secondary bg-opacity-10 form-control-depo`}
-                      readOnly
-                      onChange={(e) => { setCodServicio(e.target.value) }}>
-                    </input>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del servicio"
+                        value={codServicio}
+                        className={`bg-secondary bg-opacity-10 form-control-depo`}
+                        readOnly
+                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                      </input>
+                    </div>
                   </div>
-                </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
                     <div className="col-sm-8">
@@ -562,15 +588,15 @@ const ServicioEditComponent = () => {
                     </div>
                   </div>
                   <div className="mb-3 row">
-                      <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
-                      <div className="col-sm-8">
-                        <input type="date"
-                          value={fechaServicio}
-                          className={`form-control-depo`} 
-                          onChange={(e) => { setFechaServicio(e.target.value) }}>
-                        </input>
-                      </div>
+                    <label className="col-sm-4 col-form-label-zise">Fecha del servicio:</label>
+                    <div className="col-sm-8">
+                      <input type="date"
+                        value={fechaServicio}
+                        className={`form-control-depo`}
+                        onChange={(e) => { setFechaServicio(e.target.value) }}>
+                      </input>
                     </div>
+                  </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Tipo de servicio:</label>
                     <div className="col-sm-8">
@@ -593,7 +619,7 @@ const ServicioEditComponent = () => {
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
                     <div className="col-sm-8">
-                      <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName="preliminar_hoja_servicio.pdf">
+                      <PDFDownloadLink document={<HojaServicioReportComponent id={id} />} fileName={codServicio}>
                         {({ loading, url, error, blob }) =>
                           loading ? (
                             <button className="btn-depo btn-primary-depo">Loading Document ...</button>
@@ -716,14 +742,14 @@ const ServicioEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                       <div className="col-sm-8">
-                        <input type="text"
+                        <textarea
                           name="observaciones"
                           placeholder='Observaciones'
                           value={observaciones}
                           onChange={(e) => { setObservaciones(e.target.value) }}
                           className='form-control-depo'
                           autoComplete='off'>
-                        </input>
+                        </textarea>
                       </div>
                     </div>
                     <div className="mb-3 row">
@@ -743,7 +769,7 @@ const ServicioEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise">Firma del Solicitante:</label>
                       <div className="col-sm-8">
-                        {!url && <div>
+                        {!urlSolicitante && <div>
                           <div className='w-100' style={{ border: "2px solid #E8E3E1" }}>
                             <SignatureCanvas ref={data => setSign(data)}
                               canvasProps={{ width: 330, height: 150, className: 'sigCanvas' }} />
@@ -757,9 +783,31 @@ const ServicioEditComponent = () => {
                           </button>
                         </div>}
                         <br />
-                        <img src={url} />
+                        <img src={urlSolicitante} />
                       </div>
                     </div>
+
+                    <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Firma del Operador:</label>
+                      <div className="col-sm-8">
+                        {!urlOperador && <div>
+                          <div className='w-100' style={{ border: "2px solid #E8E3E1" }}>
+                            <SignatureCanvas ref={data => setSign2(data)}
+                              canvasProps={{ width: 330, height: 150, className: 'sigCanvas' }} />
+                          </div>
+                          <button className="btn-depo btn-danger-depo mt-1" onClick={handleClear2}>
+                            <i className="bi bi-trash-fill"></i>
+                          </button>
+                          &nbsp;&nbsp;
+                          <button className="btn-depo btn-primary-depo  mt-1" onClick={handleGenerate2}>
+                            <i className="bi bi-floppy-fill"></i>
+                          </button>
+                        </div>}
+                        <br />
+                        <img src={urlOperador} />
+                      </div>
+                    </div>
+
                     {estadoRegistro !== "Concluido" &&
                       <div>
                         <button type="button" className="btn-depo btn-primary-depo" onClick={editServicio}>Guardar</button>

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   firma: {
     width: '120px',
-    height: '40px',
+    height: '60px',
     objectFit: 'cover',
     paddingBottom: '20px'
   },
@@ -110,6 +110,14 @@ const styles = StyleSheet.create({
     color: '#222'
   },
 
+  cell3: {
+    width: '25%',
+    textAlign: 'left',
+    color: '#222',
+    height: '60px',
+    marginTop: '10px'
+  },
+
   textFirma: {
     paddingTop: 25,
   },
@@ -125,6 +133,7 @@ const HojaServicioReportComponent = ({ id }) => {
   const [numeroServicio, setNumeroServicio] = useState('')
   const [operadorId, setOperadorId] = useState('')
   const [montacargaId, setMontacargaId] = useState('')
+  const [fechaServicio, setFechaServicio] = useState('')
   const [horaSalidaLocal, setHoraSalidaLocal] = useState('')
   const [horaInicioServicio, setHoraInicioServicio] = useState('')
   const [horaRetornoLocal, setHoraRetornoLocal] = useState('')
@@ -137,7 +146,8 @@ const HojaServicioReportComponent = ({ id }) => {
   const [operadorNombreCompleto, setOperadorNombreCompleto] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
   const [solicitante, setSolicitante] = useState('')
-  const [url, setUrl] = useState('')
+  const [urlSolicitante, setUrlSolicitante] = useState('')
+  const [urlOperador, setUrlOperador] = useState('')
   const [fechaRegistro, setFechaRegistro] = useState('')
   const [fechaConclusion, setFechaConclusion] = useState('')
   const [observaciones, setObservaciones] = useState('')
@@ -161,6 +171,7 @@ const HojaServicioReportComponent = ({ id }) => {
     let fechaConclusion1 = new Date(data.fechaConclusion);
     setCodServicio(data.codServicio)
     setNumeroServicio(data.numeroServicio)
+    setFechaServicio(data.fechaServicio.toLocaleString().split(",")[0])
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
@@ -178,7 +189,8 @@ const HojaServicioReportComponent = ({ id }) => {
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
     setSolicitante(data.solicitante)
-    setUrl(data.url)
+    setUrlSolicitante(data.urlSolicitante)
+    setUrlOperador(data.urlOperador)
     setFechaRegistro(data.fechaRegistro)
     setFechaConclusion(fechaConclusion1.toLocaleDateString())
     setObservaciones(data.observaciones)
@@ -218,7 +230,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Fecha de registro:</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.parragraph}>{fechaConclusion}</Text>
+              <Text style={styles.parragraph}>{fechaServicio}</Text>
             </View>
           </View>
 
@@ -395,23 +407,25 @@ const HojaServicioReportComponent = ({ id }) => {
           </View>
 
           <View style={styles.row}>
-            <View style={styles.cell2}>
+            <View style={styles.cell3}>
               <Text style={styles.textFirma}></Text>
               <Text style={styles.parragraph}></Text>
             </View>
-            <View style={styles.cell2}>
+            <View style={styles.cell3}>
               <Text style={styles.textFirma}></Text>
               <Text style={styles.parragraph}></Text>
             </View>
-            <View style={styles.cell2}>
-              <Text style={styles.textFirma}></Text>
-              <Text style={styles.parragraph}></Text>
-            </View>
-            <View style={styles.cell2}>
-              {url &&
-                <Image src={url} style={styles.firma} />
+            <View style={styles.cell3}>
+              {urlOperador &&
+                <Image src={urlOperador} style={styles.firma} />
               }
-              <Text style={styles.parragraph}>Firma Solicitante-Cliente</Text>
+              <Text style={styles.parragraph}>Firma Operador</Text>
+            </View>
+            <View style={styles.cell3}>
+              {urlSolicitante &&
+                <Image src={urlSolicitante} style={styles.firma} />
+              }
+              <Text style={styles.parragraph}>Firma Solicitante</Text>
             </View>
           </View>
         </View>
