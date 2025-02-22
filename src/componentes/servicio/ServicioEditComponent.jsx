@@ -142,7 +142,6 @@ const ServicioEditComponent = () => {
       errorCopy.msgHoraInicioServicio = 'Tiene que ingresar la hora de fin del servicio';
       valid = false;
     }
-
     if (horaRetornoLocal) {
       errorCopy.msgHoraRetornoLocal = '';
     } else {
@@ -418,7 +417,6 @@ const ServicioEditComponent = () => {
   }
 
   const handleGenerate = () => {
-    debugger
     if (sign.isEmpty()) {
       alerta("Debe de ingresar la firma del solicitante")
       return
@@ -443,7 +441,6 @@ const ServicioEditComponent = () => {
   }
 
   const handleGenerate2 = () => {
-    debugger
     if (sign2.isEmpty()) {
       alerta("Debe de ingresar la firma del operador")
       return

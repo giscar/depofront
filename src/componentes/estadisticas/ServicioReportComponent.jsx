@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { busquedaEstadisticaAgregate, montacargasActivo, operadorActivo } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import ExportExcelServicios from './ExportExcelServicios';
+import Swal from 'sweetalert2'
+import DataTable from 'react-data-table-component';
 
 const ServicioReportComponent = () => {
 
@@ -18,6 +20,30 @@ const ServicioReportComponent = () => {
         ingress = true;
     });
   })
+
+  const showLoading = () => {
+      Swal.fire({
+        title: 'Cargando',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        onOpen: () => {
+          Swal.showLoading();
+        }
+      })
+    }
+  
+    const closeLoading = () => {
+      Swal.close()
+    }
+  
+    const alerta = (msg) => {
+      Swal.fire({
+        title: "Alerta!",
+        text: msg,
+        icon: "warning"
+      })
+    }
 
   const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
     position: "top-right",
@@ -51,10 +77,13 @@ const ServicioReportComponent = () => {
 
   const findService = () => {
     if (!codServicio && !ruc && !operadorId && !montacargaId && !estadoRegistro && !tipoServicio) {
+      alerta("No se ha ingresado ningun filtro de busqueda")
       return
     }
+    showLoading()
     busquedaEstadisticaAgregate(ruc, codServicio, operadorId, montacargaId, estadoRegistro, tipoServicio).then((response) => {
-      setServicios(response.data);
+      setServicios(response.data)
+      closeLoading()
     }).catch(error => {
       console.error(error)
     })
@@ -71,20 +100,115 @@ const ServicioReportComponent = () => {
   }
 
   useEffect(() => {
+    showLoading()
     operadorActivo().then((response) => {
-      setOperadores(response.data);
+      setOperadores(response.data)
+      closeLoading()
     }).catch(error => {
       console.log(error);
     })
   }, [])
 
   useEffect(() => {
+    showLoading()
     montacargasActivo().then((response) => {
-      setMontacargas(response.data);
+      setMontacargas(response.data)
+      closeLoading()
     }).catch(error => {
       console.log(error);
     })
   }, [])
+
+  const columns = [
+    {
+      name: 'Codigo',
+      selector: row => row.codServicio,
+      sortable: true,
+      width: '6%',
+    },
+    {
+      name: 'RUC',
+      selector: row => row.ruc,
+      sortable: true,
+      width: '8%',
+    },
+    {
+      name: 'Razon Social',
+      selector: row => row.cliente[0]?.razonSocial,
+      sortable: true,
+      width: '14%',
+    },
+    {
+      name: 'Salida local',
+      selector: row => row.horaSalidaLocal ? (new Date(row.horaSalidaLocal)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Inicio servicio',
+      selector: row => row.horaInicioServicio ? (new Date(row.horaInicioServicio)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Fin servicio',
+      selector: row => row.horaFinServicio ? (new Date(row.horaFinServicio)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Retorno local',
+      selector: row => row.horaRetornoLocal ? (new Date(row.horaRetornoLocal)).toLocaleString() : "",
+      sortable: true,
+      width: '11%',
+    },
+    {
+      name: 'Operador',
+      selector: row => row.operador[0]?.nombre + ' ' + row.operador[0]?.apellidoPat,
+      sortable: true,
+      width: '10%',
+    },
+    {
+      name: 'Montacarga',
+      selector: row => row.montacarga[0]?.codigo,
+      sortable: true,
+      width: '6%',
+    },
+    {
+      name: 'Estado',
+      selector: row => 
+        <>
+      {row.estadoRegistro === "Concluido" &&
+        <span className="badge badge-boxed  badge-outline-success">{row.estadoRegistro}</span>
+      }
+      {row.estadoRegistro == "Proceso" &&
+        <span className="badge badge-boxed  badge-outline-danger">{row.estadoRegistro}</span>
+      }
+      {row.estadoRegistro == "Facturado" &&
+        <span className="badge badge-boxed  badge-outline-primary">{row.estadoRegistro}</span>
+      }
+      </>,
+      sortable: true,
+      width: '7%',
+    },
+    {
+      name: '',
+      selector: row =>  
+        <>
+        {row.estadoRegistro === "Concluido" &&
+        <a className='icon-link-depo' onClick={() => verServicio(row.id)}>
+          <i className="bi bi-search"></i>
+        </a>
+      }
+      {row.estadoRegistro !== "Concluido" &&
+        <a className='icon-link-depo' onClick={() => editServicio(row.id)}>
+          <i className="bi bi-pencil-fill"></i>
+        </a>
+      }
+      </>,
+      width: '5%',
+    }
+  ]
 
   return (
     <>
@@ -199,74 +323,13 @@ const ServicioReportComponent = () => {
           </div>
         </div>
         <br />
-        {servicios.length > 0 &&
           <div className="table-responsive">
-            <table className="table mb-0">
-              <thead className="thead-light">
-                <tr>
-                  <th className='td-th-size-depo'>Codigo</th>
-                  <th className='td-th-size-depo'>RUC</th>
-                  <th className='td-th-size-depo'>Razon Social</th>
-                  <th className='td-th-size-depo'>Tipo</th>
-                  <th className='td-th-size-depo'>Salida local</th>
-                  <th className='td-th-size-depo'>Inicio servicio</th>
-                  <th className='td-th-size-depo'>Fin servicio</th>
-                  <th className='td-th-size-depo'>Retorno local</th>
-                  <th className='td-th-size-depo'>Operador</th>
-                  <th className='td-th-size-depo'>Montacarga</th>
-                  <th className='td-th-size-depo'>Estado</th>
-                  <th className='td-th-size-depo'>Accion</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  servicios.map(servicio =>
-                    <tr key={servicio.id}>
-                      <td className='td-th-size-depo'>{servicio.codServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.ruc}</td>
-                      <td className='td-th-size-depo'>{servicio.cliente[0]?.razonSocial}</td>
-                      <td className='td-th-size-depo'>{servicio.tipoServicio}</td>
-                      <td className='td-th-size-depo'>{servicio.horaSalidaLocal? (new Date(servicio.horaSalidaLocal)).toLocaleString() : "" }</td>
-                      <td className='td-th-size-depo'>{servicio.horaInicioServicio? (new Date(servicio.horaInicioServicio)).toLocaleString() : "" }</td>
-                      <td className='td-th-size-depo'>{servicio.horaFinServicio? (new Date(servicio.horaFinServicio)).toLocaleString() : "" }</td>
-                      <td className='td-th-size-depo'>{servicio.horaRetornoLocal? (new Date(servicio.horaRetornoLocal)).toLocaleString() : "" }</td>
-                      <td className='td-th-size-depo'>{servicio.operador[0]?.nombre}</td>
-                      <td className='td-th-size-depo'>{servicio.montacarga[0]?.codigo}</td>
-                      <td className='td-th-size-depo'>
-                        {servicio.estadoRegistro === "Concluido" &&
-                          <span className="badge badge-boxed  badge-outline-success">{servicio.estadoRegistro}</span>
-                        }
-                        {servicio.estadoRegistro === "Facturado" &&
-                          <span className="badge badge-boxed  badge-outline-primary">{servicio.estadoRegistro}</span>
-                        }
-                        {servicio.estadoRegistro === "Proceso" &&
-                          <span className="badge badge-boxed  badge-outline-danger">{servicio.estadoRegistro}</span>
-                        }
-                      </td>
-                      <td className='text-center'>
-                        {servicio.estadoRegistro === "Concluido" &&
-                          <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
-                            <i className="bi bi-search"></i>
-                          </a>
-                        }
-                        {servicio.estadoRegistro === "Facturado" &&
-                          <a className='icon-link-depo' onClick={() => verServicio(servicio.id)}>
-                            <i className="bi bi-search"></i>
-                          </a>
-                        }
-                        {servicio.estadoRegistro === "Proceso" &&
-                          <a className='icon-link-depo' onClick={() => editServicio(servicio.id)}>
-                            <i className="bi bi-pencil-fill"></i>
-                          </a>
-                        }
-                      </td>
-                    </tr>
-                  )
-                }
-              </tbody>
-            </table>
+            <DataTable
+              columns={columns}
+              data={servicios}
+              pagination
+            />
           </div>
-        }
       </div>
       }
       {!ingress &&

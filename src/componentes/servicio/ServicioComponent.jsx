@@ -128,6 +128,7 @@ const ServicioComponent = () => {
     setRuc('');
     setCodServicio('');
     setServicios([]);
+    setData([])
   }
 
   const columns = [
@@ -147,7 +148,7 @@ const ServicioComponent = () => {
       name: 'Razon Social',
       selector: row => row.cliente[0]?.razonSocial,
       sortable: true,
-      width: '16%',
+      width: '14%',
     },
     {
       name: 'Salida local',
@@ -217,7 +218,7 @@ const ServicioComponent = () => {
         </a>
       }
       </>,
-      width: '3%',
+      width: '5%',
     }
   ]
 
@@ -257,7 +258,8 @@ const ServicioComponent = () => {
                         placeholder="Codigo del servicio"
                         value={codServicio}
                         className="form-control-depo"
-                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                        onChange={(e) => { setCodServicio(e.target.value) }}
+                        autoComplete='off'>
                       </input>
                     </div>
                     <div className="col-lg-6">

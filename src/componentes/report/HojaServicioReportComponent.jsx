@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   },
   firma: {
     width: '120px',
-    height: '60px',
+    height: '40px',
     objectFit: 'cover',
     paddingBottom: '20px'
   },
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     width: '25%',
     textAlign: 'left',
     color: '#222',
-    height: '60px',
     marginTop: '10px'
   },
 
@@ -171,11 +170,11 @@ const HojaServicioReportComponent = ({ id }) => {
     let fechaConclusion1 = new Date(data.fechaConclusion);
     setCodServicio(data.codServicio)
     setNumeroServicio(data.numeroServicio)
-    setFechaServicio(data.fechaServicio.toLocaleString().split(",")[0])
+    setFechaServicio(data.fechaServicio.toLocaleString().split("T")[0])
     setRuc(data.ruc)
     setRazonSocial(data.cliente ? data.cliente[0]?.razonSocial : "")
     setDireccion(data.cliente ? data.cliente[0]?.direccion : "")
-    setMontacargaModelo(data.montacarga[0]?.modelo+' - '+data.montacarga[0]?.codigo)
+    setMontacargaModelo(data.montacarga[0]?.codigo)
     setOperadorNombreCompleto(data.operador[0].nombre + " " + data.operador[0].apellidoPat + " " + data.operador[0].apellidoMat)
     setHoraSalidaLocal(horaSalidaLocal1.toLocaleString())
     setHoraInicioServicio(horaInicioServicio1.toLocaleString())
@@ -221,7 +220,7 @@ const HojaServicioReportComponent = ({ id }) => {
               <Text style={styles.parragraph}>Hoja de Servicio de Montacarga</Text>
             </View>
             <View style={styles.cell}>
-              <Text style={styles.parragraph}>Nº {numeroServicio}</Text>
+              <Text style={styles.parragraph}>Nº {codServicio}</Text>
             </View>
           </View>
 
@@ -238,14 +237,12 @@ const HojaServicioReportComponent = ({ id }) => {
             <View style={styles.cell1}>
               <Text style={styles.parragraph}>Cliente: {razonSocial}</Text>
             </View>
-
           </View>
 
           <View style={styles.row}>
             <View style={styles.cell1}>
               <Text style={styles.parragraph}>Direccion: {direccion}</Text>
             </View>
-
           </View>
 
           <View style={styles.row}>
