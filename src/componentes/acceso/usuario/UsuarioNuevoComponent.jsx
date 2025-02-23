@@ -224,7 +224,7 @@ const UsuarioNuevoComponent = () => {
                     <div key={perfil.id} className="form-check">
                       <input className="form-check-input" type="checkbox" value={perfil.id} onChange={handleChange} style={{backgroundColor : 'orange'}}/>
                       <label className="form-check-label" >
-                        {perfil.codigo}
+                        {perfil.codigo} - {perfil.descripcion}
                       </label>
                     </div>
                     )

@@ -59,7 +59,7 @@ const OperadorNuevoComponent = () => {
       data.apellidoMat = apellidoMat.toUpperCase();
       data.documento = documento;
       data.telefono = telefono;
-      data.direccion = direccion.toUpperCase();
+      data.direccion = direccion?.toUpperCase();
       data.estado = "1";
       data.indInactivo = "0";
       data.usuarioRegistro = initialLogin.documento;

@@ -5,6 +5,7 @@ import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoServicio, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import Select from 'react-select'
 
 const ServicioNuevoComponent = () => {
 
@@ -30,8 +31,6 @@ const ServicioNuevoComponent = () => {
   const [moneda, setMoneda] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [tipoPago, setTipoPago] = useState('')
-  const [esOperador, setEsOperdor] = useState(false)
-  const [operador, setOperador] = useState([])
 
   const navigator = useNavigate();
 
@@ -54,6 +53,14 @@ const ServicioNuevoComponent = () => {
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
+  } 
+
+  const nuevaMontacarga = () => {
+    navigator(`/montacargaNuevo`)
+  }
+
+  const nuevoOperador = () => {
+    navigator(`/operadorNuevo`)
   }
 
   const showLoading = () => {
@@ -98,7 +105,7 @@ const ServicioNuevoComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
 
   const validateForm = () => {
     let valid = true;
@@ -176,8 +183,8 @@ const ServicioNuevoComponent = () => {
       data.horaInicioServicio = horaInicioServicio;
       data.horaFinServicio = horaFinServicio;
       data.horaRetornoLocal = horaRetornoLocal;
-      data.operadorId = operadorId;
-      data.montacargaId = montacargaId;
+      data.operadorId = operadorId.id;
+      data.montacargaId = montacargaId.id;
       data.totalHoras = totalHoras;
       data.montoServicio = montoServicio;
       data.estado = "1";
@@ -208,7 +215,11 @@ const ServicioNuevoComponent = () => {
   useEffect(() => {
     showLoading()
     operadorActivo().then((response) => {
-      setOperadores(response.data);
+      response.data.map(p =>{
+        p.label = p.nombre+" "+p.apellidoPat;
+        p.value = p.documento;
+      })
+      setOperadores(response.data)
       operadorForDocumento(initialLogin.documento).then((response) => {
         if (response?.data) {
           setEsOperdor(true);
@@ -226,6 +237,10 @@ const ServicioNuevoComponent = () => {
   useEffect(() => {
     showLoading()
     montacargasActivo().then((response) => {
+      response.data.map(p =>{
+        p.label = p.codigo+" "+p.marca;
+        p.value = p.id;
+      })
       setMontacargas(response.data)
       closeLoading()
     }).catch(error => {
@@ -370,37 +385,28 @@ const ServicioNuevoComponent = () => {
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Operador:</label>
-                    <div className="col-sm-8">
-                      <select value={operadorId}
-                        className={`form-select-depo${errors.msgOperadorId ? ' is-invalid' : ''}`}
-                        onChange={(e) => { setOperadorId(e.target.value) }}>
-                        <option value="">Seleccione</option>
-                        {esOperador &&
-                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
-                        }
-                        {!esOperador &&
-                          operadores.map(oper =>
-                            <option key={oper.id} value={oper.id}>{oper.nombre + " " + oper.apellidoPat + " " + oper.apellidoMat}</option>
-                          )
-                        }
-                      </select>
+                    <div className="col-sm-6">
+                      <Select defaultValue={operadorId}
+                        onChange={setOperadorId}
+                        options={operadores}
+                        className={`${errors.msgOperadorId ? ' is-invalid' : ''}`}/>
                       {errors.msgOperadorId && <div className='invalid-feedback'>{errors.msgOperadorId}</div>}
+                    </div>
+                    <div className="col-sm-2 text-end">
+                      <button className='btn btn-warning'onClick={nuevoOperador}>Nuevo</button>
                     </div>
                   </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise" >Montacarga:</label>
-                    <div className="col-sm-8">
-                      <select value={montacargaId}
-                        className={`form-select-depo${errors.msgMontacargaId ? ' is-invalid' : ''}`}
-                        onChange={(e) => { setMontacargaId(e.target.value) }}>
-                        <option value="">Seleccione</option>
-                        {
-                          montacargas.map(montacarga =>
-                            <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
-                          )
-                        }
-                      </select>
+                    <div className="col-sm-6">
+                    <Select defaultValue={montacargaId}
+                        onChange={setMontacargaId}
+                        options={montacargas}
+                        className={`${errors.msgMontacargaId ? ' is-invalid' : ''}`}/>
                       {errors.msgMontacargaId && <div className='invalid-feedback'>{errors.msgMontacargaId}</div>}
+                    </div>
+                    <div className="col-sm-2 text-end">
+                      <button className='btn btn-warning' onClick={nuevaMontacarga}>Nuevo</button>
                     </div>
                   </div>
                   <div className="mb-3 row">

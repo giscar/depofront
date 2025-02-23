@@ -132,7 +132,7 @@ const OperadorEditComponent = () => {
       data.nombre = nombre.toUpperCase();
       data.documento = documento;
       data.telefono = telefono;
-      data.direccion = direccion.toUpperCase();
+      data.direccion = direccion?.toUpperCase();
       data.apellidoPat = apellidoPat.toUpperCase();
       data.apellidoMat = apellidoMat.toUpperCase();
       data.indInactivo = "0";

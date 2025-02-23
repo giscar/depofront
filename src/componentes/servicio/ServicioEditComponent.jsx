@@ -215,7 +215,7 @@ const ServicioEditComponent = () => {
     data.montoServicio = montoServicio;
     data.estadoRegistro = "Proceso";
     data.tipoServicio = tipoServicio;
-    data.solicitante = solicitante.toUpperCase();
+    data.solicitante = solicitante?.toUpperCase();
     data.urlSolicitante = urlSolicitante;
     data.urlOperador = urlOperador;
     data.observaciones = observaciones?.toUpperCase();
@@ -261,7 +261,7 @@ const ServicioEditComponent = () => {
       data.montoServicio = montoServicio;
       data.estadoRegistro = "Concluido";
       data.tipoServicio = tipoServicio;
-      data.solicitante = solicitante;
+      data.solicitante = solicitante?.toUpperCase();
       data.urlSolicitante = urlSolicitante;
       data.urlOperador = urlOperador;
       data.observaciones = observaciones?.toUpperCase();
@@ -303,7 +303,7 @@ const ServicioEditComponent = () => {
     setMontoServicio(data.montoServicio)
     setEstadoRegistro(data.estadoRegistro ? data.estadoRegistro : "En proceso")
     setTipoServicio(data.tipoServicio)
-    setSolicitante(data.solicitante)
+    setSolicitante(data.solicitante?.toUpperCase())
     setUrlSolicitante(data.urlSolicitante)
     setUrlOperador(data.urlOperador)
     setObservaciones(data.observaciones?.toUpperCase())

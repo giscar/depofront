@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { operadorActivo, operadorForId, operadorInactiva } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
 import { useEffect } from 'react';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import DataTable from 'react-data-table-component';
 
 const OperadorComponent = () => {
 
@@ -14,6 +15,8 @@ const OperadorComponent = () => {
   let ingress = false
 
   const initialLogin = JSON.parse(sessionStorage.getItem('user'))
+
+  const [data, setData] = useState([]);
 
   initialLogin.perfiles.map(p => {
     p.roles.map(r => {
@@ -46,7 +49,7 @@ const OperadorComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
 
   const irOperadorNuevo = () => {
     navigator("/operadorNuevo")
@@ -76,9 +79,9 @@ const OperadorComponent = () => {
           title: "Operador Eliminado!",
           text: "La accion se ejecuto correctamente.",
           icon: "success"
-        });
+        })
       }
-    });
+    })
   }
 
   const inactivaOperador = (id) => {
@@ -101,7 +104,8 @@ const OperadorComponent = () => {
   const buscarOperador = () => {
     showLoading()
     operadorActivo().then((response) => {
-      setOperadores(response.data);
+      setOperadores(response.data)
+      cargarDatatable(response.data)
       closeLoading()
     }).catch(error => {
       console.error(error)
@@ -109,9 +113,65 @@ const OperadorComponent = () => {
     })
   }
 
+  const cargarDatatable = (data) => {
+    /*data.map(p => {
+      let revisionOperatividadString = ""
+      if (p.revisionOperatividad) {
+        revisionOperatividadString = (new Date(p.revisionOperatividad)).toLocaleString().substring(0, 10).split(",")[0];
+        p.revisionOperatividadString = revisionOperatividadString
+      }
+    })*/
+    setData(data)
+  }
+
   useEffect(() => {
     buscarOperador();
   }, [operador])
+
+
+  const columns = [
+    {
+      name: 'Nombres',
+      selector: row => row.nombre,
+      sortable: true,
+    },
+    {
+      name: 'Apellido paterno',
+      selector: row => row.apellidoPat,
+      sortable: true,
+    },
+    {
+      name: 'Apelllido Materno',
+      selector: row => row.apellidoMat,
+      sortable: true,
+    },
+    {
+      name: 'Documento',
+      selector: row => row.documento,
+      sortable: true,
+    },
+    {
+      name: 'Direccion',
+      selector: row => row.direccion,
+      sortable: true,
+    },
+    {
+      name: 'Telefono',
+      selector: row => row.telefono,
+      sortable: true,
+    },
+    {
+      name: 'Acciones',
+      selector: row => <div>
+        <a className='p-4 icon-link-depo' onClick={() => irOperadorEdit(row.id)}>
+          <i className="bi bi-pencil-fill"></i>
+        </a>
+        <a className='icon-link-depo' onClick={() => handleOperador(row.id)}>
+          <i className="bi bi-x-circle-fill"></i>
+        </a>
+      </div>,
+    },
+  ];
 
   return (
     <>
@@ -138,45 +198,13 @@ const OperadorComponent = () => {
             </div>
           </div>
           <br />
-          {operadores.length > 0 &&
-            <div className="table-responsive">
-              <table className="table mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th className='td-th-size-depo'>Nombres</th>
-                    <th className='td-th-size-depo'>Apellido Paterno</th>
-                    <th className='td-th-size-depo'>Apelllido Materno</th>
-                    <th className='td-th-size-depo'>Documento</th>
-                    <th className='td-th-size-depo'>Direccion</th>
-                    <th className='td-th-size-depo'>Telefono</th>
-                    <th className='td-th-size-depo text-center'>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    operadores.map(operador =>
-                      <tr key={operador.id}>
-                        <td className='td-th-size-depo'>{operador.nombre}</td>
-                        <td className='td-th-size-depo'>{operador.apellidoPat}</td>
-                        <td className='td-th-size-depo'>{operador.apellidoMat}</td>
-                        <td className='td-th-size-depo'>{operador.documento}</td>
-                        <td className='td-th-size-depo'>{operador.direccion}</td>
-                        <td className='td-th-size-depo'>{operador.telefono}</td>
-                        <td className='text-center'>
-                          <a className='p-4 icon-link-depo' onClick={() => irOperadorEdit(operador.id)}>
-                            <i className="bi bi-pencil-fill"></i>
-                          </a>
-                          <a className='icon-link-depo' onClick={() => handleOperador(operador.id)}>
-                            <i className="bi bi-x-circle-fill"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    )
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
+          <div className="table-responsive">
+            <DataTable
+              columns={columns}
+              data={data}
+              pagination
+            />
+          </div>
         </div>
       }
       {!ingress &&

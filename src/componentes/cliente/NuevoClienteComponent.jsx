@@ -109,7 +109,7 @@ function NuevoClienteComponent() {
       const data = {}
       data.ruc = ruc;
       data.razonSocial = razonSocial.toUpperCase();
-      data.direccion = direccion.toUpperCase();
+      data.direccion = direccion?.toUpperCase();
       data.email = email.toUpperCase();
       data.estado = "1";
       data.usuarioRegistro = initialLogin.documento;

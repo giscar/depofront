@@ -70,9 +70,9 @@ const MontacargaComponent = () => {
           title: "Montacarga Eliminado!",
           text: "La accion se ejecuto correctamente.",
           icon: "success"
-        });
+        })
       }
-    });
+    })
   }
 
   const inactivaMontacarga = (id) => {
@@ -102,7 +102,6 @@ const MontacargaComponent = () => {
 
   const buscarMontacarga = () => {
     showLoading()
-    //datatableMontacarga()
     montacargasActivo().then((response) => {
       cargarDatatable(response.data)
       setMontacargas(response.data)
@@ -128,38 +127,47 @@ const MontacargaComponent = () => {
     {
       name: 'Codigo',
       selector: row => row.codigo,
+      sortable: true,
     },
     {
       name: 'Marca',
       selector: row => row.marca,
+      sortable: true,
     },
     {
       name: 'Tonelaje',
       selector: row => row.tonelaje,
+      sortable: true,
     },
     {
       name: 'Serie',
       selector: row => row.serie,
+      sortable: true,
     },
     {
       name: 'Modelo',
       selector: row => row.modelo,
+      sortable: true,
     },
     {
       name: 'Año de fabricacion',
       selector: row => row.anhoFabricacion,
+      sortable: true,
     },
     {
       name: 'Ubicacion',
       selector: row => row.ubicacion,
+      sortable: true,
     },
     {
       name: 'Estado',
       selector: row => row.estado,
+      sortable: true,
     },
     {
       name: 'Revision',
       selector: row => row.revisionOperatividadString,
+      sortable: true,
     },
     {
       name: 'Acciones',
