@@ -94,7 +94,7 @@ const ServicioComponent = () => {
 
   useEffect(() => {
       setRuc(cliente?.ruc)
-    }, [cliente])
+  }, [cliente])
 
   useEffect(() => {
     showLoading()

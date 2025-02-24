@@ -326,7 +326,6 @@ const ServicioNuevoComponent = () => {
                         placeholder="Codigo del servicio"
                         value={numeroServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroServicio ? 'is-invalid' : ''}`}
-                        readOnly
                         onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
                       {errors.msgNumeroServicio && <div className='invalid-feedback'>{errors.msgNumeroServicio}</div>}
@@ -339,7 +338,6 @@ const ServicioNuevoComponent = () => {
                         placeholder="Codigo del servicio"
                         value={codServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodServicio ? 'is-invalid' : ''}`}
-                        readOnly
                         onChange={(e) => { setCodServicio(e.target.value) }}>
                       </input>
                       {errors.msgCodServicio && <div className='invalid-feedback'>{errors.msgCodServicio}</div>}

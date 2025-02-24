@@ -1,8 +1,9 @@
 import { clienteForRucOrName } from '../../service/FacturaService';
 import HeaderComponent from '../HeaderComponent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
+import BusquedaClienteComponent from './BusquedaClienteComponent';
 
 function ClienteComponent() {
 
@@ -11,6 +12,11 @@ function ClienteComponent() {
   const [clientes, setClientes] = useState([])
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
+
+  const [cliente, setCliente] = useState('')
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   const alerta = (msg) =>{
     Swal.fire({
@@ -65,6 +71,10 @@ function ClienteComponent() {
     setClientes([]);
   }
 
+  useEffect(() => {
+        setRuc(cliente?.ruc)
+    }, [cliente])
+
   const access = "R006"
   let ingress = false;
 
@@ -74,7 +84,7 @@ function ClienteComponent() {
     p.roles.map(r => {
       if (r.codigo == access)
         ingress = true;
-    });
+    })
   })
 
   return (
@@ -121,6 +131,7 @@ function ClienteComponent() {
                         placeholder="Ingrese el numero de RUC"
                         value={ruc}
                         className="form-control-depo"
+                        onClick={handleShow}
                         onChange={(e) => { setRuc(e.target.value) }}>
                       </input>
                     </div>
@@ -195,6 +206,7 @@ function ClienteComponent() {
           </div>
         </div>
       }
+      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }

@@ -495,7 +495,6 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={numeroServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        readOnly
                         onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
                     </div>
@@ -507,7 +506,6 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={codServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        readOnly
                         onChange={(e) => { setCodServicio(e.target.value) }}>
                       </input>
                     </div>
