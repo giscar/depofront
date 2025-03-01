@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoServicio, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
+import { buscarCodigoServicio, buscarServicioByCodServicio, montacargasActivo, operadorActivo, operadorForDocumento, servicioSave } from '../../service/FacturaService';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import Select from 'react-select'
@@ -61,6 +61,10 @@ const ServicioNuevoComponent = () => {
 
   const nuevoOperador = () => {
     navigator(`/operadorNuevo`)
+  }
+
+  const nuevoServicio = () => {
+    navigator(`/servicioNuevo`)
   }
 
   const showLoading = () => {
@@ -169,43 +173,53 @@ const ServicioNuevoComponent = () => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      showLoading()
-      const data = {}
-      data.codServicio = codServicio;
-      data.numeroServicio = numeroServicio;
-      data.ruc = ruc;
-      data.razonSocial = razonSocial?.toUpperCase();
-      data.direccion = direccion?.toUpperCase();
-      data.fechaServicio = fechaServicio;
-      data.horaSalidaLocal = horaSalidaLocal;
-      data.horaInicioServicio = horaInicioServicio;
-      data.horaFinServicio = horaFinServicio;
-      data.horaRetornoLocal = horaRetornoLocal;
-      data.operadorId = operadorId.id;
-      data.montacargaId = montacargaId.id;
-      data.totalHoras = totalHoras;
-      data.montoServicio = montoServicio;
-      data.estado = "1";
-      data.estadoRegistro = "Proceso";
-      data.tipoServicio = tipoServicio;
-      data.solicitante = solicitante;
-      data.moneda = moneda;
-      data.observaciones = observaciones?.toUpperCase();;
-      data.tipoPago = tipoPago;
-      servicioSave(data).then((response) => {
-        if (response.data.id) {
-          editServicio(response.data.id)
+    e.preventDefault()
+    buscarServicioByCodServicio(codServicio).then(response => {
+      debugger
+      if(response.data){
+        alerta('El codigo de la hora de servicio ya existe, cambie de codigo')
+        return false;
+      }else{
+        if(validaNumeroServicio()){
+          if (validateForm()) {
+            showLoading()
+            const data = {}
+            data.codServicio = codServicio;
+            data.numeroServicio = numeroServicio;
+            data.ruc = ruc;
+            data.razonSocial = razonSocial?.toUpperCase();
+            data.direccion = direccion?.toUpperCase();
+            data.fechaServicio = fechaServicio;
+            data.horaSalidaLocal = horaSalidaLocal;
+            data.horaInicioServicio = horaInicioServicio;
+            data.horaFinServicio = horaFinServicio;
+            data.horaRetornoLocal = horaRetornoLocal;
+            data.operadorId = operadorId.id;
+            data.montacargaId = montacargaId.id;
+            data.totalHoras = totalHoras;
+            data.montoServicio = montoServicio;
+            data.estado = "1";
+            data.estadoRegistro = "Proceso";
+            data.tipoServicio = tipoServicio;
+            data.solicitante = solicitante;
+            data.moneda = moneda;
+            data.observaciones = observaciones?.toUpperCase();;
+            data.tipoPago = tipoPago;
+            servicioSave(data).then((response) => {
+              if (response.data.id) {
+                editServicio(response.data.id)
+              }
+              limpiar()
+              notify()
+              handleCodServicio()
+              closeLoading()
+            }).catch(error => {
+              console.error(error)
+            })
+          }
         }
-        limpiar()
-        notify()
-        handleCodServicio()
-        closeLoading()
-      }).catch(error => {
-        console.error(error)
-      })
-    }
+      }
+    }).catch(e => console.log(e))
   }
 
   const [show, setShow] = useState(false);
@@ -263,6 +277,16 @@ const ServicioNuevoComponent = () => {
     })
   }
 
+  const validaNumeroServicio = () => {
+    debugger
+      const numeroServicioGenado = "OPE" + (codServicio).toString().padStart(8, '0');
+      if(numeroServicio !== numeroServicioGenado){
+        alerta("El numero de servicio no correspondo al codigo de servicio")
+        return false
+      }
+      return true
+  }
+
   useEffect(() => {
     setRuc(cliente?.ruc)
     setRazonSocial(cliente?.razonSocial)
@@ -311,6 +335,15 @@ const ServicioNuevoComponent = () => {
             </div>
           </div>
           <br />
+          <div className='row'>
+            <div className="col-lg-6">
+            <button type="button" className="btn btn-info" onClick={nuevoServicio}>Nuevo servicio</button>
+            </div>
+            <div className="col-lg-6">
+              
+            </div>
+          </div>
+          <br/>
           <div className="row">
             <div className="col-lg-6">
               <div className="card">

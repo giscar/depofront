@@ -105,6 +105,8 @@ export const busquedaEstadisticaAgregate = (ruc, codServicio, idOperador, idMont
 
 export const buscarServicioByIdOperador = (documento) => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaIdOperadorAggregate?documento="+documento);
 
+export const buscarServicioByCodServicio = (codServicio) => axios.get(REST_API_BASE_URL_SERVICIO+"/findByCodigoServicio?codServicio="+codServicio);
+
 export const buscarServiciosPendientes = () => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaServiciosPendientes");
 
 export const buscarServiciosConcluidos = () => axios.get(REST_API_BASE_URL_SERVICIO+"/busquedaServiciosConcluidos");

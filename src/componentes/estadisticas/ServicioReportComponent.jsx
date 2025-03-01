@@ -5,7 +5,9 @@ import { busquedaEstadisticaAgregate, montacargasActivo, operadorActivo } from '
 import HeaderComponent from '../HeaderComponent';
 import ExportExcelServicios from './ExportExcelServicios';
 import Swal from 'sweetalert2'
+import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
 import DataTable from 'react-data-table-component';
+import Select from 'react-select'
 
 const ServicioReportComponent = () => {
 
@@ -45,15 +47,6 @@ const ServicioReportComponent = () => {
       })
     }
 
-  const notify = () => toast.warning('No se ha encontrado registros en la busqueda', {
-    position: "top-right",
-    autoClose: 1000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "colored",
-  });
   const navigator = useNavigate();
 
   const [servicios, setServicios] = useState([])
@@ -66,6 +59,15 @@ const ServicioReportComponent = () => {
   const [estadoRegistro, setEstadoRegistro] = useState('')
   const [tipoServicio, setTipoServicio] = useState('')
 
+
+  const [cliente, setCliente] = useState('')
+  const [show, setShow] = useState(false)
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
+
+  useEffect(() => {
+        setRuc(cliente?.ruc)
+    }, [cliente])
 
   const editServicio = (id) => {
     navigator(`/servicioEdit/${id}`)
@@ -81,7 +83,11 @@ const ServicioReportComponent = () => {
       return
     }
     showLoading()
-    busquedaEstadisticaAgregate(ruc, codServicio, operadorId, montacargaId, estadoRegistro, tipoServicio).then((response) => {
+    busquedaEstadisticaAgregate(ruc, codServicio, operadorId.id, montacargaId.id, estadoRegistro, tipoServicio).then((response) => {
+      if(response.data.length == 0){
+        alerta("No se encontraron datos en la busqueda")
+        return
+      }
       setServicios(response.data)
       closeLoading()
     }).catch(error => {
@@ -102,6 +108,10 @@ const ServicioReportComponent = () => {
   useEffect(() => {
     showLoading()
     operadorActivo().then((response) => {
+      response.data.map(p =>{
+        p.label = p.nombre+" "+p.apellidoPat;
+        p.value = p.documento;
+      })
       setOperadores(response.data)
       closeLoading()
     }).catch(error => {
@@ -112,6 +122,10 @@ const ServicioReportComponent = () => {
   useEffect(() => {
     showLoading()
     montacargasActivo().then((response) => {
+      response.data.map(p =>{
+        p.label = p.codigo+" "+p.marca;
+        p.value = p.id;
+      })
       setMontacargas(response.data)
       closeLoading()
     }).catch(error => {
@@ -255,36 +269,25 @@ const ServicioReportComponent = () => {
                       id="inputRuc"
                       placeholder="Ingrese el numero de RUC"
                       value={ruc}
+                      onClick={handleShow}
                       className="form-control-depo"
                       onChange={(e) => { setRuc(e.target.value) }}>
                     </input>
                   </div>
                   <div className="col-lg-3">
                     <label className="col-form-label-zise" >Operador:</label>
-                    <select value={operadorId}
-                      className='form-select-depo'
-                      onChange={(e) => { setOperadorId(e.target.value) }}>
-                      <option value="">Seleccione</option>
-                      {
-                        operadores.map(operador =>
-                          <option key={operador.id} value={operador.id}>{operador.nombre + " " + operador.apellidoPat + " " + operador.apellidoMat}</option>
-                        )
-                      }
-                    </select>
+                    <Select defaultValue={operadorId}
+                        onChange={setOperadorId}
+                        options={operadores}
+                        />
                   </div>
 
                   <div className="col-lg-3">
                     <label className="col-form-label-zise" >Montacarga:</label>
-                    <select value={montacargaId}
-                      className='form-select-depo'
-                      onChange={(e) => { setMontacargaId(e.target.value) }}>
-                      <option value="">Seleccione</option>
-                      {
-                        montacargas.map(montacarga =>
-                          <option key={montacarga.id} value={montacarga.id}>{montacarga.codigo + " " + montacarga.marca}</option>
-                        )
-                      }
-                    </select>
+                    <Select defaultValue={montacargaId}
+                        onChange={setMontacargaId}
+                        options={montacargas}
+                        />
                   </div>
 
                   <div className="col-lg-3">
@@ -357,6 +360,7 @@ const ServicioReportComponent = () => {
           </div>
         </div>
       }
+      <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
     </>
   )
 }

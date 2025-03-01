@@ -121,6 +121,10 @@ const ServicioEditComponent = () => {
     navigator(`/servicioEdit/${id}`)
   }
 
+  const nuevoServicio = () => {
+    navigator(`/servicioNuevo`)
+  }
+
   const validateForm = () => {
     let valid = true;
     const errorCopy = { ...errors }
@@ -480,6 +484,15 @@ const ServicioEditComponent = () => {
             </div>
           </div>
           <br />
+          <div className='row'>
+            <div className="col-lg-6">
+            <button type="button" className="btn btn-info" onClick={nuevoServicio}>Nuevo servicio</button>
+            </div>
+            <div className="col-lg-6">
+              
+            </div>
+          </div>
+          <br/>
           <div className="row">
             <div className="col-lg-6">
               <div className="card">
@@ -495,7 +508,8 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={numeroServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
+                        onChange={(e) => { setNumeroServicio(e.target.value) }}
+                        readOnly>
                       </input>
                     </div>
                   </div>
@@ -506,7 +520,8 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={codServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        onChange={(e) => { setCodServicio(e.target.value) }}>
+                        onChange={(e) => { setCodServicio(e.target.value) }}
+                        readOnly>
                       </input>
                     </div>
                   </div>
