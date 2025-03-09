@@ -206,7 +206,7 @@ const MercaderiaEditComponent = () => {
       if (codigoDua) {
         errorCopy.msgCodigoDua = '';
       } else {
-        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
+        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DAM o DUA';
         valid = false;
       }
     }
@@ -447,17 +447,17 @@ const MercaderiaEditComponent = () => {
   }
 
   const registrarSalida = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     showLoading()
     if (validateSalida()) {
       const data = {}
-      data.idMercaderia = mercaderia.id;
-      data.numeroMercaderia = mercaderia.numeroMercaderia;
-      data.cantidadSalida = cantidadSalida;
+      data.idMercaderia = mercaderia.id
+      data.numeroMercaderia = mercaderia.numeroMercaderia
+      data.cantidadSalida = cantidadSalida
       data.saldoRestante = (parseInt(mercaderia.cantidad) - parseInt(cantidadSalida))
-      data.descripcionSalida = descripcionSalida;
-      data.fechaSalida = fechaSalida;
-      data.usuarioRegistro = initialLogin.documento;
+      data.descripcionSalida = descripcionSalida
+      data.fechaSalida = fechaSalida
+      data.usuarioRegistro = initialLogin.documento
       salidaSave(data).then(response => {
         mercaderiaById(mercaderia.id).then(response => {
           if ((parseInt(mercaderia.cantidad) - parseInt(cantidadSalida)) > 0) {
@@ -472,7 +472,7 @@ const MercaderiaEditComponent = () => {
               setMercaderias(response.data)
               let cantidadMercaderias = 0;
               response.data.map(item => {
-                cantidadMercaderias = cantidadMercaderias + item.cantidad;
+                cantidadMercaderias = cantidadMercaderias + item.cantidad
               })
               ingresoById(id).then(res => {
                 if (cantidadMercaderias > 0) {
@@ -495,8 +495,9 @@ const MercaderiaEditComponent = () => {
         }).catch(e => console.log(e))
       }).catch(error => {
         console.error(error)
-      });
+      })
     }
+    closeLoading()
   }
 
   const limpiarSalida = () => {
@@ -644,10 +645,10 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Numero de DUA:</label>
+                    <label className="col-sm-4 col-form-label-zise">Numero de DAM / DUA:</label>
                     <div className="col-sm-8">
                       <input type="number"
-                        placeholder='Numero de DUA'
+                        placeholder='Numero de DAM / DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
                         className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}

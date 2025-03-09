@@ -201,7 +201,7 @@ const ServicioEditComponent = () => {
   const editaServicioOperaciones = () => {
     showLoading()
     let data = {}
-    data.id = id;
+    data.id = id
     data.codServicio = codServicio;
     data.numeroServicio = numeroServicio;
     data.ruc = ruc;
@@ -373,6 +373,18 @@ const ServicioEditComponent = () => {
     }
   }, [horaSalidaLocal, horaRetornoLocal, cliente])
 
+  useEffect(() => {
+    if(ruc == '20106740004'){
+      setHoraSalidaLocal(horaInicioServicio)
+    }
+  }, [horaInicioServicio])
+
+  useEffect(() => {
+    if(ruc == '20106740004'){
+      setHoraRetornoLocal(horaFinServicio)
+    }
+  }, [horaFinServicio])
+
   const handleUpload = (e) => {
     e.preventDefault()
     if (validateUpload()) {
@@ -486,7 +498,7 @@ const ServicioEditComponent = () => {
           <br />
           <div className='row'>
             <div className="col-lg-6">
-            <button type="button" className="btn btn-info" onClick={nuevoServicio}>Nuevo servicio</button>
+              <button type="button" className="btn btn-info" onClick={nuevoServicio}>Nuevo servicio</button>
             </div>
             <div className="col-lg-6">
               

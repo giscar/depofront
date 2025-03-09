@@ -107,7 +107,7 @@ const MercaderiaNuevoComponent = () => {
       if (codigoDua) {
         errorCopy.msgCodigoDua = '';
       } else {
-        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DUA';
+        errorCopy.msgCodigoDua = 'Tiene que ingresar el numero de DAM o DUA';
         valid = false;
       }
     }
@@ -265,7 +265,7 @@ const MercaderiaNuevoComponent = () => {
                     <label className="col-sm-4 col-form-label-zise">Numero de DAM / DUA:</label>
                     <div className="col-sm-8">
                       <input type="number"
-                        placeholder='Numero de DUA'
+                        placeholder='Numero de DAM / DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
                         className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''}`}

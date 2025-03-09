@@ -125,14 +125,14 @@ const ServicioNuevoComponent = () => {
       errorCopy.msgCodServicio = 'El sistema no ha generado el codigo del servicio';
       valid = false;
     }
-
+/*
     if (numeroServicio) {
       errorCopy.msgNumeroServicio = '';
     } else {
       errorCopy.msgNumeroServicio = 'El sistema no ha generado el numero del servicio';
       valid = false;
     }
-
+*/
     if (ruc) {
       errorCopy.msgRuc = '';
     } else {
@@ -180,31 +180,31 @@ const ServicioNuevoComponent = () => {
         alerta('El codigo de la hora de servicio ya existe, cambie de codigo')
         return false;
       }else{
-        if(validaNumeroServicio()){
           if (validateForm()) {
             showLoading()
             const data = {}
             data.codServicio = codServicio;
             data.numeroServicio = numeroServicio;
             data.ruc = ruc;
-            data.razonSocial = razonSocial?.toUpperCase();
-            data.direccion = direccion?.toUpperCase();
-            data.fechaServicio = fechaServicio;
-            data.horaSalidaLocal = horaSalidaLocal;
-            data.horaInicioServicio = horaInicioServicio;
-            data.horaFinServicio = horaFinServicio;
-            data.horaRetornoLocal = horaRetornoLocal;
-            data.operadorId = operadorId.id;
-            data.montacargaId = montacargaId.id;
-            data.totalHoras = totalHoras;
-            data.montoServicio = montoServicio;
-            data.estado = "1";
-            data.estadoRegistro = "Proceso";
-            data.tipoServicio = tipoServicio;
-            data.solicitante = solicitante;
-            data.moneda = moneda;
-            data.observaciones = observaciones?.toUpperCase();;
-            data.tipoPago = tipoPago;
+            data.razonSocial = razonSocial?.toUpperCase()
+            data.direccion = direccion?.toUpperCase()
+            data.fechaServicio = fechaServicio
+            data.horaSalidaLocal = horaSalidaLocal
+            data.horaInicioServicio = horaInicioServicio
+            data.horaFinServicio = horaFinServicio
+            data.horaRetornoLocal = horaRetornoLocal
+            data.operadorId = operadorId.id
+            data.montacargaId = montacargaId.id
+            data.totalHoras = totalHoras
+            data.montoServicio = montoServicio
+            data.estado = "1"
+            data.estadoRegistro = "Proceso"
+            data.tipoServicio = tipoServicio
+            data.solicitante = solicitante
+            data.moneda = moneda
+            data.observaciones = observaciones?.toUpperCase()
+            data.tipoPago = tipoPago
+            data.numeroServicio = "OPE" + (parseInt(codServicio)).toString().padStart(8, '0')
             servicioSave(data).then((response) => {
               if (response.data.id) {
                 editServicio(response.data.id)
@@ -217,7 +217,6 @@ const ServicioNuevoComponent = () => {
               console.error(error)
             })
           }
-        }
       }
     }).catch(e => console.log(e))
   }
@@ -237,7 +236,6 @@ const ServicioNuevoComponent = () => {
       operadorForDocumento(initialLogin.documento).then((response) => {
         if (response?.data) {
           setEsOperdor(true);
-          setOperador(response.data)
         }
         closeLoading()
       }).catch(error => {
@@ -270,21 +268,10 @@ const ServicioNuevoComponent = () => {
     showLoading()
     buscarCodigoServicio().then((response) => {
       setCodServicio(response.data + 1)
-      setNumeroServicio("OPE" + (response.data + 1).toString().padStart(8, '0'))
       closeLoading()
     }).catch(error => {
       console.log(error);
     })
-  }
-
-  const validaNumeroServicio = () => {
-    debugger
-      const numeroServicioGenado = "OPE" + (codServicio).toString().padStart(8, '0');
-      if(numeroServicio !== numeroServicioGenado){
-        alerta("El numero de servicio no correspondo al codigo de servicio")
-        return false
-      }
-      return true
   }
 
   useEffect(() => {
@@ -352,18 +339,6 @@ const ServicioNuevoComponent = () => {
                   <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de servicios.</p>
                 </div>
                 <div className="card-body">
-                  <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Nro del servicio:</label>
-                    <div className="col-sm-8">
-                      <input type="text"
-                        placeholder="Codigo del servicio"
-                        value={numeroServicio}
-                        className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgNumeroServicio ? 'is-invalid' : ''}`}
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
-                      </input>
-                      {errors.msgNumeroServicio && <div className='invalid-feedback'>{errors.msgNumeroServicio}</div>}
-                    </div>
-                  </div>
                   <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Codigo del servicio:</label>
                     <div className="col-sm-8">
