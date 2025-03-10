@@ -6,6 +6,7 @@ import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingre
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 import Swal from 'sweetalert2'
+import Select from 'react-select'
 
 const MercaderiaEditComponent = () => {
 
@@ -27,6 +28,7 @@ const MercaderiaEditComponent = () => {
   const [mercaderia, setMercaderia] = useState('')
   const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
+  const [catalogoUnidadMedidaId, setCatalogoUnidadMedidaId] = useState('')
   const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
   const [productoCodigo, setProductoCodigo] = useState('')
   const [descripcionProducto, setDescripcionProducto] = useState('')
@@ -276,8 +278,8 @@ const MercaderiaEditComponent = () => {
       errorCopy.msgDescripcionProducto = 'Tiene que ingresar la descripcion del producto';
       valid = false;
     }
-
-    if (unidadMedida) {
+debugger
+    if (unidadMedida?.codigo) {
       errorCopy.msgUnidadMedida = '';
     } else {
       errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
@@ -317,7 +319,7 @@ const MercaderiaEditComponent = () => {
       data.idIngreso = id;
       data.productoCodigo = productoCodigo;
       data.descripcionProducto = descripcionProducto?.toUpperCase();
-      data.unidadMedida = unidadMedida;
+      data.unidadMedida = unidadMedida.codigo;
       data.cantidad = cantidad;
       data.cantidadOrignal = cantidad;
       data.fechaIngreso = fechaIngreso;
@@ -415,6 +417,10 @@ const MercaderiaEditComponent = () => {
   const handleUnidadMedida = () => {
     showLoading()
     catalogoByTipo("1").then((response) => {
+      response.data.map(p =>{
+        p.label = p.descripcion;
+        p.value = p.codigo;
+      })
       setCatalogoUnidadMedida(response.data)
       closeLoading()
     })
@@ -560,12 +566,13 @@ const MercaderiaEditComponent = () => {
   }
 
   const cargarMercaderia = (data) => {
+    debugger
     setNumeroMercaderia(data.numeroMercaderia)
     setCantidad(data.cantidad)
     setProductoCodigo(data.productoCodigo)
     setSerie(data.serie)
     setDescripcionProducto(data.descripcionProducto)
-    setUnidadMedida(data.unidadMedida)
+    setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida))
     setCodigoAlmacen(data.codigoAlmacen)
     setFechaIngreso(data.fechaIngreso.substring(0, 10))
     setObservaciones(data.observaciones)
@@ -803,17 +810,11 @@ const MercaderiaEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise" >Unidad de medida:</label>
                       <div className="col-sm-8">
-                        <select value={unidadMedida}
-                          className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                          onChange={(e) => { setUnidadMedida(e.target.value) }}
-                          disabled={indSalida}>
-                          <option value="">Seleccione</option>
-                          {
-                            catalogoUnidadMedida.map(um =>
-                              <option key={um.id} value={um.codigo}>{um.descripcion}</option>
-                            )
-                          }
-                        </select>
+                      <Select value={unidadMedida}
+                        onChange={setUnidadMedida}
+                        options={catalogoUnidadMedida}
+                        className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        />
                         {errors.msgUnidadMedida && <div className='invalid-feedback'>{errors.msgUnidadMedida}</div>}
                       </div>
                     </div>

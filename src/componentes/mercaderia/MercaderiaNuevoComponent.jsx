@@ -161,7 +161,6 @@ const MercaderiaNuevoComponent = () => {
   useEffect(() => {
     setCodigoDua("")
     setPedidoDeposito("")
-    //validateForm()
   }, [tipoMercaderia])
 
   const handleCodIngreso = () => {
@@ -178,17 +177,6 @@ const MercaderiaNuevoComponent = () => {
     setRazonSocial(cliente?.razonSocial)
     setDireccion(cliente?.direccion)
   }, [cliente])
-
-  const limpiar = () => {
-    setRuc('')
-    setRazonSocial('')
-    setDireccion('')
-    setCliente([])
-    setCodIngreso('')
-    setNumeroIngreso('')
-    setCodigoDua('')
-    setDescripcion('')
-  };
 
   return (
     <>

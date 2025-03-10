@@ -125,14 +125,7 @@ const ServicioNuevoComponent = () => {
       errorCopy.msgCodServicio = 'El sistema no ha generado el codigo del servicio';
       valid = false;
     }
-/*
-    if (numeroServicio) {
-      errorCopy.msgNumeroServicio = '';
-    } else {
-      errorCopy.msgNumeroServicio = 'El sistema no ha generado el numero del servicio';
-      valid = false;
-    }
-*/
+
     if (ruc) {
       errorCopy.msgRuc = '';
     } else {
