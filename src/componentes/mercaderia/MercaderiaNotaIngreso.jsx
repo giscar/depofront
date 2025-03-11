@@ -1,28 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import { ingresoById, mercaderiaByNumeroMercaderia, salidaByNumeroMercaderia } from '../../service/FacturaService';
+import { ingresoById} from '../../service/FacturaService';
 
-const MercaderiaSalidaNotaIngreso = ({ show, handleClose, numeroMercaderia, idIngreso }) => {
+const MercaderiaSalidaNotaIngreso = ({ show, handleClose, idIngreso }) => {
 
-  const [salidas, setSalidas] = useState([])
-  const [mercaderia, setMercaderia] = useState([])
+  const [codNotaIngreso, setCodNotaIngreso] = useState('')
+  const [codIngreso, setCodIngreso] = useState('')
+  const [rucAgencia, setRucAgencia] = useState('')
+  const [razonSocialAgencia, setRazonSocialAgencia] = useState('')
+  const [rucCliente, setrucCliente] = useState('')
+  const [razonSocialCliente, setRazonSocialCliente] = useState('')
+  const [chofer, setChofer] = useState('')
+  const [placaVehiculo, setPlacaVechiculo] = useState('')
+  const [fechaRecepcion, setFechaRecepcion] = useState('')
+  const [almacenado, setAlmacenado] = useState('')
+
   const [ingreso, setIngreso] = useState([])
 
-  const buscarClienteByDescripcion = () => {
-    salidaByNumeroMercaderia(numeroMercaderia).then(response => {
-      setSalidas(response.data)
-      mercaderiaByNumeroMercaderia(numeroMercaderia).then(response => {
-        setMercaderia(response.data)
-      })
-    }).catch(error => {
-      console.log(error)
-    })
-  }
 
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
+      debugger
       setIngreso(response.data)
+      cargarNotaIngreso(response.data)
     }).catch(e => {
       console.log(e)
     })
@@ -30,12 +31,13 @@ const MercaderiaSalidaNotaIngreso = ({ show, handleClose, numeroMercaderia, idIn
 
   useEffect(() => {
     if(show){
-      buscarClienteByDescripcion()
       buscarIngresoById()
     }
   }, [show])
 
-  
+  const cargarNotaIngreso = (data) =>{
+    setCodIngreso(data.codIngreso)
+  }
 
   return (
     <>
@@ -46,61 +48,120 @@ const MercaderiaSalidaNotaIngreso = ({ show, handleClose, numeroMercaderia, idIn
         keyboard={false}
         className='anyClass'>
         <Modal.Header closeButton>
-          <Modal.Title>Listado de salidas por mercaderia</Modal.Title>
+          <Modal.Title>Nota de ingreso</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
             <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Numero:</label>
+                    <label className="col-sm-4 col-form-label-zise">Nota de ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
-                        value={mercaderia.numeroMercaderia}
+                        value={codNotaIngreso}
                         className="bg-secondary bg-opacity-10 form-control"
                         readOnly>
                       </input>
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo Producto:</label>
+                    <label className="col-sm-4 col-form-label-zise">Codigo de ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
-                        value={mercaderia.productoCodigo}
+                        value={codIngreso}
                         className="bg-secondary bg-opacity-10 form-control"
                         readOnly>
                       </input>
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Descripcion:</label>
+                    <label className="col-sm-4 col-form-label-zise">Ruc agencia:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
-                        value={mercaderia.descripcionProducto}
+                        value={rucAgencia}
                         className="bg-secondary bg-opacity-10 form-control"
                         readOnly>
                       </input>
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">RUC:</label>
+                    <label className="col-sm-4 col-form-label-zise">Razon social agencia:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
-                        value={ingreso.ruc}
+                        value={razonSocialAgencia}
                         className="bg-secondary bg-opacity-10 form-control"
                         readOnly>
                       </input>
                     </div>
                   </div>
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">RazonSocial:</label>
+                    <label className="col-sm-4 col-form-label-zise">Ruc cliente:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
-                        value={ingreso.razonSocial}
+                        value={rucCliente}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Razon Social cliente:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={razonSocialCliente}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Chofer:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={chofer}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Placa del vehiculo:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={placaVehiculo}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Fecha recepcion:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={fechaRecepcion}
+                        className="bg-secondary bg-opacity-10 form-control"
+                        readOnly>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Almacenado:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder="Codigo del Ingreso"
+                        value={almacenado}
                         className="bg-secondary bg-opacity-10 form-control"
                         readOnly>
                       </input>
@@ -110,34 +171,7 @@ const MercaderiaSalidaNotaIngreso = ({ show, handleClose, numeroMercaderia, idIn
           </Form>
         </Modal.Body>
         <Modal.Footer>
-
-
-          {salidas.length > 0 &&
-            <div className="table-responsive container">
-              <table className="table mb-0">
-                <thead className="thead-light">
-                  <tr>
-                    <th className='td-th-size-depo'>Cantidad</th>
-                    <th className='td-th-size-depo'>Saldo restante</th>
-                    <th className='td-th-size-depo'>Descripcion</th>
-                    <th className='td-th-size-depo'>fecha de salida</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    salidas.map(salida =>
-                      <tr key={salida.id}>
-                        <td className='td-th-size-depo'>{salida.cantidadSalida}</td>
-                        <td className='td-th-size-depo'>{salida.saldoRestante}</td>
-                        <td className='td-th-size-depo'>{salida.descripcionSalida}</td>
-                        <td className='td-th-size-depo'>{(new Date(salida.fechaSalida)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                      </tr>
-                    )
-                  }
-                </tbody>
-              </table>
-            </div>
-          }
+          <button className='btn btn-warning'>Descargar Nota de ingreso</button>
         </Modal.Footer>
       </Modal>
     </>

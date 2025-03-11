@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 import Swal from 'sweetalert2'
 import Select from 'react-select'
+import MercaderiaSalidaNotaIngreso from './MercaderiaNotaIngreso';
 
 const MercaderiaEditComponent = () => {
 
@@ -278,7 +279,7 @@ const MercaderiaEditComponent = () => {
       errorCopy.msgDescripcionProducto = 'Tiene que ingresar la descripcion del producto';
       valid = false;
     }
-debugger
+    
     if (unidadMedida?.codigo) {
       errorCopy.msgUnidadMedida = '';
     } else {
@@ -408,6 +409,10 @@ debugger
     setNumeroMercaderiaSeleccionada(numSalida)
     setShowSalida(true);
   }
+
+  const [showNotaIngreso, setShowNotaIngreso] = useState(false);
+  const handleCloseNotaIngreso = () => setShowNotaIngreso(false);
+  const handleShowNotaIngreso = () => setShowNotaIngreso(true);
 
   useEffect(() => {
     handleUnidadMedida();
@@ -735,6 +740,11 @@ debugger
                       <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                     </div>
                   }
+
+
+<a className='icon-link-depo' onClick={() => handleShowNotaIngreso()}>
+                                    <i className="bi bi-eye-fill"></i>
+                                  </a>
                 </div>
               </div>
             </div>
@@ -1039,6 +1049,7 @@ debugger
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
+      <MercaderiaSalidaNotaIngreso show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} />
     </>
   )
 }

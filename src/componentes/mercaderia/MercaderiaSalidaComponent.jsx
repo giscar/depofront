@@ -44,7 +44,7 @@ const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia, idIngr
         size="lg"
         backdrop="static"
         keyboard={false}
-        className='anyClass'>
+        className=''>
         <Modal.Header closeButton>
           <Modal.Title>Listado de salidas por mercaderia</Modal.Title>
         </Modal.Header>

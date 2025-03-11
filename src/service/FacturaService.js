@@ -29,6 +29,11 @@ const REST_API_BASE_URL_CATALOGO = `${url}catalogo`
 
 const REST_API_BASE_URL_SALIDA = `${url}salida`
 
+const REST_API_BASE_URL_ORDEN_SALIDA = `${url}ordenSalida`
+
+const REST_API_BASE_URL_NOTA_RECEPCION = `${url}notaRecepcion`
+
+
 export const consultaRuc = (ruc) => axios.get("https://dniruc.apisperu.com/api/v1/ruc/"+ruc+"?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNhcmVsaTMwMTBAZ21haWwuY29tIn0.NrIg6H6iH-awBAti4elyZ048ls9uCaEG6Y-rIwmbGGU");
 
 export const catalogoByTipo = (tipo) => axios.get(REST_API_BASE_URL_CATALOGO+"/"+tipo);
@@ -195,3 +200,10 @@ export const salidaSave = (salida) => axios.post(REST_API_BASE_URL_SALIDA, salid
 
 export const salidaByNumeroMercaderia = (numeroMercaderia) => axios.get(REST_API_BASE_URL_SALIDA+"/numeroMercaderia?numeroMercaderia="+numeroMercaderia);
 
+export const notaRecepcionById = (id) => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"?id="+id);
+
+export const notaRecepcionSave = (notaRecepcion) => axios.post(REST_API_BASE_URL_NOTA_RECEPCION, notaRecepcion);
+
+export const ordenSalidaById = (id) => axios.get(REST_API_BASE_URL_ORDEN_SALIDA+"?id="+id);
+
+export const ordenSalidaSave = (ordenSalida) => axios.post(REST_API_BASE_URL_ORDEN_SALIDA, ordenSalida);
