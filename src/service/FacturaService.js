@@ -204,6 +204,8 @@ export const notaRecepcionById = (id) => axios.get(REST_API_BASE_URL_NOTA_RECEPC
 
 export const notaRecepcionSave = (notaRecepcion) => axios.post(REST_API_BASE_URL_NOTA_RECEPCION, notaRecepcion);
 
+export const buscarCodigoNotaRecepcion = () => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"/maxNotaRecepcion"); 
+
 export const ordenSalidaById = (id) => axios.get(REST_API_BASE_URL_ORDEN_SALIDA+"?id="+id);
 
 export const ordenSalidaSave = (ordenSalida) => axios.post(REST_API_BASE_URL_ORDEN_SALIDA, ordenSalida);

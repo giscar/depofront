@@ -5,9 +5,9 @@ import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
+import MercaderiaNotaRecepcion from './MercaderiaNotaRecepcion';
 import Swal from 'sweetalert2'
 import Select from 'react-select'
-import MercaderiaSalidaNotaIngreso from './MercaderiaNotaIngreso';
 
 const MercaderiaEditComponent = () => {
 
@@ -29,7 +29,6 @@ const MercaderiaEditComponent = () => {
   const [mercaderia, setMercaderia] = useState('')
   const [mercaderias, setMercaderias] = useState([])
   const [catalogoUnidadMedida, setCatalogoUnidadMedida] = useState([])
-  const [catalogoUnidadMedidaId, setCatalogoUnidadMedidaId] = useState('')
   const [catalogoAlmacen, setCatalogoAlmacen] = useState([])
   const [productoCodigo, setProductoCodigo] = useState('')
   const [descripcionProducto, setDescripcionProducto] = useState('')
@@ -279,7 +278,7 @@ const MercaderiaEditComponent = () => {
       errorCopy.msgDescripcionProducto = 'Tiene que ingresar la descripcion del producto';
       valid = false;
     }
-    
+
     if (unidadMedida?.codigo) {
       errorCopy.msgUnidadMedida = '';
     } else {
@@ -1049,7 +1048,7 @@ const MercaderiaEditComponent = () => {
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
-      <MercaderiaSalidaNotaIngreso show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} />
+      <MercaderiaNotaRecepcion show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias}/>
     </>
   )
 }

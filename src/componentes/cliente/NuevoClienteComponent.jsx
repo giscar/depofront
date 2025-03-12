@@ -1,4 +1,4 @@
-import { buscarCodigoFactura, consultaRuc, nuevoCliente } from '../../service/FacturaService';
+import { consultaRuc, nuevoCliente } from '../../service/FacturaService';
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
 import { useState } from 'react';
