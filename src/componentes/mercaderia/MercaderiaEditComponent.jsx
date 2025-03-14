@@ -5,9 +5,11 @@ import HeaderComponent from '../HeaderComponent';
 import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
-import MercaderiaNotaRecepcion from './MercaderiaNotaRecepcion';
 import Swal from 'sweetalert2'
 import Select from 'react-select'
+import MercaderiaNotaRecepcionComponent from './MercaderiaNotaRecepcionComponent';
+import MercaderiaOrdenSalidaComponent from './MercaderiaOrdenSalidaComponent';
+
 
 const MercaderiaEditComponent = () => {
 
@@ -413,6 +415,10 @@ const MercaderiaEditComponent = () => {
   const handleCloseNotaIngreso = () => setShowNotaIngreso(false);
   const handleShowNotaIngreso = () => setShowNotaIngreso(true);
 
+  const [showOrdenSalida, setShowOrdenSalida] = useState(false);
+  const handleCloseOrdenSalida = () => setShowOrdenSalida(false);
+  const handleShowOrdenSalida = () => setShowOrdenSalida(true);
+
   useEffect(() => {
     handleUnidadMedida();
     handleAlmacen();
@@ -740,10 +746,9 @@ const MercaderiaEditComponent = () => {
                     </div>
                   }
 
+<button className='btn btn-info' onClick={() => handleShowNotaIngreso()}>Generar Nota recepcion</button>
+<button className='btn btn-danger' onClick={() => handleShowOrdenSalida()}>Generar Nota recepcion</button>
 
-<a className='icon-link-depo' onClick={() => handleShowNotaIngreso()}>
-                                    <i className="bi bi-eye-fill"></i>
-                                  </a>
                 </div>
               </div>
             </div>
@@ -1048,7 +1053,9 @@ const MercaderiaEditComponent = () => {
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
-      <MercaderiaNotaRecepcion show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias}/>
+      <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias}/>
+      <MercaderiaOrdenSalidaComponent show={showOrdenSalida } handleClose={handleCloseOrdenSalida} idIngreso={id} mercaderias={mercaderias}/>
+
     </>
   )
 }

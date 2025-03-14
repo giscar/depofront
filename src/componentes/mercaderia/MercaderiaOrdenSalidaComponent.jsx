@@ -4,22 +4,20 @@ import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
 import { buscarCodigoNotaRecepcion, clienteForRuc, consultaRuc, ingresoById, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
 
-const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) => {
+const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
 
-  const [codNotaIngreso, setCodNotaIngreso] = useState('')
   const [codIngreso, setCodIngreso] = useState('')
-  const [numNotaRecepcion, setNumNotaRecepcion] = useState('')
+  const [numOrdenSalida, setNumOrdenSalida] = useState('')
   const [codNotaRecepcion, seCodNotaRecepcion] = useState('')
-  const [rucAgencia, setRucAgencia] = useState('')
-  const [razonSocialAgencia, setRazonSocialAgencia] = useState('')
-  const [direccionAgencia, setDireccionAgencia] = useState('')
-  const [rucCliente, setRucCliente] = useState('')
-  const [razonSocialCliente, setRazonSocialCliente] = useState('')
-  const [direccionCliente, setDireccionCliente] = useState('')
+  const [rucDestinatario, setRucDestinatario] = useState('')
+  const [razonDestinatario, setRazonDestinatario] = useState('')
+  const [direccionDestinatario, setDireccionDestinatario] = useState('')
+  const [rucDepovent, setDepovent] = useState('')
+  const [razonSocialDepovent, setRazonDepovent] = useState('')
+  const [direccionDepovent, setDireccionDepovent] = useState('')
   const [chofer, setChofer] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
   const [fechaRecepcion, setFechaRecepcion] = useState('')
-  const [almacenado, setAlmacenado] = useState('')
 
   const [ingreso, setIngreso] = useState([])
 
@@ -98,7 +96,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
       })
     })
   }
-  
+
   const buscaRucCliente = (e) => {
     e.preventDefault();
     if (rucCliente.length !== 11) {
@@ -148,7 +146,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
     debugger
     e.preventDefault()
     const data = {}
-    data.numNotaRecepcion =numNotaRecepcion
+    data.numNotaRecepcion = numNotaRecepcion
     data.codIngreso = codIngreso
     data.codIngreso = codIngreso
     data.razonSocialAgencia = razonSocialAgencia
@@ -162,7 +160,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
     data.almacenado = almacenado
     data.mercaderias = mercaderias
     notaRecepcionSave(data).then(p => console.log(p))
-    .catch(e => console.log(e))
+      .catch(e => console.log(e))
   }
 
   return (
@@ -237,7 +235,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
                     value={direccionAgencia}
                     className="bg-secondary bg-opacity-10 form-control"
                     onChange={(e) => { setDireccionAgencia(e.target.value) }}
-                    >
+                  >
                   </input>
                 </div>
               </div>
@@ -291,7 +289,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
                     value={chofer}
                     onChange={(e) => { setChofer(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
-                    >
+                  >
                   </input>
                 </div>
               </div>
@@ -304,7 +302,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
                     value={placaVehiculo}
                     onChange={(e) => { setPlacaVehiculo(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
-                    >
+                  >
                   </input>
                 </div>
               </div>
@@ -317,7 +315,7 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
                     value={fechaRecepcion}
                     onChange={(e) => { setFechaRecepcion(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
-                    >
+                  >
                   </input>
                 </div>
               </div>
@@ -330,63 +328,62 @@ const MercaderiaNotaRecepcion = ({ show, handleClose, idIngreso, mercaderias }) 
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
-                    >
+                  >
                   </input>
                 </div>
               </div>
             </Form.Group>
           </Form>
-          <br/>
+          <br />
           <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
         </Modal.Body>
         <Modal.Footer>
-        <div className="table-responsive">
-                      <table className="table mb-0">
-                        <thead className="thead-light">
-                          <tr>
-                            <th className='td-th-size-depo'>Serie</th>
-                            <th className='td-th-size-depo'>Numero</th>
-                            <th className='td-th-size-depo'>Codigo</th>
-                            <th className='td-th-size-depo'>Descripcion</th>
-                            <th className='td-th-size-depo'>Unidad medida</th>
-                            <th className='td-th-size-depo'>cantidad inicial</th>
-                            <th className='td-th-size-depo'>Fecha de ingreso</th>
-                            <th className='td-th-size-depo'>Almacen</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            mercaderias.map(mercaderia =>
-                              <tr key={mercaderia.id}>
-                                <td className='td-th-size-depo'>{mercaderia.serie}</td>
-                                <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
-                                <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
-                                <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                                <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
-                                <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
-                                <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                                <td className='td-th-size-depo'>
-                                  {mercaderia.estadoMercaderia === "Sin mercaderia" &&
-                                    <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
-                                  }
-                                  {mercaderia.estadoMercaderia === "Proceso" &&
-                                    <span className="badge badge-boxed  badge-outline-warning">{mercaderia.estadoMercaderia}</span>
-                                  }
-                                  {mercaderia.estadoMercaderia === "Saldo cero" &&
-                                    <span className="badge badge-boxed  badge-outline-success">{mercaderia.estadoMercaderia}</span>
-                                  }
-
-                                </td>
-                              </tr>
-                            )
-                          }
-                        </tbody>
-                      </table>
-                    </div>
+          <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+                <tr>
+                  <th className='td-th-size-depo'>Serie</th>
+                  <th className='td-th-size-depo'>Numero</th>
+                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>Descripcion</th>
+                  <th className='td-th-size-depo'>Unidad medida</th>
+                  <th className='td-th-size-depo'>cantidad inicial</th>
+                  <th className='td-th-size-depo'>Fecha de ingreso</th>
+                  <th className='td-th-size-depo'>Almacen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  mercaderias.map(mercaderia =>
+                    <tr key={mercaderia.id}>
+                      <td className='td-th-size-depo'>{mercaderia.serie}</td>
+                      <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
+                      <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
+                      <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
+                      <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
+                      <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
+                      <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
+                      <td className='td-th-size-depo'>
+                        {mercaderia.estadoMercaderia === "Sin mercaderia" &&
+                          <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
+                        }
+                        {mercaderia.estadoMercaderia === "Proceso" &&
+                          <span className="badge badge-boxed  badge-outline-warning">{mercaderia.estadoMercaderia}</span>
+                        }
+                        {mercaderia.estadoMercaderia === "Saldo cero" &&
+                          <span className="badge badge-boxed  badge-outline-success">{mercaderia.estadoMercaderia}</span>
+                        }
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
           <button className='btn btn-warning'>Descargar Nota de ingreso</button>
         </Modal.Footer>
       </Modal>
     </>
   );
 }
-export default MercaderiaNotaRecepcion;
+export default MercaderiaOrdenSalidaComponent;
