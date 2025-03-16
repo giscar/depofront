@@ -13,8 +13,7 @@ import MercaderiaOrdenSalidaComponent from './MercaderiaOrdenSalidaComponent';
 
 const MercaderiaEditComponent = () => {
 
-  const { id } = useParams();
-
+  const { id } = useParams()
   const [cliente, setCliente] = useState('')
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
@@ -37,7 +36,7 @@ const MercaderiaEditComponent = () => {
   const [unidadMedida, setUnidadMedida] = useState('')
   const [cantidad, setCantidad] = useState('')
   const [fechaIngreso, setFechaIngreso] = useState('')
-  const [codigoAlmacen, setCodigoAlmacen] = useState('')
+  const [almacen, setAlmacen] = useState('')
   const [tipoMercaderia, setTipoMercaderia] = useState('')
   const [pedidoDeposito, setPedidoDeposito] = useState('')
   const [serie, setSerie] = useState('')
@@ -98,7 +97,7 @@ const MercaderiaEditComponent = () => {
     if (id) {
       showLoading()
       ingresoById(id).then((response) => {
-        cargarIngreso(response.data);
+        cargarIngreso(response.data)
         cargarMercaderias(id)
         closeLoading()
       }).catch(error => {
@@ -110,9 +109,11 @@ const MercaderiaEditComponent = () => {
   const cargarMercaderias = (idIngreso) => {
     showLoading()
     mercaderiaByIngreso(idIngreso).then(response => {
+      debugger
       setMercaderias(response.data)
       closeLoading()
     })
+    closeLoading()
   }
 
   const cargarIngreso = (data) => {
@@ -127,20 +128,14 @@ const MercaderiaEditComponent = () => {
     setPedidoDeposito(data.pedidoDeposito)
     setTipoMercaderia(data.tipoMercaderia)
     setEstadoRegistro(data.estadoRegistro)
-    setTimeout(() => {
-      setIngreso(data)
-    }, 1000);
+    setIngreso(data)
   }
 
-  useEffect(() => {
-    if(tipoMercaderia){
-      if (ingreso) {
-        setCodigoDua("")
-        setPedidoDeposito("")
-        validateForm()
-      }
-    }
-  }, [tipoMercaderia])
+  const limpiarPorMercaderia = () => {
+    setCodigoDua("")
+    setPedidoDeposito("")
+    validateForm()
+  }
 
   const [errors, setErrors] = useState({
     msgCodIngreso: '',
@@ -150,7 +145,7 @@ const MercaderiaEditComponent = () => {
     msgDescripcion: '',
     msgUnidadMedida: '',
     msgFechaIngreso: '',
-    msgCodigoAlmacen: '',
+    msgAlmacen: '',
     msgTipoMercaderia: '',
     msgPedidoDeposito: '',
     msgCantidad: '',
@@ -229,7 +224,7 @@ const MercaderiaEditComponent = () => {
     setUnidadMedida('')
     setCantidad('')
     setFechaIngreso('')
-    setCodigoAlmacen('')
+    setAlmacen('')
     setProductoCodigo('')
     setDescripcionProducto('')
     setObservaciones('')
@@ -243,7 +238,7 @@ const MercaderiaEditComponent = () => {
     errorCopy.msgUnidadMedida = '';
     errorCopy.msgCantidad = '';
     errorCopy.msgFechaIngreso = '';
-    errorCopy.msgCodigoAlmacen = '';
+    errorCopy.msgAlmacen = '';
     setErrors(errorCopy);
   }
 
@@ -301,10 +296,10 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
-    if (codigoAlmacen) {
-      errorCopy.msgCodigoAlmacen = '';
+    if (almacen?.codigo) {
+      errorCopy.msgAlmacen = '';
     } else {
-      errorCopy.msgCodigoAlmacen = 'Tiene que ingresar el almacen de destino';
+      errorCopy.msgAlmacen = 'Tiene que ingresar el almacen de destino';
       valid = false;
     }
 
@@ -317,33 +312,44 @@ const MercaderiaEditComponent = () => {
     if (validateMercaderia()) {
       showLoading()
       const data = {}
-      data.idIngreso = id;
-      data.productoCodigo = productoCodigo;
-      data.descripcionProducto = descripcionProducto?.toUpperCase();
-      data.unidadMedida = unidadMedida.codigo;
-      data.cantidad = cantidad;
-      data.cantidadOrignal = cantidad;
-      data.fechaIngreso = fechaIngreso;
-      data.codigoAlmacen = codigoAlmacen;
-      data.observaciones = observaciones;
-      data.serie = serie;
-      data.numeroMercaderia = numeroMercaderia;
-      data.codMercaderia = codMercaderia;
+      data.idIngreso = id
+      data.codIngreso = codIngreso
+      data.productoCodigo = productoCodigo
+      data.descripcionProducto = descripcionProducto?.toUpperCase()
+      data.unidadMedida = unidadMedida
+      data.almacen = almacen
+      data.cantidad = cantidad
+      data.cantidadOrignal = cantidad
+      data.fechaIngreso = fechaIngreso
+      data.observaciones = observaciones
+      data.serie = serie
+      data.numeroMercaderia = numeroMercaderia
+      data.codMercaderia = codMercaderia
       data.estadoMercaderia = "Proceso"
+      debugger
       mercaderiaSave(data).then(response => {
-        console.log(response)
         cargarMercaderias(id)
         ingresoById(id).then(response => {
           response.data.estadoRegistro = "Proceso"
           ingresoSave(response.data).then(respon => {
             cargarIngreso(respon.data)
-            notify();
+            notify()
             handleCodMercaderia()
             closeLoading()
-          }).catch(error => console.log(error))
-        }).catch(error => console.log(error))
-      }).catch(error => console.log(error))
+          }).catch(error => {
+            console.log(error)
+            closeLoading()
+          })
+        }).catch(error => {
+          console.log(error)
+          closeLoading()
+        })
+      }).catch(error => {
+        console.log(error)
+        closeLoading()
+      })
       limpiarMercaderia()
+      closeLoading()
     }
   }
 
@@ -438,6 +444,10 @@ const MercaderiaEditComponent = () => {
   const handleAlmacen = () => {
     showLoading()
     catalogoByTipo("2").then((response) => {
+      response.data.map(p =>{
+        p.label = p.descripcion;
+        p.value = p.codigo;
+      })
       setCatalogoAlmacen(response.data)
     })
     closeLoading()
@@ -458,7 +468,7 @@ const MercaderiaEditComponent = () => {
       closeLoading()
     }).catch(error => {
       console.error(error)
-    });
+    })
   }
 
   const registrarSalida = (e) => {
@@ -520,7 +530,7 @@ const MercaderiaEditComponent = () => {
     setNumeroMercaderia('')
     setCodMercaderia('')
     setMercaderia('')
-    setCodigoAlmacen('')
+    setAlmacen('')
     setSerie('')
     setDescripcionProducto('')
     setUnidadMedida('')
@@ -575,14 +585,13 @@ const MercaderiaEditComponent = () => {
   }
 
   const cargarMercaderia = (data) => {
-    debugger
     setNumeroMercaderia(data.numeroMercaderia)
     setCantidad(data.cantidad)
     setProductoCodigo(data.productoCodigo)
     setSerie(data.serie)
     setDescripcionProducto(data.descripcionProducto)
     setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida))
-    setCodigoAlmacen(data.codigoAlmacen)
+    setAlmacen(catalogoAlmacen.filter(p => p.codigo == data.almacen))
     setFechaIngreso(data.fechaIngreso.substring(0, 10))
     setObservaciones(data.observaciones)
     setMercaderia(data)
@@ -634,7 +643,10 @@ const MercaderiaEditComponent = () => {
                     <div className="col-sm-8">
                       <select value={tipoMercaderia}
                         className={`form-select-depo ${errors.msgTipoMercaderia ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                        onChange={(e) => { setTipoMercaderia(e.target.value) }}
+                        onChange={(e) => { 
+                          setTipoMercaderia(e.target.value) 
+                          limpiarPorMercaderia()
+                        }}
                         disabled={indSalida}>
                         <option value="">Seleccione</option>
                         <option value="Simple">Simple</option>
@@ -863,18 +875,12 @@ const MercaderiaEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise" >Almacen:</label>
                       <div className="col-sm-8">
-                        <select value={codigoAlmacen}
-                          className={`form-select-depo${errors.msgCodigoAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                          onChange={(e) => { setCodigoAlmacen(e.target.value) }}
-                          disabled={indSalida}>
-                          <option value="">Seleccione</option>
-                          {
-                            catalogoAlmacen.map(al =>
-                              <option key={al.id} value={al.codigo}>{al.descripcion}</option>
-                            )
-                          }
-                        </select>
-                        {errors.msgCodigoAlmacen && <div className='invalid-feedback'>{errors.msgCodigoAlmacen}</div>}
+                      <Select value={almacen}
+                        onChange={setAlmacen}
+                        options={catalogoAlmacen}
+                        className={`form-select-depo${errors.msgAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        />
+                        {errors.msgAlmacen && <div className='invalid-feedback'>{errors.msgAlmacen}</div>}
                       </div>
                     </div>
 
@@ -986,11 +992,11 @@ const MercaderiaEditComponent = () => {
                                 <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                                <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.unidadMedida.descripcion}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
                                 <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                                <td className='td-th-size-depo'>{mercaderia.almacen[0].descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.almacen.descripcion}</td>
                                 <td className='td-th-size-depo'>
                                   {mercaderia.estadoMercaderia === "Sin mercaderia" &&
                                     <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
