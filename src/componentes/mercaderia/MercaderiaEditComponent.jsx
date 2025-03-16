@@ -112,7 +112,7 @@ const MercaderiaEditComponent = () => {
     mercaderiaByIngreso(idIngreso).then(response => {
       setMercaderias(response.data)
       closeLoading()
-    });
+    })
   }
 
   const cargarIngreso = (data) => {
@@ -173,7 +173,6 @@ const MercaderiaEditComponent = () => {
   });
 
   const validateForm = () => {
-    debugger
     let valid = true;
     const errorCopy = { ...errors }
     const regex = /^[0-9]*$/;
@@ -747,7 +746,7 @@ const MercaderiaEditComponent = () => {
                   }
 
 <button className='btn btn-info' onClick={() => handleShowNotaIngreso()}>Generar Nota recepcion</button>
-<button className='btn btn-danger' onClick={() => handleShowOrdenSalida()}>Generar Nota recepcion</button>
+<button className='btn btn-danger' onClick={() => handleShowOrdenSalida()}>Generar orden de salida</button>
 
                 </div>
               </div>

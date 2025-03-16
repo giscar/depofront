@@ -2,12 +2,17 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { clienteForDescripcion, clienteForRuc } from '../../service/FacturaService';
+import NuevoClienteBusqueda from './NuevoClienteBusqueda';
 
 const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
 
-  const [ruc, setRuc] = useState();
-  const [razonSocial, setRazonSocial] = useState('');
+  const [ruc, setRuc] = useState()
+  const [razonSocial, setRazonSocial] = useState('')
   const [clientes, setClientes] = useState([])
+
+  const [showNuevoCliente, setShowNuevoCliente] = useState(false);
+  const handleCloseNuevoCliente = () => setShowNuevoCliente(false);
+  const handleShowNuevoCliente = () => setShowNuevoCliente(true);
 
   const buscarClienteByDescripcion = (e) => {
     e.preventDefault();
@@ -28,6 +33,15 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
         console.error(error)
       })
     }
+  }
+
+  const cerrarModal = () => {
+    handleClose()
+  }
+
+  const nuevoClienteApi = () => {
+    handleClose()
+    handleShowNuevoCliente()
   }
 
   const seleccionarCliente = (cliente) => {
@@ -77,11 +91,7 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
                 <button className='btn-depo btn-primary-depo' onClick={buscarClienteByDescripcion}>Buscar</button>
               </div>
             </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-
-          <br />
+            <br />
           {clientes.length > 0 &&
             <div className="table-responsive">
               <table className="table mb-0">
@@ -102,7 +112,7 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
                         <td className='td-th-size-depo'>{cliente.direccion}</td>
                         <td className='td-th-size-depo text-center'>
                           <a className='icon-link-depo' onClick={() => seleccionarCliente(cliente)}>
-                          <i className="bi bi-patch-plus-fill"></i>
+                            <i className="bi bi-patch-plus-fill"></i>
                           </a>
                         </td>
                       </tr>
@@ -112,9 +122,15 @@ const BusquedaClienteComponent = ({ show, handleClose, setCliente }) => {
               </table>
             </div>
           }
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-primary' onClick={() => nuevoClienteApi()}>Nuevo cliente</button>
+          <button className='btn btn-danger' onClick={() => cerrarModal()}>Cerrar</button>
         </Modal.Footer>
       </Modal>
+      <NuevoClienteBusqueda show={showNuevoCliente} handleClose={handleCloseNuevoCliente} setCliente={setCliente} />
     </>
-  );
+  )
 }
 export default BusquedaClienteComponent;

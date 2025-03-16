@@ -35,8 +35,6 @@ const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia, idIngr
     }
   }, [show])
 
-  
-
   return (
     <>
       <Modal show={show}
@@ -141,6 +139,6 @@ const MercaderiaSalidaComponent = ({ show, handleClose, numeroMercaderia, idIngr
         </Modal.Footer>
       </Modal>
     </>
-  );
+  )
 }
 export default MercaderiaSalidaComponent;

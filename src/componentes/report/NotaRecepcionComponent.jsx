@@ -30,8 +30,6 @@ const toWords = new ToWords({
   },
 });
 
-console.log(toWords.convert(123.10))
-
 
 const styles = StyleSheet.create({
   page: {

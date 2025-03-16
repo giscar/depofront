@@ -57,8 +57,6 @@ const FacturaViewComponent = () => {
     },
   });
 
-  console.log(toWords.convert(123.10))
-
   useEffect(() => {
     facturaForId(id).then((response) => {
       setFactura(response.data)

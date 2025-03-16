@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
-import { buscarCodigoNotaRecepcion, clienteForRuc, consultaRuc, ingresoById, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
+import { buscarCodigoOrdenSalida, clienteForRuc, consultaRuc, ingresoById, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
 
 const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
 
   const [codIngreso, setCodIngreso] = useState('')
+  const [numNotaRecepcion, setNumNotaRecepcion] = useState('')
   const [numOrdenSalida, setNumOrdenSalida] = useState('')
-  const [codNotaRecepcion, seCodNotaRecepcion] = useState('')
   const [rucDestinatario, setRucDestinatario] = useState('')
-  const [razonDestinatario, setRazonDestinatario] = useState('')
+  const [razonSocialDestinatario, setRazonSocialDestinatario] = useState('')
   const [direccionDestinatario, setDireccionDestinatario] = useState('')
-  const [rucDepovent, setDepovent] = useState('')
-  const [razonSocialDepovent, setRazonDepovent] = useState('')
+  const [rucDepovent, setRucDepovent] = useState('')
+  const [razonSocialDepovent, setRazonSocialDepovent] = useState('')
   const [direccionDepovent, setDireccionDepovent] = useState('')
   const [chofer, setChofer] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
@@ -47,19 +47,18 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
 
   const [errors, setErrors] = useState({
     msgCodIngreso: '',
-    msgRucAgencia: '',
-    msgRazonSocialAgencia: '',
-    msgDireccionAgencia: '',
-    msgRucCliente: '',
-    msgRazonSocialCliente: '',
-    msgDireccionCliente: '',
+    msgRucDestinatario: '',
+    msgRazonSocialDestinatario: '',
+    msgDireccionDestinatario: '',
+    msgRucDepovent: '',
+    msgRazonSocialDepovent: '',
+    msgDireccionDepovent: '',
   })
 
-  const handleCodMercaderia = () => {
+  const handleCodOrdenSalida = () => {
     showLoading()
-    buscarCodigoNotaRecepcion().then((response) => {
-      setNumNotaRecepcion(response.data + 1)
-      seCodNotaRecepcion("NOTARECEP" + (response.data + 1).toString().padStart(6, '0'));
+    buscarCodigoOrdenSalida().then((response) => {
+      setNumOrdenSalida(response.data + 1)
       closeLoading()
     }).catch(error => {
       console.log(error);
@@ -67,69 +66,56 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
   }
 
   useEffect(() => {
-    handleCodMercaderia();
+    handleCodOrdenSalida();
   }, [])
 
-
-  const buscaRucAgencia = (e) => {
+  const buscaRucDestinatario = (e) => {
     e.preventDefault();
-    if (rucAgencia.length !== 11) {
+    if (rucDestinatario.length !== 11) {
       alerta("El RUC debe tener 11 digitos")
-      setRucAgencia("")
+      setRucDestinatario("")
       return
     }
-    clienteForRuc(rucAgencia).then(p => {
-      consultaRuc(rucAgencia).then(response => {
-        showLoading()
-        setRucAgencia(response.data.ruc)
-        setRazonSocialAgencia(response.data.razonSocial)
-        setDireccionAgencia(response.data.direccion)
-        const data = {}
-        data.ruc = response.data.ruc
-        data.razonSocial = response.data.razonSocial
-        data.direccion = response.data.direccion
-        nuevoCliente(data)
-        closeLoading()
-      }).catch(error => {
-        showLoading()
-        console.log(error)
-      })
-    })
-  }
-
-  const buscaRucCliente = (e) => {
-    e.preventDefault();
-    if (rucCliente.length !== 11) {
-      alerta("El RUC debe tener 11 digitos")
-      setRucCliente("")
-      return
-    }
-    clienteForRuc(rucCliente).then(p => {
-      consultaRuc(rucCliente).then(response => {
-        showLoading()
-        setRucCliente(response.data.ruc)
-        setRazonSocialCliente(response.data.razonSocial)
-        setDireccionCliente(response.data.direccion)
-        const data = {}
-        data.ruc = response.data.ruc
-        data.razonSocial = response.data.razonSocial
-        data.direccion = response.data.direccion
-        nuevoCliente(data)
-        closeLoading()
-      }).catch(error => {
-        showLoading()
-        console.log(error)
-      })
+    clienteForRuc(rucDestinatario).then(p => {
+      showLoading()
+      if(p.data.length == 0){
+        consultaRuc(rucDestinatario).then(response => {
+          showLoading()
+          setRucDestinatario(response.data.ruc)
+          setRazonSocialDestinatario(response.data.razonSocial)
+          setDireccionDestinatario(response.data.direccion)
+          const data = {}
+          data.ruc = response.data.ruc
+          data.razonSocial = response.data.razonSocial
+          data.direccion = response.data.direccion
+          nuevoCliente(data)
+          closeLoading()
+        }).catch(error => {
+          showLoading()
+          console.log(error)
+          closeLoading()
+        })
+      }
+      closeLoading()
     })
   }
 
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
+      showLoading()
       setIngreso(response.data)
       cargarNotaIngreso(response.data)
+      cargarDepovent()
+      closeLoading()
     }).catch(e => {
       console.log(e)
     })
+  }
+
+  const cargarDepovent = () => {
+    setRazonSocialDepovent("Depositos y Ventas S.A.");
+    setRucDepovent("20100014476");
+    setDireccionDepovent("jr. victor a. belaunde 901 carmen de la legua");
   }
 
   useEffect(() => {
@@ -148,12 +134,12 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     const data = {}
     data.numNotaRecepcion = numNotaRecepcion
     data.codIngreso = codIngreso
-    data.codIngreso = codIngreso
-    data.razonSocialAgencia = razonSocialAgencia
-    data.direccionAgencia = direccionAgencia
-    data.rucCliente = rucCliente
-    data.razonSocialCliente = razonSocialCliente
-    data.direccionCliente = direccionCliente
+    data.rucDestinatario = rucDestinatario
+    data.razonSocialDestinatario = razonSocialDestinatario
+    data.direccionDestinatario = direccionDestinatario
+    data.rucDepovent = rucDepovent
+    data.razonSocialDepovent = razonSocialDepovent
+    data.direccionDepovent = direccionDepovent
     data.chofer = chofer
     data.placaVehiculo = placaVehiculo
     data.placaVehiculo = placaVehiculo
@@ -178,17 +164,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
           <Form>
             <Form.Group className="mb-3">
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Nota de recepcion:</label>
-                <div className="col-sm-8">
-                  <input type="text"
-                    placeholder="Nota recepcion"
-                    value={numNotaRecepcion}
-                    className="bg-secondary bg-opacity-10 form-control"
-                    readOnly>
-                  </input>
-                </div>
-              </div>
-              <div className="mb-3 row">
                 <label className="col-sm-4 col-form-label-zise">Codigo de ingreso:</label>
                 <div className="col-sm-8">
                   <input type="text"
@@ -199,69 +174,76 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
                   </input>
                 </div>
               </div>
+              <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Orden de salida:</label>
+                <div className="col-sm-8">
+                  <input type="text"
+                    placeholder="Nota recepcion"
+                    value={numOrdenSalida}
+                    className="bg-secondary bg-opacity-10 form-control"
+                    readOnly>
+                  </input>
+                </div>
+              </div>
               <div className="mb-3 row pb-2">
-                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC:</label>
+                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC destinatario:</label>
                 <div className="col-sm-6">
                   <input type="number"
-                    placeholder="Ruc de la agencia"
-                    value={rucAgencia}
+                    placeholder="Ruc de Destinatario"
+                    value={rucDestinatario}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucAgencia ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucAgencia(e.target.value) }}
-                  />
-                  {errors.msgRucAgencia && <div className='invalid-feedback'>{errors.msgRucAgencia}</div>}
+                    className={`form-control-depo ${errors.msgRucDestinatario ? ' is-invalid' : ''}`}
+                    onChange={(e) => { setRucDestinatario(e.target.value) }}/>
+                  {errors.msgRucDestinatario && <div className='invalid-feedback'>{errors.msgRucDestinatario}</div>}
                 </div>
                 <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucAgencia}>Buscar</button>
+                  <button className='btn btn-primary' onClick={buscaRucDestinatario}>Buscar</button>
                 </div>
               </div>
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Razon social agencia:</label>
+                <label className="col-sm-4 col-form-label-zise">Razon social Destinatario:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Razon social agencia"
-                    value={razonSocialAgencia}
+                    placeholder="Razon social Destinatario"
+                    value={razonSocialDestinatario}
                     className="bg-secondary bg-opacity-10 form-control"
-                    onChange={(e) => { setRazonSocialAgencia(e.target.value) }}
+                    onChange={(e) => { setRazonSocialDestinatario(e.target.value) }}
                     readOnly>
                   </input>
                 </div>
               </div>
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Direccion agencia:</label>
+                <label className="col-sm-4 col-form-label-zise">Direccion Destinatario:</label>
                 <div className="col-sm-8">
                   <input type="text"
                     placeholder="Direccion agencia"
-                    value={direccionAgencia}
+                    value={direccionDestinatario}
                     className="bg-secondary bg-opacity-10 form-control"
-                    onChange={(e) => { setDireccionAgencia(e.target.value) }}
-                  >
+                    onChange={(e) => { setDireccionDestinatario(e.target.value) }}>
                   </input>
                 </div>
               </div>
               <div className="mb-3 row pb-2">
-                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Cliente:</label>
-                <div className="col-sm-6">
+                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Depovent:</label>
+                <div className="col-sm-8">
                   <input type="number"
-                    placeholder="Ruc del cliente"
-                    value={rucCliente}
+                    placeholder="Ruc de Depovent"
+                    value={rucDepovent}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucCliente ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucCliente(e.target.value) }}
+                    className={`form-control-depo ${errors.msgRucDepovent ? ' is-invalid' : ''}`}
+                    onChange={(e) => { setRucDepovent(e.target.value) }}
+                    readOnly
                   />
-                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucCliente}</div>}
-                </div>
-                <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucCliente}>Buscar</button>
+                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucDepovent}</div>}
                 </div>
               </div>
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Razon Social cliente:</label>
+                <label className="col-sm-4 col-form-label-zise">Razon Social Depovent:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Razon social del cliente"
-                    value={razonSocialCliente}
-                    onChange={(e) => { setRazonSocialCliente(e.target.value) }}
+                    placeholder="Razon social Depovent"
+                    value={razonSocialDepovent}
+                    onChange={(e) => { setRazonSocialDepovent(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
                     readOnly>
                   </input>
@@ -269,12 +251,12 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
               </div>
 
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Direccion cliente:</label>
+                <label className="col-sm-4 col-form-label-zise">Direccion Depovent:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Direccion del cliente"
-                    value={direccionCliente}
-                    onChange={(e) => { setDireccionCliente(e.target.value) }}
+                    placeholder="Direccion Depovent"
+                    value={direccionDepovent}
+                    onChange={(e) => { setDireccionDepovent(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
                     readOnly>
                   </input>
@@ -314,19 +296,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
                     placeholder="Codigo del Ingreso"
                     value={fechaRecepcion}
                     onChange={(e) => { setFechaRecepcion(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                  >
-                  </input>
-                </div>
-              </div>
-
-              <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Almacenado:</label>
-                <div className="col-sm-8">
-                  <input type="text"
-                    placeholder="Codigo del Ingreso"
-                    value={almacenado}
-                    onChange={(e) => { setAlmacenado(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
                   >
                   </input>
