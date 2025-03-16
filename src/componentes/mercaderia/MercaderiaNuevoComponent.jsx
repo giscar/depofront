@@ -145,7 +145,7 @@ const MercaderiaNuevoComponent = () => {
         irMercaderia(response.data.id)
       }).catch(error => {
         console.error(error)
-      });
+      })
       notify()
     }
   }
@@ -168,7 +168,7 @@ const MercaderiaNuevoComponent = () => {
       setCodIngreso(response.data + 1)
       setNumeroIngreso("ING" + (response.data + 1).toString().padStart(6, '0'));
     }).catch(error => {
-      console.log(error);
+      console.log(error)
     })
   }
 

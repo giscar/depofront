@@ -91,7 +91,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
           nuevoCliente(data)
           closeLoading()
         }).catch(error => {
-          showLoading()
           console.log(error)
           closeLoading()
         })

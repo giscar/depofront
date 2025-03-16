@@ -81,24 +81,26 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       return
     }
     clienteForRuc(rucAgencia).then(p => {
-      consultaRuc(rucAgencia).then(response => {
-        showLoading()
-        setRucAgencia(response.data.ruc)
-        setRazonSocialAgencia(response.data.razonSocial)
-        setDireccionAgencia(response.data.direccion)
-        const data = {}
-        data.ruc = response.data.ruc
-        data.razonSocial = response.data.razonSocial
-        data.direccion = response.data.direccion
-        nuevoCliente(data)
-        closeLoading()
-      }).catch(error => {
-        showLoading()
-        console.log(error)
-      })
+      if(p.data.length == 0){
+        consultaRuc(rucAgencia).then(response => {
+          showLoading()
+          setRucAgencia(response.data.ruc)
+          setRazonSocialAgencia(response.data.razonSocial)
+          setDireccionAgencia(response.data.direccion)
+          const data = {}
+          data.ruc = response.data.ruc
+          data.razonSocial = response.data.razonSocial
+          data.direccion = response.data.direccion
+          nuevoCliente(data)
+          closeLoading()
+        }).catch(error => {
+          console.log(error)
+          closeLoading()
+        })
+      }
     })
   }
-  
+
   const buscaRucCliente = (e) => {
     e.preventDefault();
     if (rucCliente.length !== 11) {
@@ -107,21 +109,23 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       return
     }
     clienteForRuc(rucCliente).then(p => {
-      consultaRuc(rucCliente).then(response => {
-        showLoading()
-        setRucCliente(response.data.ruc)
-        setRazonSocialCliente(response.data.razonSocial)
-        setDireccionCliente(response.data.direccion)
-        const data = {}
-        data.ruc = response.data.ruc
-        data.razonSocial = response.data.razonSocial
-        data.direccion = response.data.direccion
-        nuevoCliente(data)
-        closeLoading()
-      }).catch(error => {
-        showLoading()
-        console.log(error)
-      })
+      if(p.data.length == 0){
+        consultaRuc(rucCliente).then(response => {
+          showLoading()
+          setRucCliente(response.data.ruc)
+          setRazonSocialCliente(response.data.razonSocial)
+          setDireccionCliente(response.data.direccion)
+          const data = {}
+          data.ruc = response.data.ruc
+          data.razonSocial = response.data.razonSocial
+          data.direccion = response.data.direccion
+          nuevoCliente(data)
+          closeLoading()
+        }).catch(error => {
+          showLoading()
+          console.log(error)
+        })
+      }
     })
   }
 
@@ -148,7 +152,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     debugger
     e.preventDefault()
     const data = {}
-    data.numNotaRecepcion =numNotaRecepcion
+    data.numNotaRecepcion = numNotaRecepcion
     data.codIngreso = codIngreso
     data.codIngreso = codIngreso
     data.razonSocialAgencia = razonSocialAgencia
@@ -162,7 +166,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     data.almacenado = almacenado
     data.mercaderias = mercaderias
     notaRecepcionSave(data).then(p => console.log(p))
-    .catch(e => console.log(e))
+      .catch(e => console.log(e))
   }
 
   return (
@@ -209,8 +213,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     value={rucAgencia}
                     maxlength="11"
                     className={`form-control-depo ${errors.msgRucAgencia ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucAgencia(e.target.value) }}
-                  />
+                    onChange={(e) => { setRucAgencia(e.target.value) }}/>
                   {errors.msgRucAgencia && <div className='invalid-feedback'>{errors.msgRucAgencia}</div>}
                 </div>
                 <div className='col-sm-2 text-start' >
@@ -237,7 +240,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     value={direccionAgencia}
                     className="bg-secondary bg-opacity-10 form-control"
                     onChange={(e) => { setDireccionAgencia(e.target.value) }}
-                    >
+                  >
                   </input>
                 </div>
               </div>
@@ -290,8 +293,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={chofer}
                     onChange={(e) => { setChofer(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                    >
+                    className="bg-secondary bg-opacity-10 form-control">
                   </input>
                 </div>
               </div>
@@ -303,8 +305,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={placaVehiculo}
                     onChange={(e) => { setPlacaVehiculo(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                    >
+                    className="bg-secondary bg-opacity-10 form-control">
                   </input>
                 </div>
               </div>
@@ -316,8 +317,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={fechaRecepcion}
                     onChange={(e) => { setFechaRecepcion(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                    >
+                    className="bg-secondary bg-opacity-10 form-control">
                   </input>
                 </div>
               </div>
@@ -329,60 +329,58 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                    >
+                    className="bg-secondary bg-opacity-10 form-control">
                   </input>
                 </div>
               </div>
             </Form.Group>
           </Form>
-          <br/>
+          <br />
           <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
         </Modal.Body>
         <Modal.Footer>
-        <div className="table-responsive">
-                      <table className="table mb-0">
-                        <thead className="thead-light">
-                          <tr>
-                            <th className='td-th-size-depo'>Serie</th>
-                            <th className='td-th-size-depo'>Numero</th>
-                            <th className='td-th-size-depo'>Codigo</th>
-                            <th className='td-th-size-depo'>Descripcion</th>
-                            <th className='td-th-size-depo'>Unidad medida</th>
-                            <th className='td-th-size-depo'>cantidad inicial</th>
-                            <th className='td-th-size-depo'>Fecha de ingreso</th>
-                            <th className='td-th-size-depo'>Almacen</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {
-                            mercaderias.map(mercaderia =>
-                              <tr key={mercaderia.id}>
-                                <td className='td-th-size-depo'>{mercaderia.serie}</td>
-                                <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
-                                <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
-                                <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                                <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
-                                <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
-                                <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                                <td className='td-th-size-depo'>
-                                  {mercaderia.estadoMercaderia === "Sin mercaderia" &&
-                                    <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
-                                  }
-                                  {mercaderia.estadoMercaderia === "Proceso" &&
-                                    <span className="badge badge-boxed  badge-outline-warning">{mercaderia.estadoMercaderia}</span>
-                                  }
-                                  {mercaderia.estadoMercaderia === "Saldo cero" &&
-                                    <span className="badge badge-boxed  badge-outline-success">{mercaderia.estadoMercaderia}</span>
-                                  }
-
-                                </td>
-                              </tr>
-                            )
-                          }
-                        </tbody>
-                      </table>
-                    </div>
+          <div className="table-responsive">
+            <table className="table mb-0">
+              <thead className="thead-light">
+                <tr>
+                  <th className='td-th-size-depo'>Serie</th>
+                  <th className='td-th-size-depo'>Numero</th>
+                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>Descripcion</th>
+                  <th className='td-th-size-depo'>Unidad medida</th>
+                  <th className='td-th-size-depo'>cantidad inicial</th>
+                  <th className='td-th-size-depo'>Fecha de ingreso</th>
+                  <th className='td-th-size-depo'>Almacen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  mercaderias.map(mercaderia =>
+                    <tr key={mercaderia.id}>
+                      <td className='td-th-size-depo'>{mercaderia.serie}</td>
+                      <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
+                      <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
+                      <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
+                      <td className='td-th-size-depo'>{mercaderia.um[0].descripcion}</td>
+                      <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
+                      <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
+                      <td className='td-th-size-depo'>
+                        {mercaderia.estadoMercaderia === "Sin mercaderia" &&
+                          <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
+                        }
+                        {mercaderia.estadoMercaderia === "Proceso" &&
+                          <span className="badge badge-boxed  badge-outline-warning">{mercaderia.estadoMercaderia}</span>
+                        }
+                        {mercaderia.estadoMercaderia === "Saldo cero" &&
+                          <span className="badge badge-boxed  badge-outline-success">{mercaderia.estadoMercaderia}</span>
+                        }
+                      </td>
+                    </tr>
+                  )
+                }
+              </tbody>
+            </table>
+          </div>
           <button className='btn btn-warning'>Descargar Nota de ingreso</button>
         </Modal.Footer>
       </Modal>
