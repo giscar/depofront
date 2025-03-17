@@ -70,34 +70,37 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
   }, [])
 
   const buscaRucDestinatario = (e) => {
-    e.preventDefault();
-    if (rucDestinatario.length !== 11) {
-      alerta("El RUC debe tener 11 digitos")
-      setRucDestinatario("")
-      return
-    }
-    clienteForRuc(rucDestinatario).then(p => {
-      showLoading()
-      if(p.data.length == 0){
-        consultaRuc(rucDestinatario).then(response => {
-          showLoading()
-          setRucDestinatario(response.data.ruc)
-          setRazonSocialDestinatario(response.data.razonSocial)
-          setDireccionDestinatario(response.data.direccion)
-          const data = {}
-          data.ruc = response.data.ruc
-          data.razonSocial = response.data.razonSocial
-          data.direccion = response.data.direccion
-          nuevoCliente(data)
-          closeLoading()
-        }).catch(error => {
-          console.log(error)
-          closeLoading()
-        })
+      e.preventDefault();
+      if (rucDestinatario.length !== 11) {
+        alerta("El RUC debe tener 11 digitos")
+        setRucDestinatario("")
+        return
       }
-      closeLoading()
-    })
-  }
+      clienteForRuc(rucDestinatario).then(p => {
+        if(p.data.length > 0){
+          setRucDestinatario(p.data[0].ruc)
+          setRazonSocialDestinatario(p.data[0].razonSocial)
+          setDireccionDestinatario(p.data[0].direccion)
+        }else{
+          consultaRuc(rucDestinatario).then(response => {
+            showLoading()
+            setRucDestinatario(response.data.ruc)
+            setRazonSocialDestinatario(response.data.razonSocial)
+            setDireccionDestinatario(response.data.direccion)
+            const data = {}
+            data.ruc = response.data.ruc
+            data.razonSocial = response.data.razonSocial
+            data.direccion = response.data.direccion
+            nuevoCliente(data)
+            closeLoading()
+          }).catch(error => {
+            closeLoading()
+            console.log(error)
+          })
+        }
+        closeLoading()
+      })
+    }
 
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
@@ -304,8 +307,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
           </Form>
           <br />
           <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
-        </Modal.Body>
-        <Modal.Footer>
           <div className="table-responsive">
             <table className="table mb-0">
               <thead className="thead-light">
@@ -348,6 +349,9 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
               </tbody>
             </table>
           </div>
+        </Modal.Body>
+        <Modal.Footer>
+          
           <button className='btn btn-warning'>Descargar Nota de ingreso</button>
         </Modal.Footer>
       </Modal>

@@ -481,6 +481,8 @@ const MercaderiaEditComponent = () => {
       data.descripcionSalida = descripcionSalida
       data.fechaSalida = fechaSalida
       data.usuarioRegistro = initialLogin.documento
+      debugger
+      data.idCodIngreso = codIngreso
       salidaSave(data).then(response => {
         mercaderiaById(mercaderia.id).then(response => {
           if ((parseInt(mercaderia.cantidad) - parseInt(cantidadSalida)) > 0) {

@@ -108,7 +108,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
   }
 
   const buscaRucEmpresa = (e) => {
-    debugger
     e.preventDefault();
     if (rucEmpresa.length !== 11) {
       alerta("El RUC debe tener 11 digitos")
@@ -200,13 +199,11 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     data.almacenado = almacenado
     data.observaciones = observaciones
     data.fechaRecepcion = fechaRecepcion
-    debugger
     showLoading()
     notaRecepcionSave(data).then( response => {
       console.log(response.data)
       mercaderias.map(p => {
         p.idNotaRecepcion = response.data.id
-        debugger
         mercaderiaSave(p).then(q => {
           closeLoading()
         })
