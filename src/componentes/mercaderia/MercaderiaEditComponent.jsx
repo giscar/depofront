@@ -109,7 +109,6 @@ const MercaderiaEditComponent = () => {
   const cargarMercaderias = (idIngreso) => {
     showLoading()
     mercaderiaByIngreso(idIngreso).then(response => {
-      debugger
       setMercaderias(response.data)
       closeLoading()
     })
@@ -326,7 +325,6 @@ const MercaderiaEditComponent = () => {
       data.numeroMercaderia = numeroMercaderia
       data.codMercaderia = codMercaderia
       data.estadoMercaderia = "Proceso"
-      debugger
       mercaderiaSave(data).then(response => {
         cargarMercaderias(id)
         ingresoById(id).then(response => {
@@ -753,13 +751,10 @@ const MercaderiaEditComponent = () => {
 
                   {!indSalida &&
                     <div>
-                      <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
+                      <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>&nbsp;&nbsp;
+                      <button className='btn btn-info' onClick={() => handleShowNotaIngreso()}>Generar Nota recepcion</button>
                     </div>
                   }
-
-<button className='btn btn-info' onClick={() => handleShowNotaIngreso()}>Generar Nota recepcion</button>
-<button className='btn btn-danger' onClick={() => handleShowOrdenSalida()}>Generar orden de salida</button>
-
                 </div>
               </div>
             </div>
@@ -903,6 +898,8 @@ const MercaderiaEditComponent = () => {
                         <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
                         &nbsp;&nbsp;
                         <button type="button" className="btn-depo btn-warning-depo" onClick={limpiarMercaderia}>Limpiar</button>
+                        &nbsp;&nbsp;
+                        <button className='btn btn-danger' onClick={() => handleShowOrdenSalida()}>Generar orden de salida</button>
                       </div>
                     }
                     {indSalida &&

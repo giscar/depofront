@@ -2,25 +2,24 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
-import { buscarCodigoNotaRecepcion, clienteForRuc, consultaRuc, ingresoById, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
+import { buscarCodigoNotaRecepcion, clienteForRuc, consultaRuc, ingresoById, mercaderiaSave, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
 
 const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
 
-  const [codNotaIngreso, setCodNotaIngreso] = useState('')
+  const [codigoRecepcion, setCodigoRecepcion] = useState('')
+  const [numeroRecepcion, setNumeroRecepcion] = useState('')
   const [codIngreso, setCodIngreso] = useState('')
-  const [numNotaRecepcion, setNumNotaRecepcion] = useState('')
-  const [codNotaRecepcion, seCodNotaRecepcion] = useState('')
   const [rucAgencia, setRucAgencia] = useState('')
   const [razonSocialAgencia, setRazonSocialAgencia] = useState('')
   const [direccionAgencia, setDireccionAgencia] = useState('')
-  const [rucCliente, setRucCliente] = useState('')
-  const [razonSocialCliente, setRazonSocialCliente] = useState('')
-  const [direccionCliente, setDireccionCliente] = useState('')
+  const [rucEmpresa, setRucEmpresa] = useState('')
+  const [razonSocialEmpresa, setRazonSocialEmpresa] = useState('')
+  const [direccionEmpresa, setDireccionEmpresa] = useState('')
   const [chofer, setChofer] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
   const [fechaRecepcion, setFechaRecepcion] = useState('')
   const [almacenado, setAlmacenado] = useState('')
-
+  const [observaciones, setObservaciones] = useState('')
   const [ingreso, setIngreso] = useState([])
 
   const showLoading = () => {
@@ -52,38 +51,45 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     msgRucAgencia: '',
     msgRazonSocialAgencia: '',
     msgDireccionAgencia: '',
-    msgRucCliente: '',
-    msgRazonSocialCliente: '',
-    msgDireccionCliente: '',
+    msgRucEmpresa: '',
+    msgRazonSocialEmpresa: '',
+    msgDireccionEmpresa: '',
   })
 
-  const handleCodMercaderia = () => {
+  const handleCodRecepcion = () => {
     showLoading()
     buscarCodigoNotaRecepcion().then((response) => {
-      setNumNotaRecepcion(response.data + 1)
-      seCodNotaRecepcion("NOTARECEP" + (response.data + 1).toString().padStart(6, '0'));
+      setNumeroRecepcion(response.data + 1)
+      setCodigoRecepcion("NOTARECEP" + (response.data + 1).toString().padStart(6, '0'));
       closeLoading()
     }).catch(error => {
-      console.log(error);
+      console.log(error)
+      closeLoading()
     })
+    closeLoading()
   }
 
   useEffect(() => {
-    handleCodMercaderia();
+    handleCodRecepcion();
   }, [])
 
 
   const buscaRucAgencia = (e) => {
+    debugger
     e.preventDefault();
     if (rucAgencia.length !== 11) {
       alerta("El RUC debe tener 11 digitos")
       setRucAgencia("")
       return
     }
+    showLoading()
     clienteForRuc(rucAgencia).then(p => {
-      if(p.data.length == 0){
+      if(p.data.length > 0){
+        setRucAgencia(p.data[0].ruc)
+        setRazonSocialAgencia(p.data[0].razonSocial)
+        setDireccionAgencia(p.data[0].direccion)
+      }else{
         consultaRuc(rucAgencia).then(response => {
-          showLoading()
           setRucAgencia(response.data.ruc)
           setRazonSocialAgencia(response.data.razonSocial)
           setDireccionAgencia(response.data.direccion)
@@ -92,29 +98,34 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
           data.razonSocial = response.data.razonSocial
           data.direccion = response.data.direccion
           nuevoCliente(data)
-          closeLoading()
         }).catch(error => {
           console.log(error)
           closeLoading()
         })
       }
+      closeLoading()
     })
   }
 
-  const buscaRucCliente = (e) => {
+  const buscaRucEmpresa = (e) => {
+    debugger
     e.preventDefault();
-    if (rucCliente.length !== 11) {
+    if (rucEmpresa.length !== 11) {
       alerta("El RUC debe tener 11 digitos")
-      setRucCliente("")
+      setRucEmpresa("")
       return
     }
-    clienteForRuc(rucCliente).then(p => {
-      if(p.data.length == 0){
-        consultaRuc(rucCliente).then(response => {
+    clienteForRuc(rucEmpresa).then(p => {
+      if(p.data.length > 0){
+        setRucEmpresa(p.data[0].ruc)
+        setRazonSocialEmpresa(p.data[0].razonSocial)
+        setDireccionEmpresa(p.data[0].direccion)
+      }else{
+        consultaRuc(rucEmpresa).then(response => {
           showLoading()
-          setRucCliente(response.data.ruc)
-          setRazonSocialCliente(response.data.razonSocial)
-          setDireccionCliente(response.data.direccion)
+          setRucEmpresa(response.data.ruc)
+          setRazonSocialEmpresa(response.data.razonSocial)
+          setDireccionEmpresa(response.data.direccion)
           const data = {}
           data.ruc = response.data.ruc
           data.razonSocial = response.data.razonSocial
@@ -122,10 +133,11 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
           nuevoCliente(data)
           closeLoading()
         }).catch(error => {
-          showLoading()
+          closeLoading()
           console.log(error)
         })
       }
+      closeLoading()
     })
   }
 
@@ -149,24 +161,64 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
   }
 
   const saveNotaRecepcion = (e) => {
-    debugger
     e.preventDefault()
-    const data = {}
-    data.numNotaRecepcion = numNotaRecepcion
+    let i = 0
+    mercaderias.map(p => {
+      if(p.idNotaRecepcion){
+        i++
+        
+        
+      }
+    })
+    if(i > 0){
+      alerta("Ya se ingreso la nota de recepcion para esta mercaderia no puede ingresarla por segunda vez")
+      handleClose()
+      return
+    }else{
+      let data = {}
+    let agencia = {}
+    let empresa = {}
+    agencia.ruc = rucAgencia
+    agencia.razonSocial = razonSocialAgencia
+    agencia.direccion  = direccionAgencia
+
+    empresa.ruc = rucEmpresa
+    empresa.razonSocial = razonSocialEmpresa
+    empresa.direccion = direccionEmpresa
+    data.idIngreso = idIngreso
+    data.codigoRecepcion = codigoRecepcion
+    data.agencia = agencia
+    data.empresa = empresa
     data.codIngreso = codIngreso
-    data.codIngreso = codIngreso
-    data.razonSocialAgencia = razonSocialAgencia
-    data.direccionAgencia = direccionAgencia
-    data.rucCliente = rucCliente
-    data.razonSocialCliente = razonSocialCliente
-    data.direccionCliente = direccionCliente
     data.chofer = chofer
     data.placaVehiculo = placaVehiculo
-    data.placaVehiculo = placaVehiculo
-    data.almacenado = almacenado
+    mercaderias.map(p => {
+      //p.idNotaRecepcion = idNotaRecepcion
+      p.numeroNotaRecepcion = numeroRecepcion
+    })
     data.mercaderias = mercaderias
-    notaRecepcionSave(data).then(p => console.log(p))
-      .catch(e => console.log(e))
+    data.almacenado = almacenado
+    data.observaciones = observaciones
+    data.fechaRecepcion = fechaRecepcion
+    debugger
+    showLoading()
+    notaRecepcionSave(data).then( response => {
+      console.log(response.data)
+      mercaderias.map(p => {
+        p.idNotaRecepcion = response.data.id
+        debugger
+        mercaderiaSave(p).then(q => {
+          closeLoading()
+        })
+        closeLoading()
+        handleClose()
+      })
+    }).catch(e => {
+      console.log(e)
+      closeLoading()
+      handleClose()
+    })
+    }
   }
 
   return (
@@ -188,7 +240,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <div className="col-sm-8">
                   <input type="text"
                     placeholder="Nota recepcion"
-                    value={numNotaRecepcion}
+                    value={codigoRecepcion}
                     className="bg-secondary bg-opacity-10 form-control"
                     readOnly>
                   </input>
@@ -206,7 +258,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 </div>
               </div>
               <div className="mb-3 row pb-2">
-                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC:</label>
+                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Agencia:</label>
                 <div className="col-sm-6">
                   <input type="number"
                     placeholder="Ruc de la agencia"
@@ -239,34 +291,33 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Direccion agencia"
                     value={direccionAgencia}
                     className="bg-secondary bg-opacity-10 form-control"
-                    onChange={(e) => { setDireccionAgencia(e.target.value) }}
-                  >
+                    onChange={(e) => { setDireccionAgencia(e.target.value) }}>
                   </input>
                 </div>
               </div>
               <div className="mb-3 row pb-2">
-                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Cliente:</label>
+                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Empresa:</label>
                 <div className="col-sm-6">
                   <input type="number"
-                    placeholder="Ruc del cliente"
-                    value={rucCliente}
+                    placeholder="Ruc de la Empresa"
+                    value={rucEmpresa}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucCliente ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucCliente(e.target.value) }}
+                    className={`form-control-depo ${errors.msgRucEmpresa ? ' is-invalid' : ''}`}
+                    onChange={(e) => { setRucEmpresa(e.target.value) }}
                   />
-                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucCliente}</div>}
+                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucEmpresa}</div>}
                 </div>
                 <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucCliente}>Buscar</button>
+                  <button className='btn btn-primary' onClick={buscaRucEmpresa}>Buscar</button>
                 </div>
               </div>
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Razon Social cliente:</label>
+                <label className="col-sm-4 col-form-label-zise">Razon Social Empresa:</label>
                 <div className="col-sm-8">
                   <input type="text"
                     placeholder="Razon social del cliente"
-                    value={razonSocialCliente}
-                    onChange={(e) => { setRazonSocialCliente(e.target.value) }}
+                    value={razonSocialEmpresa}
+                    onChange={(e) => { setRazonSocialEmpresa(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
                     readOnly>
                   </input>
@@ -274,12 +325,12 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
               </div>
 
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Direccion cliente:</label>
+                <label className="col-sm-4 col-form-label-zise">Direccion Empresa:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Direccion del cliente"
-                    value={direccionCliente}
-                    onChange={(e) => { setDireccionCliente(e.target.value) }}
+                    placeholder="Direccion de la Empresa"
+                    value={direccionEmpresa}
+                    onChange={(e) => { setDireccionEmpresa(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control"
                     readOnly>
                   </input>
@@ -314,7 +365,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Fecha recepcion:</label>
                 <div className="col-sm-8">
                   <input type="date"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Ingrese la fecha de recepcion"
                     value={fechaRecepcion}
                     onChange={(e) => { setFechaRecepcion(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control">
@@ -326,9 +377,21 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Almacenado:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="ingrese el detalle almacenado"
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
+                    className="bg-secondary bg-opacity-10 form-control">
+                  </input>
+                </div>
+              </div>
+
+              <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
+                <div className="col-sm-8">
+                  <input type="text"
+                    placeholder="Ingrese observaciones"
+                    value={observaciones}
+                    onChange={(e) => { setObservaciones(e.target.value) }}
                     className="bg-secondary bg-opacity-10 form-control">
                   </input>
                 </div>
@@ -336,9 +399,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
             </Form.Group>
           </Form>
           <br />
-          <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
-        </Modal.Body>
-        <Modal.Footer>
           <div className="table-responsive">
             <table className="table mb-0">
               <thead className="thead-light">
@@ -381,10 +441,13 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
               </tbody>
             </table>
           </div>
-          <button className='btn btn-warning'>Descargar Nota de ingreso</button>
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
+          <button className='btn btn-danger' onClick={handleClose}>Cancelar</button>
         </Modal.Footer>
       </Modal>
     </>
-  );
+  )
 }
 export default MercaderiaNotaRecepcionComponent;
