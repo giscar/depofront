@@ -97,12 +97,12 @@ const MercaderiaNuevoComponent = () => {
     }
 
     if (tipoMercaderia == "Nacionalizada") {
-      if (pedidoDeposito) {
+      /*if (pedidoDeposito) {
         errorCopy.msgPedidoDeposito = '';
       } else {
         errorCopy.msgPedidoDeposito = 'Tiene que numero de Pedido de Deposito';
         valid = false;
-      }
+      }*/
 
       if (codigoDua) {
         errorCopy.msgCodigoDua = '';
@@ -265,7 +265,7 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Numero de RUC:</label>
+                    <label className="col-sm-4 col-form-label-zise">RUC del dueño:</label>
                     <div className="col-sm-8">
                       <input type="number"
                         placeholder="Ingrese el numero de RUC"
@@ -280,7 +280,7 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Razon Social:</label>
+                    <label className="col-sm-4 col-form-label-zise">Razon Social del dueño:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder='Razon Social'
@@ -293,7 +293,7 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Dirección:</label>
+                    <label className="col-sm-4 col-form-label-zise">Dirección del dueño:</label>
                     <div className="col-sm-8">
                       <input type='text'
                         placeholder='Dirección'

@@ -1,30 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { usuarioForRoles } from "../../service/FacturaService";
 
-const LoginComponent = () => {
+const ReclamosComponent = () => {
     const [inputUsername, setInputUsername] = useState("");
     const [inputPassword, setInputPassword] = useState("");
 
-    sessionStorage.setItem('user', {})
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        usuarioForRoles(inputUsername, inputPassword).then((response) => {
-            if (response.data) {
-                sessionStorage.setItem('user', JSON.stringify(response.data))
-                acceder()
-            }
-        }).catch(error => {
-            console.log(error);
-        })
-    };
-
-    const navigator = useNavigate();
-
-    const acceder = () => {
-        navigator("/inicio")
-    }
 
     return (
         <>
@@ -40,8 +19,8 @@ const LoginComponent = () => {
                                                 <a href="index.html" className="logo logo-admin">
                                                     <img src="/Logo.png" height="50" alt="logo" className="auth-logo" />
                                                 </a>
-                                                <h4 className="mt-3 mb-1 fw-semibold font-18">Sistema Integral de Almacenes y Servicios Depovent</h4>
-                                                <p className="text-muted  mb-0">Acceder al sistema.</p>
+                                                <h4 className="mt-3 mb-1 fw-semibold font-18">Intranet de Depovent</h4>
+                                                <p className="text-muted  mb-0">Solo usuarios permitidos pueden ingresar a la intranetß.</p>
                                             </div>
                                         </div>
                                         <div className="card-body pt-0">
@@ -75,7 +54,7 @@ const LoginComponent = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6 text-end">
-                                                        <a href="auth-recover-pw.html" className="col-form-label-zise "><i className="dripicons-lock"></i> Olvido su contraseña?</a>
+                                                        
                                                     </div>
                                                 </div>
 
@@ -89,38 +68,11 @@ const LoginComponent = () => {
                                                     </div>
                                                 </div>
                                             </form>
-                                            <div className="m-3 text-center text-muted">
-                                                <p className="mb-0">No cuenta con un acceso ?  <a href="auth-register-alt.html" className="text-primary ms-2"></a></p>
-                                            </div>
-                                            <hr className="hr-dashed mt-4" />
-                                            <div className="text-center mt-n5">
-                                                <h6 className="card-bg px-3 my-4 d-inline-block">Acceder por:</h6>
-                                            </div>
-                                            <div className="d-flex justify-content-center mb-1">
-                                                <a href="" className="d-flex justify-content-center align-items-center thumb-sm bg-soft-primary rounded-circle me-2">
-                                                    <i className="fab fa-facebook align-self-center"></i>
-                                                </a>
-                                                <a href="" className="d-flex justify-content-center align-items-center thumb-sm bg-soft-info rounded-circle me-2">
-                                                    <i className="fab fa-twitter align-self-center"></i>
-                                                </a>
-                                                <a href="" className="d-flex justify-content-center align-items-center thumb-sm bg-soft-danger rounded-circle">
-                                                    <i className="fab fa-google align-self-center"></i>
-                                                </a>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-7 col-xl-9 col-lg-8  p-0 vh-100 d-flex justify-content-center auth-bg">
-                                    <div className="accountbg d-flex align-items-center">
-                                        <div className="account-title text-center text-white">
-                                            <img src="/Logo.png" height="150" alt="" className="thumb" />
-                                            <h4 className="mt-3 text-white">Bienvenido al <span className="text-warning">Sistema Integral de Almacenes y Servicios Depovent</span> </h4>
-                                            <h1 className="text-white">Acceso al sistema</h1>
-                                            <p className="font-18 mt-3">Solo personal autorizado por el administrador de usuarios podra acceder al sistema.</p>
-                                            <div className="border w-25 mx-auto border-warning"></div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -130,4 +82,4 @@ const LoginComponent = () => {
     );
 };
 
-export default LoginComponent;
+export default ReclamosComponent;

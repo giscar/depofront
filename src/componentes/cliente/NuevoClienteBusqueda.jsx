@@ -43,11 +43,9 @@ const NuevoClienteBusqueda = ({ show, handleClose, setCliente }) => {
       return
     }
     clienteForRuc(ruc).then(p => {
-      debugger
       showLoading()
       if (p.data.length == 0) {
         consultaRuc(ruc).then(response => {
-          debugger
           showLoading()
           setRuc(response.data.ruc)
           setRazonSocial(response.data.razonSocial)
@@ -62,6 +60,10 @@ const NuevoClienteBusqueda = ({ show, handleClose, setCliente }) => {
           console.log(error)
           closeLoading()
         })
+      }
+      if(p.data.length > 0){
+        alerta("El RUC que se desea ingresar ya existe en el sistema")
+        closeLoading()
       }
       closeLoading()
     })

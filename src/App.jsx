@@ -36,6 +36,8 @@ import FacturaViewComponent from './componentes/factura/FacturaViewComponent'
 import MercaderiaNuevoComponent from './componentes/mercaderia/MercaderiaNuevoComponent'
 import MercaderiaComponent from './componentes/mercaderia/MercaderiaComponent'
 import MercaderiaEditComponent from './componentes/mercaderia/MercaderiaEditComponent'
+import IntranetComponent from './componentes/intranet/IntranetComponent'
+
 
 function App() {
 
@@ -46,6 +48,7 @@ function App() {
           <Routes>
             <Route path='/' element={<LoginComponent/>}></Route>
             <Route path='/inicio' element={<InicioComponent />}></Route>
+            <Route path='/intranet' element={<IntranetComponent />}></Route>
             <Route path='/facturas' element={<FacturaListaComponent />}></Route>
             <Route path='/NuevaFactura' element={<FacturaComponent />}></Route>
             <Route path='/facturaRegistro/:ids' element={<FacturaRegistroComponent />}></Route>
@@ -78,7 +81,6 @@ function App() {
             <Route path='/mercaderia' element={<MercaderiaComponent />}></Route>
             <Route path='/mercaderiaNuevo' element={<MercaderiaNuevoComponent />}></Route>
             <Route path='/mercaderiaEdit/:id' element={<MercaderiaEditComponent />}></Route>
-            
 
           </Routes>
           <ToastContainer />
