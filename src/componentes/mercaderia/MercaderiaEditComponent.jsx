@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaSave, salidaSave } from '../../service/FacturaService';
+import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaEdit, mercaderiaSave, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 import Swal from 'sweetalert2'
@@ -25,6 +25,7 @@ const MercaderiaEditComponent = () => {
   const [ingreso, setIngreso] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
 
+  const [idMercaderia, setIdMercaderia] = useState('')
   const [numeroMercaderia, setNumeroMercaderia] = useState('')
   const [codMercaderia, setCodMercaderia] = useState('')
   const [mercaderia, setMercaderia] = useState('')
@@ -44,6 +45,7 @@ const MercaderiaEditComponent = () => {
   const [numeroMercaderiaSeleccionada, setNumeroMercaderiaSeleccionada] = useState('')
 
   const [indSalida, setIndSalida] = useState(false)
+  const [indEdita, setIndEdita] = useState(false)
   const [cantidadSalida, setCantidadSalida] = useState('')
   const [descripcionSalida, setDescripcionSalida] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
@@ -109,6 +111,7 @@ const MercaderiaEditComponent = () => {
   const cargarMercaderias = (idIngreso) => {
     showLoading()
     mercaderiaByIngreso(idIngreso).then(response => {
+      debugger
       setMercaderias(response.data)
       closeLoading()
     })
@@ -124,7 +127,6 @@ const MercaderiaEditComponent = () => {
     setRazonSocial(data.razonSocial)
     setDireccion(data.direccion)
     setDescripcion(data.descripcion)
-    setPedidoDeposito(data.pedidoDeposito)
     setTipoMercaderia(data.tipoMercaderia)
     setEstadoRegistro(data.estadoRegistro)
     setIngreso(data)
@@ -274,11 +276,20 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
-    if (unidadMedida?.codigo) {
-      errorCopy.msgUnidadMedida = '';
-    } else {
-      errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
-      valid = false;
+    if(!indEdita){
+      if (unidadMedida?.codigo) {
+        errorCopy.msgUnidadMedida = '';
+      } else {
+        errorCopy.msgUnidadMedida = 'Tiene que ingresar la unidad de medida';
+        valid = false;
+      }
+
+      if (almacen?.codigo) {
+        errorCopy.msgAlmacen = '';
+      } else {
+        errorCopy.msgAlmacen = 'Tiene que ingresar el almacen de destino';
+        valid = false;
+      }
     }
 
     if (cantidad) {
@@ -292,13 +303,6 @@ const MercaderiaEditComponent = () => {
       errorCopy.msgFechaIngreso = '';
     } else {
       errorCopy.msgFechaIngreso = 'Tiene que ingresar la fecha de ingreso de la mercaderia';
-      valid = false;
-    }
-
-    if (almacen?.codigo) {
-      errorCopy.msgAlmacen = '';
-    } else {
-      errorCopy.msgAlmacen = 'Tiene que ingresar el almacen de destino';
       valid = false;
     }
 
@@ -326,6 +330,53 @@ const MercaderiaEditComponent = () => {
       data.codMercaderia = codMercaderia
       data.estadoMercaderia = "Proceso"
       mercaderiaSave(data).then(response => {
+        cargarMercaderias(id)
+        ingresoById(id).then(response => {
+          response.data.estadoRegistro = "Proceso"
+          ingresoSave(response.data).then(respon => {
+            cargarIngreso(respon.data)
+            notify()
+            handleCodMercaderia()
+            closeLoading()
+          }).catch(error => {
+            console.log(error)
+            closeLoading()
+          })
+        }).catch(error => {
+          console.log(error)
+          closeLoading()
+        })
+      }).catch(error => {
+        console.log(error)
+        closeLoading()
+      })
+      limpiarMercaderia()
+      closeLoading()
+    }
+  }
+
+  const editarMercaderia = (e) => {
+    e.preventDefault()
+    if (validateMercaderia()) {
+      showLoading()
+      const data = {}
+      data.id = idMercaderia
+      data.idIngreso = id
+      data.codIngreso = codIngreso
+      data.productoCodigo = productoCodigo
+      data.descripcionProducto = descripcionProducto?.toUpperCase()
+      data.unidadMedida = unidadMedida[0]
+      data.almacen = almacen[0]
+      data.cantidad = cantidad
+      data.cantidadOrignal = cantidad
+      data.fechaIngreso = fechaIngreso
+      data.observaciones = observaciones
+      data.serie = serie
+      data.numeroMercaderia = numeroMercaderia
+      data.codMercaderia = codMercaderia
+      data.estadoMercaderia = "Proceso"
+      mercaderiaEdit(data).then(response => {
+        setIndEdita(false)
         cargarMercaderias(id)
         ingresoById(id).then(response => {
           response.data.estadoRegistro = "Proceso"
@@ -402,7 +453,6 @@ const MercaderiaEditComponent = () => {
     navigator(`/mercaderiaEdit/${id}`)
   }
 
-
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -460,6 +510,20 @@ const MercaderiaEditComponent = () => {
   const seleccionarSalida = (idMercaderia) => {
     showLoading()
     setIndSalida(true)
+    setIndEdita(false)
+    mercaderiaById(idMercaderia).then(response => {
+      cargarMercaderia(response.data)
+      setMercaderia(response.data)
+      closeLoading()
+    }).catch(error => {
+      console.error(error)
+    })
+  }
+
+  const seleccionarEdit = (idMercaderia) => {
+    showLoading()
+    setIndSalida(false)
+    setIndEdita(true)
     mercaderiaById(idMercaderia).then(response => {
       cargarMercaderia(response.data)
       setMercaderia(response.data)
@@ -481,7 +545,6 @@ const MercaderiaEditComponent = () => {
       data.descripcionSalida = descripcionSalida
       data.fechaSalida = fechaSalida
       data.usuarioRegistro = initialLogin.documento
-      debugger
       data.idCodIngreso = codIngreso
       salidaSave(data).then(response => {
         mercaderiaById(mercaderia.id).then(response => {
@@ -583,6 +646,7 @@ const MercaderiaEditComponent = () => {
     setErrors(errorCopy);
     return valid;
   }
+  
 
   const cargarMercaderia = (data) => {
     setNumeroMercaderia(data.numeroMercaderia)
@@ -590,11 +654,20 @@ const MercaderiaEditComponent = () => {
     setProductoCodigo(data.productoCodigo)
     setSerie(data.serie)
     setDescripcionProducto(data.descripcionProducto)
-    setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida))
-    setAlmacen(catalogoAlmacen.filter(p => p.codigo == data.almacen))
+    setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida.codigo))
+    setAlmacen(catalogoAlmacen.filter(p => p.codigo == data.almacen.codigo))
     setFechaIngreso(data.fechaIngreso.substring(0, 10))
     setObservaciones(data.observaciones)
+    setIdMercaderia(data.id)
     setMercaderia(data)
+  }
+
+  const formatearFecha = (fec) => {
+    //2024-11-02
+    let dia = fec.substring(8, 10)
+    let mes = fec.substring(5, 7)
+    let anho = fec.substring(0, 4)
+    return `${dia}/${mes}/${anho}`
   }
 
   return (
@@ -848,9 +921,8 @@ const MercaderiaEditComponent = () => {
                           placeholder='Cantidad de productos'
                           value={cantidad}
                           onChange={(e) => { setCantidad(e.target.value) }}
-                          className={`form-control-depo ${errors.msgCantidad ? 'is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                          autoComplete='off'
-                          disabled={indSalida}>
+                          className={`form-control-depo ${errors.msgCantidad ? 'is-invalid' : ''}`}
+                          autoComplete='off'>
                         </input>
                         {errors.msgCantidad && <div className='invalid-feedback'>{errors.msgCantidad}</div>}
                       </div>
@@ -861,9 +933,8 @@ const MercaderiaEditComponent = () => {
                       <div className="col-sm-8">
                         <input type="date"
                           value={fechaIngreso}
-                          className={`form-control-depo ${errors.msgFechaIngreso ? 'is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                          onChange={(e) => { setFechaIngreso(e.target.value) }}
-                          disabled={indSalida}>
+                          className={`form-control-depo ${errors.msgFechaIngreso ? 'is-invalid' : ''} `}
+                          onChange={(e) => { setFechaIngreso(e.target.value) }}>
                         </input>
                         {errors.msgFechaIngreso && <div className='invalid-feedback'>{errors.msgFechaIngreso}</div>}
                       </div>
@@ -897,7 +968,12 @@ const MercaderiaEditComponent = () => {
                     </div>
                     {!indSalida &&
                       <div>
-                        <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                        {indEdita &&
+                          <button type="button" className="btn-depo btn-primary-depo" onClick={editarMercaderia}>Editar mercaderia</button>
+                        }
+                        {!indEdita &&
+                          <button type="button" className="btn-depo btn-primary-depo" onClick={agregarMercaderia}>Agregar mercaderia</button>
+                        }
                         &nbsp;&nbsp;
                         <button type="button" className="btn-depo btn-warning-depo" onClick={limpiarMercaderia}>Limpiar</button>
                         &nbsp;&nbsp;
@@ -945,6 +1021,7 @@ const MercaderiaEditComponent = () => {
                             </div>
                           </div>
                         </div>
+                        
                         <button type="button" className="btn-depo btn-warning-depo" onClick={registrarSalida}>Guardar salida</button>
                         &nbsp;&nbsp;
                         <button type="button" className="btn-depo btn-danger-depo" onClick={cancelarSalida}>Cancelar Salida</button>
@@ -994,7 +1071,7 @@ const MercaderiaEditComponent = () => {
                                 <td className='td-th-size-depo'>{mercaderia.unidadMedida.descripcion}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
-                                <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
+                                <td className='td-th-size-depo'>{formatearFecha(mercaderia.fechaIngreso.split("T")[0])}</td>
                                 <td className='td-th-size-depo'>{mercaderia.almacen.descripcion}</td>
                                 <td className='td-th-size-depo'>
                                   {mercaderia.estadoMercaderia === "Sin mercaderia" &&
@@ -1009,8 +1086,12 @@ const MercaderiaEditComponent = () => {
 
                                 </td>
                                 <td className='td-th-size-depo'>
-                                  <a className='icon-link-depo' onClick={() => seleccionarSalida(mercaderia.id)}>
+                                  <a className='icon-link-depo' onClick={() => seleccionarEdit(mercaderia.id)}>
                                     <i className="bi bi-pencil-fill"></i>
+                                  </a>
+                                  &nbsp;&nbsp;
+                                  <a className='icon-link-depo' onClick={() => seleccionarSalida(mercaderia.id)}>
+                                    <i className="bi bi-arrow-right-circle-fill"></i>
                                   </a>
                                   &nbsp;&nbsp;
                                   <a className='icon-link-depo' onClick={() => handleShowSalida(mercaderia.numeroMercaderia)}>
