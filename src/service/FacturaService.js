@@ -203,6 +203,8 @@ export const salidaByNumeroMercaderia = (numeroMercaderia) => axios.get(REST_API
 
 export const notaRecepcionById = (id) => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"?id="+id);
 
+export const notaRecepciondByIdIngreso = (idIngreso) => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"/findByIdIngreso?idIngreso="+idIngreso);
+
 export const notaRecepcionSave = (notaRecepcion) => axios.post(REST_API_BASE_URL_NOTA_RECEPCION, notaRecepcion);
 
 export const buscarCodigoNotaRecepcion = () => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"/maxNotaRecepcion"); 

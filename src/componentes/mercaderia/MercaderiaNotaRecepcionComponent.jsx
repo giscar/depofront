@@ -46,16 +46,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     })
   }
 
-  const [errors, setErrors] = useState({
-    msgCodIngreso: '',
-    msgRucAgencia: '',
-    msgRazonSocialAgencia: '',
-    msgDireccionAgencia: '',
-    msgRucEmpresa: '',
-    msgRazonSocialEmpresa: '',
-    msgDireccionEmpresa: '',
-  })
-
   const handleCodRecepcion = () => {
     showLoading()
     buscarCodigoNotaRecepcion().then((response) => {
@@ -73,9 +63,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     handleCodRecepcion();
   }, [])
 
-
   const buscaRucAgencia = (e) => {
-    debugger
     e.preventDefault();
     if (rucAgencia.length !== 11) {
       alerta("El RUC debe tener 11 digitos")
@@ -157,16 +145,21 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
 
   const cargarNotaIngreso = (data) => {
     setCodIngreso(data.codIngreso)
+    setDireccionEmpresa(data.direccion)
+    setRazonSocialEmpresa(data.razonSocial)
+    setRucEmpresa(data.ruc)
   }
 
   const saveNotaRecepcion = (e) => {
     e.preventDefault()
+    if (!validateForm()) {
+      alerta("Debe ingresar todos los valores")
+      return
+    }
     let i = 0
     mercaderias.map(p => {
       if(p.idNotaRecepcion){
         i++
-        
-        
       }
     })
     if(i > 0){
@@ -189,8 +182,8 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     data.agencia = agencia
     data.empresa = empresa
     data.codIngreso = codIngreso
-    data.chofer = chofer
-    data.placaVehiculo = placaVehiculo
+    data.chofer = chofer?.toUpperCase()
+    data.placaVehiculo = placaVehiculo?.toUpperCase()
     mercaderias.map(p => {
       //p.idNotaRecepcion = idNotaRecepcion
       p.numeroNotaRecepcion = numeroRecepcion
@@ -210,12 +203,112 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
         closeLoading()
         handleClose()
       })
+      notify()
     }).catch(e => {
       console.log(e)
       closeLoading()
       handleClose()
     })
     }
+  }
+
+  const [errors, setErrors] = useState({
+    msgCodigoRecepcion: '',
+    msgCodIngreso: '',
+    msgRucAgencia: '',
+    msgRazonSocialAgencia: '',
+    msgDireccionAgencia: '',
+    msgRucEmpresa: '',
+    msgRazonSocialEmpresa: '',
+    msgDireccionEmpresa: '',
+    msgChofer: '',
+    msgPlacaVehiculo: '',
+  })
+
+  const validateForm = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+    const regex = /^[0-9]*$/;
+
+    if (codigoRecepcion) {
+      errorCopy.msgCodigoRecepcion = '';
+    } else {
+      errorCopy.msgCodigoRecepcion = 'El codigo de la nota de recepcion no se ha generado';
+      valid = false;
+    }
+
+    if (codIngreso) {
+      errorCopy.msgCodIngreso = '';
+    } else {
+      errorCopy.msgCodIngreso = 'El codigo de ingreso no se generado';
+      valid = false;
+    }
+
+    if (rucAgencia) {
+      errorCopy.msgRucAgencia = '';
+    } else {
+      errorCopy.msgRucAgencia = 'No se ha ingresado el RUC de la agencia';
+      valid = false;
+    }
+    
+    if (razonSocialAgencia) {
+      errorCopy.msgRazonSocialAgencia = '';
+    } else {
+      errorCopy.msgRazonSocialAgencia = 'No se ha ingresado la razon social de la agencia';
+      valid = false;
+    }
+
+    if (direccionAgencia) {
+      errorCopy.msgDireccionAgencia = '';
+    } else {
+      errorCopy.msgDireccionAgencia = 'No se ha ingresado la direccion de la agencia';
+      valid = false;
+    }
+
+    if (rucEmpresa) {
+      errorCopy.msgRucEmpresa = '';
+    } else {
+      errorCopy.msgRucEmpresa = 'No se ha generado el RUC de la empresa';
+      valid = false;
+    }
+    
+    if (razonSocialEmpresa) {
+      errorCopy.msgRazonSocialEmpresa = '';
+    } else {
+      errorCopy.msgRazonSocialEmpresa = 'No se ha generado la razon social de la empresa';
+      valid = false;
+    }
+
+    if (direccionEmpresa) {
+      errorCopy.msgDireccionEmpresa = '';
+    } else {
+      errorCopy.msgDireccionEmpresa = 'No se ha generado la direccion de la empresa';
+      valid = false;
+    }
+
+    if (chofer) {
+      errorCopy.msgChofer = '';
+    } else {
+      errorCopy.msgChofer = 'No se ha ingresado el nombre del chofer';
+      valid = false;
+    }
+
+    if (placaVehiculo) {
+      errorCopy.msgPlacaVehiculo = '';
+    } else {
+      errorCopy.msgPlacaVehiculo = 'No se ha ingresado la placa del vehiculo';
+      valid = false;
+    }
+
+    if (fechaRecepcion) {
+      errorCopy.msgFechaRecepcion = '';
+    } else {
+      errorCopy.msgFechaRecepcion = 'No se ha generado la direccion de la empresa';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+    return valid;
   }
 
   return (
@@ -238,9 +331,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Nota recepcion"
                     value={codigoRecepcion}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgCodigoRecepcion ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
+                  {errors.msgCodigoRecepcion && <div className='invalid-feedback'>{errors.msgCodigoRecepcion}</div>}
                 </div>
               </div>
               <div className="mb-3 row">
@@ -249,9 +343,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Codigo del Ingreso"
                     value={codIngreso}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgCodIngreso ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
+                  {errors.msgCodIngreso && <div className='invalid-feedback'>{errors.msgCodIngreso}</div>}
                 </div>
               </div>
               <div className="mb-3 row pb-2">
@@ -275,10 +370,11 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Razon social agencia"
                     value={razonSocialAgencia}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgRazonSocialAgencia ? ' is-invalid' : ''}`}
                     onChange={(e) => { setRazonSocialAgencia(e.target.value) }}
                     readOnly>
                   </input>
+                  {errors.msgRazonSocialAgencia && <div className='invalid-feedback'>{errors.msgRazonSocialAgencia}</div>}
                 </div>
               </div>
               <div className="mb-3 row">
@@ -287,9 +383,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Direccion agencia"
                     value={direccionAgencia}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgDireccionAgencia ? ' is-invalid' : ''}`}
                     onChange={(e) => { setDireccionAgencia(e.target.value) }}>
                   </input>
+                  {errors.msgDireccionAgencia && <div className='invalid-feedback'>{errors.msgDireccionAgencia}</div>}
                 </div>
               </div>
               <div className="mb-3 row pb-2">
@@ -301,12 +398,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     maxlength="11"
                     className={`form-control-depo ${errors.msgRucEmpresa ? ' is-invalid' : ''}`}
                     onChange={(e) => { setRucEmpresa(e.target.value) }}
-                  />
-                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucEmpresa}</div>}
+                    readOnly/>
+                  {errors.msgRucEmpresa && <div className='invalid-feedback'>{errors.msgRucEmpresa}</div>}
                 </div>
-                <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucEmpresa}>Buscar</button>
-                </div>
+                
               </div>
               <div className="mb-3 row">
                 <label className="col-sm-4 col-form-label-zise">Razon Social Empresa:</label>
@@ -315,9 +410,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Razon social del cliente"
                     value={razonSocialEmpresa}
                     onChange={(e) => { setRazonSocialEmpresa(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgRazonSocialEmpresa ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
+                  {errors.msgRazonSocialEmpresa && <div className='invalid-feedback'>{errors.msgRazonSocialEmpresa}</div>}
                 </div>
               </div>
 
@@ -328,9 +424,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Direccion de la Empresa"
                     value={direccionEmpresa}
                     onChange={(e) => { setDireccionEmpresa(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    className={`form-control-depo ${errors.msgDireccionEmpresa ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
+                  {errors.msgDireccionEmpresa && <div className='invalid-feedback'>{errors.msgDireccionEmpresa}</div>}
                 </div>
               </div>
 
@@ -341,8 +438,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={chofer}
                     onChange={(e) => { setChofer(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control">
+                    className={`form-control-depo ${errors.msgChofer ? ' is-invalid' : ''}`}>
                   </input>
+                  {errors.msgChofer && <div className='invalid-feedback'>{errors.msgChofer}</div>}
                 </div>
               </div>
 
@@ -353,8 +451,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Codigo del Ingreso"
                     value={placaVehiculo}
                     onChange={(e) => { setPlacaVehiculo(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control">
+                    className={`form-control-depo ${errors.msgPlacaVehiculo ? ' is-invalid' : ''}`}>
                   </input>
+                  {errors.msgPlacaVehiculo && <div className='invalid-feedback'>{errors.msgPlacaVehiculo}</div>}
                 </div>
               </div>
 
@@ -365,8 +464,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ingrese la fecha de recepcion"
                     value={fechaRecepcion}
                     onChange={(e) => { setFechaRecepcion(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control">
+                    className={`form-control-depo ${errors.msgFechaRecepcion ? ' is-invalid' : ''}`}>
                   </input>
+                  {errors.msgFechaRecepcion && <div className='invalid-feedback'>{errors.msgFechaRecepcion}</div>}
                 </div>
               </div>
 

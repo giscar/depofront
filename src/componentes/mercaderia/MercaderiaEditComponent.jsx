@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent'
 import { toast } from 'react-toastify';
 import HeaderComponent from '../HeaderComponent';
-import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaEdit, mercaderiaSave, salidaSave } from '../../service/FacturaService';
+import { buscarCodigoMercaderia, catalogoByTipo, ingresoById, ingresoEdit, ingresoSave, mercaderiaById, mercaderiaByIngreso, mercaderiaEdit, mercaderiaSave, notaRecepciondByIdIngreso, salidaSave } from '../../service/FacturaService';
 import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 import Swal from 'sweetalert2'
@@ -46,6 +46,7 @@ const MercaderiaEditComponent = () => {
 
   const [indSalida, setIndSalida] = useState(false)
   const [indEdita, setIndEdita] = useState(false)
+  const [indNotaRecepcion, setIndNotaRecepcion] = useState(false)
   const [cantidadSalida, setCantidadSalida] = useState('')
   const [descripcionSalida, setDescripcionSalida] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
@@ -84,7 +85,13 @@ const MercaderiaEditComponent = () => {
     showLoading()
     buscarCodigoMercaderia().then((response) => {
       setCodMercaderia(response.data + 1)
-      setNumeroMercaderia("MER" + (response.data + 1).toString().padStart(6, '0'));
+      setNumeroMercaderia("MER" + (response.data + 1).toString().padStart(6, '0'))
+      notaRecepciondByIdIngreso(id).then(p =>{
+        console.log(p)
+        if(p.data){
+          setIndNotaRecepcion(true)
+        }
+      })
       closeLoading()
     }).catch(error => {
       console.log(error);
@@ -111,7 +118,6 @@ const MercaderiaEditComponent = () => {
   const cargarMercaderias = (idIngreso) => {
     showLoading()
     mercaderiaByIngreso(idIngreso).then(response => {
-      debugger
       setMercaderias(response.data)
       closeLoading()
     })
@@ -317,7 +323,7 @@ const MercaderiaEditComponent = () => {
       const data = {}
       data.idIngreso = id
       data.codIngreso = codIngreso
-      data.productoCodigo = productoCodigo
+      data.productoCodigo = productoCodigo?.toUpperCase()
       data.descripcionProducto = descripcionProducto?.toUpperCase()
       data.unidadMedida = unidadMedida
       data.almacen = almacen
@@ -326,7 +332,7 @@ const MercaderiaEditComponent = () => {
       data.fechaIngreso = fechaIngreso
       data.observaciones = observaciones
       data.serie = serie
-      data.numeroMercaderia = numeroMercaderia
+      data.numeroMercaderia = numeroMercaderia?.toUpperCase()
       data.codMercaderia = codMercaderia
       data.estadoMercaderia = "Proceso"
       mercaderiaSave(data).then(response => {
@@ -363,7 +369,7 @@ const MercaderiaEditComponent = () => {
       data.id = idMercaderia
       data.idIngreso = id
       data.codIngreso = codIngreso
-      data.productoCodigo = productoCodigo
+      data.productoCodigo = productoCodigo?.toUpperCase()
       data.descripcionProducto = descripcionProducto?.toUpperCase()
       data.unidadMedida = unidadMedida[0]
       data.almacen = almacen[0]
@@ -372,7 +378,7 @@ const MercaderiaEditComponent = () => {
       data.fechaIngreso = fechaIngreso
       data.observaciones = observaciones
       data.serie = serie
-      data.numeroMercaderia = numeroMercaderia
+      data.numeroMercaderia = numeroMercaderia?.toUpperCase()
       data.codMercaderia = codMercaderia
       data.estadoMercaderia = "Proceso"
       mercaderiaEdit(data).then(response => {
@@ -402,8 +408,13 @@ const MercaderiaEditComponent = () => {
     }
   }
 
+  const descargarNotaRecepcion = () =>{
+    e.preventDefault()
+    console.log("entro")
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (validateForm()) {
       showLoading()
       const data = {}
@@ -649,9 +660,9 @@ const MercaderiaEditComponent = () => {
   
 
   const cargarMercaderia = (data) => {
-    setNumeroMercaderia(data.numeroMercaderia)
+    setNumeroMercaderia(data.numeroMercaderia?.toUpperCase())
     setCantidad(data.cantidad)
-    setProductoCodigo(data.productoCodigo)
+    setProductoCodigo(data.productoCodigo?.toUpperCase())
     setSerie(data.serie)
     setDescripcionProducto(data.descripcionProducto)
     setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida.codigo))
@@ -659,6 +670,7 @@ const MercaderiaEditComponent = () => {
     setFechaIngreso(data.fechaIngreso.substring(0, 10))
     setObservaciones(data.observaciones)
     setIdMercaderia(data.id)
+    setCodMercaderia(data.codMercaderia)
     setMercaderia(data)
   }
 
@@ -824,10 +836,16 @@ const MercaderiaEditComponent = () => {
                     </div>
                   </div>
 
-                  {!indSalida &&
+                  {!indSalida && !indNotaRecepcion &&
                     <div>
                       <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>&nbsp;&nbsp;
                       <button className='btn btn-info' onClick={() => handleShowNotaIngreso()}>Generar Nota recepcion</button>
+                    </div>
+                  }
+                  {indNotaRecepcion &&
+                    <div>
+                      <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
+                      <button className='btn btn-warning' onClick={() => handleShowNotaIngreso()}>Descargar Nota recepcion</button>
                     </div>
                   }
                 </div>
