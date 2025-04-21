@@ -128,12 +128,15 @@ const ServicioEditComponent = () => {
   const validateForm = () => {
     let valid = true;
     const errorCopy = { ...errors }
-    if (horaSalidaLocal) {
-      errorCopy.msgHoraSalidaLocal = '';
-    } else {
-      errorCopy.msgHoraSalidaLocal = 'Tiene que ingresar la hora de salida de Depovent';
-      valid = false;
+    if(tipoServicio == "Externo"){
+      if (horaSalidaLocal) {
+        errorCopy.msgHoraSalidaLocal = '';
+      } else {
+        errorCopy.msgHoraSalidaLocal = 'Tiene que ingresar la hora de salida de Depovent';
+        valid = false;
+      }
     }
+    
     if (horaFinServicio) {
       errorCopy.msgHoraFinServicio = '';
     } else {
@@ -146,12 +149,15 @@ const ServicioEditComponent = () => {
       errorCopy.msgHoraInicioServicio = 'Tiene que ingresar la hora de fin del servicio';
       valid = false;
     }
-    if (horaRetornoLocal) {
-      errorCopy.msgHoraRetornoLocal = '';
-    } else {
-      errorCopy.msgHoraRetornoLocal = 'Tiene que ingresar la hora de retorno a Depovent';
-      valid = false;
+    if(tipoServicio == "Externo"){
+      if (horaRetornoLocal) {
+        errorCopy.msgHoraRetornoLocal = '';
+      } else {
+        errorCopy.msgHoraRetornoLocal = 'Tiene que ingresar la hora de retorno a Depovent';
+        valid = false;
+      }
     }
+    
     if (totalHoras) {
       errorCopy.msgTotalHoras = '';
     } else {
@@ -520,8 +526,7 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={numeroServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        onChange={(e) => { setNumeroServicio(e.target.value) }}
-                        readOnly>
+                        onChange={(e) => { setNumeroServicio(e.target.value) }}>
                       </input>
                     </div>
                   </div>
@@ -532,8 +537,7 @@ const ServicioEditComponent = () => {
                         placeholder="Codigo del servicio"
                         value={codServicio}
                         className={`bg-secondary bg-opacity-10 form-control-depo`}
-                        onChange={(e) => { setCodServicio(e.target.value) }}
-                        readOnly>
+                        onChange={(e) => { setCodServicio(e.target.value) }}>
                       </input>
                     </div>
                   </div>

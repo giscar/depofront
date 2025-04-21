@@ -31,7 +31,7 @@ const ServicioComponent = () => {
   const [servicios, setServicios] = useState([])
   const [ruc, setRuc] = useState('')
   const [codServicio, setCodServicio] = useState('')
-  const [esOperador, setEsOperdor] = useState(false)
+  const [esOperador, setEsOperador] = useState(false)
   const [data, setData] = useState([]);
 
 
@@ -101,7 +101,7 @@ const ServicioComponent = () => {
     operadorForDocumento(initialLogin.documento).then(p => {
       if (p?.data) {
         buscarServicioByIdOperador(p.data.documento).then((response) => {
-          setEsOperdor(true);
+          setEsOperador(true);
           setServicios(response.data)
           setData(response.data)
           closeLoading()
@@ -111,7 +111,7 @@ const ServicioComponent = () => {
         })
       } else {
         buscarServiciosPendientes().then((response) => {
-          setEsOperdor(false)
+          setEsOperador(false)
           setServicios(response.data)
           setData(response.data)
           closeLoading()

@@ -7,8 +7,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import MercaderiaSalidaComponent from './MercaderiaSalidaComponent';
 import Swal from 'sweetalert2'
 import Select from 'react-select'
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import MercaderiaNotaRecepcionComponent from './MercaderiaNotaRecepcionComponent';
 import MercaderiaOrdenSalidaComponent from './MercaderiaOrdenSalidaComponent';
+import NotaRecepcionReportComponent from '../report/NotaRecepcionReportComponent';
 
 
 const MercaderiaEditComponent = () => {
@@ -843,10 +845,23 @@ const MercaderiaEditComponent = () => {
                     </div>
                   }
                   {indNotaRecepcion &&
-                    <div>
-                      <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
+                  <div className="mb-3 row">
+                                      <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
+                                      <div className="col-sm-8">
+                                        <PDFDownloadLink document={<NotaRecepcionReportComponent id={id} />} fileName={1233}>
+                                          {({ loading, url, error, blob }) =>
+                                            loading ? (
+                                              <button className="btn-depo btn-primary-depo">Loading Document ...</button>
+                                            ) : (
+                                              <button className="btn-depo btn-primary-depo">Descargar</button>
+                                            )
+                                          }
+                                        </PDFDownloadLink>
+                                        <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
                       <button className='btn btn-warning' onClick={() => handleShowNotaIngreso()}>Descargar Nota recepcion</button>
-                    </div>
+                                      </div>
+                                    </div>
+
                   }
                 </div>
               </div>
@@ -1158,7 +1173,6 @@ const MercaderiaEditComponent = () => {
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
       <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias}/>
       <MercaderiaOrdenSalidaComponent show={showOrdenSalida } handleClose={handleCloseOrdenSalida} idIngreso={id} mercaderias={mercaderias}/>
-
     </>
   )
 }
