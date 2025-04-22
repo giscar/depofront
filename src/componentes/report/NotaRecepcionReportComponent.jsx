@@ -56,6 +56,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
   },
+  texto: {
+    fontSize: 12,
+    textAlign: "justify",
+    fontWeight: "bold",
+  },
+  textoUpper: {
+    fontSize: 9,
+    textAlign: "right",
+    fontWeight: "bold",
+  },
   subtitle1: {
     fontSize: 18,
     textAlign: "center",
@@ -144,10 +154,27 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
+  cell80: {
+    width: '80%',
+    textAlign: 'left',
+    color: '#222'
+  },
   cell20: {
     width: '20%',
     textAlign: 'left',
     color: '#222'
+  },
+  cell20th: {
+    width: '20%',
+    textAlign: 'left',
+    color: '#222',
+    backgroundColor: '#b4b0b0'
+  },
+  cell60th: {
+    width: '60%',
+    textAlign: 'left',
+    color: '#222',
+    backgroundColor: '#b4b0b0'
   },
   cell30: {
     width: '30%',
@@ -156,6 +183,11 @@ const styles = StyleSheet.create({
   },
   cell35: {
     width: '35%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cell40: {
+    width: '40%',
     textAlign: 'left',
     color: '#222'
   },
@@ -218,12 +250,31 @@ const NotaRecepcionReportComponent = ({ id }) => {
 
   useEffect(() => {
     if (id) {
-notaRecepciondByIdIngreso(id).then(p =>{
+      notaRecepciondByIdIngreso(id).then(p =>{
+        debugger
+        let cantidadMercaderia = 0;
+        let unidadDescripcion = "";
+        p.data.mercaderias.map(mer =>{
+          cantidadMercaderia = cantidadMercaderia + mer.cantidad
+          unidadDescripcion = mer.unidadMedida.descripcion
+        })
+        p.data.cantidadMercaderia = cantidadMercaderia
+        p.data.unidadDescripcion = unidadDescripcion 
         console.log(p)
         setNota(p.data)
       })
     }
   }, [])
+
+  const formatearFecha = (fec) => {
+    if(fec){
+      let dia = fec.substring(8, 10)
+    let mes = fec.substring(5, 7)
+    let anho = fec.substring(0, 4)
+    return `${dia}/${mes}/${anho}`
+    }
+    
+  }
 
   return (
     <Document>
@@ -251,19 +302,93 @@ notaRecepciondByIdIngreso(id).then(p =>{
           </View>
           <View style={styles.row}>
             <View style={styles.cell30}>
-              <Text style={styles.title}>{nota.fechaRecepcion}</Text>
+              <Text style={styles.subtitle}>{formatearFecha(nota.fechaRecepcion)}</Text>
             </View>
             <View style={styles.cell35}>
-              <Text style={styles.title}>NOTA DE RECEPCION</Text>
+              <Text style={styles.subtitle}>NOTA DE RECEPCION</Text>
             </View>
             <View style={styles.cell30}>
-              <Text style={styles.subtitle}>{nota.codigoRecepcion}</Text>
+              <Text style={styles.subtitle}>{nota.numeroRecepcion?.toString().padStart(6, '0')}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell20}>
+              <Text style={styles.texto}>Recibido de: </Text>
+            </View>
+            <View style={styles.cell80}>
+              <Text style={styles.textoUpper}>{nota.agencia?.razonSocial}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell20}>
+              <Text style={styles.texto}>Chofer: </Text>
+            </View>
+            <View style={styles.cell30}>
+              <Text style={styles.texto}>{nota?.chofer}</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.texto}>Placa: </Text>
+            </View>
+            <View style={styles.cell30}>
+              <Text style={styles.texto}>{nota?.placaVehiculo}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell40}>
+              <Text style={styles.texto}>Guia de remision o factura: </Text>
+            </View>
+            <View style={styles.cell60}>
+              <Text style={styles.texto}>{nota?.guiaRemision}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell20}>
+              <Text style={styles.texto}>Posterior facturado: </Text>
+            </View>
+            <View style={styles.cell80}>
+              <Text style={styles.textoUpper}>{nota.empresa?.razonSocial}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell20th}>
+              <Text style={styles.subtitle}>Cantidad</Text>
+            </View>
+            <View style={styles.cell20th}>
+              <Text style={styles.subtitle}>Unidad</Text>
+            </View>
+            <View style={styles.cell60th}>
+              <Text style={styles.subtitle}>Descripcion</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell20}>
+              <Text style={styles.subtitle}>{nota?.cantidadMercaderia}</Text>
+            </View>
+            <View style={styles.cell20}>
+              <Text style={styles.subtitle}>{nota?.unidadDescripcion}</Text>
+            </View>
+            <View style={styles.cell60}>
+              <Text style={styles.subtitle}>{nota?.descripcion}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell40}>
+              <Text style={styles.texto}>Observaciones: </Text>
+            </View>
+            <View style={styles.cell60}>
+              <Text style={styles.texto}>{nota?.observaciones}</Text>
             </View>
           </View>
         </View>
       </Page>
     </Document>
-  );
+  )
 }
 
 export default NotaRecepcionReportComponent;

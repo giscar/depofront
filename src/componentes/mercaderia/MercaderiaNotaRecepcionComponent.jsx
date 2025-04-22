@@ -16,9 +16,11 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
   const [razonSocialEmpresa, setRazonSocialEmpresa] = useState('')
   const [direccionEmpresa, setDireccionEmpresa] = useState('')
   const [chofer, setChofer] = useState('')
+  const [guiaRemision, setGuiaRemision] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
   const [fechaRecepcion, setFechaRecepcion] = useState('')
   const [almacenado, setAlmacenado] = useState('')
+  const [descripcion, setDescripcion] = useState('')
   const [observaciones, setObservaciones] = useState('')
   const [ingreso, setIngreso] = useState([])
 
@@ -95,39 +97,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     })
   }
 
-  const buscaRucEmpresa = (e) => {
-    e.preventDefault();
-    if (rucEmpresa.length !== 11) {
-      alerta("El RUC debe tener 11 digitos")
-      setRucEmpresa("")
-      return
-    }
-    clienteForRuc(rucEmpresa).then(p => {
-      if(p.data.length > 0){
-        setRucEmpresa(p.data[0].ruc)
-        setRazonSocialEmpresa(p.data[0].razonSocial)
-        setDireccionEmpresa(p.data[0].direccion)
-      }else{
-        consultaRuc(rucEmpresa).then(response => {
-          showLoading()
-          setRucEmpresa(response.data.ruc)
-          setRazonSocialEmpresa(response.data.razonSocial)
-          setDireccionEmpresa(response.data.direccion)
-          const data = {}
-          data.ruc = response.data.ruc
-          data.razonSocial = response.data.razonSocial
-          data.direccion = response.data.direccion
-          nuevoCliente(data)
-          closeLoading()
-        }).catch(error => {
-          closeLoading()
-          console.log(error)
-        })
-      }
-      closeLoading()
-    })
-  }
-
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
       setIngreso(response.data)
@@ -168,47 +137,50 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       return
     }else{
       let data = {}
-    let agencia = {}
-    let empresa = {}
-    agencia.ruc = rucAgencia
-    agencia.razonSocial = razonSocialAgencia
-    agencia.direccion  = direccionAgencia
+      let agencia = {}
+      let empresa = {}
+      agencia.ruc = rucAgencia
+      agencia.razonSocial = razonSocialAgencia
+      agencia.direccion  = direccionAgencia
 
-    empresa.ruc = rucEmpresa
-    empresa.razonSocial = razonSocialEmpresa
-    empresa.direccion = direccionEmpresa
-    data.idIngreso = idIngreso
-    data.codigoRecepcion = codigoRecepcion
-    data.agencia = agencia
-    data.empresa = empresa
-    data.codIngreso = codIngreso
-    data.chofer = chofer?.toUpperCase()
-    data.placaVehiculo = placaVehiculo?.toUpperCase()
-    mercaderias.map(p => {
-      //p.idNotaRecepcion = idNotaRecepcion
-      p.numeroNotaRecepcion = numeroRecepcion
-    })
-    data.mercaderias = mercaderias
-    data.almacenado = almacenado
-    data.observaciones = observaciones
-    data.fechaRecepcion = fechaRecepcion
-    showLoading()
-    notaRecepcionSave(data).then( response => {
-      console.log(response.data)
+      empresa.ruc = rucEmpresa
+      empresa.razonSocial = razonSocialEmpresa
+      empresa.direccion = direccionEmpresa
+      data.idIngreso = idIngreso
+      data.codigoRecepcion = codigoRecepcion
+      data.numeroRecepcion = numeroRecepcion
+      data.agencia = agencia
+      data.empresa = empresa
+      data.codIngreso = codIngreso
+      data.chofer = chofer?.toUpperCase()
+      data.guiaRemision = guiaRemision
+      data.placaVehiculo = placaVehiculo?.toUpperCase()
       mercaderias.map(p => {
-        p.idNotaRecepcion = response.data.id
-        mercaderiaSave(p).then(q => {
+      //p.idNotaRecepcion = idNotaRecepcion
+        p.numeroNotaRecepcion = numeroRecepcion
+      })
+      data.mercaderias = mercaderias
+      data.almacenado = almacenado
+      data.descripcion = descripcion
+      data.observaciones = observaciones
+      data.fechaRecepcion = fechaRecepcion
+      showLoading()
+      notaRecepcionSave(data).then( response => {
+        console.log(response.data)
+        mercaderias.map(p => {
+          p.idNotaRecepcion = response.data.id
+          mercaderiaSave(p).then(q => {
+            closeLoading()
+          })
           closeLoading()
+          handleClose()
         })
+        notify()
+      }).catch(e => {
+        console.log(e)
         closeLoading()
         handleClose()
       })
-      notify()
-    }).catch(e => {
-      console.log(e)
-      closeLoading()
-      handleClose()
-    })
     }
   }
 
@@ -223,6 +195,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     msgDireccionEmpresa: '',
     msgChofer: '',
     msgPlacaVehiculo: '',
+    msgGuiaRemision: '',
+    msgDescripcion: '',
+    msgObservaciones: '',
   })
 
   const validateForm = () => {
@@ -300,10 +275,31 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       valid = false;
     }
 
+    if (guiaRemision) {
+      errorCopy.msgGuiaRemision = '';
+    } else {
+      errorCopy.msgGuiaRemision = 'No se ha ingresado la guia de remision o factura';
+      valid = false;
+    }
+
     if (fechaRecepcion) {
       errorCopy.msgFechaRecepcion = '';
     } else {
       errorCopy.msgFechaRecepcion = 'No se ha generado la direccion de la empresa';
+      valid = false;
+    }
+
+    if (descripcion) {
+      errorCopy.msgDescripcion = '';
+    } else {
+      errorCopy.msgDescripcion = 'Debe ingresar la descripcion de la mercaderia de ingreso';
+      valid = false;
+    }
+
+    if (observaciones) {
+      errorCopy.msgObservaciones = '';
+    } else {
+      errorCopy.msgObservaciones = 'Debe ingresar la observacion de la mercaderia de ingreso';
       valid = false;
     }
 
@@ -458,6 +454,19 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
               </div>
 
               <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Guia de remision o factura:</label>
+                <div className="col-sm-8">
+                  <input type="text"
+                    placeholder="Codigo del Ingreso"
+                    value={guiaRemision}
+                    onChange={(e) => { setGuiaRemision(e.target.value) }}
+                    className={`form-control-depo ${errors.msgGuiaRemision ? ' is-invalid' : ''}`}>
+                  </input>
+                  {errors.msgGuiaRemision && <div className='invalid-feedback'>{errors.msgGuiaRemision}</div>}
+                </div>
+              </div>
+
+              <div className="mb-3 row">
                 <label className="col-sm-4 col-form-label-zise">Fecha recepcion:</label>
                 <div className="col-sm-8">
                   <input type="date"
@@ -483,14 +492,28 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
               </div>
 
               <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Descripcion:</label>
+                <div className="col-sm-8">
+                  <textarea rows={3} cols={3}
+                    placeholder="Ingrese Descripcion"
+                    value={descripcion}
+                    onChange={(e) => { setDescripcion(e.target.value) }}
+                    className={`form-control-depo ${errors.msgDescripcion ? ' is-invalid' : ''}`}>
+                  </textarea>
+                  {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
+                </div>
+              </div>
+
+              <div className="mb-3 row">
                 <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                 <div className="col-sm-8">
-                  <input type="text"
+                  <textarea rows={3} cols={3}
                     placeholder="Ingrese observaciones"
                     value={observaciones}
                     onChange={(e) => { setObservaciones(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control">
-                  </input>
+                    className={`form-control-depo ${errors.msgObservaciones ? ' is-invalid' : ''}`}>
+                  </textarea>
+                  {errors.msgObservaciones && <div className='invalid-feedback'>{errors.msgObservaciones}</div>}
                 </div>
               </div>
             </Form.Group>
