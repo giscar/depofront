@@ -55,13 +55,13 @@ const MercaderiaEditComponent = () => {
 
   const showLoading = () => {
     Swal.fire({
-        title: 'Cargando',
-        allowEscapeKey: false,
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        onOpen: ()=>{
-            Swal.showLoading();
-        }
+      title: 'Cargando',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      onOpen: () => {
+        Swal.showLoading();
+      }
     })
   }
 
@@ -88,9 +88,9 @@ const MercaderiaEditComponent = () => {
     buscarCodigoMercaderia().then((response) => {
       setCodMercaderia(response.data + 1)
       setNumeroMercaderia("MER" + (response.data + 1).toString().padStart(6, '0'))
-      notaRecepciondByIdIngreso(id).then(p =>{
+      notaRecepciondByIdIngreso(id).then(p => {
         console.log(p)
-        if(p.data){
+        if (p.data) {
           setIndNotaRecepcion(true)
         }
       })
@@ -284,7 +284,7 @@ const MercaderiaEditComponent = () => {
       valid = false;
     }
 
-    if(!indEdita){
+    if (!indEdita) {
       if (unidadMedida?.codigo) {
         errorCopy.msgUnidadMedida = '';
       } else {
@@ -410,7 +410,7 @@ const MercaderiaEditComponent = () => {
     }
   }
 
-  const descargarNotaRecepcion = () =>{
+  const descargarNotaRecepcion = () => {
     e.preventDefault()
     console.log("entro")
   }
@@ -447,7 +447,7 @@ const MercaderiaEditComponent = () => {
       }).catch(error => {
         console.error(error)
       });
-    }   
+    }
   }
 
   const validaNumeroMercaderia = () => {
@@ -493,7 +493,7 @@ const MercaderiaEditComponent = () => {
   const handleUnidadMedida = () => {
     showLoading()
     catalogoByTipo("1").then((response) => {
-      response.data.map(p =>{
+      response.data.map(p => {
         p.label = p.descripcion;
         p.value = p.codigo;
       })
@@ -505,7 +505,7 @@ const MercaderiaEditComponent = () => {
   const handleAlmacen = () => {
     showLoading()
     catalogoByTipo("2").then((response) => {
-      response.data.map(p =>{
+      response.data.map(p => {
         p.label = p.descripcion;
         p.value = p.codigo;
       })
@@ -559,6 +559,8 @@ const MercaderiaEditComponent = () => {
       data.fechaSalida = fechaSalida
       data.usuarioRegistro = initialLogin.documento
       data.idCodIngreso = codIngreso
+      data.idIngreso = id
+      data.idOrdenSalida = ""
       salidaSave(data).then(response => {
         mercaderiaById(mercaderia.id).then(response => {
           if ((parseInt(mercaderia.cantidad) - parseInt(cantidadSalida)) > 0) {
@@ -659,7 +661,7 @@ const MercaderiaEditComponent = () => {
     setErrors(errorCopy);
     return valid;
   }
-  
+
 
   const cargarMercaderia = (data) => {
     setNumeroMercaderia(data.numeroMercaderia?.toUpperCase())
@@ -730,8 +732,8 @@ const MercaderiaEditComponent = () => {
                     <div className="col-sm-8">
                       <select value={tipoMercaderia}
                         className={`form-select-depo ${errors.msgTipoMercaderia ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                        onChange={(e) => { 
-                          setTipoMercaderia(e.target.value) 
+                        onChange={(e) => {
+                          setTipoMercaderia(e.target.value)
                           limpiarPorMercaderia()
                         }}
                         disabled={indSalida}>
@@ -845,23 +847,22 @@ const MercaderiaEditComponent = () => {
                     </div>
                   }
                   {indNotaRecepcion &&
-                  <div className="mb-3 row">
-                                      <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
-                                      <div className="col-sm-8">
-                                        <PDFDownloadLink document={<NotaRecepcionReportComponent id={id} />} fileName={1233}>
-                                          {({ loading, url, error, blob }) =>
-                                            loading ? (
-                                              <button className="btn-depo btn-primary-depo">Loading Document ...</button>
-                                            ) : (
-                                              <button className="btn-depo btn-primary-depo">Descargar</button>
-                                            )
-                                          }
-                                        </PDFDownloadLink>
-                                        <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
-                      <button className='btn btn-warning' onClick={() => handleShowNotaIngreso()}>Descargar Nota recepcion</button>
-                                      </div>
-                                    </div>
-
+                    <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Hoja de servicio preliminar:</label>
+                      <div className="col-sm-8">
+                        <PDFDownloadLink document={<NotaRecepcionReportComponent id={id} />} fileName={1233}>
+                          {({ loading, url, error, blob }) =>
+                            loading ? (
+                              <button className="btn-depo btn-warning-depo">Loading Document ...</button>
+                            ) : (
+                              <button className="btn-depo btn-warning-depo">Descargar Nota recepcion</button>
+                            )
+                          }
+                        </PDFDownloadLink>
+                        &nbsp;&nbsp;
+                        <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
+                      </div>
+                    </div>
                   }
                 </div>
               </div>
@@ -938,10 +939,10 @@ const MercaderiaEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise" >Unidad de medida:</label>
                       <div className="col-sm-8">
-                      <Select value={unidadMedida}
-                        onChange={setUnidadMedida}
-                        options={catalogoUnidadMedida}
-                        className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        <Select value={unidadMedida}
+                          onChange={setUnidadMedida}
+                          options={catalogoUnidadMedida}
+                          className={`form-select-depo${errors.msgUnidadMedida ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         />
                         {errors.msgUnidadMedida && <div className='invalid-feedback'>{errors.msgUnidadMedida}</div>}
                       </div>
@@ -976,10 +977,10 @@ const MercaderiaEditComponent = () => {
                     <div className="mb-3 row">
                       <label className="col-sm-4 col-form-label-zise" >Almacen:</label>
                       <div className="col-sm-8">
-                      <Select value={almacen}
-                        onChange={setAlmacen}
-                        options={catalogoAlmacen}
-                        className={`form-select-depo${errors.msgAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        <Select value={almacen}
+                          onChange={setAlmacen}
+                          options={catalogoAlmacen}
+                          className={`form-select-depo${errors.msgAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         />
                         {errors.msgAlmacen && <div className='invalid-feedback'>{errors.msgAlmacen}</div>}
                       </div>
@@ -1054,7 +1055,6 @@ const MercaderiaEditComponent = () => {
                             </div>
                           </div>
                         </div>
-                        
                         <button type="button" className="btn-depo btn-warning-depo" onClick={registrarSalida}>Guardar salida</button>
                         &nbsp;&nbsp;
                         <button type="button" className="btn-depo btn-danger-depo" onClick={cancelarSalida}>Cancelar Salida</button>
@@ -1171,8 +1171,8 @@ const MercaderiaEditComponent = () => {
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
-      <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias}/>
-      <MercaderiaOrdenSalidaComponent show={showOrdenSalida } handleClose={handleCloseOrdenSalida} idIngreso={id} mercaderias={mercaderias}/>
+      <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias} />
+      <MercaderiaOrdenSalidaComponent show={showOrdenSalida} handleClose={handleCloseOrdenSalida} idIngreso={id} mercaderias={mercaderias} />
     </>
   )
 }

@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     paddingTop: 25,
   },
 
-});
+})
 
 const NotaRecepcionReportComponent = ({ id }) => {
 
@@ -251,7 +251,6 @@ const NotaRecepcionReportComponent = ({ id }) => {
   useEffect(() => {
     if (id) {
       notaRecepciondByIdIngreso(id).then(p =>{
-        debugger
         let cantidadMercaderia = 0;
         let unidadDescripcion = "";
         p.data.mercaderias.map(mer =>{

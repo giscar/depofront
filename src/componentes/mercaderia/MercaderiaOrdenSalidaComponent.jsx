@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
-import { buscarCodigoOrdenSalida, clienteForRuc, consultaRuc, ingresoById, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
+import { buscarCodigoOrdenSalida, ingresoById, notaRecepcionSave, ordenSalidaSave, salidaByIdIngreso, salidaSave } from '../../service/FacturaService';
 
 const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
 
   const [codIngreso, setCodIngreso] = useState('')
-  const [numNotaRecepcion, setNumNotaRecepcion] = useState('')
   const [numOrdenSalida, setNumOrdenSalida] = useState('')
   const [rucDestinatario, setRucDestinatario] = useState('')
   const [razonSocialDestinatario, setRazonSocialDestinatario] = useState('')
@@ -17,8 +16,8 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
   const [direccionDepovent, setDireccionDepovent] = useState('')
   const [chofer, setChofer] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
-  const [fechaRecepcion, setFechaRecepcion] = useState('')
-
+  const [fechaEmision, setFechaEmision] = useState('')
+  const [salidas, setSalidas] = useState([])
   const [ingreso, setIngreso] = useState([])
 
   const showLoading = () => {
@@ -45,16 +44,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     })
   }
 
-  const [errors, setErrors] = useState({
-    msgCodIngreso: '',
-    msgRucDestinatario: '',
-    msgRazonSocialDestinatario: '',
-    msgDireccionDestinatario: '',
-    msgRucDepovent: '',
-    msgRazonSocialDepovent: '',
-    msgDireccionDepovent: '',
-  })
-
   const handleCodOrdenSalida = () => {
     showLoading()
     buscarCodigoOrdenSalida().then((response) => {
@@ -69,39 +58,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     handleCodOrdenSalida();
   }, [])
 
-  const buscaRucDestinatario = (e) => {
-      e.preventDefault();
-      if (rucDestinatario.length !== 11) {
-        alerta("El RUC debe tener 11 digitos")
-        setRucDestinatario("")
-        return
-      }
-      clienteForRuc(rucDestinatario).then(p => {
-        if(p.data.length > 0){
-          setRucDestinatario(p.data[0].ruc)
-          setRazonSocialDestinatario(p.data[0].razonSocial)
-          setDireccionDestinatario(p.data[0].direccion)
-        }else{
-          consultaRuc(rucDestinatario).then(response => {
-            showLoading()
-            setRucDestinatario(response.data.ruc)
-            setRazonSocialDestinatario(response.data.razonSocial)
-            setDireccionDestinatario(response.data.direccion)
-            const data = {}
-            data.ruc = response.data.ruc
-            data.razonSocial = response.data.razonSocial
-            data.direccion = response.data.direccion
-            nuevoCliente(data)
-            closeLoading()
-          }).catch(error => {
-            closeLoading()
-            console.log(error)
-          })
-        }
-        closeLoading()
-      })
-    }
-
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
       showLoading()
@@ -114,6 +70,14 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     })
   }
 
+  const buscarSalidasByIdIngreso = () => {
+    salidaByIdIngreso(idIngreso).then(p => {
+      debugger
+      console.log(p.data)
+      setSalidas(p.data)
+    })
+  }
+
   const cargarDepovent = () => {
     setRazonSocialDepovent("Depositos y Ventas S.A.");
     setRucDepovent("20100014476");
@@ -123,18 +87,75 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
   useEffect(() => {
     if (show) {
       buscarIngresoById()
+      buscarSalidasByIdIngreso()
     }
   }, [show])
 
   const cargarNotaIngreso = (data) => {
+    debugger
     setCodIngreso(data.codIngreso)
+    setRucDestinatario(data.ruc)
+    setDireccionDestinatario(data.direccion)
+    setRazonSocialDestinatario(data.razonSocial)
   }
 
-  const saveNotaRecepcion = (e) => {
-    debugger
+  const formatearFecha = (fec) => {
+    //2024-11-02
+    let dia = fec.substring(8, 10)
+    let mes = fec.substring(5, 7)
+    let anho = fec.substring(0, 4)
+    return `${dia}/${mes}/${anho}`
+  }
+
+  const [errors, setErrors] = useState({
+    msgChofer: '',
+    msgPlacaVehiculo: '',
+    msgFechaEmision: ''
+  })
+
+  const validateForm = () => {
+    let valid = true;
+    const errorCopy = { ...errors }
+    const regex = /^[0-9]*$/;
+
+    if (chofer) {
+      errorCopy.msgChofer = '';
+    } else {
+      errorCopy.msgChofer = 'Debe ingresar el nombre del chofer';
+      valid = false;
+    }
+
+    if (placaVehiculo) {
+      errorCopy.msgPlacaVehiculo = '';
+    } else {
+      errorCopy.msgPlacaVehiculo = 'Debe ingresar la placa del vehiculo';
+      valid = false;
+    }
+
+    if (fechaEmision) {
+      errorCopy.msgFechaEmision = '';
+    } else {
+      errorCopy.msgFechaEmision = 'Debe ingresar la fecha de salida de la mercaderia';
+      valid = false;
+    }
+
+    setErrors(errorCopy);
+    return valid;
+  }
+
+
+  const saveNotaOrdenSalida = (e) => {
     e.preventDefault()
+    if (!validateForm()) {
+      alerta("Debe ingresar todos los valores")
+      return
+    }
+    if(salidas.length == 0) {
+      alerta("No se han registrado salidas no se puede registrar ")
+      handleClose()
+      return
+    }
     const data = {}
-    data.numNotaRecepcion = numNotaRecepcion
     data.codIngreso = codIngreso
     data.rucDestinatario = rucDestinatario
     data.razonSocialDestinatario = razonSocialDestinatario
@@ -144,11 +165,19 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     data.direccionDepovent = direccionDepovent
     data.chofer = chofer
     data.placaVehiculo = placaVehiculo
-    data.placaVehiculo = placaVehiculo
-    data.almacenado = almacenado
-    data.mercaderias = mercaderias
-    notaRecepcionSave(data).then(p => console.log(p))
-      .catch(e => console.log(e))
+    data.fechaEmision = fechaEmision
+    data.salidas = salidas
+    showLoading()
+    ordenSalidaSave(data).then(p => {
+      data.salidas.map(sal => {
+        sal.idOrdenSalida = p.data.id
+        salidaSave(sal).then(q => {
+          console.log(q)
+        }).catch(e => console.log(e))
+      })
+      handleClose()
+      closeLoading()
+    }).catch(e => console.log(e))
   }
 
   return (
@@ -160,7 +189,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
         keyboard={false}
         className='anyClass'>
         <Modal.Header closeButton>
-          <Modal.Title>Nota de ingreso</Modal.Title>
+          <Modal.Title>Nota de Salida</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -189,17 +218,14 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
               </div>
               <div className="mb-3 row pb-2">
                 <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC destinatario:</label>
-                <div className="col-sm-6">
+                <div className="col-sm-8">
                   <input type="number"
                     placeholder="Ruc de Destinatario"
                     value={rucDestinatario}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucDestinatario ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucDestinatario(e.target.value) }}/>
-                  {errors.msgRucDestinatario && <div className='invalid-feedback'>{errors.msgRucDestinatario}</div>}
-                </div>
-                <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucDestinatario}>Buscar</button>
+                    className={`form-control-depo`}
+                    onChange={(e) => { setRucDestinatario(e.target.value) }}
+                    readOnly/>
                 </div>
               </div>
               <div className="mb-3 row">
@@ -236,7 +262,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
                     onChange={(e) => { setRucDepovent(e.target.value) }}
                     readOnly
                   />
-                  {errors.msgRuc && <div className='invalid-feedback'>{errors.msgRucDepovent}</div>}
                 </div>
               </div>
               <div className="mb-3 row">
@@ -269,12 +294,13 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
                 <label className="col-sm-4 col-form-label-zise">Chofer:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Nombre del chofer"
                     value={chofer}
                     onChange={(e) => { setChofer(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                  >
+                    className={`form-control-depo ${errors.msgChofer ? ' is-invalid' : ''}`}
+                    >
                   </input>
+                  {errors.msgChofer && <div className='invalid-feedback'>{errors.msgChofer}</div>}
                 </div>
               </div>
 
@@ -282,67 +308,56 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
                 <label className="col-sm-4 col-form-label-zise">Placa del vehiculo:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Placa del vehiculo"
                     value={placaVehiculo}
                     onChange={(e) => { setPlacaVehiculo(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
-                  >
+                    className={`form-control-depo ${errors.msgPlacaVehiculo ? ' is-invalid' : ''}`}
+                    >
                   </input>
+                  {errors.msgPlacaVehiculo && <div className='invalid-feedback'>{errors.msgPlacaVehiculo}</div>}
                 </div>
               </div>
 
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Fecha recepcion:</label>
+                <label className="col-sm-4 col-form-label-zise">Fecha emision:</label>
                 <div className="col-sm-8">
                   <input type="date"
-                    placeholder="Codigo del Ingreso"
-                    value={fechaRecepcion}
-                    onChange={(e) => { setFechaRecepcion(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control"
+                    placeholder="Fecha de salida"
+                    value={fechaEmision}
+                    onChange={(e) => { setFechaEmision(e.target.value) }}
+                    className={`form-control-depo ${errors.msgFechaEmision ? ' is-invalid' : ''}`}
                   >
                   </input>
+                  {errors.msgFechaEmision && <div className='invalid-feedback'>{errors.msgFechaEmision}</div>}
                 </div>
               </div>
             </Form.Group>
           </Form>
           <br />
-          <button className='btn btn-primary' onClick={saveNotaRecepcion}>Guardar Nota de recepcion</button>
+          <div className='text-end'>
+            <button className='btn btn-primary' onClick={saveNotaOrdenSalida}>Guardar Nota de recepcion</button>
+          </div>
           <div className="table-responsive">
+          <br />
             <table className="table mb-0">
               <thead className="thead-light">
                 <tr>
-                  <th className='td-th-size-depo'>Serie</th>
-                  <th className='td-th-size-depo'>Numero</th>
-                  <th className='td-th-size-depo'>Codigo</th>
+                  <th className='td-th-size-depo'>Mercaderia</th>
+                  <th className='td-th-size-depo'>Fecha de Salida</th>
                   <th className='td-th-size-depo'>Descripcion</th>
-                  <th className='td-th-size-depo'>Unidad medida</th>
-                  <th className='td-th-size-depo'>cantidad inicial</th>
-                  <th className='td-th-size-depo'>Fecha de ingreso</th>
-                  <th className='td-th-size-depo'>Almacen</th>
+                  <th className='td-th-size-depo'>Cantidad salida</th>
+                  <th className='td-th-size-depo'>Saldo restante</th>
                 </tr>
               </thead>
               <tbody>
                 {
-                  mercaderias.map(mercaderia =>
-                    <tr key={mercaderia.id}>
-                      <td className='td-th-size-depo'>{mercaderia.serie}</td>
-                      <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
-                      <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
-                      <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                      <td className='td-th-size-depo'>{mercaderia.unidadMedida.descripcion}</td>
-                      <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
-                      <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
-                      <td className='td-th-size-depo'>
-                        {mercaderia.estadoMercaderia === "Sin mercaderia" &&
-                          <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
-                        }
-                        {mercaderia.estadoMercaderia === "Proceso" &&
-                          <span className="badge badge-boxed  badge-outline-warning">{mercaderia.estadoMercaderia}</span>
-                        }
-                        {mercaderia.estadoMercaderia === "Saldo cero" &&
-                          <span className="badge badge-boxed  badge-outline-success">{mercaderia.estadoMercaderia}</span>
-                        }
-                      </td>
+                  salidas.map(salida =>
+                    <tr key={salida.id}>
+                      <td className='td-th-size-depo'>{salida.numeroMercaderia}</td>
+                      <td className='td-th-size-depo'>{formatearFecha(salida.fechaSalida)}</td>
+                      <td className='td-th-size-depo'>{salida.descripcionSalida}</td>
+                      <td className='td-th-size-depo'>{salida.cantidadSalida}</td>
+                      <td className='td-th-size-depo'>{salida.saldoRestante}</td>
                     </tr>
                   )
                 }
@@ -352,7 +367,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
         </Modal.Body>
         <Modal.Footer>
           
-          <button className='btn btn-warning'>Descargar Nota de ingreso</button>
         </Modal.Footer>
       </Modal>
     </>

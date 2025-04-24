@@ -201,6 +201,8 @@ export const salidaSave = (salida) => axios.post(REST_API_BASE_URL_SALIDA, salid
 
 export const salidaByNumeroMercaderia = (numeroMercaderia) => axios.get(REST_API_BASE_URL_SALIDA+"/numeroMercaderia?numeroMercaderia="+numeroMercaderia);
 
+export const salidaByIdIngreso = (idIngreso) => axios.get(REST_API_BASE_URL_SALIDA+"/findSalidaByIdIngreso?idIngreso="+idIngreso);
+
 export const notaRecepcionById = (id) => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"?id="+id);
 
 export const notaRecepciondByIdIngreso = (idIngreso) => axios.get(REST_API_BASE_URL_NOTA_RECEPCION+"/findByIdIngreso?idIngreso="+idIngreso);
