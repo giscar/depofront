@@ -1172,7 +1172,7 @@ const MercaderiaEditComponent = () => {
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
       <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias} />
-      <MercaderiaOrdenSalidaComponent show={showOrdenSalida} handleClose={handleCloseOrdenSalida} idIngreso={id} mercaderias={mercaderias} />
+      <MercaderiaOrdenSalidaComponent show={showOrdenSalida} handleClose={handleCloseOrdenSalida} idIngreso={id} />
     </>
   )
 }

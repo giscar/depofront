@@ -5,6 +5,7 @@ import HeaderComponent from '../HeaderComponent';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2'
 import BusquedaClienteComponent from '../cliente/BusquedaClienteComponent';
+import MercaderiaKardexComponent from './MercaderiaKardexComponent';
 
 const MercaderiaComponent = () => {
 
@@ -18,11 +19,19 @@ const MercaderiaComponent = () => {
   const [tipoMercaderia, setTipoMercaderia] = useState('')
   const [ruc, setRuc] = useState('')
   const [estadoRegistro, setEstadoRegistro] = useState('')
+  const [idIngreso, setIdIngreso] = useState('')
 
   const [cliente, setCliente] = useState('')
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [showSalida, setShowSalida] = useState(false);
+  const handleCloseSalida = () => setShowSalida(false);
+  const handleShowSalida = (idIngreso) => {
+    setIdIngreso(idIngreso)
+    setShowSalida(true);
+  }
 
 
   initialLogin.perfiles.map(p => {
@@ -230,6 +239,10 @@ const MercaderiaComponent = () => {
                         <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
                           <i className="bi bi-pencil-fill"></i>
                         </a>
+
+                        <a className='icon-link-depo' onClick={() => handleShowSalida(item.id)}>
+                          <i className="bi bi-eye-fill"></i>
+                        </a>
                       </td>
                     </tr>
                   )
@@ -265,6 +278,7 @@ const MercaderiaComponent = () => {
         </div>
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
+      <MercaderiaKardexComponent show={showSalida} handleClose={handleCloseSalida} idIngreso={idIngreso} />
     </>
   )
 }

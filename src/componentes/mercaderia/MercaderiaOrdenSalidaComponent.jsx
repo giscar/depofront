@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
-import { buscarCodigoOrdenSalida, ingresoById, notaRecepcionSave, ordenSalidaSave, salidaByIdIngreso, salidaSave } from '../../service/FacturaService';
+import { buscarCodigoOrdenSalida, ingresoById, ordenSalidaSave, salidaByIdIngreso, salidaSave } from '../../service/FacturaService';
 
-const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
+const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
 
   const [codIngreso, setCodIngreso] = useState('')
   const [numOrdenSalida, setNumOrdenSalida] = useState('')
@@ -157,6 +157,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso, mercader
     }
     const data = {}
     data.codIngreso = codIngreso
+    data.idIngreso = idIngreso
     data.rucDestinatario = rucDestinatario
     data.razonSocialDestinatario = razonSocialDestinatario
     data.direccionDestinatario = direccionDestinatario
