@@ -72,7 +72,7 @@ const MercaderiaNuevoComponent = () => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
-  });
+  })
 
   const validateForm = () => {
     let valid = true;

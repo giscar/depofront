@@ -104,7 +104,7 @@ const HeaderComponent = () => {
                   Almacenes
                 </a>
                 <ul className="dropdown-menu">
-                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederAlmaceSimple()}>Registro mercaderia</a></li>
+                  <li><a className="dropdown-item icon-link-depo" onClick={() => accederAlmaceSimple()}>Ingreso</a></li>
                   <li><a className="dropdown-item icon-link-depo" onClick={() => accederAlmaceSimple()}>Despacho mercaderia</a></li>
                 </ul>
               </li>

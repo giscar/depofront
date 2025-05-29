@@ -36,6 +36,16 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     })
   }
 
+  const notify = () => toast.info('Se ha registrado la nota de recepcion', {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "colored",
+    })
+
   const closeLoading = () => {
     Swal.close()
   }
@@ -486,7 +496,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="ingrese el detalle almacenado"
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
-                    className="bg-secondary bg-opacity-10 form-control">
+                    className="form-control">
                   </input>
                 </div>
               </div>
