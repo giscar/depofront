@@ -78,7 +78,6 @@ const MercaderiaNuevoComponent = () => {
     msgSerie: '',
     msgAlmacen: '',
     msgIndFacturaFijo: '',
-    msgObservaciones:''
     
   })
 

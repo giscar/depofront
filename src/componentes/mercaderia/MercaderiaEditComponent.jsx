@@ -11,6 +11,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import MercaderiaNotaRecepcionComponent from './MercaderiaNotaRecepcionComponent';
 import MercaderiaOrdenSalidaComponent from './MercaderiaOrdenSalidaComponent';
 import NotaRecepcionReportComponent from '../report/NotaRecepcionReportComponent';
+import ExportExcelMercaderias from '../estadisticas/ExportExcelMeraderias';
 
 
 const MercaderiaEditComponent = () => {
@@ -1259,6 +1260,10 @@ const MercaderiaEditComponent = () => {
                   <p className="text-muted mb-0">Esta información corresponde a las mercaderias que se encuentran en los almacenes.
                   </p>
                 </div>
+                <div className='w-25'>
+                <ExportExcelMercaderias mercaderias={mercaderias} />
+                </div>
+                
                 <div className="card-body">
                   <div className="table-responsive">
                     <div className="table-responsive">
