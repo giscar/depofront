@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
@@ -48,6 +49,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
 
   const closeLoading = () => {
     Swal.close()
+  }
+
+  const editarIngreso = (id) => {
+    navigator(`/mercaderiaEdit/${id}`)
   }
 
   const alerta = (msg) => {
@@ -176,20 +181,26 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       data.fechaRecepcion = fechaRecepcion
       showLoading()
       notaRecepcionSave(data).then( response => {
+        debugger
         console.log(response.data)
         mercaderias.map(p => {
           p.idNotaRecepcion = response.data.id
           mercaderiaSave(p).then(q => {
             closeLoading()
+            notify()
+          handleClose()
+          editarIngreso(codIngreso)
+          handleClose()
+          
           })
           closeLoading()
           handleClose()
+          
         })
-        notify()
       }).catch(e => {
         console.log(e)
         closeLoading()
-        handleClose()
+       
       })
     }
   }
@@ -551,7 +562,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                       <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                       <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                       <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                      <td className='td-th-size-depo'>{mercaderia.unidadMedida.descripcion}</td>
+                      <td className='td-th-size-depo'>{mercaderia.unidadMedida?.descripcion}</td>
                       <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
                       <td className='td-th-size-depo'>{(new Date(mercaderia.fechaIngreso)).toLocaleString().substring(0, 10).split(",")[0]}</td>
                       <td className='td-th-size-depo'>

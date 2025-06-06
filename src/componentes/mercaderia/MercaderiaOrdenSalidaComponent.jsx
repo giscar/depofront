@@ -336,7 +336,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
           </Form>
           <br />
           <div className='text-end'>
-            <button className='btn btn-primary' onClick={saveNotaOrdenSalida}>Guardar Nota de recepcion</button>
+            <button className='btn btn-primary' onClick={saveNotaOrdenSalida}>Guardar Nota de Despacho</button>
           </div>
           <div className="table-responsive">
           <br />

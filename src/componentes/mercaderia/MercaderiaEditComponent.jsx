@@ -17,9 +17,13 @@ const MercaderiaEditComponent = () => {
 
   const { id } = useParams()
   const [cliente, setCliente] = useState('')
+  const [clienteAgencia, setClienteAgencia] = useState('')
   const [ruc, setRuc] = useState('')
   const [razonSocial, setRazonSocial] = useState('')
   const [direccion, setDireccion] = useState('')
+  const [rucAgencia, setRucAgencia] = useState('')
+  const [razonSocialAgencia, setRazonSocialAgencia] = useState('')
+  const [direccionAgencia, setDireccionAgencia] = useState('')
   const [codIngreso, setCodIngreso] = useState('')
   const [numeroIngreso, setNumeroIngreso] = useState('')
   const [codigoDua, setCodigoDua] = useState('')
@@ -52,6 +56,12 @@ const MercaderiaEditComponent = () => {
   const [cantidadSalida, setCantidadSalida] = useState('')
   const [descripcionSalida, setDescripcionSalida] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
+
+    const [guia, setGuia] = useState('')
+    const [horaTermino, setHoraTermino] = useState('')
+    const [indFacturarFijo, setIndFacturarFijo] = useState('')
+    const [nroContenedor, setNroContenedor] = useState('')
+    const [dimensionContenedor, setDimensionContenedor] = useState('')
 
   const showLoading = () => {
     Swal.fire({
@@ -134,9 +144,27 @@ const MercaderiaEditComponent = () => {
     setPedidoDeposito(data.pedidoDeposito)
     setRazonSocial(data.razonSocial)
     setDireccion(data.direccion)
+    setRucAgencia(data.rucAgencia)
+    setRazonSocialAgencia(data.razonSocialAgencia)
+    setDireccionAgencia(data.direccionAgencia)
+    catalogoByTipo("2").then((response) => {
+      response.data.map(p => {
+        p.label = p.descripcion;
+        p.value = p.codigo;
+      })
+      setCatalogoAlmacen(response.data)
+      setAlmacen(response.data?.filter(p => p.codigo == data.almacen?.codigo))
+    })
+    
     setDescripcion(data.descripcion)
     setTipoMercaderia(data.tipoMercaderia)
     setEstadoRegistro(data.estadoRegistro)
+    setGuia(data.guia)
+    setHoraTermino(data.horaTermino)
+    setIndFacturarFijo(data.indFacturarFijo)
+    setNroContenedor(data.nroContenedor)
+    setDimensionContenedor(data.dimensionContenedor)
+    setObservaciones(data.observaciones)
     setIngreso(data)
   }
 
@@ -164,6 +192,7 @@ const MercaderiaEditComponent = () => {
     msgCantidadSalida: '',
     msgFechaSalida: '',
     msgDescripcionSalida: '',
+    msgIndFacturaFijo: '',
   })
 
   const notify = () => toast.info('Se han registrado los cambios correctamente', {
@@ -222,6 +251,29 @@ const MercaderiaEditComponent = () => {
       errorCopy.msgRuc = '';
     } else {
       errorCopy.msgRuc = 'Tiene que ingresar el numero de RUC';
+      valid = false;
+    }
+
+    if (tipoMercaderia == "Nacionalizada") {
+      if (rucAgencia) {
+        errorCopy.msgRucAgencia = '';
+      } else {
+        errorCopy.msgRucAgencia = 'Tiene que ingresar el numero de RUC de la agencia de aduana';
+        valid = false;
+      }
+    }
+
+    if (almacen) {
+      errorCopy.msgAlmacen = '';
+    } else {
+      errorCopy.msgAlmacen = 'Tiene que ingresar el almacen';
+      valid = false;
+    }
+
+    if (indFacturarFijo) {
+      errorCopy.msgIndFacturaFijo = '';
+    } else {
+      errorCopy.msgIndFacturaFijo = 'Tiene que ingresar si se va a facturar o es fijo';
       valid = false;
     }
 
@@ -292,12 +344,12 @@ const MercaderiaEditComponent = () => {
         valid = false;
       }
 
-      if (almacen?.codigo) {
+      /*if (almacen?.codigo) {
         errorCopy.msgAlmacen = '';
       } else {
         errorCopy.msgAlmacen = 'Tiene que ingresar el almacen de destino';
         valid = false;
-      }
+      }*/
     }
 
     if (cantidad) {
@@ -328,7 +380,7 @@ const MercaderiaEditComponent = () => {
       data.productoCodigo = productoCodigo?.toUpperCase()
       data.descripcionProducto = descripcionProducto?.toUpperCase()
       data.unidadMedida = unidadMedida
-      data.almacen = almacen
+      //data.almacen = almacen
       data.cantidad = cantidad
       data.cantidadOrignal = cantidad
       data.fechaIngreso = fechaIngreso
@@ -373,8 +425,12 @@ const MercaderiaEditComponent = () => {
       data.codIngreso = codIngreso
       data.productoCodigo = productoCodigo?.toUpperCase()
       data.descripcionProducto = descripcionProducto?.toUpperCase()
-      data.unidadMedida = unidadMedida[0]
-      data.almacen = almacen[0]
+      if(Array.isArray(unidadMedida)){
+        data.unidadMedida = unidadMedida[0]
+      }else{
+        data.unidadMedida = unidadMedida
+      }
+      //data.almacen = almacen[0]
       data.cantidad = cantidad
       data.cantidadOrignal = cantidad
       data.fechaIngreso = fechaIngreso
@@ -425,6 +481,9 @@ const MercaderiaEditComponent = () => {
       data.ruc = ruc;
       data.razonSocial = razonSocial?.toUpperCase();
       data.direccion = direccion?.toUpperCase();
+      data.rucAgencia = rucAgencia;
+      data.razonSocialAgencia = razonSocialAgencia?.toUpperCase();
+      data.direccionAgencia = direccionAgencia?.toUpperCase();
       data.codigoDua = codigoDua;
       data.pedidoDeposito = pedidoDeposito;
       data.descripcion = descripcion?.toUpperCase();
@@ -439,6 +498,17 @@ const MercaderiaEditComponent = () => {
           data.estadoRegistro = "Saldo cero";
         }
       }
+      if(Array.isArray(almacen)){
+        data.almacen = almacen[0]
+      }else{
+        data.almacen = almacen
+      }
+      data.guia = guia;
+      data.horaTermino = horaTermino;
+      data.indFacturarFijo = indFacturarFijo;
+      data.nroContenedor = nroContenedor;
+      data.dimensionContenedor = dimensionContenedor;
+      data.observaciones = observaciones;
       data.usuarioRegistro = initialLogin.documento;
       data.id = id;
       ingresoEdit(data).then((response) => {
@@ -446,7 +516,7 @@ const MercaderiaEditComponent = () => {
         notify()
       }).catch(error => {
         console.error(error)
-      });
+      })
     }
   }
 
@@ -469,6 +539,10 @@ const MercaderiaEditComponent = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [showAgencia, setShowAgencia] = useState(false);
+  const handleCloseAgencia = () => setShowAgencia(false);
+  const handleShowAgencia = () => setShowAgencia(true);
 
   const [showSalida, setShowSalida] = useState(false);
   const handleCloseSalida = () => setShowSalida(false);
@@ -519,6 +593,12 @@ const MercaderiaEditComponent = () => {
     setRazonSocial(cliente?.razonSocial)
     setDireccion(cliente?.direccion)
   }, [cliente])
+
+  useEffect(() => {
+      setRucAgencia(clienteAgencia?.ruc)
+      setRazonSocialAgencia(clienteAgencia?.razonSocial)
+      setDireccionAgencia(clienteAgencia?.direccion)
+    }, [clienteAgencia])
 
   const seleccionarSalida = (idMercaderia) => {
     showLoading()
@@ -608,7 +688,6 @@ const MercaderiaEditComponent = () => {
     setNumeroMercaderia('')
     setCodMercaderia('')
     setMercaderia('')
-    setAlmacen('')
     setSerie('')
     setDescripcionProducto('')
     setUnidadMedida('')
@@ -669,8 +748,7 @@ const MercaderiaEditComponent = () => {
     setProductoCodigo(data.productoCodigo?.toUpperCase())
     setSerie(data.serie)
     setDescripcionProducto(data.descripcionProducto)
-    setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida.codigo))
-    setAlmacen(catalogoAlmacen.filter(p => p.codigo == data.almacen.codigo))
+    setUnidadMedida(catalogoUnidadMedida.filter(p => p.codigo == data.unidadMedida?.codigo))
     setFechaIngreso(data.fechaIngreso.substring(0, 10))
     setObservaciones(data.observaciones)
     setIdMercaderia(data.id)
@@ -698,10 +776,11 @@ const MercaderiaEditComponent = () => {
                   <ol className="breadcrumb">
                     <li className="breadcrumb-item"><a href="#">Depovent</a></li>
                     <li className="breadcrumb-item"><a href="#">Almacen</a></li>
-                    <li className="breadcrumb-item active">Nuevo Ingreso</li>
+                    <li className="breadcrumb-item active">Registrar Mercaderias</li>
+                    <p className="text-muted mb-0"><span style={{ color: 'red' }}>(*)</span> :Datos obligatorias que se debe ingresar</p>
                   </ol>
                 </div>
-                <h4 className="page-title">Registrar Ingreso</h4>
+                <h4 className="page-title">Registrar Mercaderias</h4>
               </div>
             </div>
           </div>
@@ -715,7 +794,7 @@ const MercaderiaEditComponent = () => {
                 </div>
                 <div className="card-body">
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Codigo del ingreso:</label>
+                    <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Codigo del ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
                         placeholder="Codigo del Ingreso"
@@ -728,7 +807,7 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise" >Tipo de mercaderia:</label>
+                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Tipo de mercaderia:</label>
                     <div className="col-sm-8">
                       <select value={tipoMercaderia}
                         className={`form-select-depo ${errors.msgTipoMercaderia ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
@@ -778,7 +857,7 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">RUC del dueño:</label>
+                    <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>RUC del dueño:</label>
                     <div className="col-sm-8">
                       <input type="number"
                         placeholder="Ingrese el numero de RUC"
@@ -820,16 +899,146 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise">Descripcion:</label>
+                    <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>RUC de la Agencia:</label>
+                    <div className="col-sm-8">
+                      <input type="number"
+                        placeholder="Ingrese el numero de RUC de la agencia"
+                        value={rucAgencia}
+                        className={`form-control-depo ${errors.msgRucAgencia ? 'is-invalid' : ''}`}
+                        onClick={handleShowAgencia}
+                        onChange={(e) => { setRucAgencia(e.target.value) }}
+                        readOnly>
+                      </input>
+                      {errors.msgRucAgencia && <div className='invalid-feedback'>{errors.msgRucAgencia}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Razon Social de la Agencia:</label>
                     <div className="col-sm-8">
                       <input type="text"
+                        placeholder='Razon Social de la Agencia'
+                        value={razonSocialAgencia}
+                        className='bg-secondary bg-opacity-10 form-control-depo'
+                        disabled
+                        onChange={(e) => { setRazonSocialAgencia(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Dirección de la Agencia:</label>
+                    <div className="col-sm-8">
+                      <input type='text'
+                        placeholder='Dirección de la Agencia'
+                        value={direccionAgencia}
+                        className='bg-secondary bg-opacity-10 form-control-depo'
+                        disabled
+                        onChange={(e) => { setDireccionAgencia(e.target.value) }}>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Descripcion:</label>
+                    <div className="col-sm-8">
+                      <textarea rows={3} cols={3}
                         placeholder='Descripcion'
                         value={descripcion}
                         onChange={(e) => { setDescripcion(e.target.value) }}
                         className={`form-control-depo ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
                         autoComplete='off'
                         disabled={indSalida}>
+                      </textarea>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Almacen:</label>
+                      <div className="col-sm-8">
+                        <Select value={almacen}
+                          onChange={setAlmacen}
+                          options={catalogoAlmacen}
+                          className={`form-select-depo${errors.msgAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        />
+                        {errors.msgAlmacen && <div className='invalid-feedback'>{errors.msgAlmacen}</div>}
+                      </div>
+                    </div>
+
+                    <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Guia:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Ingrese Guia'
+                        value={guia}
+                        onChange={(e) => { setGuia(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
                       </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                      <label className="col-sm-4 col-form-label-zise">Hora de termino:</label>
+                      <div className="col-sm-8">
+                        <input type="datetime-local"
+                          value={horaTermino}
+                          className={`form-control-depo`}
+                          onChange={(e) => { setHoraTermino(e.target.value) }}>
+                        </input>
+                      </div>
+                    </div>
+
+                    <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Indicador Factura / Fijo:</label>
+                    <div className="col-sm-8">
+                      <select value={indFacturarFijo}
+                        className={`form-select-depo${errors.msgIndFacturaFijo ? ' is-invalid' : ''}`}
+                        onChange={(e) => { setIndFacturarFijo(e.target.value) }}>
+                        <option value="">Seleccione</option>
+                        <option value="Factura">Factura</option>
+                        <option value="Fijo">Fijo</option>
+                      </select>
+                      {errors.msgIndFacturaFijo && <div className='invalid-feedback'>{errors.msgIndFacturaFijo}</div>}
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Nro Contenedor:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Ingrese el numero del contenedor'
+                        value={nroContenedor}
+                        onChange={(e) => { setNroContenedor(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Dimensiones del contenedor:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Ingrese las dimensiones del contenedor'
+                        value={dimensionContenedor}
+                        onChange={(e) => { setDimensionContenedor(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
+                    <div className="col-sm-8">
+                      <textarea rows={3} cols={3}
+                        placeholder='Ingrese observaciones'
+                        value={observaciones}
+                        onChange={(e) => { setObservaciones(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
+                      </textarea>
                     </div>
                   </div>
 
@@ -974,32 +1183,6 @@ const MercaderiaEditComponent = () => {
                       </div>
                     </div>
 
-                    <div className="mb-3 row">
-                      <label className="col-sm-4 col-form-label-zise" >Almacen:</label>
-                      <div className="col-sm-8">
-                        <Select value={almacen}
-                          onChange={setAlmacen}
-                          options={catalogoAlmacen}
-                          className={`form-select-depo${errors.msgAlmacen ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                        />
-                        {errors.msgAlmacen && <div className='invalid-feedback'>{errors.msgAlmacen}</div>}
-                      </div>
-                    </div>
-
-                    <div className="mb-3 row">
-                      <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
-                      <div className="col-sm-8">
-                        <input type="text"
-                          name="observaciones"
-                          placeholder='Observaciones de la mercaderia'
-                          value={observaciones}
-                          onChange={(e) => { setObservaciones(e.target.value) }}
-                          className={`form-control-depo ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                          autoComplete='off'
-                          disabled={indSalida}>
-                        </input>
-                      </div>
-                    </div>
                     {!indSalida &&
                       <div>
                         {indEdita &&
@@ -1101,11 +1284,11 @@ const MercaderiaEditComponent = () => {
                                 <td className='td-th-size-depo'>{mercaderia.numeroMercaderia}</td>
                                 <td className='td-th-size-depo'>{mercaderia.productoCodigo}</td>
                                 <td className='td-th-size-depo'>{mercaderia.descripcionProducto}</td>
-                                <td className='td-th-size-depo'>{mercaderia.unidadMedida.descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.unidadMedida?.descripcion}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidadOrignal}</td>
                                 <td className='td-th-size-depo'>{mercaderia.cantidad}</td>
                                 <td className='td-th-size-depo'>{formatearFecha(mercaderia.fechaIngreso.split("T")[0])}</td>
-                                <td className='td-th-size-depo'>{mercaderia.almacen.descripcion}</td>
+                                <td className='td-th-size-depo'>{mercaderia.almacen?.descripcion}</td>
                                 <td className='td-th-size-depo'>
                                   {mercaderia.estadoMercaderia === "Sin mercaderia" &&
                                     <span className="badge badge-boxed  badge-outline-primary">{mercaderia.estadoMercaderia}</span>
@@ -1170,6 +1353,7 @@ const MercaderiaEditComponent = () => {
         </div>
       }
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
+      <BusquedaClienteComponent show={showAgencia} handleClose={handleCloseAgencia} setCliente={setClienteAgencia} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
       <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias} />
       <MercaderiaOrdenSalidaComponent show={showOrdenSalida} handleClose={handleCloseOrdenSalida} idIngreso={id} />
