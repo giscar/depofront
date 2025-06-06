@@ -57,11 +57,13 @@ const MercaderiaEditComponent = () => {
   const [descripcionSalida, setDescripcionSalida] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
 
-    const [guia, setGuia] = useState('')
-    const [horaTermino, setHoraTermino] = useState('')
-    const [indFacturarFijo, setIndFacturarFijo] = useState('')
-    const [nroContenedor, setNroContenedor] = useState('')
-    const [dimensionContenedor, setDimensionContenedor] = useState('')
+  const [guia, setGuia] = useState('')
+  const [horaTermino, setHoraTermino] = useState('')
+  const [indFacturarFijo, setIndFacturarFijo] = useState('')
+  const [nroContenedor, setNroContenedor] = useState('')
+  const [dimensionContenedor, setDimensionContenedor] = useState('')
+
+  console.log(indNotaRecepcion)
 
   const showLoading = () => {
     Swal.fire({
@@ -1355,7 +1357,7 @@ const MercaderiaEditComponent = () => {
       <BusquedaClienteComponent show={show} handleClose={handleClose} setCliente={setCliente} />
       <BusquedaClienteComponent show={showAgencia} handleClose={handleCloseAgencia} setCliente={setClienteAgencia} />
       <MercaderiaSalidaComponent show={showSalida} handleClose={handleCloseSalida} numeroMercaderia={numeroMercaderiaSeleccionada} idIngreso={id} />
-      <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias} />
+      <MercaderiaNotaRecepcionComponent show={showNotaIngreso} handleClose={handleCloseNotaIngreso} idIngreso={id} mercaderias={mercaderias} setIndNotaRecepcion={setIndNotaRecepcion}/>
       <MercaderiaOrdenSalidaComponent show={showOrdenSalida} handleClose={handleCloseOrdenSalida} idIngreso={id} />
     </>
   )

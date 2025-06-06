@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Swal from 'sweetalert2'
+import { toast } from 'react-toastify';
 import { buscarCodigoNotaRecepcion, clienteForRuc, consultaRuc, ingresoById, mercaderiaSave, notaRecepcionSave, nuevoCliente } from '../../service/FacturaService';
 
-const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercaderias }) => {
+const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercaderias, setIndNotaRecepcion }) => {
 
   const [codigoRecepcion, setCodigoRecepcion] = useState('')
   const [numeroRecepcion, setNumeroRecepcion] = useState('')
@@ -132,6 +133,12 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     setDireccionEmpresa(data.direccion)
     setRazonSocialEmpresa(data.razonSocial)
     setRucEmpresa(data.ruc)
+    setRucAgencia(data.rucAgencia)
+    setRazonSocialAgencia(data.razonSocialAgencia)
+    setDireccionAgencia(data.direccionAgencia)
+    setDescripcion(data.descripcion)
+    setObservaciones(data.observaciones)
+    setGuiaRemision(data.guia)
   }
 
   const saveNotaRecepcion = (e) => {
@@ -175,9 +182,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
         p.numeroNotaRecepcion = numeroRecepcion
       })
       data.mercaderias = mercaderias
-      data.almacenado = almacenado
-      data.descripcion = descripcion
-      data.observaciones = observaciones
+      data.almacenado = almacenado?.toUpperCase()
+      data.descripcion = descripcion?.toUpperCase()
+      data.observaciones = observaciones?.toUpperCase()
       data.fechaRecepcion = fechaRecepcion
       showLoading()
       notaRecepcionSave(data).then( response => {
@@ -188,15 +195,14 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
           mercaderiaSave(p).then(q => {
             closeLoading()
             notify()
-          handleClose()
-          editarIngreso(codIngreso)
-          handleClose()
-          
+            handleClose()
+            editarIngreso(codIngreso)
+            handleClose()
           })
           closeLoading()
           handleClose()
-          
         })
+        setIndNotaRecepcion(true)
       }).catch(e => {
         console.log(e)
         closeLoading()
@@ -348,7 +354,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Nota recepcion"
                     value={codigoRecepcion}
-                    className={`form-control-depo ${errors.msgCodigoRecepcion ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodigoRecepcion ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
                   {errors.msgCodigoRecepcion && <div className='invalid-feedback'>{errors.msgCodigoRecepcion}</div>}
@@ -360,7 +366,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Codigo del Ingreso"
                     value={codIngreso}
-                    className={`form-control-depo ${errors.msgCodIngreso ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgCodIngreso ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
                   {errors.msgCodIngreso && <div className='invalid-feedback'>{errors.msgCodIngreso}</div>}
@@ -373,12 +379,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ruc de la agencia"
                     value={rucAgencia}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucAgencia ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setRucAgencia(e.target.value) }}/>
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRucAgencia ? ' is-invalid' : ''}`}
+                    onChange={(e) => { setRucAgencia(e.target.value) }}
+                    readOnly />
                   {errors.msgRucAgencia && <div className='invalid-feedback'>{errors.msgRucAgencia}</div>}
-                </div>
-                <div className='col-sm-2 text-start' >
-                  <button className='btn btn-primary' onClick={buscaRucAgencia}>Buscar</button>
                 </div>
               </div>
               <div className="mb-3 row">
@@ -387,7 +391,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Razon social agencia"
                     value={razonSocialAgencia}
-                    className={`form-control-depo ${errors.msgRazonSocialAgencia ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRazonSocialAgencia ? ' is-invalid' : ''}`}
                     onChange={(e) => { setRazonSocialAgencia(e.target.value) }}
                     readOnly>
                   </input>
@@ -400,8 +404,8 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                   <input type="text"
                     placeholder="Direccion agencia"
                     value={direccionAgencia}
-                    className={`form-control-depo ${errors.msgDireccionAgencia ? ' is-invalid' : ''}`}
-                    onChange={(e) => { setDireccionAgencia(e.target.value) }}>
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgDireccionAgencia ? ' is-invalid' : ''}`}
+                    onChange={(e) => { setDireccionAgencia(e.target.value) }} readOnly >
                   </input>
                   {errors.msgDireccionAgencia && <div className='invalid-feedback'>{errors.msgDireccionAgencia}</div>}
                 </div>
@@ -413,7 +417,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ruc de la Empresa"
                     value={rucEmpresa}
                     maxlength="11"
-                    className={`form-control-depo ${errors.msgRucEmpresa ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRucEmpresa ? ' is-invalid' : ''}`}
                     onChange={(e) => { setRucEmpresa(e.target.value) }}
                     readOnly/>
                   {errors.msgRucEmpresa && <div className='invalid-feedback'>{errors.msgRucEmpresa}</div>}
@@ -427,7 +431,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Razon social del cliente"
                     value={razonSocialEmpresa}
                     onChange={(e) => { setRazonSocialEmpresa(e.target.value) }}
-                    className={`form-control-depo ${errors.msgRazonSocialEmpresa ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgRazonSocialEmpresa ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
                   {errors.msgRazonSocialEmpresa && <div className='invalid-feedback'>{errors.msgRazonSocialEmpresa}</div>}
@@ -441,7 +445,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Direccion de la Empresa"
                     value={direccionEmpresa}
                     onChange={(e) => { setDireccionEmpresa(e.target.value) }}
-                    className={`form-control-depo ${errors.msgDireccionEmpresa ? ' is-invalid' : ''}`}
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgDireccionEmpresa ? ' is-invalid' : ''}`}
                     readOnly>
                   </input>
                   {errors.msgDireccionEmpresa && <div className='invalid-feedback'>{errors.msgDireccionEmpresa}</div>}
@@ -452,7 +456,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Chofer:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Nombre del chofer"
                     value={chofer}
                     onChange={(e) => { setChofer(e.target.value) }}
                     className={`form-control-depo ${errors.msgChofer ? ' is-invalid' : ''}`}>
@@ -465,7 +469,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Placa del vehiculo:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Placa vehicular"
                     value={placaVehiculo}
                     onChange={(e) => { setPlacaVehiculo(e.target.value) }}
                     className={`form-control-depo ${errors.msgPlacaVehiculo ? ' is-invalid' : ''}`}>
@@ -478,10 +482,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Guia de remision o factura:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="Codigo del Ingreso"
+                    placeholder="Guia de remision o factura"
                     value={guiaRemision}
                     onChange={(e) => { setGuiaRemision(e.target.value) }}
-                    className={`form-control-depo ${errors.msgGuiaRemision ? ' is-invalid' : ''}`}>
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgGuiaRemision ? ' is-invalid' : ''}`}>
                   </input>
                   {errors.msgGuiaRemision && <div className='invalid-feedback'>{errors.msgGuiaRemision}</div>}
                 </div>
@@ -507,7 +511,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="ingrese el detalle almacenado"
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
-                    className="form-control">
+                    className="form-control-depo" >
                   </input>
                 </div>
               </div>
@@ -519,7 +523,8 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ingrese Descripcion"
                     value={descripcion}
                     onChange={(e) => { setDescripcion(e.target.value) }}
-                    className={`form-control-depo ${errors.msgDescripcion ? ' is-invalid' : ''}`}>
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgDescripcion ? ' is-invalid' : ''}`}
+                    readOnly >
                   </textarea>
                   {errors.msgDescripcion && <div className='invalid-feedback'>{errors.msgDescripcion}</div>}
                 </div>
@@ -532,7 +537,8 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ingrese observaciones"
                     value={observaciones}
                     onChange={(e) => { setObservaciones(e.target.value) }}
-                    className={`form-control-depo ${errors.msgObservaciones ? ' is-invalid' : ''}`}>
+                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgObservaciones ? ' is-invalid' : ''}`}
+                    readOnly >
                   </textarea>
                   {errors.msgObservaciones && <div className='invalid-feedback'>{errors.msgObservaciones}</div>}
                 </div>

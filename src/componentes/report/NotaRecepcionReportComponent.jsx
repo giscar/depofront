@@ -247,7 +247,6 @@ const NotaRecepcionReportComponent = ({ id }) => {
 
   const [nota, setNota] = useState({})
 
-
   useEffect(() => {
     if (id) {
       notaRecepciondByIdIngreso(id).then(p =>{

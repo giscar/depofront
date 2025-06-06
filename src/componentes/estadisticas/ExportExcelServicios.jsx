@@ -92,7 +92,7 @@ const ExportExcelServicios = ({ servicios }) => {
         </button>
       )}
     </>
-  );
-};
+  )
+}
 
 export default ExportExcelServicios;
