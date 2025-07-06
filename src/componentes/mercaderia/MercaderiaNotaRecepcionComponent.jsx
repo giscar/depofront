@@ -81,38 +81,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     handleCodRecepcion();
   }, [])
 
-  const buscaRucAgencia = (e) => {
-    e.preventDefault();
-    if (rucAgencia.length !== 11) {
-      alerta("El RUC debe tener 11 digitos")
-      setRucAgencia("")
-      return
-    }
-    showLoading()
-    clienteForRuc(rucAgencia).then(p => {
-      if(p.data.length > 0){
-        setRucAgencia(p.data[0].ruc)
-        setRazonSocialAgencia(p.data[0].razonSocial)
-        setDireccionAgencia(p.data[0].direccion)
-      }else{
-        consultaRuc(rucAgencia).then(response => {
-          setRucAgencia(response.data.ruc)
-          setRazonSocialAgencia(response.data.razonSocial)
-          setDireccionAgencia(response.data.direccion)
-          const data = {}
-          data.ruc = response.data.ruc
-          data.razonSocial = response.data.razonSocial
-          data.direccion = response.data.direccion
-          nuevoCliente(data)
-        }).catch(error => {
-          console.log(error)
-          closeLoading()
-        })
-      }
-      closeLoading()
-    })
-  }
-
   const buscarIngresoById = () => {
     ingresoById(idIngreso).then(response => {
       setIngreso(response.data)
@@ -148,6 +116,10 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       return
     }
     let i = 0
+    if(mercaderias.length == 0){
+      alerta("No se han ingresado mercaderias")
+      return
+    }
     mercaderias.map(p => {
       if(p.idNotaRecepcion){
         i++
@@ -163,7 +135,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       let empresa = {}
       agencia.ruc = rucAgencia
       agencia.razonSocial = razonSocialAgencia
-      agencia.direccion  = direccionAgencia
+      agencia.direccion = direccionAgencia
 
       empresa.ruc = rucEmpresa
       empresa.razonSocial = razonSocialEmpresa
@@ -178,7 +150,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       data.guiaRemision = guiaRemision
       data.placaVehiculo = placaVehiculo?.toUpperCase()
       mercaderias.map(p => {
-      //p.idNotaRecepcion = idNotaRecepcion
         p.numeroNotaRecepcion = numeroRecepcion
       })
       data.mercaderias = mercaderias
@@ -188,8 +159,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       data.fechaRecepcion = fechaRecepcion
       showLoading()
       notaRecepcionSave(data).then( response => {
-        debugger
-        console.log(response.data)
         mercaderias.map(p => {
           p.idNotaRecepcion = response.data.id
           mercaderiaSave(p).then(q => {
@@ -206,7 +175,6 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       }).catch(e => {
         console.log(e)
         closeLoading()
-       
       })
     }
   }
@@ -322,14 +290,14 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       errorCopy.msgDescripcion = 'Debe ingresar la descripcion de la mercaderia de ingreso';
       valid = false;
     }
-
+/*
     if (observaciones) {
       errorCopy.msgObservaciones = '';
     } else {
       errorCopy.msgObservaciones = 'Debe ingresar la observacion de la mercaderia de ingreso';
       valid = false;
     }
-
+*/
     setErrors(errorCopy);
     return valid;
   }
@@ -505,7 +473,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
               </div>
 
               <div className="mb-3 row">
-                <label className="col-sm-4 col-form-label-zise">Almacenado:</label>
+                <label className="col-sm-4 col-form-label-zise">Almacenero:</label>
                 <div className="col-sm-8">
                   <input type="text"
                     placeholder="ingrese el detalle almacenado"
@@ -537,10 +505,9 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                     placeholder="Ingrese observaciones"
                     value={observaciones}
                     onChange={(e) => { setObservaciones(e.target.value) }}
-                    className={`bg-secondary bg-opacity-10 form-control-depo ${errors.msgObservaciones ? ' is-invalid' : ''}`}
+                    className="form-control-depo"
                     readOnly >
                   </textarea>
-                  {errors.msgObservaciones && <div className='invalid-feedback'>{errors.msgObservaciones}</div>}
                 </div>
               </div>
             </Form.Group>

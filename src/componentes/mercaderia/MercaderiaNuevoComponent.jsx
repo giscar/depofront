@@ -30,6 +30,7 @@ const MercaderiaNuevoComponent = () => {
   const [indFacturarFijo, setIndFacturarFijo] = useState('')
   const [nroContenedor, setNroContenedor] = useState('')
   const [dimensionContenedor, setDimensionContenedor] = useState('')
+  const [otrosVehiculos, setOtrosVehiculos] = useState('')
   const [observaciones, setObservaciones] = useState('')
 
   const navigator = useNavigate();
@@ -78,6 +79,7 @@ const MercaderiaNuevoComponent = () => {
     msgSerie: '',
     msgAlmacen: '',
     msgIndFacturaFijo: '',
+    msgObservaciones: '',
     
   })
 
@@ -178,6 +180,13 @@ const MercaderiaNuevoComponent = () => {
       valid = false;
     }
 
+    /*if (observaciones) {
+      errorCopy.msgObservaciones = '';
+    } else {
+      errorCopy.msgObservaciones = 'Tiene que ingresar una observacion';
+      valid = false;
+    }*/
+
     setErrors(errorCopy);
     return valid;
   }
@@ -208,7 +217,8 @@ const MercaderiaNuevoComponent = () => {
       data.indFacturarFijo = indFacturarFijo;
       data.nroContenedor = nroContenedor;
       data.dimensionContenedor = dimensionContenedor;
-      data.observaciones = observaciones;
+      data.otrosVehiculos = otrosVehiculos;
+      data.observaciones = observaciones?.toUpperCase();
       ingresoSave(data).then((response) => {
         closeLoading()
         irMercaderia(response.data.id)
@@ -288,7 +298,7 @@ const MercaderiaNuevoComponent = () => {
                   <p className="text-muted mb-0">Debe ser ingresada por el/la administrador(a) del modulo de almacenes.</p>
                 </div>
                 <div className="card-body">
-                  <div className="mb-3 row">
+                  <div className="mb-3 row d-none">
                     <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>Numero de ingreso:</label>
                     <div className="col-sm-8">
                       <input type="text"
@@ -323,8 +333,7 @@ const MercaderiaNuevoComponent = () => {
                         placeholder='Numero de Pedido de Deposito'
                         value={pedidoDeposito}
                         onChange={(e) => { setPedidoDeposito(e.target.value) }}
-                        className={` form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''}`}
-                        disabled={tipoMercaderia == "Simple" ? true : false}
+                        className='form-control-depo'                        
                         autoComplete='off'>
                       </input>
                       {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
@@ -338,8 +347,7 @@ const MercaderiaNuevoComponent = () => {
                         placeholder='Numero de DAM / DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
-                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''}`}
-                        disabled={tipoMercaderia == "Simple" ? true : false}
+                        className='form-control-depo'                        
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
@@ -479,7 +487,7 @@ const MercaderiaNuevoComponent = () => {
                     </div>
 
                     <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Indicador Factura / Fijo:</label>
+                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Facturar / Fijo:</label>
                     <div className="col-sm-8">
                       <select value={indFacturarFijo}
                         className={`form-select-depo${errors.msgIndFacturaFijo ? ' is-invalid' : ''}`}
@@ -519,6 +527,19 @@ const MercaderiaNuevoComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Otro Vehiculo:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Ingrese el otro vehiculo'
+                        value={otrosVehiculos}
+                        onChange={(e) => { setOtrosVehiculos(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
                     <label className="col-sm-4 col-form-label-zise">Observaciones:</label>
                     <div className="col-sm-8">
                       <textarea rows={3} cols={3}
@@ -530,7 +551,6 @@ const MercaderiaNuevoComponent = () => {
                       </textarea>
                     </div>
                   </div>
-
                   <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>
                 </div>
               </div>

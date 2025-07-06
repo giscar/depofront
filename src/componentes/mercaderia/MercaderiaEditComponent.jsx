@@ -63,6 +63,7 @@ const MercaderiaEditComponent = () => {
   const [indFacturarFijo, setIndFacturarFijo] = useState('')
   const [nroContenedor, setNroContenedor] = useState('')
   const [dimensionContenedor, setDimensionContenedor] = useState('')
+  const [otrosVehiculos, setOtrosVehiculos] = useState('')
 
   console.log(indNotaRecepcion)
 
@@ -167,6 +168,7 @@ const MercaderiaEditComponent = () => {
     setIndFacturarFijo(data.indFacturarFijo)
     setNroContenedor(data.nroContenedor)
     setDimensionContenedor(data.dimensionContenedor)
+    setOtrosVehiculos(data.otrosVehiculos)
     setObservaciones(data.observaciones)
     setIngreso(data)
   }
@@ -387,7 +389,7 @@ const MercaderiaEditComponent = () => {
       data.cantidad = cantidad
       data.cantidadOrignal = cantidad
       data.fechaIngreso = fechaIngreso
-      data.observaciones = observaciones
+      data.observaciones = observaciones?.toUpperCase()
       data.serie = serie
       data.numeroMercaderia = numeroMercaderia?.toUpperCase()
       data.codMercaderia = codMercaderia
@@ -437,7 +439,7 @@ const MercaderiaEditComponent = () => {
       data.cantidad = cantidad
       data.cantidadOrignal = cantidad
       data.fechaIngreso = fechaIngreso
-      data.observaciones = observaciones
+      data.observaciones = observaciones?.toUpperCase()
       data.serie = serie
       data.numeroMercaderia = numeroMercaderia?.toUpperCase()
       data.codMercaderia = codMercaderia
@@ -511,6 +513,7 @@ const MercaderiaEditComponent = () => {
       data.indFacturarFijo = indFacturarFijo;
       data.nroContenedor = nroContenedor;
       data.dimensionContenedor = dimensionContenedor;
+      data.otrosVehiculos = otrosVehiculos;
       data.observaciones = observaciones;
       data.usuarioRegistro = initialLogin.documento;
       data.id = id;
@@ -835,8 +838,6 @@ const MercaderiaEditComponent = () => {
                         value={pedidoDeposito}
                         onChange={(e) => { setPedidoDeposito(e.target.value) }}
                         className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                        disabled={tipoMercaderia == "Simple" ? true : false}
-                        readOnly={indSalida}
                         autoComplete='off'>
                       </input>
                       {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
@@ -851,8 +852,6 @@ const MercaderiaEditComponent = () => {
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
                         className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
-                        disabled={tipoMercaderia == "Simple" ? true : false}
-                        readOnly={indSalida}
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
@@ -993,7 +992,7 @@ const MercaderiaEditComponent = () => {
                     </div>
 
                     <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Indicador Factura / Fijo:</label>
+                    <label className="col-sm-4 col-form-label-zise" ><span style={{ color: 'red' }}>(*)</span>Facturar / Fijo:</label>
                     <div className="col-sm-8">
                       <select value={indFacturarFijo}
                         className={`form-select-depo${errors.msgIndFacturaFijo ? ' is-invalid' : ''}`}
@@ -1026,6 +1025,19 @@ const MercaderiaEditComponent = () => {
                         placeholder='Ingrese las dimensiones del contenedor'
                         value={dimensionContenedor}
                         onChange={(e) => { setDimensionContenedor(e.target.value) }}
+                        className={`form-control-depo`}
+                        autoComplete='off'>
+                      </input>
+                    </div>
+                  </div>
+
+                  <div className="mb-3 row">
+                    <label className="col-sm-4 col-form-label-zise">Otro Vehiculo:</label>
+                    <div className="col-sm-8">
+                      <input type="text"
+                        placeholder='Ingrese el otro vehiculo'
+                        value={otrosVehiculos}
+                        onChange={(e) => { setOtrosVehiculos(e.target.value) }}
                         className={`form-control-depo`}
                         autoComplete='off'>
                       </input>

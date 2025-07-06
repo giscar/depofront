@@ -150,7 +150,7 @@ const MercaderiaComponent = () => {
             <div className="col-lg-3">
               <label className='col-form-label-zise'>Pedido de deposito:</label>
               <input type="number"
-                placeholder="Codigo del servicio"
+                placeholder="Numero de pedido de deposito"
                 value={pedidoDeposito}
                 className="form-control-depo"
                 onChange={(e) => { setPedidoDeposito(e.target.value) }}>
@@ -160,7 +160,7 @@ const MercaderiaComponent = () => {
             <div className="col-lg-3">
               <label className='col-form-label-zise'>DUA / DAM:</label>
               <input type="number"
-                placeholder="Codigo del servicio"
+                placeholder="DUA o DAM"
                 value={codigoDua}
                 className="form-control-depo"
                 onChange={(e) => { setCodigoDua(e.target.value) }}>
