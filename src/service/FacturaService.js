@@ -1,8 +1,8 @@
 import axios from "axios";
 
 //const url =  "http://161.35.0.67:8080/";
-//const url = "http://localhost:8080/";
-const url =  "https://erp.depovent.com.pe/app/";
+const url = "http://localhost:8080/";
+//const url =  "https://erp.depovent.com.pe/app/";
 
 
 const apiPeru = "https://dniruc.apisperu.com/api/v1/ruc/20131312955?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNhcmVsaTMwMTBAZ21haWwuY29tIn0.NrIg6H6iH-awBAti4elyZ048ls9uCaEG6Y-rIwmbGGU"

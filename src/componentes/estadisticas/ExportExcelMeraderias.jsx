@@ -80,8 +80,8 @@ const ExportExcelMercaderias = ({ mercaderias }) => {
     longitudes.forEach((col) => {
       propiedades.push({
         width: col,
-      });
-    });
+      })
+    })
 
     hoja["!cols"] = propiedades;
 

@@ -81,6 +81,9 @@ const MercaderiaComponent = () => {
 
   const buscarIngresos = () => {
     showLoading()
+    if(!ruc){
+      setRuc("");
+    }
     ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia, estadoRegistro).then((response) => {
       setIngresos(response.data);
       closeLoading()
@@ -239,7 +242,7 @@ const MercaderiaComponent = () => {
                         <a className='icon-link-depo' onClick={() => editarIngreso(item.id)}>
                           <i className="bi bi-pencil-fill"></i>
                         </a>
-
+                        &nbsp;&nbsp;
                         <a className='icon-link-depo' onClick={() => handleShowSalida(item.id)}>
                           <i className="bi bi-eye-fill"></i>
                         </a>
