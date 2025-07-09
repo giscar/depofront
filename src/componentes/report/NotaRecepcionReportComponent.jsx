@@ -9,7 +9,7 @@ import {
 import Logo from "../../assets/Logo.png"
 import { useEffect, useState } from "react";
 import { ToWords } from 'to-words';
-import { notaRecepciondByIdIngreso } from "../../service/FacturaService";
+import { ingresoById, notaRecepciondByIdIngreso } from "../../service/FacturaService";
 
 const toWords = new ToWords({
   localeCode: 'es-ES',
@@ -64,6 +64,11 @@ const styles = StyleSheet.create({
   textoUpper: {
     fontSize: 9,
     textAlign: "right",
+    fontWeight: "bold",
+  },
+  textoUpperLeft: {
+    fontSize: 10,
+    textAlign: "left",
     fontWeight: "bold",
   },
   subtitle1: {
@@ -159,8 +164,23 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
+  cell10: {
+    width: '10%',
+    textAlign: 'left',
+    color: '#222'
+  },
   cell20: {
     width: '20%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cell50: {
+    width: '50%',
+    textAlign: 'left',
+    color: '#222'
+  },
+  cell100: {
+    width: '100%',
     textAlign: 'left',
     color: '#222'
   },
@@ -246,6 +266,7 @@ const styles = StyleSheet.create({
 const NotaRecepcionReportComponent = ({ id }) => {
 
   const [nota, setNota] = useState({})
+  const [ingreso, setIngreso] = useState({})
 
   useEffect(() => {
     if (id) {
@@ -260,7 +281,10 @@ const NotaRecepcionReportComponent = ({ id }) => {
         p.data.unidadDescripcion = unidadDescripcion 
         console.log(p)
         setNota(p.data)
-      })
+      }).then(ingresoById(id).then(p => {
+        debugger
+        setIngreso(p.data);
+      }))
     }
   }, [])
 
@@ -306,81 +330,81 @@ const NotaRecepcionReportComponent = ({ id }) => {
               <Text style={styles.subtitle}>NOTA DE RECEPCION</Text>
             </View>
             <View style={styles.cell30}>
-              <Text style={styles.subtitle}>{nota.numeroRecepcion?.toString().padStart(6, '0')}</Text>
+              <Text style={styles.subtitle}>Nro. {nota.numeroRecepcion?.toString().padStart(6, '0')}</Text>
             </View>
           </View>
           <View style={styles.row}>
-            <View style={styles.cell20}>
-              <Text style={styles.texto}>Recibido de: </Text>
-            </View>
-            <View style={styles.cell80}>
-              <Text style={styles.textoUpper}>{nota.agencia?.razonSocial}</Text>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>RECIBIDO DE: {nota.agencia?.razonSocial}</Text>
             </View>
           </View>
           <View style={styles.row}>
-            <View style={styles.cell20}>
-              <Text style={styles.texto}>Chofer: </Text>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>CHOFER: {nota?.chofer}</Text>
             </View>
-            <View style={styles.cell30}>
-              <Text style={styles.texto}>{nota?.chofer}</Text>
-            </View>
-            <View style={styles.cell20}>
-              <Text style={styles.texto}>Placa: </Text>
-            </View>
-            <View style={styles.cell30}>
-              <Text style={styles.texto}>{nota?.placaVehiculo}</Text>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>PLACA: {nota?.placaVehiculo}</Text>
             </View>
           </View>
           <View style={styles.row}>
-            <View style={styles.cell40}>
-              <Text style={styles.texto}>Guia de remision o factura: </Text>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>GUIA/FACTURA: {nota?.guiaRemision}</Text>
             </View>
-            <View style={styles.cell60}>
-              <Text style={styles.texto}>{nota?.guiaRemision}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell20}>
-              <Text style={styles.texto}>Posterior facturado: </Text>
-            </View>
-            <View style={styles.cell80}>
-              <Text style={styles.textoUpper}>{nota.empresa?.razonSocial}</Text>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>DAM/DUA: {ingreso?.codigoDua}</Text>
             </View>
           </View>
           <View style={styles.row}>
-            
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>POSTERIOR FACTURADO: {nota.empresa?.razonSocial}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>HORA DE TERMINO: {ingreso?.horaTermino?.replace("T", " ")}</Text>
+            </View>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>ALMACEN: {ingreso?.almacen?.descripcion}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>FACTURAR O FIJO: {ingreso?.indFacturarFijo}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>NRO CONTENEDOR: {ingreso?.nroContenedor}</Text>
+            </View>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>DIMENSION CONTENEDOR: {ingreso?.dimensionContenedor}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>OBSERVACIONES: {nota?.observaciones}</Text>
+            </View>
           </View>
           <View style={styles.row}>
             <View style={styles.cell20th}>
-              <Text style={styles.subtitle}>Cantidad</Text>
+              <Text style={styles.textoUpperLeft}>CANTIDAD</Text>
             </View>
             <View style={styles.cell20th}>
-              <Text style={styles.subtitle}>Unidad</Text>
+              <Text style={styles.textoUpperLeft}>UNIDAD</Text>
             </View>
             <View style={styles.cell60th}>
-              <Text style={styles.subtitle}>Descripcion</Text>
+              <Text style={styles.textoUpperLeft}>RESUMEN DEL INGRESO</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.cell20}>
-              <Text style={styles.subtitle}>{nota?.cantidadMercaderia}</Text>
+              <Text style={styles.textoUpperLeft}>{nota?.cantidadMercaderia}</Text>
             </View>
             <View style={styles.cell20}>
-              <Text style={styles.subtitle}>{nota?.unidadDescripcion}</Text>
+              <Text style={styles.textoUpperLeft}>{nota?.unidadDescripcion}</Text>
             </View>
             <View style={styles.cell60}>
-              <Text style={styles.subtitle}>{nota?.descripcion}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell40}>
-              <Text style={styles.texto}>Observaciones: </Text>
-            </View>
-            <View style={styles.cell60}>
-              <Text style={styles.texto}>{nota?.observaciones}</Text>
+              <Text style={styles.textoUpperLeft}>{nota?.descripcion}</Text>
             </View>
           </View>
         </View>

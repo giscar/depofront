@@ -837,7 +837,7 @@ const MercaderiaEditComponent = () => {
                         placeholder='Numero de Pedido de Deposito'
                         value={pedidoDeposito}
                         onChange={(e) => { setPedidoDeposito(e.target.value) }}
-                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgPedidoDeposito ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        className='form-control-depo'                        
                         autoComplete='off'>
                       </input>
                       {errors.msgPedidoDeposito && <div className='invalid-feedback'>{errors.msgPedidoDeposito}</div>}
@@ -851,7 +851,7 @@ const MercaderiaEditComponent = () => {
                         placeholder='Numero de DAM / DUA'
                         value={codigoDua}
                         onChange={(e) => { setCodigoDua(e.target.value) }}
-                        className={`form-control-depo ${tipoMercaderia == "Simple" ? "bg-secondary bg-opacity-10" : ""} ${errors.msgCodigoDua ? ' is-invalid' : ''} ${indSalida ? ' bg-secondary bg-opacity-10' : ''}`}
+                        className='form-control-depo'
                         autoComplete='off'>
                       </input>
                       {errors.msgCodigoDua && <div className='invalid-feedback'>{errors.msgCodigoDua}</div>}
@@ -1084,7 +1084,7 @@ const MercaderiaEditComponent = () => {
                           }
                         </PDFDownloadLink>
                         &nbsp;&nbsp;
-                        <button type="button" className="btn-depo btn-primary-depo" onClick={descargarNotaRecepcion}>Guardar</button>&nbsp;&nbsp;
+                        <button type="button" className="btn-depo btn-primary-depo" onClick={handleSubmit}>Guardar</button>&nbsp;&nbsp;
                       </div>
                     </div>
                   }
