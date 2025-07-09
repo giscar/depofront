@@ -214,7 +214,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
       valid = false;
     }
 
-    if (rucAgencia) {
+    /*if (rucAgencia) {
       errorCopy.msgRucAgencia = '';
     } else {
       errorCopy.msgRucAgencia = 'No se ha ingresado el RUC de la agencia';
@@ -233,7 +233,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
     } else {
       errorCopy.msgDireccionAgencia = 'No se ha ingresado la direccion de la agencia';
       valid = false;
-    }
+    }*/
 
     if (rucEmpresa) {
       errorCopy.msgRucEmpresa = '';
@@ -341,7 +341,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 </div>
               </div>
               <div className="mb-3 row pb-2">
-                <label className="col-sm-4 col-form-label-zise "><span style={{ color: 'red' }}>(*)</span>RUC Agencia:</label>
+                <label className="col-sm-4 col-form-label-zise ">RUC Agencia:</label>
                 <div className="col-sm-6">
                   <input type="number"
                     placeholder="Ruc de la agencia"

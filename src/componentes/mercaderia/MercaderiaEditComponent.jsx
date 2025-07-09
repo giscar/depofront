@@ -901,7 +901,7 @@ const MercaderiaEditComponent = () => {
                   </div>
 
                   <div className="mb-3 row">
-                    <label className="col-sm-4 col-form-label-zise"><span style={{ color: 'red' }}>(*)</span>RUC de la Agencia:</label>
+                    <label className="col-sm-4 col-form-label-zise">RUC de la Agencia:</label>
                     <div className="col-sm-8">
                       <input type="number"
                         placeholder="Ingrese el numero de RUC de la agencia"
