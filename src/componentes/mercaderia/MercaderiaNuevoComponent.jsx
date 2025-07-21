@@ -493,7 +493,7 @@ const MercaderiaNuevoComponent = () => {
                         className={`form-select-depo${errors.msgIndFacturaFijo ? ' is-invalid' : ''}`}
                         onChange={(e) => { setIndFacturarFijo(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Factura">Factura</option>
+                        <option value="Facturar">Facturar</option>
                         <option value="Fijo">Fijo</option>
                       </select>
                       {errors.msgIndFacturaFijo && <div className='invalid-feedback'>{errors.msgIndFacturaFijo}</div>}

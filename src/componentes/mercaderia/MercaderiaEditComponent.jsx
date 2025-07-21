@@ -998,7 +998,7 @@ const MercaderiaEditComponent = () => {
                         className={`form-select-depo${errors.msgIndFacturaFijo ? ' is-invalid' : ''}`}
                         onChange={(e) => { setIndFacturarFijo(e.target.value) }}>
                         <option value="">Seleccione</option>
-                        <option value="Factura">Factura</option>
+                        <option value="Facturar">Facturar</option>
                         <option value="Fijo">Fijo</option>
                       </select>
                       {errors.msgIndFacturaFijo && <div className='invalid-feedback'>{errors.msgIndFacturaFijo}</div>}
@@ -1272,8 +1272,8 @@ const MercaderiaEditComponent = () => {
                   <p className="text-muted mb-0">Esta información corresponde a las mercaderias que se encuentran en los almacenes.
                   </p>
                 </div>
-                <div className='w-25'>
-                <ExportExcelMercaderias mercaderias={mercaderias} />
+                <div className='w-75 text-start'>
+                  <ExportExcelMercaderias mercaderias={mercaderias} />
                 </div>
                 
                 <div className="card-body">

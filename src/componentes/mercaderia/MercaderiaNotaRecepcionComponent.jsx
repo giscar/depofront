@@ -476,7 +476,7 @@ const MercaderiaNotaRecepcionComponent = ({ show, handleClose, idIngreso, mercad
                 <label className="col-sm-4 col-form-label-zise">Almacenero:</label>
                 <div className="col-sm-8">
                   <input type="text"
-                    placeholder="ingrese el detalle almacenado"
+                    placeholder="ingrese el nombre del almacenero"
                     value={almacenado}
                     onChange={(e) => { setAlmacenado(e.target.value) }}
                     className="form-control-depo" >

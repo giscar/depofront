@@ -154,8 +154,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
-  cell60: {
-    width: '60%',
+  cell50: {
+    width: '50%',
     textAlign: 'left',
     color: '#222'
   },
@@ -174,26 +174,33 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: '#222'
   },
-  cell50: {
-    width: '50%',
-    textAlign: 'left',
-    color: '#222'
-  },
   cell100: {
     width: '100%',
     textAlign: 'left',
     color: '#222'
   },
+  cell10th: {
+    width: '10%',
+    textAlign: 'left',
+    color: '#222',
+    height: '40px',
+    paddingTop: 10,
+    backgroundColor: '#b4b0b0'
+  },
   cell20th: {
     width: '20%',
     textAlign: 'left',
     color: '#222',
+    height: '40px',
+    paddingTop: 10,
     backgroundColor: '#b4b0b0'
   },
-  cell60th: {
-    width: '60%',
+  cell50th: {
+    width: '50%',
     textAlign: 'left',
     color: '#222',
+    height: '40px',
+    paddingTop: 10,
     backgroundColor: '#b4b0b0'
   },
   cell30: {
@@ -273,13 +280,17 @@ const NotaRecepcionReportComponent = ({ id }) => {
       notaRecepciondByIdIngreso(id).then(p =>{
         let cantidadMercaderia = 0;
         let unidadDescripcion = "";
+        let serie = "";
         p.data.mercaderias.map(mer =>{
           cantidadMercaderia = cantidadMercaderia + mer.cantidad
           unidadDescripcion = mer.unidadMedida.descripcion
+          serie = mer.serie
         })
         p.data.cantidadMercaderia = cantidadMercaderia
         p.data.unidadDescripcion = unidadDescripcion 
+        p.data.serie = serie
         console.log(p)
+        debugger
         setNota(p.data)
       }).then(ingresoById(id).then(p => {
         debugger
@@ -356,9 +367,10 @@ const NotaRecepcionReportComponent = ({ id }) => {
           </View>
           <View style={styles.row}>
             <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>POSTERIOR FACTURADO: {nota.empresa?.razonSocial}</Text>
+              <Text style={styles.textoUpperLeft}>ALMACENADO POR CUENTA DE: {nota.empresa?.razonSocial}</Text>
             </View>
           </View>
+          
           <View style={styles.row}>
             <View style={styles.cell50}>
               <Text style={styles.textoUpperLeft}>HORA DE TERMINO: {ingreso?.horaTermino?.replace("T", " ")}</Text>
@@ -370,6 +382,11 @@ const NotaRecepcionReportComponent = ({ id }) => {
           <View style={styles.row}>
             <View style={styles.cell100}>
               <Text style={styles.textoUpperLeft}>FACTURAR O FIJO: {ingreso?.indFacturarFijo}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>ALMACENERO QUE RECEPCIONÓ LA CARGA: {nota.almacenado}</Text>
             </View>
           </View>
           <View style={styles.row}>
@@ -386,24 +403,30 @@ const NotaRecepcionReportComponent = ({ id }) => {
             </View>
           </View>
           <View style={styles.row}>
+            <View style={styles.cell10th}>
+              <Text style={styles.textoUpperLeft}>SERIE</Text>
+            </View>
             <View style={styles.cell20th}>
               <Text style={styles.textoUpperLeft}>CANTIDAD</Text>
             </View>
             <View style={styles.cell20th}>
               <Text style={styles.textoUpperLeft}>UNIDAD</Text>
             </View>
-            <View style={styles.cell60th}>
+            <View style={styles.cell50th}>
               <Text style={styles.textoUpperLeft}>RESUMEN DEL INGRESO</Text>
             </View>
           </View>
           <View style={styles.row}>
+            <View style={styles.cell10}>
+              <Text style={styles.textoUpperLeft}>{nota?.serie}</Text>
+            </View>
             <View style={styles.cell20}>
               <Text style={styles.textoUpperLeft}>{nota?.cantidadMercaderia}</Text>
             </View>
             <View style={styles.cell20}>
               <Text style={styles.textoUpperLeft}>{nota?.unidadDescripcion}</Text>
             </View>
-            <View style={styles.cell60}>
+            <View style={styles.cell50}>
               <Text style={styles.textoUpperLeft}>{nota?.descripcion}</Text>
             </View>
           </View>
