@@ -17,6 +17,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
   const [chofer, setChofer] = useState('')
   const [placaVehiculo, setPlacaVehiculo] = useState('')
   const [fechaEmision, setFechaEmision] = useState('')
+  const [fechaInicioTranslado, setFechaInicioTranslado] = useState('')
   const [salidas, setSalidas] = useState([])
   const [ingreso, setIngreso] = useState([])
 
@@ -139,6 +140,14 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
       valid = false;
     }
 
+    if (fechaInicioTranslado) {
+      errorCopy.msgFechaInicioTranslado = '';
+    } else {
+      errorCopy.msgFechaInicioTranslado = 'Debe ingresar la fecha de inicio de translado';
+      valid = false;
+    }
+    
+
     setErrors(errorCopy);
     return valid;
   }
@@ -167,6 +176,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
     data.chofer = chofer
     data.placaVehiculo = placaVehiculo
     data.fechaEmision = fechaEmision
+    data.fechaInicioTranslado = fechaInicioTranslado
     data.salidas = salidas
     showLoading()
     ordenSalidaSave(data).then(p => {
