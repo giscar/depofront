@@ -290,10 +290,8 @@ const NotaRecepcionReportComponent = ({ id }) => {
         p.data.unidadDescripcion = unidadDescripcion 
         p.data.serie = serie
         console.log(p)
-        debugger
         setNota(p.data)
       }).then(ingresoById(id).then(p => {
-        debugger
         setIngreso(p.data);
       }))
     }

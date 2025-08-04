@@ -64,7 +64,6 @@ const MercaderiaKardexComponent = ({ show, handleClose, idIngreso }) => {
                     <th className='td-th-size-depo'>Placa vehicular</th>
                     <th className='td-th-size-depo'>fecha de salida</th>
                     <th className='td-th-size-depo'>Acciones</th>
-                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -79,17 +78,17 @@ const MercaderiaKardexComponent = ({ show, handleClose, idIngreso }) => {
                           <a className='icon-link-depo' onClick={() => descargarOrdenSalida()}>
                             <i className="bi bi-pencil-fill"></i>
                           </a>
-                          <td>
-                            <PDFDownloadLink document={<NotaSalidaReportComponent id={os.id} />} fileName={1233}>
+                          &nbsp;&nbsp;
+                            <PDFDownloadLink document={<NotaSalidaReportComponent id={os.id} />} fileName={os.rucDestinatario + '_orden_salida.pdf'}>
                                                       {({ loading, url, error, blob }) =>
                                                         loading ? (
-                                                          <button className="btn-depo btn-warning-depo">Loading Document ...</button>
+                                                          <i class="bi bi-arrow-clockwise"></i>
                                                         ) : (
-                                                          <button className="btn-depo btn-warning-depo">Descargar Nota recepcion</button>
+                                                          <i class="bi bi-cloud-download-fill"></i>
                                                         )
                                                       }
                                                     </PDFDownloadLink>
-                          </td>
+                    
                         </td>
                       </tr>
                     )

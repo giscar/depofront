@@ -87,7 +87,6 @@ const MercaderiaComponent = () => {
     ingresoPorFiltros(pedidoDeposito, codigoDua, ruc, tipoMercaderia, estadoRegistro).then((response) => {
       setIngresos(response.data);
       closeLoading()
-      debugger
       if(response.data.length == 0){
         notify("La consulta no ha tenido resultados")
       }else{

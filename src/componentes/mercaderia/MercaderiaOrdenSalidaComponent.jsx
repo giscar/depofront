@@ -18,6 +18,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
   const [placaVehiculo, setPlacaVehiculo] = useState('')
   const [fechaEmision, setFechaEmision] = useState('')
   const [fechaInicioTranslado, setFechaInicioTranslado] = useState('')
+  const [domicilioPuntoPartida, setdomicilioPuntoPartida] = useState('')
   const [salidas, setSalidas] = useState([])
   const [ingreso, setIngreso] = useState([])
 
@@ -73,8 +74,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
 
   const buscarSalidasByIdIngreso = () => {
     salidaByIdIngreso(idIngreso).then(p => {
-      debugger
-      console.log(p.data)
       setSalidas(p.data)
     })
   }
@@ -93,7 +92,6 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
   }, [show])
 
   const cargarNotaIngreso = (data) => {
-    debugger
     setCodIngreso(data.codIngreso)
     setRucDestinatario(data.ruc)
     setDireccionDestinatario(data.direccion)
@@ -111,7 +109,8 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
   const [errors, setErrors] = useState({
     msgChofer: '',
     msgPlacaVehiculo: '',
-    msgFechaEmision: ''
+    msgFechaEmision: '',
+    msgFechaInicioTranslado: ''
   })
 
   const validateForm = () => {
@@ -146,12 +145,10 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
       errorCopy.msgFechaInicioTranslado = 'Debe ingresar la fecha de inicio de translado';
       valid = false;
     }
-    
 
     setErrors(errorCopy);
     return valid;
   }
-
 
   const saveNotaOrdenSalida = (e) => {
     e.preventDefault()
@@ -177,6 +174,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
     data.placaVehiculo = placaVehiculo
     data.fechaEmision = fechaEmision
     data.fechaInicioTranslado = fechaInicioTranslado
+    data.domicilioPuntoPartida = domicilioPuntoPartida 
     data.salidas = salidas
     showLoading()
     ordenSalidaSave(data).then(p => {
@@ -333,7 +331,7 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
                 <label className="col-sm-4 col-form-label-zise">Fecha emision:</label>
                 <div className="col-sm-8">
                   <input type="date"
-                    placeholder="Fecha de salida"
+                    placeholder="Fecha de emision"
                     value={fechaEmision}
                     onChange={(e) => { setFechaEmision(e.target.value) }}
                     className={`form-control-depo ${errors.msgFechaEmision ? ' is-invalid' : ''}`}
@@ -341,7 +339,35 @@ const MercaderiaOrdenSalidaComponent = ({ show, handleClose, idIngreso }) => {
                   </input>
                   {errors.msgFechaEmision && <div className='invalid-feedback'>{errors.msgFechaEmision}</div>}
                 </div>
+                </div>
+
+                <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Fecha de translado:</label>
+                <div className="col-sm-8">
+                  <input type="date"
+                    placeholder="Fecha de inicio de translado"
+                    value={fechaInicioTranslado}
+                    onChange={(e) => { setFechaInicioTranslado(e.target.value) }}
+                    className={`form-control-depo ${errors.msgFechaInicioTranslado ? ' is-invalid' : ''}`}
+                  >
+                  </input>
+                  {errors.msgFechaInicioTranslado && <div className='invalid-feedback'>{errors.msgFechaInicioTranslado}</div>}
+                </div>
               </div>
+
+              <div className="mb-3 row">
+                <label className="col-sm-4 col-form-label-zise">Domicilio punto de partida:</label>
+                <div className="col-sm-8">
+                  <input type="text"
+                    placeholder="Domicilio punto de partida"
+                    value={domicilioPuntoPartida}
+                    onChange={(e) => { setdomicilioPuntoPartida(e.target.value) }}
+                    className={`form-control-depo`}
+                    >
+                  </input>
+                </div>
+              </div>
+
             </Form.Group>
           </Form>
           <br />

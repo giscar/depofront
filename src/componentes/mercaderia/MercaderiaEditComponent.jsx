@@ -639,6 +639,9 @@ const MercaderiaEditComponent = () => {
       const data = {}
       data.idMercaderia = mercaderia.id
       data.numeroMercaderia = mercaderia.numeroMercaderia
+      data.codigoMercaderia = mercaderia.productoCodigo
+      data.unidadMedidaMercaderia = mercaderia.unidadMedida?.descripcion
+      data.descripcionMercaderia = mercaderia.descripcionProducto?.toUpperCase()
       data.cantidadSalida = cantidadSalida
       data.saldoRestante = (parseInt(mercaderia.cantidad) - parseInt(cantidadSalida))
       data.descripcionSalida = descripcionSalida

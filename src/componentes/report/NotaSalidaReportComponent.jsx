@@ -17,7 +17,7 @@ const toWords = new ToWords({
     currency: true,
     ignoreDecimal: false,
     ignoreZeroCurrency: false,
-    doNotAddOnly: false,
+    donotaSalidaddOnly: false,
     currencyOptions: {
 
       symbol: 'S/.',
@@ -270,9 +270,9 @@ const styles = StyleSheet.create({
 
 })
 
-const NotaSalidaReportComponent = ({ id }) => {
+const notaSalidaSalidaReportComponent = ({ id }) => {
 
-  const [notaSalida, setNota] = useState({})
+  const [notaSalida, setnotaSalida] = useState({})
   const [ingreso, setIngreso] = useState({})
 
   useEffect(() => {
@@ -280,6 +280,8 @@ const NotaSalidaReportComponent = ({ id }) => {
       console.log(id)
       ordenSalidaById(id).then(p => {
         console.log(p)
+        setnotaSalida(p.data)
+        setIngreso(p.data.ingreso)
       })
     }
   }, [])
@@ -320,76 +322,48 @@ const NotaSalidaReportComponent = ({ id }) => {
           </View>
           <View style={styles.row}>
             <View style={styles.cell30}>
-              <Text style={styles.subtitle}>{formatearFecha(nota.fechaRecepcion)}</Text>
+              <Text style={styles.subtitle}>Fecha de emmisión: {formatearFecha(notaSalida.fechaEmision)}</Text>
             </View>
             <View style={styles.cell35}>
-              <Text style={styles.subtitle}>NOTA DE RECEPCION</Text>
+              <Text style={styles.subtitle}>ORDEN DE SALIDA - ALMACEN</Text>
+              <Text style={styles.subtitle}>Nro. {notaSalida.numeroRecepcion?.toString().padStart(6, '0')}</Text>
             </View>
             <View style={styles.cell30}>
-              <Text style={styles.subtitle}>Nro. {nota.numeroRecepcion?.toString().padStart(6, '0')}</Text>
+              <Text style={styles.subtitle}>Fecha de translado: {formatearFecha(notaSalida.fechaInicioTranslado)}</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>RECIBIDO DE: {nota.agencia?.razonSocial}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>CHOFER: {nota?.chofer}</Text>
-            </View>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>PLACA: {nota?.placaVehiculo}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>GUIA/FACTURA: {nota?.guiaRemision}</Text>
-            </View>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>DAM/DUA: {ingreso?.codigoDua}</Text>
+              <Text style={styles.textoUpperLeft}>REMITENTE: DEPOSITOS Y VENTAS S.A - 20100014476</Text>
             </View>
           </View>
           <View style={styles.row}>
             <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>ALMACENADO POR CUENTA DE: {nota.empresa?.razonSocial}</Text>
+              <Text style={styles.textoUpperLeft}>DESTINATARIO: {notaSalida.razonSocialDestinatario} - {notaSalida.rucDestinatario}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>DIRECCION DE PUNTO DE PARTIDA: Jr. Victor A. Belaúnde 901 - CALLAO (Cdra. 57 Av. Argentina)</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell100}>
+              <Text style={styles.textoUpperLeft}>DOMICILIO DE PUNTO DE PARTIDA: {notaSalida.domicilioPuntoPartida}</Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>CHOFER: {notaSalida?.chofer}</Text>
+            </View>
+            <View style={styles.cell50}>
+              <Text style={styles.textoUpperLeft}>PLACA: {notaSalida?.placaVehiculo}</Text>
             </View>
           </View>
           
           <View style={styles.row}>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>HORA DE TERMINO: {ingreso?.horaTermino?.replace("T", " ")}</Text>
-            </View>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>ALMACEN: {ingreso?.almacen?.descripcion}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>FACTURAR O FIJO: {ingreso?.indFacturarFijo}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>ALMACENERO QUE RECEPCIONÓ LA CARGA: {nota.almacenado}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>NRO CONTENEDOR: {ingreso?.nroContenedor}</Text>
-            </View>
-            <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>DIMENSION CONTENEDOR: {ingreso?.dimensionContenedor}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
-            <View style={styles.cell100}>
-              <Text style={styles.textoUpperLeft}>OBSERVACIONES: {nota?.observaciones}</Text>
-            </View>
-          </View>
-          <View style={styles.row}>
             <View style={styles.cell10th}>
-              <Text style={styles.textoUpperLeft}>SERIE</Text>
+              <Text style={styles.textoUpperLeft}>CODIGO</Text>
             </View>
             <View style={styles.cell20th}>
               <Text style={styles.textoUpperLeft}>CANTIDAD</Text>
@@ -398,27 +372,31 @@ const NotaSalidaReportComponent = ({ id }) => {
               <Text style={styles.textoUpperLeft}>UNIDAD</Text>
             </View>
             <View style={styles.cell50th}>
-              <Text style={styles.textoUpperLeft}>RESUMEN DEL INGRESO</Text>
+              <Text style={styles.textoUpperLeft}>DESCRIPCION</Text>
             </View>
           </View>
+          {
+                    notaSalida.salidas?.map(p =>
           <View style={styles.row}>
             <View style={styles.cell10}>
-              <Text style={styles.textoUpperLeft}>{nota?.serie}</Text>
+              <Text style={styles.textoUpperLeft}>{p?.cantidadSalida}</Text>
             </View>
             <View style={styles.cell20}>
-              <Text style={styles.textoUpperLeft}>{nota?.cantidadMercaderia}</Text>
+              <Text style={styles.textoUpperLeft}>{p?.cantidadSalida}</Text>
             </View>
             <View style={styles.cell20}>
-              <Text style={styles.textoUpperLeft}>{nota?.unidadDescripcion}</Text>
+              <Text style={styles.textoUpperLeft}>{p?.unidadMedidaMercaderia}</Text>
             </View>
             <View style={styles.cell50}>
-              <Text style={styles.textoUpperLeft}>{nota?.descripcion}</Text>
+              <Text style={styles.textoUpperLeft}>{p?.descripcionSalida}</Text>
             </View>
           </View>
+                    )
+                  }
         </View>
       </Page>
     </Document>
   )
 }
 
-export default NotaSalidaReportComponent;
+export default notaSalidaSalidaReportComponent;
